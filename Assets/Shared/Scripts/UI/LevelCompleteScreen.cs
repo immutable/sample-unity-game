@@ -126,7 +126,7 @@ namespace HyperCasual.Runner
             }
         }
 
-        public async void OnEnable()
+        public void OnEnable()
         {
             ShowNextButton(true);
             m_NextButton.RemoveListener(OnNextButtonClicked);
