@@ -133,47 +133,47 @@ namespace HyperCasual.Runner
             m_NextButton.AddListener(OnNextButtonClicked);
         }
 
-        void OnNextButtonClicked()
+        private void OnNextButtonClicked()
         {
             ShowCompletedContainer(true);
             m_NextLevelEvent.Raise();
         }
 
         // Level complete
-        void ShowCompletedContainer(bool show)
+        private void ShowCompletedContainer(bool show)
         {
             m_CompletedContainer.gameObject.SetActive(show);
         }
 
-        void ShowContinueWithPassportButton(bool show)
+        private void ShowContinueWithPassportButton(bool show)
         {
             m_ContinuePassportButton.gameObject.SetActive(show);
         }
 
-        void ShowNextButton(bool show)
+        private void ShowNextButton(bool show)
         {
             m_NextButton.gameObject.SetActive(show);
         }
 
-        void ShowLoading(bool show)
+        private void ShowLoading(bool show)
         {
             m_Loading.gameObject.SetActive(show);
         }
 
         // Minted screen
-        void ShowMintedContainer(bool show)
+        private void ShowMintedContainer(bool show)
         {
             m_MintedContainer.gameObject.SetActive(show);
         }
 
         // Unlocked Skin screen
-        void ShowSkinUnlockedContainer(bool show)
+        private void ShowSkinUnlockedContainer(bool show)
         {
             m_SkinUnlockedContainer.gameObject.SetActive(show);
         }
 
         // Collected Skin screen
-        void ShowCollectedSkinContainer(bool show)
+        private void ShowCollectedSkinContainer(bool show)
         {
             m_CollectedSkinContainer.gameObject.SetActive(show);
         }
