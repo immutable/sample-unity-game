@@ -4,6 +4,7 @@ using HyperCasual.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Immutable.Passport;
 
 namespace HyperCasual.Runner
 {
@@ -23,7 +24,9 @@ namespace HyperCasual.Runner
         [SerializeField]
         GameObject m_Loading;
 
-        void OnEnable()
+        Passport passport;
+
+        async void OnEnable()
         {
             ShowLoading(true);
 
@@ -33,6 +36,11 @@ namespace HyperCasual.Runner
             // Set listener to 'Logout' button
             m_LogoutButton.RemoveListener(OnLogoutButtonClick);
             m_LogoutButton.AddListener(OnLogoutButtonClick);
+
+            // Initialise Passport
+            string clientId = "ZJL7JvetcDFBNDlgRs5oJoxuAUUl6uQj";
+            string environment = Immutable.Passport.Model.Environment.SANDBOX;
+            passport = await Passport.Init(clientId, environment);
 
             ShowLoading(false);
             ShowStartButton(true);
