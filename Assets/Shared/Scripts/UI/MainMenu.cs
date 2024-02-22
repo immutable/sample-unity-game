@@ -3,7 +3,6 @@ using HyperCasual.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Cysharp.Threading.Tasks;
 
 namespace HyperCasual.Runner
 {
@@ -25,7 +24,9 @@ namespace HyperCasual.Runner
 
         void OnEnable()
         {
+            ShowLoading(true);
             m_StartButton.AddListener(OnStartButtonClick);
+            
             ShowLoading(false);
             ShowStartButton(true);
         }

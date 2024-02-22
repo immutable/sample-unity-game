@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.cysharp.unitask": {
-      "version": "2.3.3",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://package.openupm.com"
-    },
     "com.unity.burst": {
       "version": "1.8.4",
       "depth": 1,

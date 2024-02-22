@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 
 namespace HyperCasual.Runner
 {
