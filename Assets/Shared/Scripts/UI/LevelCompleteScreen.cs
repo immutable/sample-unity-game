@@ -13,6 +13,7 @@ namespace HyperCasual.Runner
     /// </summary>
     public class LevelCompleteScreen : View
     {
+        // Completed screen
         [SerializeField]
         HyperCasualButton m_NextButton;
         [SerializeField]
@@ -27,23 +28,20 @@ namespace HyperCasual.Runner
         Slider m_XpSlider;
         [SerializeField]
         GameObject m_Loading;
-
         [SerializeField]
         GameObject m_CompletedContainer;
-        [SerializeField]
-        GameObject m_MintedContainer;
-        [SerializeField]
-        GameObject m_SkinUnlockedContainer;
-        [SerializeField]
-        GameObject m_CollectedSkinContainer;
 
         // Minted screen
+        [SerializeField]
+        GameObject m_MintedContainer;
         [SerializeField]
         TextMeshProUGUI m_MintedTitle;
         [SerializeField]
         HyperCasualButton m_MintedNextButton;
 
         // Unlocked Skin screen
+        [SerializeField]
+        GameObject m_SkinUnlockedContainer;
         [SerializeField]
         TextMeshProUGUI m_SkinUnlockedErrorMessage;
         [SerializeField]
@@ -54,6 +52,8 @@ namespace HyperCasual.Runner
         GameObject m_SkinUnlockedLoading;
 
         // Collected Skin screen
+        [SerializeField]
+        GameObject m_CollectedSkinContainer;
         [SerializeField]
         TextMeshProUGUI m_CollectedSkinErrorMessage;
         [SerializeField]
@@ -139,6 +139,7 @@ namespace HyperCasual.Runner
             m_NextLevelEvent.Raise();
         }
 
+        // Level complete
         void ShowCompletedContainer(bool show)
         {
             m_CompletedContainer.gameObject.SetActive(show);
@@ -157,6 +158,24 @@ namespace HyperCasual.Runner
         void ShowLoading(bool show)
         {
             m_Loading.gameObject.SetActive(show);
+        }
+
+        // Minted screen
+        void ShowMintedContainer(bool show)
+        {
+            m_MintedContainer.gameObject.SetActive(show);
+        }
+
+        // Unlocked Skin screen
+        void ShowSkinUnlockedContainer(bool show)
+        {
+            m_SkinUnlockedContainer.gameObject.SetActive(show);
+        }
+
+        // Collected Skin screen
+        void ShowCollectedSkinContainer(bool show)
+        {
+            m_CollectedSkinContainer.gameObject.SetActive(show);
         }
 
         void DisplayCoins(int count)

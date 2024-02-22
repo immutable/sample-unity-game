@@ -3333,14 +3333,14 @@ MonoBehaviour:
   m_Loading: {fileID: 4233544250727167671}
   m_CompletedContainer: {fileID: 4245644721876780819}
   m_MintedContainer: {fileID: 4142625986736842617}
-  m_SkinUnlockedContainer: {fileID: 7911546731179172212}
-  m_CollectedSkinContainer: {fileID: 3624062007101749917}
   m_MintedTitle: {fileID: 3771762555458707869}
   m_MintedNextButton: {fileID: 9044594929801672133}
+  m_SkinUnlockedContainer: {fileID: 7911546731179172212}
   m_SkinUnlockedErrorMessage: {fileID: 8195056357084106153}
   m_SkinUnlockedGetButton: {fileID: 6015925868416164580}
   m_SkinUnlockedNextButton: {fileID: 1082315832006481771}
   m_SkinUnlockedLoading: {fileID: 2365312212716957610}
+  m_CollectedSkinContainer: {fileID: 3624062007101749917}
   m_CollectedSkinErrorMessage: {fileID: 2308593738783223578}
   m_CollectedSkinUseButton: {fileID: 3761956128622227495}
   m_CollectedSkinNextButton: {fileID: 0}
