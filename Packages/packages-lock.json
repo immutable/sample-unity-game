@@ -7,6 +7,23 @@
       "dependencies": {},
       "hash": "06c20cafa885cbb9f14791c269cda6b547e0be30"
     },
+    "com.cysharp.unitask": {
+      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2.3.3",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "b992a061fbf68ff1eb475d0837065b0549ed31ba"
+    },
+    "com.immutable.passport": {
+      "version": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Passport#v1.5.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.0",
+        "com.cysharp.unitask": "2.3.3"
+      },
+      "hash": "5dce7cfba381739e0465f79dca96d00cac69fdfb"
+    },
     "com.unity.burst": {
       "version": "1.8.4",
       "depth": 1,
@@ -83,6 +100,13 @@
     },
     "com.unity.mathematics": {
       "version": "1.2.6",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.2.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
