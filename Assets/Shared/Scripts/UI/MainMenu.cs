@@ -64,7 +64,8 @@ namespace HyperCasual.Runner
             }
 
             ShowLoading(false);
-            ShowStartButton(true);
+            // Show the logout button if the player is logged in
+            ShowLogoutButton(SaveManager.Instance.IsLoggedIn);
         }
 
         void OnDisable()
@@ -78,7 +79,7 @@ namespace HyperCasual.Runner
             AudioManager.Instance.PlayEffect(SoundID.ButtonSound);
         }
 
-        void OnLogoutButtonClick()
+        async void OnLogoutButtonClick()
         {
             try
             {
@@ -88,6 +89,11 @@ namespace HyperCasual.Runner
                 ShowLoading(true);
 
                 // Logout
+#if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
+                await passport.LogoutPKCE();
+#else
+                await passport.Logout();
+#endif
 
                 // Reset the login flag
                 SaveManager.Instance.IsLoggedIn = false;
