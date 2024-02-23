@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+using Immutable.Passport;
 
 namespace HyperCasual.Runner
 {
@@ -102,13 +103,13 @@ namespace HyperCasual.Runner
             }
         }
 
-        public void OnEnable()
+        public async void OnEnable()
         {
             // Set listener to 'Next' button
             m_NextButton.RemoveListener(OnNextButtonClicked);
             m_NextButton.AddListener(OnNextButtonClicked);
 
-            // Set listener to "Continue with Passport" button  
+            // Set listener to "Continue with Passport" button
             m_ContinuePassportButton.RemoveListener(OnContinueWithPassportButtonClicked);
             m_ContinuePassportButton.AddListener(OnContinueWithPassportButtonClicked);
 
@@ -116,10 +117,32 @@ namespace HyperCasual.Runner
             m_TryAgainButton.RemoveListener(OnTryAgainButtonClicked);
             m_TryAgainButton.AddListener(OnTryAgainButtonClicked);
 
-            ShowNextButton(true);
+            // Show loading
+            ShowLoading(true);
+            ShowNextButton(false);
+            ShowContinueWithPassportButton(false);
+
+            // Check if user has logged into Passport before
+            bool hasCredentialsSaved = await Passport.Instance.HasCredentialsSaved();
+            if (hasCredentialsSaved)
+            {
+                // User logged into Passport before, re-login the user using saved credentials
+                bool success = await Passport.Instance.Login(useCachedSession: true);
+                MemoryCache.IsConnected = success;
+                // Show 'Next' button if successfully logged in
+                ShowNextButton(success);
+                // Show "Continue with Passport" button if failed to log in
+                ShowContinueWithPassportButton(!success);
+            }
+            else
+            {
+                // User has not logged in before, show "Continue with Passport" button
+                ShowContinueWithPassportButton(true);
+            }
+            ShowLoading(false);
         }
 
-        private void OnContinueWithPassportButtonClicked()
+        private async void OnContinueWithPassportButtonClicked()
         {
             try
             {
@@ -128,8 +151,9 @@ namespace HyperCasual.Runner
                 ShowLoading(true);
 
                 // Log into Passport
+                await Passport.Instance.Login();
 
-                // Show 'Next' button
+                // Show next button
                 ShowNextButton(true);
                 ShowLoading(false);
             }
