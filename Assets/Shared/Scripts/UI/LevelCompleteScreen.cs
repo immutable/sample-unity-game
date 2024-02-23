@@ -235,7 +235,17 @@ namespace HyperCasual.Runner
 
         private void OnNextButtonClicked()
         {
-            m_NextLevelEvent.Raise();
+            // Check if the player is already using a new skin
+            if (!SaveManager.Instance.UseNewSkin)
+            {
+                // Player is not using a new skin, take player to Unlocked Skin screen
+                m_UnlockedSkinEvent.Raise();
+            }
+            else
+            {
+                // Player is already using a new skin, take player to the next level
+                m_NextLevelEvent.Raise();
+            }
         }
 
         private void ShowCompletedContainer(bool show)
