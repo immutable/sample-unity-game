@@ -144,6 +144,8 @@ namespace HyperCasual.Runner
                 // Show 'Next' button
                 ShowNextButton(true);
                 ShowLoading(false);
+                // Take the player to the Setup Wallet screen
+                m_SetupWalletEvent.Raise();
             }
             catch (Exception ex)
             {
