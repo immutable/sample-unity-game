@@ -6,6 +6,9 @@ using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
 using Immutable.Passport;
+using Cysharp.Threading.Tasks;
+using System.Numerics;
+using System.Net.Http;
 
 namespace HyperCasual.Runner
 {
@@ -117,10 +120,79 @@ namespace HyperCasual.Runner
             m_TryAgainButton.RemoveListener(OnTryAgainButtonClicked);
             m_TryAgainButton.AddListener(OnTryAgainButtonClicked);
 
-            // Show 'Next' button if player is already logged into Passport
-            ShowNextButton(SaveManager.Instance.IsLoggedIn);
-            // Show "Continue with Passport" button if the player is not logged into Passport
-            ShowContinueWithPassportButton(!SaveManager.Instance.IsLoggedIn);
+            ShowError(false);
+            ShowLoading(false);
+
+            // If player is logged into Passport mint coins to player
+            if (SaveManager.Instance.IsLoggedIn)
+            {
+                // Mint collected coins to player
+                await MintCoins();
+            }
+            else
+            {
+                // Show 'Next' button if player is already logged into Passport
+                ShowNextButton(SaveManager.Instance.IsLoggedIn);
+                // Show "Continue with Passport" button if the player is not logged into Passport
+                ShowContinueWithPassportButton(!SaveManager.Instance.IsLoggedIn);
+            }
+        }
+
+        /// <summary>
+        /// Mints collected coins (i.e. Immutable Runner Token) to the player's wallet
+        /// </summary>
+        private async UniTask MintCoins()
+        {
+            // This function is similar to MintCoins() in MintScreen.cs. Consider refactoring duplicate code in production.
+            Debug.Log("Minting coins...");
+            bool success = false;
+
+            // Show loading
+            ShowLoading(true);
+            ShowNextButton(false);
+            ShowError(false);
+
+            try
+            {
+                // Don't mint any coins if player did not collect any
+                if (m_CoinCount == 0)
+                {
+                    success = true;
+                }
+                else
+                {
+                    // Get the player's wallet address to mint the coins to
+                    List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
+                    string address = accounts[0];
+                    if (address != null)
+                    {
+                        // Calculate the quantity to mint
+                        // Need to take into account Immutable Runner Token decimal value i.e. 18
+                        BigInteger quantity = BigInteger.Multiply(new BigInteger(m_CoinCount), BigInteger.Pow(10, 18));
+                        Debug.Log($"Quantity: {quantity}");
+                        var nvc = new List<KeyValuePair<string, string>>
+                    {
+                        // Set 'to' to the player's wallet address
+                        new KeyValuePair<string, string>("to", address),
+                        // Set 'quanity' to the number of coins collected
+                        new KeyValuePair<string, string>("quantity", quantity.ToString())
+                    };
+                        using var client = new HttpClient();
+                        string url = $"http://localhost:3000/mint/token"; // Endpoint to mint token
+                        using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
+                        using var res = await client.SendAsync(req);
+                        success = res.IsSuccessStatusCode;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Failed to mint coins: {ex.Message}");
+            }
+
+            ShowLoading(false);
+            ShowNextButton(success);
+            ShowError(!success);
         }
 
         private async void OnContinueWithPassportButtonClicked()
@@ -156,8 +228,9 @@ namespace HyperCasual.Runner
             }
         }
 
-        private void OnTryAgainButtonClicked()
+        private async void OnTryAgainButtonClicked()
         {
+            await MintCoins();
         }
 
         private void OnNextButtonClicked()
