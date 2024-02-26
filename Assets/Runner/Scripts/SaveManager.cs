@@ -32,6 +32,7 @@ namespace HyperCasual.Runner
 
         /// <summary>
         /// Save and load level progress as an integer
+        /// Level progress 2 means the player completed level 2, but has not completed level 3
         /// </summary>
         public int LevelProgress 
         { 

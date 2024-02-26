@@ -5,6 +5,9 @@ using HyperCasual.Core;
 using HyperCasual.Runner;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
+using System.Collections;
+using UnityEngine;
 
 namespace HyperCasual.Gameplay
 {
@@ -32,6 +35,14 @@ namespace HyperCasual.Gameplay
         AbstractGameEvent m_LoseEvent;
         [SerializeField]
         AbstractGameEvent m_PauseEvent;
+        [SerializeField]
+        AbstractGameEvent m_CreateWalletEvent;
+        [SerializeField]
+        AbstractGameEvent m_MintedEvent;
+        [SerializeField]
+        AbstractGameEvent m_UnlockedEvent;
+        [SerializeField]
+        AbstractGameEvent m_CollectedEvent;
         [Header("Other")]
         [SerializeField]
         float m_SplashDelay = 2f;
@@ -73,7 +84,7 @@ namespace HyperCasual.Gameplay
         void CreateMenuNavigationSequence()
         {
             // Create states
-            var splashDelay = new DelayState(1);
+            var splashDelay = new DelayState(m_SplashDelay);
             m_MainMenuState = new State(OnMainMenuDisplayed);
             m_LevelSelectState = new State(OnLevelSelectionDisplayed);
             
@@ -108,6 +119,10 @@ namespace HyperCasual.Gameplay
             var unloadLastScene = new UnloadLastSceneState(m_SceneController);
             lastState?.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
             unloadLastScene.AddLink(new Link(m_LevelSelectState));
+
+            var createWalletState = new PauseState(ShowUI<CreateWalletScreen>);
+            lastState?.AddLink(new EventLink(m_CreateWalletEvent, createWalletState));
+            createWalletState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
         }
 
         /// <summary>
@@ -140,9 +155,11 @@ namespace HyperCasual.Gameplay
             var pauseState = new PauseState(ShowUI<PauseMenu>);
             var unloadLose = new UnloadLastSceneState(m_SceneController);
             var unloadPause = new UnloadLastSceneState(m_SceneController);
+            var createWalletState = new PauseState(ShowUI<CreateWalletScreen>);
 
             //Connect the states
             lastState?.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
+            lastState?.AddLink(new EventLink(m_CreateWalletEvent, createWalletState));
             loadLevelState.AddLink(new Link(gameplayState));
 
             gameplayState.AddLink(new EventLink(m_WinEvent, winState));
@@ -156,6 +173,8 @@ namespace HyperCasual.Gameplay
             pauseState.AddLink(new EventLink(m_ContinueEvent, gameplayState));
             pauseState.AddLink(new EventLink(m_BackEvent, unloadPause));
             unloadPause.AddLink(new Link(m_MainMenuState));
+
+            createWalletState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
             
             return winState;
         }

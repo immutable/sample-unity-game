@@ -66,6 +66,11 @@ MonoBehaviour:
   m_WinEvent: {fileID: 11400000, guid: 4facc4ba26e884ef88b6c2506fa5ae2c, type: 2}
   m_LoseEvent: {fileID: 11400000, guid: 2b6d3353ba4d84d3ca725ef1835ca96f, type: 2}
   m_PauseEvent: {fileID: 11400000, guid: 4bbf7a853b87f44299489a25eb0d9ce5, type: 2}
+  m_CreateWalletEvent: {fileID: 11400000, guid: 6115e730cc0fc4a06bda2c48778cf33c,
+    type: 2}
+  m_MintedEvent: {fileID: 11400000, guid: 46f352f4078934aefa54be763d0e3565, type: 2}
+  m_UnlockedEvent: {fileID: 11400000, guid: 8819262bd6f0c4f25b080e56decdf8b2, type: 2}
+  m_CollectedEvent: {fileID: 11400000, guid: 41d60f82abf3d419a89a11f3bcb331e7, type: 2}
   m_SplashDelay: 1
 --- !u!114 &3832517329008096586
 MonoBehaviour:

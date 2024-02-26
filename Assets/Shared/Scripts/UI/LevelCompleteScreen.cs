@@ -21,8 +21,6 @@ namespace HyperCasual.Runner
         [SerializeField]
         Image[] m_Coins;
         [SerializeField]
-        AbstractGameEvent m_NextLevelEvent;
-        [SerializeField]
         TextMeshProUGUI m_FoodText;
         [SerializeField]
         Slider m_XpSlider;
@@ -30,6 +28,13 @@ namespace HyperCasual.Runner
         GameObject m_Loading;
         [SerializeField]
         GameObject m_CompletedContainer;
+        [SerializeField]
+        TextMeshProUGUI m_ErrorMessage;
+
+        [SerializeField]
+        AbstractGameEvent m_NextLevelEvent;
+        [SerializeField]
+        AbstractGameEvent m_CreateWalletEvent;
 
         // Minted screen
         [SerializeField]
@@ -135,7 +140,6 @@ namespace HyperCasual.Runner
 
         private void OnNextButtonClicked()
         {
-            ShowCompletedContainer(true);
             m_NextLevelEvent.Raise();
         }
 
@@ -158,6 +162,11 @@ namespace HyperCasual.Runner
         private void ShowLoading(bool show)
         {
             m_Loading.gameObject.SetActive(show);
+        }
+
+        private void ShowErrorMessage(bool show)
+        {
+            m_ErrorMessage.gameObject.SetActive(show);
         }
 
         // Minted screen
