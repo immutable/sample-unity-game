@@ -894,8 +894,9 @@ MonoBehaviour:
   m_Loading: {fileID: 4233544250727167671}
   m_ErrorMessage: {fileID: 1110242671789650706}
   m_NextButton: {fileID: 7550771413722335867}
-  m_NextEvent: {fileID: 11400000, guid: b892538bd49f3487bbedf5106c094739, type: 2}
   m_TryAgainButton: {fileID: 1786814427895709391}
+  m_NextEvent: {fileID: 11400000, guid: b892538bd49f3487bbedf5106c094739, type: 2}
+  m_MintEvent: {fileID: 11400000, guid: 46f352f4078934aefa54be763d0e3565, type: 2}
 --- !u!1 &6102579320472314882
 GameObject:
   m_ObjectHideFlags: 0

@@ -38,7 +38,7 @@ namespace HyperCasual.Gameplay
         [SerializeField]
         AbstractGameEvent m_CreateWalletEvent;
         [SerializeField]
-        AbstractGameEvent m_MintedEvent;
+        AbstractGameEvent m_MintEvent;
         [SerializeField]
         AbstractGameEvent m_UnlockedEvent;
         [SerializeField]
@@ -121,8 +121,10 @@ namespace HyperCasual.Gameplay
             unloadLastScene.AddLink(new Link(m_LevelSelectState));
 
             var createWalletState = new PauseState(ShowUI<CreateWalletScreen>);
+            var mintState = new PauseState(ShowUI<MintScreen>);
             lastState?.AddLink(new EventLink(m_CreateWalletEvent, createWalletState));
-            createWalletState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
+            createWalletState.AddLink(new EventLink(m_MintEvent, mintState));
+            mintState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
         }
 
         /// <summary>
@@ -156,6 +158,7 @@ namespace HyperCasual.Gameplay
             var unloadLose = new UnloadLastSceneState(m_SceneController);
             var unloadPause = new UnloadLastSceneState(m_SceneController);
             var createWalletState = new PauseState(ShowUI<CreateWalletScreen>);
+            var mintState = new PauseState(ShowUI<MintScreen>);
 
             //Connect the states
             lastState?.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
@@ -174,7 +177,8 @@ namespace HyperCasual.Gameplay
             pauseState.AddLink(new EventLink(m_BackEvent, unloadPause));
             unloadPause.AddLink(new Link(m_MainMenuState));
 
-            createWalletState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
+            createWalletState.AddLink(new EventLink(m_MintEvent, mintState));
+            mintState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
             
             return winState;
         }

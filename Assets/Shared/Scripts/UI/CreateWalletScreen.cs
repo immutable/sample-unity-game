@@ -23,9 +23,9 @@ namespace HyperCasual.Runner
         [SerializeField]
         HyperCasualButton m_NextButton;
         [SerializeField]
-        AbstractGameEvent m_NextEvent;
-        [SerializeField]
         HyperCasualButton m_TryAgainButton;
+        [SerializeField]
+        AbstractGameEvent m_MintEvent;
 
         public void OnEnable()
         {
@@ -44,7 +44,7 @@ namespace HyperCasual.Runner
         {
             try
             {
-                m_Title.text = "Creating your wallet1...";
+                m_Title.text = "Creating your wallet...";
                 ShowLoading(true);
                 ShowError(false);
                 ShowNextButton(false);
@@ -68,7 +68,7 @@ namespace HyperCasual.Runner
 
         private void OnNextButtonClicked()
         {
-            m_NextEvent.Raise();
+            m_MintEvent.Raise();
         }
 
         private void ShowNextButton(bool show)
