@@ -107,7 +107,15 @@ namespace HyperCasual.Runner
             m_NextButton.RemoveListener(OnNextButtonClicked);
             m_NextButton.AddListener(OnNextButtonClicked);
 
+            // Set listener to "Continue with Passport" button  
+            m_ContinuePassportButton.RemoveListener(OnContinueWithPassportButtonClicked);
+            m_ContinuePassportButton.AddListener(OnContinueWithPassportButtonClicked);
+
             ShowNextButton(true);
+        }
+
+        private void OnContinueWithPassportButtonClicked()
+        {
         }
 
         private void OnNextButtonClicked()
