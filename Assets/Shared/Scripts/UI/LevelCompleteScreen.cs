@@ -37,38 +37,6 @@ namespace HyperCasual.Runner
         AbstractGameEvent m_CreateWalletEvent;
         [SerializeField]
         AbstractGameEvent m_UnlockedSkinEvent;
-
-        // Minted screen
-        [SerializeField]
-        GameObject m_MintedContainer;
-        [SerializeField]
-        TextMeshProUGUI m_MintedTitle;
-        [SerializeField]
-        HyperCasualButton m_MintedNextButton;
-
-        // Unlocked Skin screen
-        [SerializeField]
-        GameObject m_SkinUnlockedContainer;
-        [SerializeField]
-        TextMeshProUGUI m_SkinUnlockedErrorMessage;
-        [SerializeField]
-        HyperCasualButton m_SkinUnlockedGetButton;
-        [SerializeField]
-        HyperCasualButton m_SkinUnlockedNextButton;
-        [SerializeField]
-        GameObject m_SkinUnlockedLoading;
-
-        // Collected Skin screen
-        [SerializeField]
-        GameObject m_CollectedSkinContainer;
-        [SerializeField]
-        TextMeshProUGUI m_CollectedSkinErrorMessage;
-        [SerializeField]
-        HyperCasualButton m_CollectedSkinUseButton;
-        [SerializeField]
-        HyperCasualButton m_CollectedSkinNextButton;
-        [SerializeField]
-        GameObject m_CollectedSkinLoading;
         
         /// <summary>
         /// The slider that displays the XP value 
@@ -147,7 +115,6 @@ namespace HyperCasual.Runner
             m_NextLevelEvent.Raise();
         }
 
-        // Level complete
         private void ShowCompletedContainer(bool show)
         {
             m_CompletedContainer.gameObject.SetActive(show);
@@ -171,24 +138,6 @@ namespace HyperCasual.Runner
         private void ShowErrorMessage(bool show)
         {
             m_ErrorMessage.gameObject.SetActive(show);
-        }
-
-        // Minted screen
-        private void ShowMintedContainer(bool show)
-        {
-            m_MintedContainer.gameObject.SetActive(show);
-        }
-
-        // Unlocked Skin screen
-        private void ShowSkinUnlockedContainer(bool show)
-        {
-            m_SkinUnlockedContainer.gameObject.SetActive(show);
-        }
-
-        // Collected Skin screen
-        private void ShowCollectedSkinContainer(bool show)
-        {
-            m_CollectedSkinContainer.gameObject.SetActive(show);
         }
 
         void DisplayCoins(int count)

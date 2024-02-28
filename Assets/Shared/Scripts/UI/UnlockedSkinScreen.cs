@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HyperCasual.Runner
 {
@@ -34,7 +35,7 @@ namespace HyperCasual.Runner
         {
             Crafting, // Crafting a skin
             Crafted, // Successfully crafted a skin
-            Error // Failed to craft
+            Failed // Failed to craft
         }
 
         private CraftSkinState? m_CraftState;
@@ -61,7 +62,7 @@ namespace HyperCasual.Runner
                         ShowNextButton(true);
                         ShowError(false);
                         break;
-                    case CraftSkinState.Error:
+                    case CraftSkinState.Failed:
                         Debug.Log("Failed to craft new skin!");
                         ShowLoading(false);
                         ShowCraftButton(false);
@@ -74,13 +75,13 @@ namespace HyperCasual.Runner
             }
         }
 
-        public void OnEnable()
+        public async void OnEnable()
         {
             // Set listener to 'Next' button
             m_NextButton.RemoveListener(OnNextButtonClicked);
             m_NextButton.AddListener(OnNextButtonClicked);
 
-            // Set listener to 'Burn 3 coins to collect at the next level" (i.e. craft) button
+            // Set listener to "Burn 3 coins to collect at the next level" (i.e. craft) button
             m_CraftButton.RemoveListener(OnCraftButtonClicked);
             m_CraftButton.AddListener(OnCraftButtonClicked);
 
@@ -88,16 +89,17 @@ namespace HyperCasual.Runner
             m_TryAgainButton.RemoveListener(OnTryAgainButtonClicked);
             m_TryAgainButton.AddListener(OnTryAgainButtonClicked);
 
-            switch (m_CraftState)
+            switch (CraftState)
             {
                 case CraftSkinState.Crafting:
                     break;
                 case CraftSkinState.Crafted:
                     // Skin crafted successfully, go to collect skin screen
-                    m_NextLevelEvent.Raise();
-                    m_CraftState = null;
+                    // Need to add some delay otherwise game even won't get triggered
+                    await Task.Delay(TimeSpan.FromMilliseconds(1));
+                    CollectSkin();
                     break;
-                case CraftSkinState.Error:
+                case CraftSkinState.Failed:
                     break;
                 default:
                     // There's no craft state, so reset screen to initial state
@@ -109,25 +111,35 @@ namespace HyperCasual.Runner
             }
         }
 
-        private void Craft()
+        private async void Craft()
         {
             CraftState = CraftSkinState.Crafting;
+
             // Burn tokens and mint a new skin i.e. crafting a skin
+            await Task.Delay(TimeSpan.FromSeconds(5));
+
             CraftState = CraftSkinState.Crafted;
-            // If screen is visible, go to collect skin screen
-            // otherwise it will be picked in OnEnable function
-            if (gameObject.active)
+
+            // If successfully crafted skin and this screen is visible, go to collect skin screen
+            // otherwise it will be picked in the OnEnable function above when this screen reappears
+            if (CraftState == CraftSkinState.Crafted && gameObject.active)
             {
-                m_NextLevelEvent.Raise();
-                m_CraftState = null;
+                CollectSkin();
             }
+        }
+
+        private void CollectSkin()
+        {
+            m_CollectSkinEvent.Raise();
+            CraftState = null;
         }
 
         private void OnCraftButtonClicked()
         {
+            // m_CollectSkinEvent.Raise();
+            m_NextLevelEvent.Raise();
             // Craft in the background, while the player plays the next level
             Craft();
-            m_NextLevelEvent.Raise();
         }
 
         private void OnTryAgainButtonClicked()
