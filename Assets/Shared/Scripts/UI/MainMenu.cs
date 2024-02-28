@@ -16,7 +16,7 @@ namespace HyperCasual.Runner
         [SerializeField]
         AbstractGameEvent m_StartButtonEvent;
         [SerializeField]
-        TextMeshProUGUI m_ConnectedAs;
+        TextMeshProUGUI m_Email;
         [SerializeField]
         HyperCasualButton m_LogoutButton;
         [SerializeField]
@@ -50,6 +50,16 @@ namespace HyperCasual.Runner
         void ShowStartButton(bool show)
         {
             m_StartButton.gameObject.SetActive(show);
+        }
+
+        void ShowLogoutButton(bool show)
+        {
+            m_LogoutButton.gameObject.SetActive(show);
+        }
+
+        void ShowEmail(bool show)
+        {
+            m_Email.gameObject.SetActive(show);
         }
     }
 }
