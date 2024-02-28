@@ -35,6 +35,8 @@ namespace HyperCasual.Runner
         AbstractGameEvent m_NextLevelEvent;
         [SerializeField]
         AbstractGameEvent m_CreateWalletEvent;
+        [SerializeField]
+        AbstractGameEvent m_UnlockedSkinEvent;
 
         // Minted screen
         [SerializeField]
@@ -133,9 +135,11 @@ namespace HyperCasual.Runner
 
         public void OnEnable()
         {
-            ShowNextButton(true);
+            // Set listener to 'Next' button
             m_NextButton.RemoveListener(OnNextButtonClicked);
             m_NextButton.AddListener(OnNextButtonClicked);
+
+            ShowNextButton(true);
         }
 
         private void OnNextButtonClicked()

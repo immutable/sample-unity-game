@@ -40,9 +40,9 @@ namespace HyperCasual.Gameplay
         [SerializeField]
         AbstractGameEvent m_MintEvent;
         [SerializeField]
-        AbstractGameEvent m_UnlockedEvent;
+        AbstractGameEvent m_UnlockedSkinEvent;
         [SerializeField]
-        AbstractGameEvent m_CollectedEvent;
+        AbstractGameEvent m_CollectEvent;
         [Header("Other")]
         [SerializeField]
         float m_SplashDelay = 2f;
@@ -122,9 +122,12 @@ namespace HyperCasual.Gameplay
 
             var createWalletState = new PauseState(ShowUI<CreateWalletScreen>);
             var mintState = new PauseState(ShowUI<MintScreen>);
+            var unlockedSkinState = new PauseState(ShowUI<UnlockedSkinScreen>);
             lastState?.AddLink(new EventLink(m_CreateWalletEvent, createWalletState));
+            lastState?.AddLink(new EventLink(m_UnlockedSkinEvent, unlockedSkinState));
             createWalletState.AddLink(new EventLink(m_MintEvent, mintState));
             mintState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
+            unlockedSkinState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
         }
 
         /// <summary>
@@ -159,10 +162,12 @@ namespace HyperCasual.Gameplay
             var unloadPause = new UnloadLastSceneState(m_SceneController);
             var createWalletState = new PauseState(ShowUI<CreateWalletScreen>);
             var mintState = new PauseState(ShowUI<MintScreen>);
+            var unlockedSkinState = new PauseState(ShowUI<UnlockedSkinScreen>);
 
             //Connect the states
             lastState?.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
             lastState?.AddLink(new EventLink(m_CreateWalletEvent, createWalletState));
+            lastState?.AddLink(new EventLink(m_UnlockedSkinEvent, unlockedSkinState));
             loadLevelState.AddLink(new Link(gameplayState));
 
             gameplayState.AddLink(new EventLink(m_WinEvent, winState));
@@ -179,6 +184,7 @@ namespace HyperCasual.Gameplay
 
             createWalletState.AddLink(new EventLink(m_MintEvent, mintState));
             mintState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
+            unlockedSkinState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
             
             return winState;
         }
