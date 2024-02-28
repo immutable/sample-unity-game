@@ -23,7 +23,7 @@ namespace HyperCasual.Runner
         const string k_Xp = "Xp";
         const string k_AudioSettings = "AudioSettings";
         const string k_QualityLevel = "QualityLevel";
-        const string k_zkEVM = "zkEVM";
+        const string k_IsLoggedIn = "IsLoggedIn";
 
         void Awake()
         {
@@ -73,10 +73,10 @@ namespace HyperCasual.Runner
             PlayerPrefsUtils.Write(k_AudioSettings, audioSettings);
         }
 
-        public bool ZkEvm 
+        public bool IsLoggedIn 
         { 
-            get => PlayerPrefs.GetInt(k_zkEVM) == 1; 
-            set => PlayerPrefs.SetInt(k_zkEVM, value ? 1 : 0);
+            get => PlayerPrefs.GetInt(k_IsLoggedIn) == 1; 
+            set => PlayerPrefs.SetInt(k_IsLoggedIn, value ? 1 : 0);
         }
 
     }
