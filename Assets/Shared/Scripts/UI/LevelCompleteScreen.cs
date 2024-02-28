@@ -117,29 +117,10 @@ namespace HyperCasual.Runner
             m_TryAgainButton.RemoveListener(OnTryAgainButtonClicked);
             m_TryAgainButton.AddListener(OnTryAgainButtonClicked);
 
-            // Show loading
-            ShowLoading(true);
-            ShowNextButton(false);
-            ShowContinueWithPassportButton(false);
-
-            // Check if user has logged into Passport before
-            bool hasCredentialsSaved = await Passport.Instance.HasCredentialsSaved();
-            if (hasCredentialsSaved)
-            {
-                // User logged into Passport before, re-login the user using saved credentials
-                bool success = await Passport.Instance.Login(useCachedSession: true);
-                MemoryCache.IsConnected = success;
-                // Show 'Next' button if successfully logged in
-                ShowNextButton(success);
-                // Show "Continue with Passport" button if failed to log in
-                ShowContinueWithPassportButton(!success);
-            }
-            else
-            {
-                // User has not logged in before, show "Continue with Passport" button
-                ShowContinueWithPassportButton(true);
-            }
-            ShowLoading(false);
+            // Show 'Next' button if user is already logged into Passport
+            ShowNextButton(SaveManager.Instance.IsLoggedIn);
+            // Show "Continue with Passport" button if the user is not logged into Passport
+            ShowContinueWithPassportButton(!SaveManager.Instance.IsLoggedIn);
         }
 
         private async void OnContinueWithPassportButtonClicked()
@@ -153,7 +134,10 @@ namespace HyperCasual.Runner
                 // Log into Passport
                 await Passport.Instance.Login();
 
-                // Show next button
+                // Successfully logged in
+                // Save a persistent flag in the game that the user is logged in
+                SaveManager.Instance.IsLoggedIn = true;
+                // Show 'Next' button
                 ShowNextButton(true);
                 ShowLoading(false);
             }
