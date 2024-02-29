@@ -113,7 +113,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Get the number of coins the user collected from the Level Complete Screen
+        /// Get the number of coins the player collected from the Level Complete Screen
         /// </summary>
         private int GetNumCoinsCollected()
         {
