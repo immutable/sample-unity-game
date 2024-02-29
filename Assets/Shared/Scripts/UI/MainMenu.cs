@@ -25,7 +25,13 @@ namespace HyperCasual.Runner
         void OnEnable()
         {
             ShowLoading(true);
+
+            // Set listener to 'Start' button
+            m_StartButton.RemoveListener(OnStartButtonClick);
             m_StartButton.AddListener(OnStartButtonClick);
+            // Set listener to 'Logout' button
+            m_LogoutButton.RemoveListener(OnLogoutButtonClick);
+            m_LogoutButton.AddListener(OnLogoutButtonClick);
             
             ShowLoading(false);
             ShowStartButton(true);
@@ -40,6 +46,10 @@ namespace HyperCasual.Runner
         {
             m_StartButtonEvent.Raise();
             AudioManager.Instance.PlayEffect(SoundID.ButtonSound);
+        }
+
+        void OnLogoutButtonClick()
+        {
         }
 
         void ShowLoading(bool show)
