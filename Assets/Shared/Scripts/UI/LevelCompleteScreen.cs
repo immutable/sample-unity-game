@@ -117,9 +117,9 @@ namespace HyperCasual.Runner
             m_TryAgainButton.RemoveListener(OnTryAgainButtonClicked);
             m_TryAgainButton.AddListener(OnTryAgainButtonClicked);
 
-            // Show 'Next' button if user is already logged into Passport
+            // Show 'Next' button if player is already logged into Passport
             ShowNextButton(SaveManager.Instance.IsLoggedIn);
-            // Show "Continue with Passport" button if the user is not logged into Passport
+            // Show "Continue with Passport" button if the player is not logged into Passport
             ShowContinueWithPassportButton(!SaveManager.Instance.IsLoggedIn);
         }
 
@@ -139,7 +139,7 @@ namespace HyperCasual.Runner
 #endif
 
                 // Successfully logged in
-                // Save a persistent flag in the game that the user is logged in
+                // Save a persistent flag in the game that the player is logged in
                 SaveManager.Instance.IsLoggedIn = true;
                 // Show 'Next' button
                 ShowNextButton(true);
