@@ -40,7 +40,14 @@ namespace HyperCasual.Runner
             // Initialise Passport
             string clientId = "ZJL7JvetcDFBNDlgRs5oJoxuAUUl6uQj";
             string environment = Immutable.Passport.Model.Environment.SANDBOX;
-            passport = await Passport.Init(clientId, environment);
+            string redirectUri = null;
+            string logoutRedirectUri = null;
+
+#if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
+            redirectUri = "immutablerunner://callback";
+            logoutRedirectUri = "immutablerunner://logout";
+#endif
+            passport = await Passport.Init(clientId, environment, redirectUri, logoutRedirectUri);
 
             ShowLoading(false);
             ShowStartButton(true);
