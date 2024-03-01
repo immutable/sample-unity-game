@@ -63,25 +63,6 @@ namespace HyperCasual.Runner
                 SaveManager.Instance.IsLoggedIn = false;
             }
 
-            // Check if the player is supposed to be logged in
-            if (SaveManager.Instance.IsLoggedIn)
-            {
-                // Check if there are credentials saved
-                bool hasCredentialsSaved = await Passport.Instance.HasCredentialsSaved();
-                if (hasCredentialsSaved)
-                {
-                    // Try to log in using saved credentials
-                    bool success = await Passport.Instance.Login(useCachedSession: true);
-                    // Update the login flag
-                    SaveManager.Instance.IsLoggedIn = success;
-                }
-                else
-                {
-                    // No saved credentials to re-login the player, reset the login flag
-                    SaveManager.Instance.IsLoggedIn = false;
-                }
-            }
-
             ShowLoading(false);
             ShowStartButton(true);
         }
