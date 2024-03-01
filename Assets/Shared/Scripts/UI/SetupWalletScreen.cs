@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Immutable.Passport;
 
 namespace HyperCasual.Runner
 {
@@ -44,7 +45,7 @@ namespace HyperCasual.Runner
             SetupWallet();
         }
 
-        private void SetupWallet()
+        private async void SetupWallet()
         {
             try
             {
@@ -53,7 +54,10 @@ namespace HyperCasual.Runner
                 ShowError(false);
                 ShowSuccess(false);
 
-                // Set up wallet
+                // Set up provider
+                await Passport.Instance.ConnectEvm();
+                // Set up wallet (includes creating a wallet for new players)
+                await Passport.Instance.ZkEvmRequestAccounts();
 
                 m_Title.text = "Your wallet has been successfully set up!";
                 ShowLoading(false);

@@ -56,6 +56,12 @@ namespace HyperCasual.Runner
                 bool success = await Passport.Instance.Login(useCachedSession: true);
                 // Update the login flag
                 SaveManager.Instance.IsLoggedIn = success;
+                // Set up wallet if successful
+                if (success)
+                {
+                    await Passport.Instance.ConnectEvm();
+                    await Passport.Instance.ZkEvmRequestAccounts();
+                }
             }
             else
             {
@@ -64,11 +70,7 @@ namespace HyperCasual.Runner
             }
 
             ShowLoading(false);
-<<<<<<< HEAD
             // Show the logout button if the player is logged in
-=======
-            // Show the logout button if the user is logged in
->>>>>>> 28c6820 (feat: logout)
             ShowLogoutButton(SaveManager.Instance.IsLoggedIn);
         }
 
