@@ -1719,25 +1719,11 @@ MonoBehaviour:
   m_XpSlider: {fileID: 1008591860767710295}
   m_Loading: {fileID: 4233544250727167671}
   m_CompletedContainer: {fileID: 4245644721876780819}
-  m_ErrorMessage: {fileID: 0}
+  m_ErrorMessage: {fileID: 1110242671789650706}
   m_NextLevelEvent: {fileID: 11400000, guid: b892538bd49f3487bbedf5106c094739, type: 2}
-  m_CreateWalletEvent: {fileID: 11400000, guid: 6115e730cc0fc4a06bda2c48778cf33c,
-    type: 2}
+  m_SetupWalletEvent: {fileID: 11400000, guid: 6115e730cc0fc4a06bda2c48778cf33c, type: 2}
   m_UnlockedSkinEvent: {fileID: 11400000, guid: 8819262bd6f0c4f25b080e56decdf8b2,
     type: 2}
-  m_MintedContainer: {fileID: 0}
-  m_MintedTitle: {fileID: 0}
-  m_MintedNextButton: {fileID: 0}
-  m_SkinUnlockedContainer: {fileID: 0}
-  m_SkinUnlockedErrorMessage: {fileID: 0}
-  m_SkinUnlockedGetButton: {fileID: 0}
-  m_SkinUnlockedNextButton: {fileID: 0}
-  m_SkinUnlockedLoading: {fileID: 0}
-  m_CollectedSkinContainer: {fileID: 0}
-  m_CollectedSkinErrorMessage: {fileID: 0}
-  m_CollectedSkinUseButton: {fileID: 0}
-  m_CollectedSkinNextButton: {fileID: 0}
-  m_CollectedSkinLoading: {fileID: 0}
 --- !u!1 &5464304629257975625
 GameObject:
   m_ObjectHideFlags: 0

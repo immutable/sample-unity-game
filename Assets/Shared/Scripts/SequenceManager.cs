@@ -36,7 +36,7 @@ namespace HyperCasual.Gameplay
         [SerializeField]
         AbstractGameEvent m_PauseEvent;
         [SerializeField]
-        AbstractGameEvent m_CreateWalletEvent;
+        AbstractGameEvent m_SetupWalletEvent;
         [SerializeField]
         AbstractGameEvent m_MintEvent;
         [SerializeField]
@@ -120,13 +120,16 @@ namespace HyperCasual.Gameplay
             lastState?.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
             unloadLastScene.AddLink(new Link(m_LevelSelectState));
 
-            var createWalletState = new PauseState(ShowUI<CreateWalletScreen>);
+            var setupWalletState
+             = new PauseState(ShowUI<SetupWalletScreen>);
             var mintState = new PauseState(ShowUI<MintScreen>);
             var unlockedSkinState = new PauseState(ShowUI<UnlockedSkinScreen>);
             var collectedSkinState = new PauseState(ShowUI<CollectedSkinScreen>);
-            lastState?.AddLink(new EventLink(m_CreateWalletEvent, createWalletState));
+            lastState?.AddLink(new EventLink(m_SetupWalletEvent, setupWalletState
+            ));
             lastState?.AddLink(new EventLink(m_UnlockedSkinEvent, unlockedSkinState));
-            createWalletState.AddLink(new EventLink(m_MintEvent, mintState));
+            setupWalletState
+            .AddLink(new EventLink(m_MintEvent, mintState));
             mintState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
             unlockedSkinState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
             unlockedSkinState.AddLink(new EventLink(m_CollectEvent, collectedSkinState));
@@ -163,14 +166,16 @@ namespace HyperCasual.Gameplay
             var pauseState = new PauseState(ShowUI<PauseMenu>);
             var unloadLose = new UnloadLastSceneState(m_SceneController);
             var unloadPause = new UnloadLastSceneState(m_SceneController);
-            var createWalletState = new PauseState(ShowUI<CreateWalletScreen>);
+            var setupWalletState
+             = new PauseState(ShowUI<SetupWalletScreen>);
             var mintState = new PauseState(ShowUI<MintScreen>);
             var unlockedSkinState = new PauseState(ShowUI<UnlockedSkinScreen>);
             var collectedSkinState = new PauseState(ShowUI<CollectedSkinScreen>);
 
             //Connect the states
             lastState?.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
-            lastState?.AddLink(new EventLink(m_CreateWalletEvent, createWalletState));
+            lastState?.AddLink(new EventLink(m_SetupWalletEvent, setupWalletState
+            ));
             lastState?.AddLink(new EventLink(m_UnlockedSkinEvent, unlockedSkinState));
             loadLevelState.AddLink(new Link(gameplayState));
 
@@ -186,7 +191,8 @@ namespace HyperCasual.Gameplay
             pauseState.AddLink(new EventLink(m_BackEvent, unloadPause));
             unloadPause.AddLink(new Link(m_MainMenuState));
 
-            createWalletState.AddLink(new EventLink(m_MintEvent, mintState));
+            setupWalletState
+            .AddLink(new EventLink(m_MintEvent, mintState));
             mintState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
             unlockedSkinState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
             unlockedSkinState.AddLink(new EventLink(m_CollectEvent, collectedSkinState));

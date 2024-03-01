@@ -34,7 +34,7 @@ namespace HyperCasual.Runner
         [SerializeField]
         AbstractGameEvent m_NextLevelEvent;
         [SerializeField]
-        AbstractGameEvent m_CreateWalletEvent;
+        AbstractGameEvent m_SetupWalletEvent;
         [SerializeField]
         AbstractGameEvent m_UnlockedSkinEvent;
         

@@ -11,7 +11,7 @@ namespace HyperCasual.Runner
     /// <summary>
     /// This View contains celebration screen functionalities
     /// </summary>
-    public class CreateWalletScreen : View
+    public class SetupWalletScreen : View
     {
         
         [SerializeField]
@@ -34,13 +34,13 @@ namespace HyperCasual.Runner
             m_NextButton.AddListener(OnNextButtonClicked);
 
             // Set listener to "Try again" button
-            m_TryAgainButton.RemoveListener(CreateWallet);
-            m_TryAgainButton.AddListener(CreateWallet);
+            m_TryAgainButton.RemoveListener(SetupWallet);
+            m_TryAgainButton.AddListener(SetupWallet);
 
-            CreateWallet();
+            SetupWallet();
         }
 
-        private void CreateWallet()
+        private void SetupWallet()
         {
             try
             {
