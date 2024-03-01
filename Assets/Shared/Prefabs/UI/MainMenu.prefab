@@ -1020,7 +1020,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_StartButton: {fileID: 2691304556920018293}
   m_StartButtonEvent: {fileID: 11400000, guid: b892538bd49f3487bbedf5106c094739, type: 2}
-  m_ConnectedAs: {fileID: 4794305795399722571}
+  m_Email: {fileID: 0}
   m_LogoutButton: {fileID: 1880825616676340313}
   m_Loading: {fileID: 7960696323686974425}
 --- !u!1 &8405303144642299478
