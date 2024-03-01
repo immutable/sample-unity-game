@@ -573,7 +573,7 @@ GameObject:
   - component: {fileID: 3644189527995317054}
   - component: {fileID: 7269870367424331943}
   m_Layer: 5
-  m_Name: CreateWallet
+  m_Name: SetupWallet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -701,8 +701,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -20}
-  m_SizeDelta: {x: 400, y: 50}
+  m_AnchoredPosition: {x: 0, y: -30}
+  m_SizeDelta: {x: 450, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &5464304628974184185
 CanvasRenderer:
@@ -732,7 +732,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Setting up your wallet...
+  m_text: Your wallet has been successfully set up!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -898,6 +898,7 @@ MonoBehaviour:
   m_NextButton: {fileID: 7550771413722335867}
   m_TryAgainButton: {fileID: 1786814427895709391}
   m_MintEvent: {fileID: 11400000, guid: 46f352f4078934aefa54be763d0e3565, type: 2}
+  m_NextEvent: {fileID: 11400000, guid: b892538bd49f3487bbedf5106c094739, type: 2}
 --- !u!1 &6102579320472314882
 GameObject:
   m_ObjectHideFlags: 0

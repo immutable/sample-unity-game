@@ -120,16 +120,15 @@ namespace HyperCasual.Gameplay
             lastState?.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
             unloadLastScene.AddLink(new Link(m_LevelSelectState));
 
-            var setupWalletState
-             = new PauseState(ShowUI<SetupWalletScreen>);
+            var setupWalletState = new PauseState(ShowUI<SetupWalletScreen>);
             var mintState = new PauseState(ShowUI<MintScreen>);
             var unlockedSkinState = new PauseState(ShowUI<UnlockedSkinScreen>);
             var collectedSkinState = new PauseState(ShowUI<CollectedSkinScreen>);
             lastState?.AddLink(new EventLink(m_SetupWalletEvent, setupWalletState
             ));
             lastState?.AddLink(new EventLink(m_UnlockedSkinEvent, unlockedSkinState));
-            setupWalletState
-            .AddLink(new EventLink(m_MintEvent, mintState));
+            setupWalletState.AddLink(new EventLink(m_MintEvent, mintState));
+            setupWalletState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
             mintState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
             unlockedSkinState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
             unlockedSkinState.AddLink(new EventLink(m_CollectEvent, collectedSkinState));
@@ -166,8 +165,7 @@ namespace HyperCasual.Gameplay
             var pauseState = new PauseState(ShowUI<PauseMenu>);
             var unloadLose = new UnloadLastSceneState(m_SceneController);
             var unloadPause = new UnloadLastSceneState(m_SceneController);
-            var setupWalletState
-             = new PauseState(ShowUI<SetupWalletScreen>);
+            var setupWalletState = new PauseState(ShowUI<SetupWalletScreen>);
             var mintState = new PauseState(ShowUI<MintScreen>);
             var unlockedSkinState = new PauseState(ShowUI<UnlockedSkinScreen>);
             var collectedSkinState = new PauseState(ShowUI<CollectedSkinScreen>);
@@ -191,8 +189,8 @@ namespace HyperCasual.Gameplay
             pauseState.AddLink(new EventLink(m_BackEvent, unloadPause));
             unloadPause.AddLink(new Link(m_MainMenuState));
 
-            setupWalletState
-            .AddLink(new EventLink(m_MintEvent, mintState));
+            setupWalletState.AddLink(new EventLink(m_MintEvent, mintState));
+            setupWalletState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
             mintState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
             unlockedSkinState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
             unlockedSkinState.AddLink(new EventLink(m_CollectEvent, collectedSkinState));

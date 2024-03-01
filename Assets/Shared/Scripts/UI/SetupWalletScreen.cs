@@ -28,6 +28,8 @@ namespace HyperCasual.Runner
         HyperCasualButton m_TryAgainButton;
         [SerializeField]
         AbstractGameEvent m_MintEvent;
+        [SerializeField]
+        AbstractGameEvent m_NextEvent;
 
         public void OnEnable()
         {
@@ -70,7 +72,7 @@ namespace HyperCasual.Runner
 
         private void OnNextButtonClicked()
         {
-            m_MintEvent.Raise();
+            m_NextEvent.Raise();
         }
 
         private void ShowNextButton(bool show)
