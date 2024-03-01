@@ -49,23 +49,16 @@ namespace HyperCasual.Runner
 #endif
             passport = await Passport.Init(clientId, environment, redirectUri, logoutUri);
 
-            // Check if the player is supposed to be logged in
-            if (SaveManager.Instance.IsLoggedIn)
+            // Check if the player is supposed to be logged in and if there are credentials saved
+            if (SaveManager.Instance.IsLoggedIn && await Passport.Instance.HasCredentialsSaved())
             {
-                // Check if there are credentials saved
-                bool hasCredentialsSaved = await Passport.Instance.HasCredentialsSaved();
-                if (hasCredentialsSaved)
-                {
-                    // Try to log in using saved credentials
-                    bool success = await Passport.Instance.Login(useCachedSession: true);
-                    // Update the login flag
-                    SaveManager.Instance.IsLoggedIn = success;
-                }
-                else
-                {
-                    // No saved credentials to re-login the player, reset the login flag
-                    SaveManager.Instance.IsLoggedIn = false;
-                }
+                // Try to log in using saved credentials
+                bool success = await Passport.Instance.Login(useCachedSession: true);
+                // Update the login flag
+                SaveManager.Instance.IsLoggedIn = success;
+            } else {
+                // No saved credentials to re-login the player, reset the login flag
+                SaveManager.Instance.IsLoggedIn = false;
             }
 
             ShowLoading(false);
