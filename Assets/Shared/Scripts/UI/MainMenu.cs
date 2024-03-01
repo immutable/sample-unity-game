@@ -56,6 +56,7 @@ namespace HyperCasual.Runner
         void ShowLoading(bool show)
         {
             m_Loading.gameObject.SetActive(show);
+            ShowStartButton(!show);
         }
 
         void ShowStartButton(bool show)

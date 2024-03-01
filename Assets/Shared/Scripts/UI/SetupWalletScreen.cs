@@ -19,6 +19,8 @@ namespace HyperCasual.Runner
         [SerializeField]
         GameObject m_Loading;
         [SerializeField]
+        GameObject m_Success;
+        [SerializeField]
         TextMeshProUGUI m_ErrorMessage;
         [SerializeField]
         HyperCasualButton m_NextButton;
@@ -44,17 +46,17 @@ namespace HyperCasual.Runner
         {
             try
             {
-                m_Title.text = "Creating your wallet...";
+                m_Title.text = "Setting up your wallet...";
                 ShowLoading(true);
                 ShowError(false);
-                ShowNextButton(false);
+                ShowSuccess(false);
 
-                // Create wallet
+                // Set up wallet
 
-                m_Title.text = "Created your wallet!";
+                m_Title.text = "Your wallet has been successfully set up!";
                 ShowLoading(false);
                 ShowError(false);
-                ShowNextButton(true);
+                ShowSuccess(true);
             }
             catch (Exception ex)
             {
@@ -62,7 +64,7 @@ namespace HyperCasual.Runner
                 Debug.Log($"Failed to create wallet: {ex.Message}");
                 ShowLoading(false);
                 ShowError(true);
-                ShowNextButton(false);
+                ShowSuccess(false);
             }
         }
 
@@ -85,6 +87,12 @@ namespace HyperCasual.Runner
         {
             m_ErrorMessage.gameObject.SetActive(show);
             m_TryAgainButton.gameObject.SetActive(show);
+        }
+
+        private void ShowSuccess(bool show)
+        {
+            m_Success.gameObject.SetActive(show);
+            ShowNextButton(show);
         }
     }
 }
