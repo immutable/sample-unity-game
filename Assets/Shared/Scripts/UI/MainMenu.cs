@@ -51,6 +51,30 @@ namespace HyperCasual.Runner
 
         void OnLogoutButtonClick()
         {
+            try
+            {
+                // Hide the 'Logout' button
+                ShowLogoutButton(false);
+                // Show loading
+                ShowLoading(true);
+
+                // Logout
+
+                // Reset the login flag
+                SaveManager.Instance.IsLoggedIn = false;
+                // Successfully logged out, hide 'Logout' button
+                ShowLogoutButton(false);
+                // Reset all other values
+                SaveManager.Instance.Clear();
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Failed to log out: {ex.Message}");
+                // Failed to logout so show 'Logout' button again
+                ShowLogoutButton(true);
+            }
+            // Hide loading
+            ShowLoading(false);
         }
 
         void ShowLoading(bool show)

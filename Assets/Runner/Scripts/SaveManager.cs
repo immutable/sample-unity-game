@@ -19,7 +19,7 @@ namespace HyperCasual.Runner
         static SaveManager s_Instance;
 
         const string k_LevelProgress = "LevelProgress";
-        const string k_Currency = "Currency";
+        const string k_Food = "Food";
         const string k_Xp = "Xp";
         const string k_AudioSettings = "AudioSettings";
         const string k_QualityLevel = "QualityLevel";
@@ -41,12 +41,12 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Save and load currency as an integer
+        /// Save and load food as an integer
         /// </summary>
-        public int Currency 
+        public int Food 
         { 
-            get => PlayerPrefs.GetInt(k_Currency); 
-            set => PlayerPrefs.SetInt(k_Currency, value);
+            get => PlayerPrefs.GetInt(k_Food); 
+            set => PlayerPrefs.SetInt(k_Food, value);
         }
 
         public float XP
@@ -79,5 +79,9 @@ namespace HyperCasual.Runner
             set => PlayerPrefs.SetInt(k_IsLoggedIn, value ? 1 : 0);
         }
 
+        public void Clear()
+        {
+            PlayerPrefs.DeleteAll();
+        }
     }
 }

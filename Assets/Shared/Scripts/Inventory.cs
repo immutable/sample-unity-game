@@ -48,7 +48,7 @@ namespace HyperCasual.Runner
             m_LoseEventListener.EventHandler = OnLose;
 
             m_TempFood = 0;
-            m_TotalFood = SaveManager.Instance.Currency;
+            m_TotalFood = SaveManager.Instance.Food;
             m_TempXp = 0;
             m_TotalXp = SaveManager.Instance.XP;
             m_TempCoins = 0;
@@ -102,7 +102,7 @@ namespace HyperCasual.Runner
         {
             m_TotalFood += m_TempFood;
             m_TempFood = 0;
-            SaveManager.Instance.Currency = m_TotalFood;
+            SaveManager.Instance.Food = m_TotalFood;
 
             m_LevelCompleteScreen.FoodValue = m_TotalFood;
             m_LevelCompleteScreen.XpSlider.minValue = m_TotalXp;
