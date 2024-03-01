@@ -70,7 +70,11 @@ namespace HyperCasual.Runner
             }
 
             ShowLoading(false);
+<<<<<<< HEAD
             // Show the logout button if the player is logged in
+=======
+            // Show the logout button if the user is logged in
+>>>>>>> 28c6820 (feat: logout)
             ShowLogoutButton(SaveManager.Instance.IsLoggedIn);
         }
 
