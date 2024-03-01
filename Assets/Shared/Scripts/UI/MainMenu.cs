@@ -41,13 +41,13 @@ namespace HyperCasual.Runner
             string clientId = "ZJL7JvetcDFBNDlgRs5oJoxuAUUl6uQj";
             string environment = Immutable.Passport.Model.Environment.SANDBOX;
             string redirectUri = null;
-            string logoutRedirectUri = null;
+            string logoutUri = null;
 
 #if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
             redirectUri = "immutablerunner://callback";
-            logoutRedirectUri = "immutablerunner://logout";
+            logoutUri = "immutablerunner://logout";
 #endif
-            passport = await Passport.Init(clientId, environment, redirectUri, logoutRedirectUri);
+            passport = await Passport.Init(clientId, environment, redirectUri, logoutUri);
 
             // Check if the player is supposed to be logged in
             if (SaveManager.Instance.IsLoggedIn)
