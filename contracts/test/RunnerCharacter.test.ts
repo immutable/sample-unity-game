@@ -28,7 +28,7 @@ describe("RunnerCharacter", function () {
     await contract.deployed();
 
     // grant owner the minter role
-    await contract.grantRole(await contract.MINTER_ROLE(), owner.address);
+    await contract.grantMinterRole(owner.address);
   });
 
   it("Should be deployed with the correct arguments", async function () {
