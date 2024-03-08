@@ -1,9 +1,9 @@
 import { ethers } from "hardhat";
 import { expect } from "chai";
-import { RunnerCharacter, OperatorAllowlist__factory, RunnerCharacter__factory } from "../typechain-types";
+import { RunnerFox, OperatorAllowlist__factory, RunnerFox__factory } from "../typechain-types";
 
-describe("RunnerCharacter", function () {
-  let contract: RunnerCharacter;
+describe("RunnerFox", function () {
+  let contract: RunnerFox;
 
   beforeEach(async function () {
     // get owner (first account)
@@ -15,9 +15,9 @@ describe("RunnerCharacter", function () {
     )) as OperatorAllowlist__factory;
     const operatorAllowlist = await OperatorAllowlist.deploy(owner.address);
 
-    // deploy RunnerCharacter contract
-    const RunnerCharacter = await ethers.getContractFactory("RunnerCharacter") as RunnerCharacter__factory;
-    contract = await RunnerCharacter.deploy(
+    // deploy RunnerFox contract
+    const RunnerFox = await ethers.getContractFactory("RunnerFox") as RunnerFox__factory;
+    contract = await RunnerFox.deploy(
       owner.address, // owner
       "https://immutable.com/", // baseURI
       "https://immutable.com/", // contractURI
@@ -32,7 +32,7 @@ describe("RunnerCharacter", function () {
   });
 
   it("Should be deployed with the correct arguments", async function () {
-    expect(await contract.name()).to.equal("Immutable Runner Character");
+    expect(await contract.name()).to.equal("Immutable Runner Fox");
     expect(await contract.symbol()).to.equal("IMRC");
     expect(await contract.baseURI()).to.equal("https://immutable.com/");
     expect(await contract.contractURI()).to.equal(
@@ -45,7 +45,8 @@ describe("RunnerCharacter", function () {
 
     await contract.connect(owner).mintNextToken(recipient.address);
     expect(await contract.balanceOf(recipient.address)).to.equal(1);
-    expect(await contract.ownerOf(1)).to.equal(recipient.address);
+    expect(await contract.totalSupply()).to.equal(1);
+    expect(await contract.ownerOf(1)).to.equal(recipient.address); 
 
     await contract.connect(owner).mintNextToken(recipient.address);
     expect(await contract.balanceOf(recipient.address)).to.equal(2);
