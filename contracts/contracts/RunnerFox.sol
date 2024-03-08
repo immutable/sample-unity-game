@@ -28,14 +28,14 @@ contract RunnerFox is ImmutableERC721 {
         )
     {}
 
-    // Mints the next token
+    // Allows minter to mint the next token to a specified address
     function mintNextToken(address to) external onlyRole(MINTER_ROLE) returns (uint256) {
         uint256 tokenId = ++_currentTokenId;
         _mintByID(to, tokenId);
         return tokenId;
     }
 
-    // Mints number of tokens specified
+    // Allows minter to mint number of tokens specified to the address
     function mintNextTokenByQuantity(address to, uint256 quantity) external onlyRole(MINTER_ROLE) {
         for (uint256 i = 0; i < quantity; i++) {
             _mintByID(to, ++_currentTokenId);
