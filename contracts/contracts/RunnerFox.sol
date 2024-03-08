@@ -4,8 +4,8 @@ pragma solidity 0.8.19;
 
 import "@imtbl/contracts/contracts/token/erc721/preset/ImmutableERC721.sol";
 
-// The Runner character you use to play the game
-contract RunnerCharacter is ImmutableERC721 {
+// The Runner fox you use to play the game
+contract RunnerFox is ImmutableERC721 {
     uint256 private _currentTokenId = 0;
 
     constructor(
@@ -18,8 +18,8 @@ contract RunnerCharacter is ImmutableERC721 {
     )
         ImmutableERC721(
             owner,
-            "Immutable Runner Character",
-            "IMRC",
+            "Immutable Runner Fox", // name
+            "IMRC", // symbol
             baseURI,
             contractURI,
             operatorAllowlist,
