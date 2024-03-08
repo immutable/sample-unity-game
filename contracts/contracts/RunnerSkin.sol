@@ -18,8 +18,8 @@ contract RunnerSkin is ImmutableERC721 {
     )
         ImmutableERC721(
             owner,
-            "Immutable Runner Skin",
-            "IMRS",
+            "Immutable Runner Skin", // name
+            "IMRS", // symbol
             baseURI,
             contractURI,
             operatorAllowlist,
