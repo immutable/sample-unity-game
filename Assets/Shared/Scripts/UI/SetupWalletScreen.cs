@@ -66,8 +66,8 @@ namespace HyperCasual.Runner
             }
             catch (Exception ex)
             {
-                // Failed to create wallet, let the player try again
-                Debug.Log($"Failed to create wallet: {ex.Message}");
+                // Failed to set up wallet, let the player try again
+                Debug.Log($"Failed to set up wallet: {ex.Message}");
                 ShowLoading(false);
                 ShowError(true);
                 ShowSuccess(false);
