@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Net.Http;
+using Immutable.Passport;
+using Cysharp.Threading.Tasks;
 
 namespace HyperCasual.Runner
 {
@@ -50,7 +53,7 @@ namespace HyperCasual.Runner
             Mint();
         }
 
-        private void Mint()
+        private async void Mint()
         {
             try
             {
@@ -60,11 +63,15 @@ namespace HyperCasual.Runner
                 ShowNextButton(false);
 
                 // Mint
+                bool mintedFox = await MintFox();
 
-                ShowMintedMessage();
+                if (mintedFox)
+                {
+                    ShowMintedMessage();
+                }
                 ShowLoading(false);
-                ShowError(false);
-                ShowNextButton(true);
+                ShowError(!mintedFox);
+                ShowNextButton(mintedFox);
             }
             catch (Exception ex)
             {
@@ -74,6 +81,42 @@ namespace HyperCasual.Runner
                 ShowError(true);
                 ShowNextButton(false);
             }
+        }
+
+        /// <summary>
+        /// Gets the wallet address of the player.
+        /// </summary>
+        private async UniTask<string> GetWalletAddress()
+        {
+            List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
+            return accounts[0]; // Get the first wallet address
+        }
+
+        /// <summary>
+        /// Mints a fox (i.e. Immutable Runner Fox) to the player's wallet
+        /// </summary>
+        /// <returns>True if minted a fox successfully to player's wallet. Otherwise, false.</returns>
+        private async UniTask<bool> MintFox()
+        {
+            Debug.Log("Minting fox...");
+            // Get the player's wallet address to mint the fox to
+            string address = await GetWalletAddress();
+
+            if (address != null)
+            {
+                var nvc = new List<KeyValuePair<string, string>>
+                {
+                    // Set 'to' to the player's wallet address
+                    new KeyValuePair<string, string>("to", address)
+                };
+                using var client = new HttpClient();
+                string url = $"http://localhost:3000/mint/fox"; // Endpoint to mint a fox
+                using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
+                using var res = await client.SendAsync(req);
+                return res.IsSuccessStatusCode;
+            }
+
+            return false;
         }
 
         private void OnNextButtonClicked()
