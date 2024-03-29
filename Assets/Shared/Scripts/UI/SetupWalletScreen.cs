@@ -76,7 +76,7 @@ namespace HyperCasual.Runner
 
         private void OnNextButtonClicked()
         {
-            m_NextEvent.Raise();
+            m_MintEvent.Raise();
         }
 
         private void ShowNextButton(bool show)
