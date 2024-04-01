@@ -13,7 +13,7 @@ namespace HyperCasual.Runner
     /// </summary>
     public class MintScreen : View
     {
-        
+
         [SerializeField]
         TextMeshProUGUI m_Title;
         [SerializeField]
@@ -30,6 +30,8 @@ namespace HyperCasual.Runner
         HyperCasualButton m_TryAgainButton;
         [SerializeField]
         AbstractGameEvent m_NextEvent;
+        [SerializeField]
+        HyperCasualButton m_WalletButton;
 
         public void OnEnable()
         {
@@ -40,6 +42,10 @@ namespace HyperCasual.Runner
             // Set listener to "Try again" button
             m_TryAgainButton.RemoveListener(Mint);
             m_TryAgainButton.AddListener(Mint);
+
+            // Set listener to 'Wallet' button
+            m_WalletButton.RemoveListener(OnWalletClicked);
+            m_WalletButton.AddListener(OnWalletClicked);
 
             Mint();
         }
@@ -133,6 +139,10 @@ namespace HyperCasual.Runner
             {
                 m_Title.text = "You now own a fox!";
             }
+        }
+
+        private void OnWalletClicked()
+        {
         }
     }
 }
