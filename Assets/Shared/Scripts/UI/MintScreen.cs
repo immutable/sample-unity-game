@@ -37,7 +37,7 @@ namespace HyperCasual.Runner
         [SerializeField]
         HyperCasualButton m_WalletButton;
 
-        // To be used if there's an error and the player clicks the "Try again" button
+        // If there's an error minting, these values will be used when the player clicks the "Try again" button
         private bool mintedFox = false;
         private bool mintedCoins = false;
 
