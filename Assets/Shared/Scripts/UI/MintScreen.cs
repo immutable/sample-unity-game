@@ -239,8 +239,12 @@ namespace HyperCasual.Runner
             }
         }
 
-        private void OnWalletClicked()
+        private async void OnWalletClicked()
         {
+            // Get the player's wallet address to mint the fox to
+            string address = await GetWalletAddress();
+            // Show the player's tokens on the block explorer page.
+            Application.OpenURL($"https://explorer.testnet.immutable.com/address/{address}?tab=tokens");
         }
     }
 }
