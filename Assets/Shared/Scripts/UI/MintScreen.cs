@@ -8,6 +8,7 @@ using System.Threading;
 using System.Net.Http;
 using Immutable.Passport;
 using Cysharp.Threading.Tasks;
+using System.Numerics;
 
 namespace HyperCasual.Runner
 {
@@ -36,6 +37,10 @@ namespace HyperCasual.Runner
         [SerializeField]
         HyperCasualButton m_WalletButton;
 
+        // To be used if there's an error and the player clicks the "Try again" button
+        private bool mintedFox = false;
+        private bool mintedCoins = false;
+
         public void OnEnable()
         {
             // Set listener to 'Next' button
@@ -50,6 +55,10 @@ namespace HyperCasual.Runner
             m_WalletButton.RemoveListener(OnWalletClicked);
             m_WalletButton.AddListener(OnWalletClicked);
 
+            // Reset values
+            mintedFox = false;
+            mintedCoins = false;
+
             Mint();
         }
 
@@ -62,16 +71,27 @@ namespace HyperCasual.Runner
                 ShowError(false);
                 ShowNextButton(false);
 
-                // Mint
-                bool mintedFox = await MintFox();
+                // Mint fox if fox not minted yet
+                if (!mintedFox)
+                {
+                    mintedFox = await MintFox();
+                }
+                // Mint coins if fox not minted yet
+                if (!mintedCoins)
+                {
+                    mintedCoins = await MintCoins();
+                }
 
-                if (mintedFox)
+                // Show minted message if minted both fox and coins successfully
+                if (mintedFox && mintedCoins)
                 {
                     ShowMintedMessage();
                 }
                 ShowLoading(false);
-                ShowError(!mintedFox);
-                ShowNextButton(mintedFox);
+                // Show error if failed to mint fox or coins
+                ShowError(!mintedFox || !mintedCoins);
+                // Show next button is minted both fox and coins successfully
+                ShowNextButton(mintedFox && mintedCoins);
             }
             catch (Exception ex)
             {
@@ -110,7 +130,42 @@ namespace HyperCasual.Runner
                     new KeyValuePair<string, string>("to", address)
                 };
                 using var client = new HttpClient();
-                string url = $"http://localhost:3000/mint/fox"; // Endpoint to mint a fox
+                string url = $"http://localhost:3000/mint/fox"; // Endpoint to mint fox
+                using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
+                using var res = await client.SendAsync(req);
+                return res.IsSuccessStatusCode;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Mints collected coins (i.e. Immutable Runner Token) to the player's wallet
+        /// </summary>
+        /// <returns>True if minted coins successfully to player's wallet. Otherwise, false.</returns>
+        private async UniTask<bool> MintCoins()
+        {
+            Debug.Log("Minting coins...");
+            // Get the player's wallet address to mint the fox to
+            string address = await GetWalletAddress();
+            // Get number of coins collected
+            int coinsCollected = GetNumCoinsCollected();
+
+            if (address != null)
+            {
+                // Calculate the quantity to mint
+                // Need to take into account Immutable Runner Token decimal value i.e. 18
+                BigInteger quantity = BigInteger.Multiply(new BigInteger(coinsCollected), BigInteger.Pow(10, 18));
+                Debug.Log($"Quantity: {quantity}");
+                var nvc = new List<KeyValuePair<string, string>>
+                {
+                    // Set 'to' to the player's wallet address
+                    new KeyValuePair<string, string>("to", address),
+                    // Set 'quanity' to the number of coins collected
+                    new KeyValuePair<string, string>("quantity", quantity.ToString())
+                };
+                using var client = new HttpClient();
+                string url = $"http://localhost:3000/mint/token"; // Endpoint to mint token
                 using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
                 using var res = await client.SendAsync(req);
                 return res.IsSuccessStatusCode;
