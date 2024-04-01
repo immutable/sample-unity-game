@@ -727,6 +727,7 @@ MonoBehaviour:
   m_ErrorMessage: {fileID: 343189085458455304}
   m_TryAgainButton: {fileID: 4524174831120641203}
   m_NextEvent: {fileID: 11400000, guid: b892538bd49f3487bbedf5106c094739, type: 2}
+  m_WalletButton: {fileID: 242098275588205144}
 --- !u!1 &5573793632748482465
 GameObject:
   m_ObjectHideFlags: 0
