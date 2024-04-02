@@ -136,7 +136,6 @@ namespace HyperCasual.Runner
 
         private void OnCraftButtonClicked()
         {
-            // m_CollectSkinEvent.Raise();
             m_NextLevelEvent.Raise();
             // Craft in the background, while the player plays the next level
             Craft();
