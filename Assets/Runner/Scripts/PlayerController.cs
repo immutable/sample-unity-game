@@ -136,15 +136,15 @@ namespace HyperCasual.Runner
             {
                 m_StartHeight = m_SkinnedMeshRenderer.bounds.size.y;
             }
-            else 
+            else
             {
                 m_StartHeight = 1.0f;
             }
 
             ResetSpeed();
 
-            m_Fox.GetComponent<Renderer>().material.SetTexture("_BaseMap", 
-                MemoryCache.UseCoolerSkin ? m_foxGradientTexture : (MemoryCache.UseNewSkin ? m_foxBlueTexture : m_foxOriginalTexture));
+            m_Fox.GetComponent<Renderer>().material.SetTexture("_BaseMap",
+                MemoryCache.UseCoolerSkin ? m_foxGradientTexture : (SaveManager.Instance.UseNewSkin ? m_foxBlueTexture : m_foxOriginalTexture));
         }
 
         /// <summary>

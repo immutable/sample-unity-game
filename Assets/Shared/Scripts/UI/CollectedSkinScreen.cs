@@ -35,7 +35,7 @@ namespace HyperCasual.Runner
         {
             // For the purpose of this tutorial, we will save the flag to use the new skin in memory only
             // (i.e. if you start the game again, this flag will reset)
-            MemoryCache.UseNewSkin = true;
+            SaveManager.Instance.UseNewSkin = true;
             m_NextLevelEvent.Raise();
         }
 
