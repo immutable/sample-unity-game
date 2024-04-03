@@ -13,9 +13,10 @@ namespace HyperCasual.Runner
     /// </summary>
     public class LevelCompleteScreen : View
     {
-        // Completed screen
         [SerializeField]
         HyperCasualButton m_NextButton;
+        [SerializeField]
+        HyperCasualButton m_TryAgainButton;
         [SerializeField]
         HyperCasualButton m_ContinuePassportButton;
         [SerializeField]
@@ -37,7 +38,7 @@ namespace HyperCasual.Runner
         AbstractGameEvent m_SetupWalletEvent;
         [SerializeField]
         AbstractGameEvent m_UnlockedSkinEvent;
-        
+
         /// <summary>
         /// The slider that displays the XP value 
         /// </summary>
@@ -46,7 +47,7 @@ namespace HyperCasual.Runner
         int m_FoodValue;
 
         private ApiService Api = new();
-        
+
         /// <summary>
         /// The amount of food to display on the celebration screen.
         /// The setter method also sets the celebration screen text.
@@ -65,7 +66,7 @@ namespace HyperCasual.Runner
         }
 
         float m_XpValue;
-        
+
         /// <summary>
         /// The amount of XP to display on the celebration screen.
         /// The setter method also sets the celebration screen slider value.
@@ -84,7 +85,7 @@ namespace HyperCasual.Runner
         }
 
         int m_CoinCount = -1;
-        
+
         /// <summary>
         /// The number of tokens to display on the celebration screen.
         /// </summary>
@@ -111,10 +112,18 @@ namespace HyperCasual.Runner
             m_ContinuePassportButton.RemoveListener(OnContinueWithPassportButtonClicked);
             m_ContinuePassportButton.AddListener(OnContinueWithPassportButtonClicked);
 
+            // Set listener to "Try again" button
+            m_TryAgainButton.RemoveListener(OnTryAgainButtonClicked);
+            m_TryAgainButton.AddListener(OnTryAgainButtonClicked);
+
             ShowNextButton(true);
         }
 
         private void OnContinueWithPassportButtonClicked()
+        {
+        }
+
+        private void OnTryAgainButtonClicked()
         {
         }
 
@@ -143,9 +152,10 @@ namespace HyperCasual.Runner
             m_Loading.gameObject.SetActive(show);
         }
 
-        private void ShowErrorMessage(bool show)
+        private void ShowError(bool show)
         {
             m_ErrorMessage.gameObject.SetActive(show);
+            m_TryAgainButton.gameObject.SetActive(show);
         }
 
         void DisplayCoins(int count)
