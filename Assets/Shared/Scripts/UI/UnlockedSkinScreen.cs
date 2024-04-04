@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Immutable.Passport;
+using Immutable.Passport.Model;
 
 namespace HyperCasual.Runner
 {
@@ -116,7 +118,13 @@ namespace HyperCasual.Runner
             CraftState = CraftSkinState.Crafting;
 
             // Burn tokens and mint a new skin i.e. crafting a skin
-            await Task.Delay(TimeSpan.FromSeconds(5));
+            string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest()
+            {
+                to = "YOUR_IMMUTABLE_RUNNER_TOKEN_CONTRACT_ADDRESS", // Immutable Runner Token contract address
+                data = "0x1e957f1e", // Call craftSkin() in the contract
+                value = "0"
+            });
+            Debug.Log($"Craft transaction hash: {transactionHash}");
 
             CraftState = CraftSkinState.Crafted;
 
