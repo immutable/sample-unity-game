@@ -55,7 +55,7 @@ namespace HyperCasual.Runner
 
             m_LevelCompleteScreen = UIManager.Instance.GetView<LevelCompleteScreen>();
             m_Hud = UIManager.Instance.GetView<Hud>();
-        } 
+        }
 
         void OnEnable()
         {
@@ -114,8 +114,6 @@ namespace HyperCasual.Runner
             m_TotalXp += m_TempXp;
             m_TempXp = 0f;
             SaveManager.Instance.XP = m_TotalXp;
-
-            m_LevelCompleteScreen.OnEnable();
         }
 
         void OnLose()
@@ -132,7 +130,7 @@ namespace HyperCasual.Runner
             {
                 m_TempXp += PlayerController.Instance.Speed * Time.deltaTime;
                 m_Hud.XpValue = m_TempXp;
-                
+
                 if (SequenceManager.Instance.m_CurrentLevel is LoadLevelFromDef loadLevelFromDef)
                 {
                     m_Hud.XpSlider.minValue = 0;
