@@ -1,0 +1,23 @@
+{
+  "name": "mint-backend",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./dest/index.js",
+    "build": "yarn clean && tsc --build",
+    "clean": "rm -rf ./dest"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/morgan": "^1.9.9",
+    "morgan": "^1.10.0",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.11.1",
+    "express": "^4.19.2"
+  }
+}
