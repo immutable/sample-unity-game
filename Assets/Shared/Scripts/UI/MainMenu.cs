@@ -38,7 +38,7 @@ namespace HyperCasual.Runner
             m_LogoutButton.AddListener(OnLogoutButtonClick);
 
             // Initialise Passport
-            string clientId = "ZJL7JvetcDFBNDlgRs5oJoxuAUUl6uQj";
+            string clientId = "YOUR_IMMUTABLE_CLIENT_ID";
             string environment = Immutable.Passport.Model.Environment.SANDBOX;
             string redirectUri = null;
             string logoutUri = null;
