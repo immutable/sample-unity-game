@@ -24,23 +24,23 @@ describe("RunnerToken", function () {
       "IMRS", // symbol
       "https://immutable.com/", // baseURI
       "https://immutable.com/", // contractURI
-      operatorAllowlist.address, // operator allowlist contract
+      await operatorAllowlist.getAddress(), // operator allowlist contract
       owner.address, // royalty recipient
-      ethers.BigNumber.from("2000") // fee numerator
+      2000 // fee numerator
     );
-    await skinContract.deployed();
+    await skinContract.waitForDeployment();
 
     // deploy RunnerToken contract
     const RunnerToken = await ethers.getContractFactory("RunnerToken") as RunnerToken__factory;
-    contract = await RunnerToken.deploy(skinContract.address);
-    await contract.deployed();
+    contract = await RunnerToken.deploy(await skinContract.getAddress());
+    await contract.waitForDeployment();
 
     // grant owner the minter role
     await contract.grantMinterRole(owner.address);
     // grant owner the minter role
     await contract.grantBurnerRole(owner.address);
     // grant the token contract to mint skins
-    await skinContract.grantMinterRole(contract.address);
+    await skinContract.grantMinterRole(await contract.getAddress());
   });
 
   it("Should be deployed with the correct arguments", async function () {
@@ -95,7 +95,7 @@ describe("RunnerToken", function () {
   it("Account with three tokens can craft skin", async function () {
     const [owner, recipient] = await ethers.getSigners();
 
-    const threeTokens = ethers.BigNumber.from(3).mul(ethers.BigNumber.from(10).pow(await contract.decimals()));
+    const threeTokens = 3n * (10n ** await contract.decimals());
     await contract.connect(owner).mint(recipient.address, threeTokens);
     expect(await contract.balanceOf(recipient.address)).to.equal(threeTokens);
 
@@ -108,7 +108,7 @@ describe("RunnerToken", function () {
   it("Account with not enough tokens should not be able to craft skin", async function () {
     const [owner, recipient] = await ethers.getSigners();
 
-    const twoTokens = ethers.BigNumber.from(2).mul(ethers.BigNumber.from(10).pow(await contract.decimals()));
+    const twoTokens = 2n * (10n ** await contract.decimals());
     await contract.connect(owner).mint(recipient.address, twoTokens);
     expect(await contract.balanceOf(recipient.address)).to.equal(twoTokens);
 
@@ -119,14 +119,14 @@ describe("RunnerToken", function () {
 
   it("Token contract should not be able to craft skin without skin contract minter role", async function () {
     const [owner, recipient] = await ethers.getSigners();
-    await skinContract.revokeMinterRole(contract.address);
+    await skinContract.revokeMinterRole(await contract.getAddress());
 
-    const threeTokens = ethers.BigNumber.from(3).mul(ethers.BigNumber.from(10).pow(await contract.decimals()));
+    const threeTokens = 3n * (10n ** await contract.decimals());
     await contract.connect(owner).mint(recipient.address, threeTokens);
     expect(await contract.balanceOf(recipient.address)).to.equal(threeTokens);
 
     await expect(contract.connect(recipient).craftSkin()).to.be.revertedWith(
-      `AccessControl: account ${contract.address.toLowerCase()} is missing role ${await skinContract.MINTER_ROLE()}`
+      `AccessControl: account ${(await contract.getAddress()).toLowerCase()} is missing role ${await skinContract.MINTER_ROLE()}`
     );
     expect(await contract.balanceOf(recipient.address)).to.equal(threeTokens);
   });
