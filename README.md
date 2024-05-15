@@ -12,6 +12,16 @@
 
 This repository includes the source code for the Unity tutorial, [Build a game with Unity](https://docs.immutable.com/docs/zkEVM/build-unity-game).
 
+## Contributing
+
+Thank you for your interest in contributing to our project! Here's a quick guide on how you can get started:
+
+1. **Fork this Repository**: Fork the repository to your GitHub account by clicking the "Fork" button at the top right of the repository page.
+2. **Create a Branch**: Once you've forked the repository, create a new branch in your forked repository where you'll be making your changes. Branch naming convention is enforced [according to patterns here](https://github.com/deepakputhraya/action-branch-name).
+3. **Make Changes**: Make the necessary changes in your branch. Ensure that your changes are clear, well-documented, and aligned with the project's guidelines.
+4. **Commit Changes**: Commit your changes with clear and descriptive messages following [commit message pattern here](https://github.com/conventional-changelog/commitlint?tab=readme-ov-file#what-is-commitlint). It follows [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/#specification), which helps maintain a consistent and informative commit history. Read [here](https://www.conventionalcommits.org/en/v1.0.0/#why-use-conventional-commits) to learn more about the benefits of Conventional Commits.
+5. **Create a Pull Request (PR)**: After you've made and committed your changes, create a PR against the original repository. Provide a clear description of the changes you've made in the PR.
+
 ## Getting Help
 
 Immutable X is open to all to build on, with no approvals required. If you want to talk to us to learn more, or apply for developer grants, click below:
