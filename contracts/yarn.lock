@@ -12,6 +12,11 @@
   resolved "https://registry.yarnpkg.com/@adraffy/ens-normalize/-/ens-normalize-1.10.1.tgz#63430d04bd8c5e74f8d7d049338f1cd9d4f02069"
   integrity sha512-96Z2IP3mYmF1Xg2cDm8f1gWGf/HUVedQ3FMifV4kG/PQ4yEP51xDtRAEfhVNt5f/uzpNkZHwWQuUcu6D6K+Ekw==
 
+"@axelar-network/axelar-gmp-sdk-solidity@^5.8.0":
+  version "5.9.0"
+  resolved "https://registry.yarnpkg.com/@axelar-network/axelar-gmp-sdk-solidity/-/axelar-gmp-sdk-solidity-5.9.0.tgz#ca33a1a5c0e0932b12d46e373d01e084721964ea"
+  integrity sha512-BarUqOln3m5jnvBo+LF6ARWwbRXqek93dDtCgIevKGl+Be2JcNOaBB32Bg2LOOBnpOKJBvJq1SI2ZoGurBQ4Qg==
+
 "@colors/colors@1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
@@ -396,15 +401,17 @@
   resolved "https://registry.yarnpkg.com/@fastify/busboy/-/busboy-2.1.1.tgz#b9da6a878a371829a0502c9b6c1c143ef6663f4d"
   integrity sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==
 
-"@imtbl/contracts@^2.2.3":
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/@imtbl/contracts/-/contracts-2.2.4.tgz#3dc40c27702d1bc8023629b7fd5f028d75a8dde0"
-  integrity sha512-nwVVC+IqDqGkJ549pCN0Kcdslv0RLf1AcqJxfvY+NKDbz3gNXSFoOgMHEBOPR2au1hJIOokzeHccarNxzEEItA==
+"@imtbl/contracts@^2.2.6":
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/@imtbl/contracts/-/contracts-2.2.6.tgz#6bace85aef8230cec17b52c5bfea6370d1deda72"
+  integrity sha512-2cfE3Tojfp4GnxwVKSwoZY1CWd+/drCIbCKawyH9Nh2zASXd7VC71lo27aD5RnCweXHkZVhPzjqwQf/xrtnmIQ==
   dependencies:
+    "@axelar-network/axelar-gmp-sdk-solidity" "^5.8.0"
     "@openzeppelin/contracts" "^4.9.3"
     "@openzeppelin/contracts-upgradeable" "^4.9.3"
     "@rari-capital/solmate" "^6.4.0"
     eslint-plugin-mocha "^10.2.0"
+    openzeppelin-contracts-5.0.2 "npm:@openzeppelin/contracts@^5.0.2"
     openzeppelin-contracts-upgradeable-4.9.3 "npm:@openzeppelin/contracts-upgradeable@^4.9.3"
     seaport "https://github.com/immutable/seaport.git#1.5.0+im.1.3"
     solidity-bits "^0.4.0"
@@ -2945,6 +2952,11 @@ once@1.x, once@^1.3.0:
   integrity sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==
   dependencies:
     wrappy "1"
+
+"openzeppelin-contracts-5.0.2@npm:@openzeppelin/contracts@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-5.0.2.tgz#b1d03075e49290d06570b2fd42154d76c2a5d210"
+  integrity sha512-ytPc6eLGcHHnapAZ9S+5qsdomhjo6QBHTDRRBFfTxXIpsicMhVPouPgmUPebZZZGX7vt9USA+Z+0M0dSVtSUEA==
 
 optionator@^0.8.1:
   version "0.8.3"

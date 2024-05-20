@@ -3,10 +3,10 @@
 pragma solidity 0.8.19;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@imtbl/contracts/contracts/token/erc20/ImmutableERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@imtbl/contracts/contracts/token/erc721/preset/ImmutableERC721.sol";
 
-contract RunnerToken is ImmutableERC20, AccessControl {
+contract RunnerToken is ERC20, AccessControl {
     // Create a new role identifier for the minter role
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     // Create a new role identifier for the burner role
@@ -19,7 +19,7 @@ contract RunnerToken is ImmutableERC20, AccessControl {
 
     constructor(
         address skinContractAddr
-    ) ImmutableERC20("Immutable Runner Token", "IMR") {
+    ) ERC20("Immutable Runner Token", "IMR") {
         // Grant the contract deployer the default admin role: it will be able
         // to grant and revoke any roles
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
