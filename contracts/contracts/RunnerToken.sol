@@ -35,10 +35,6 @@ contract RunnerToken is ERC20, ERC20Burnable, MintingAccessControl {
     // Burns three tokens and crafts a skin to the caller
     function craftSkin() external {
         uint256 numTokens = 3 * 10 ** decimals();
-        require(
-            balanceOf(msg.sender) >= numTokens,
-            "craftSkin: Caller does not have enough tokens"
-        );
 
         // Burn caller's three tokens
         _burn(msg.sender, numTokens);

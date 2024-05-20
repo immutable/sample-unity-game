@@ -122,7 +122,7 @@ describe("RunnerToken", function () {
     expect(await contract.balanceOf(recipient.address)).to.equal(twoTokens);
 
     await expect(contract.connect(recipient).craftSkin()).to.be.revertedWith(
-      'craftSkin: Caller does not have enough tokens'
+      'ERC20: burn amount exceeds balance'
     );
   });
 
