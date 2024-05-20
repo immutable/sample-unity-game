@@ -37,8 +37,6 @@ describe("RunnerToken", function () {
 
     // grant owner the minter role
     await contract.grantMinterRole(owner.address);
-    // grant owner the minter role
-    await contract.grantBurnerRole(owner.address);
     // grant the token contract to mint skins
     await skinContract.grantMinterRole(await contract.getAddress());
   });
@@ -68,28 +66,39 @@ describe("RunnerToken", function () {
     );
   });
 
-  it("Account with burner role should be able to burn tokens", async function () {
+  it("Owner of tokens should be able to burn tokens", async function () {
     const [owner, recipient] = await ethers.getSigners();
 
     await contract.connect(owner).mint(recipient.address, 2);
     expect(await contract.balanceOf(recipient.address)).to.equal(2);
 
-    await contract.connect(owner).burn(recipient.address, 1);
+    await contract.connect(recipient).burn(1);
     expect(await contract.balanceOf(recipient.address)).to.equal(1);
   });
 
-  it("Account without burner role should not be able to burn NFTs", async function () {
+  it("Owner of tokens should not be able to burn tokens if not enough to burn", async function () {
+    const [owner, recipient] = await ethers.getSigners();
+
+    await contract.connect(owner).mint(recipient.address, 1);
+    expect(await contract.balanceOf(recipient.address)).to.equal(1);
+
+    await contract.connect(recipient).burn(1);
+    expect(await contract.balanceOf(recipient.address)).to.equal(0);
+
+    await expect(
+      contract.connect(recipient).burn(1)
+    ).to.be.revertedWith(`ERC20: burn amount exceeds balance`);
+  });
+
+  it("Others should not be able to burn others tokens", async function () {
     const [owner, acc1, recipient] = await ethers.getSigners();
-    const burnerRole = await contract.BURNER_ROLE();
 
     await contract.connect(owner).mint(recipient.address, 2);
     expect(await contract.balanceOf(recipient.address)).to.equal(2);
 
     await expect(
-      contract.connect(acc1).burn(recipient.address, 1)
-    ).to.be.revertedWith(
-      `AccessControl: account ${acc1.address.toLowerCase()} is missing role ${burnerRole}`
-    );
+      contract.connect(acc1).burnFrom(recipient.address, 1)
+    ).to.be.revertedWith(`ERC20: insufficient allowance`);
   });
 
   it("Account with three tokens can craft skin", async function () {
@@ -131,28 +140,19 @@ describe("RunnerToken", function () {
     expect(await contract.balanceOf(recipient.address)).to.equal(threeTokens);
   });
 
-  it("Only admin account can grant minter and burner role", async function () {
+  it("Only admin account can grant minter role", async function () {
     const [owner, recipient] = await ethers.getSigners();
 
     await contract.connect(owner).grantMinterRole(recipient.address);
     expect(await contract.hasRole(await contract.MINTER_ROLE(), recipient.address)).to.equal(true);
-
-    await contract.connect(owner).grantBurnerRole(recipient.address);
-    expect(await contract.hasRole(await contract.BURNER_ROLE(), recipient.address)).to.equal(true);
   });
 
-  it("Non-admin accounts cannot grant minter and burner role", async function () {
+  it("Non-admin accounts cannot grant minter role", async function () {
     const [_, acc1, recipient] = await ethers.getSigners();
     const adminRole = await contract.DEFAULT_ADMIN_ROLE();
 
     await expect(
       contract.connect(acc1).grantMinterRole(recipient.address)
-    ).to.be.revertedWith(
-      `AccessControl: account ${acc1.address.toLowerCase()} is missing role ${adminRole}`
-    );
-
-    await expect(
-      contract.connect(acc1).grantBurnerRole(recipient.address)
     ).to.be.revertedWith(
       `AccessControl: account ${acc1.address.toLowerCase()} is missing role ${adminRole}`
     );
