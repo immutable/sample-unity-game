@@ -7,7 +7,7 @@
     "clean": "npx hardhat clean",
     "test": "npx hardhat test",
     "compile": "npx hardhat compile",
-    "deploy": "npx hardhat run scripts/deploy.ts"
+    "deploy": "npx hardhat run --network immutableZkevmTestnet scripts/deploy.ts"
   },
   "author": "Immutable",
   "license": "MIT",
