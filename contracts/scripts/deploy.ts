@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+import { ethers } from 'hardhat'; // eslint-disable-line import/no-extraneous-dependencies
 
 async function main() {
   // Load the Immutable Runner Tokencontract and get the contract factory
@@ -6,7 +6,7 @@ async function main() {
 
   // Deploy the contract to the zkEVM network
   const contract = await contractFactory.deploy(
-    'YOUR_IMMUTABLE_RUNNER_SKIN_CONTRACT_ADDRESS' // Immutable Runner Skin contract address
+    'YOUR_IMMUTABLE_RUNNER_SKIN_CONTRACT_ADDRESS', // Immutable Runner Skin contract address
   );
 
   console.log('Contract deployed to:', await contract.getAddress());

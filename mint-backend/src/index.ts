@@ -2,7 +2,7 @@ import express, {
   Express,
   Router,
   Request,
-  Response
+  Response,
 } from 'express';
 import cors from 'cors';
 import http from 'http';
@@ -25,7 +25,7 @@ const zkEvmProvider = new JsonRpcProvider('https://rpc.testnet.immutable.com');
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
 const tokenContractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
 // Private key of wallet with minter role
-const privateKey = process.env.PRIVATE_KEY
+const privateKey = process.env.PRIVATE_KEY;
 
 const gasOverrides = {
   // Use parameter to set tip for EIP1559 transaction (gas fee)
@@ -40,7 +40,7 @@ router.post('/mint/fox', async (req: Request, res: Response) => {
       // Get the address to mint the fox to
       let to: string = req.body.to ?? null;
       // Get the quantity to mint if specified, default is one
-      let quantity = parseInt(req.body.quantity ?? "1");
+      let quantity = parseInt(req.body.quantity ?? '1');
 
       // Connect to wallet with minter role
       const signer = new Wallet(privateKey).connect(zkEvmProvider);
@@ -61,9 +61,9 @@ router.post('/mint/fox', async (req: Request, res: Response) => {
 
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: "Failed to mint to user" });
+    return res.status(400).json({ message: 'Failed to mint to user' });
   }
-}
+},
 );
 
 // Mint Immutable Runner Token
@@ -73,7 +73,7 @@ router.post('/mint/token', async (req: Request, res: Response) => {
       // Get the address to mint the token to
       let to: string = req.body.to ?? null;
       // Get the quantity to mint if specified, default is one
-      let quantity = BigInt(req.body.quantity ?? "1");
+      let quantity = BigInt(req.body.quantity ?? '1');
 
       // Connect to wallet with minter role
       const signer = new Wallet(privateKey).connect(zkEvmProvider);
@@ -94,14 +94,14 @@ router.post('/mint/token', async (req: Request, res: Response) => {
 
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: "Failed to mint to user" });
+    return res.status(400).json({ message: 'Failed to mint to user' });
   }
-}
+},
 );
 
 app.use('/', router);
 
 http.createServer(app).listen(
   3000,
-  () => console.log(`Listening on port 3000`)
+  () => console.log('Listening on port 3000'),
 );

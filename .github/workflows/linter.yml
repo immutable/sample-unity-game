@@ -64,3 +64,33 @@ jobs:
           VALIDATE_JAVASCRIPT_STANDARD: false
           VALIDATE_TYPESCRIPT_ES: false
           VALIDATE_TYPESCRIPT_STANDARD: false
+
+        ##################################
+        # Run eslint against json-server #
+        ##################################
+      - name: Install packages for json-server
+        working-directory: ./json-server
+        run: yarn install
+      - name: Run eslint against json-server
+        working-directory: ./json-server
+        run: yarn lint
+
+        ###################################
+        # Run eslint against mint-backend #
+        ###################################
+      - name: Install packages for mint-backend
+        working-directory: ./mint-backend
+        run: yarn install
+      - name: Run eslint against mint-backend
+        working-directory: ./mint-backend
+        run: yarn lint
+
+        ################################
+        # Run eslint against contracts #
+        ################################
+      - name: Install packages for contracts
+        working-directory: ./contracts
+        run: yarn install
+      - name: Run eslint against contracts
+        working-directory: ./contracts
+        run: yarn lint
