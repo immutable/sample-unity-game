@@ -15,7 +15,7 @@ namespace HyperCasual.Core
         /// </summary>
         public virtual string Name { get; set; }
 
-        readonly List<ILink> m_Links = new ();
+        readonly List<ILink> m_Links = new();
 
         public virtual void Enter()
         {
@@ -74,7 +74,7 @@ namespace HyperCasual.Core
                 link.Enable();
             }
         }
-        
+
         public void DisableLinks()
         {
             foreach (var link in m_Links)

@@ -13,7 +13,7 @@ namespace HyperCasual.Runner
     /// </summary>
     public class SetupWalletScreen : View
     {
-        
+
         [SerializeField]
         TextMeshProUGUI m_Title;
         [SerializeField]

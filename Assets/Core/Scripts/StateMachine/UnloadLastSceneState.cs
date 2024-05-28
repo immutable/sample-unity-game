@@ -16,7 +16,7 @@ namespace HyperCasual.Core
         {
             m_SceneController = sceneController;
         }
-        
+
         public override IEnumerator Execute()
         {
             yield return m_SceneController.UnloadLastScene();

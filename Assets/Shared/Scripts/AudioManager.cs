@@ -10,7 +10,7 @@ namespace HyperCasual.Runner
     /// <summary>
     /// Handles playing sounds and music based on their sound ID
     /// </summary>
-    public class AudioManager : AbstractSingleton<AudioManager> 
+    public class AudioManager : AbstractSingleton<AudioManager>
     {
         [Serializable]
         class SoundIDClipPair
@@ -45,7 +45,7 @@ namespace HyperCasual.Runner
                 m_MusicSource.mute = !value;
             }
         }
-        
+
         /// <summary>
         /// Unmute/mute all sound effects
         /// </summary>
@@ -98,7 +98,7 @@ namespace HyperCasual.Runner
             EnableSfx = audioSettings.EnableSfx;
             MasterVolume = audioSettings.MasterVolume;
         }
-        
+
         void OnDisable()
         {
             if (SaveManager.Instance == null)
@@ -113,12 +113,12 @@ namespace HyperCasual.Runner
         {
             if (m_MusicSource.isPlaying)
                 return;
-            
+
             m_MusicSource.clip = audioClip;
             m_MusicSource.loop = looping;
             m_MusicSource.Play();
         }
-        
+
         /// <summary>
         /// Play a music based on its sound ID
         /// </summary>
@@ -154,7 +154,7 @@ namespace HyperCasual.Runner
         {
             if (soundID == SoundID.None)
                 return;
-            
+
             PlayEffect(m_Clips[soundID]);
         }
     }

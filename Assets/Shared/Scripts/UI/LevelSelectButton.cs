@@ -18,7 +18,7 @@ namespace HyperCasual.Runner
         int m_Index = -1;
         Action<int> m_OnClick;
         bool m_IsUnlocked;
-        
+
         /// <param name="index">The index of the associated level</param>
         /// <param name="unlocked">Is the associated level locked?</param>
         /// <param name="onClick">callback method for this button</param>

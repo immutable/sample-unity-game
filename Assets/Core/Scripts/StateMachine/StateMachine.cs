@@ -11,7 +11,7 @@ namespace HyperCasual.Core
     public class StateMachine
     {
         public IState CurrentState { get; private set; }
-        
+
         /// <summary>
         /// Finalizes the previous state and then runs the new state
         /// </summary>
@@ -22,12 +22,12 @@ namespace HyperCasual.Core
             if (state == null)
                 throw new ArgumentNullException(nameof(state));
 
-            if (CurrentState != null && m_CurrentPlayCoroutine != null) 
+            if (CurrentState != null && m_CurrentPlayCoroutine != null)
             {
                 //interrupt currently executing state
                 Skip();
             }
-            
+
             CurrentState = state;
             Coroutines.StartCoroutine(Play());
         }
@@ -43,14 +43,14 @@ namespace HyperCasual.Core
             if (!m_PlayLock)
             {
                 m_PlayLock = true;
-                
+
                 CurrentState.Enter();
 
                 //keep a ref to execute coroutine of the current state
                 //to support stopping it later.
                 m_CurrentPlayCoroutine = Coroutines.StartCoroutine(CurrentState.Execute());
                 yield return m_CurrentPlayCoroutine;
-                
+
                 m_CurrentPlayCoroutine = null;
             }
         }
@@ -63,7 +63,7 @@ namespace HyperCasual.Core
         {
             if (CurrentState == null)
                 throw new Exception($"{nameof(CurrentState)} is null!");
-            
+
             if (m_CurrentPlayCoroutine != null)
             {
                 Coroutines.StopCoroutine(ref m_CurrentPlayCoroutine);
@@ -73,24 +73,24 @@ namespace HyperCasual.Core
                 m_PlayLock = false;
             }
         }
-        
+
         public virtual void Run(IState state)
         {
             SetCurrentState(state);
             Run();
         }
-        
+
         Coroutine m_LoopCoroutine;
         /// <summary>
         /// Turns on the main loop of the StateMachine.
         /// This method does not resume previous state if called after Stop()
         /// and the client needs to set the state manually.
         /// </summary>
-        public virtual void Run() 
+        public virtual void Run()
         {
             if (m_LoopCoroutine != null) //already running
                 return;
-            
+
             m_LoopCoroutine = Coroutines.StartCoroutine(Loop());
         }
 
@@ -101,13 +101,13 @@ namespace HyperCasual.Core
         {
             if (m_LoopCoroutine == null) //already stopped
                 return;
-            
-            if (CurrentState != null && m_CurrentPlayCoroutine != null) 
+
+            if (CurrentState != null && m_CurrentPlayCoroutine != null)
             {
                 //interrupt currently executing state
                 Skip();
             }
-            
+
             Coroutines.StopCoroutine(ref m_LoopCoroutine);
             CurrentState = null;
         }
@@ -133,7 +133,7 @@ namespace HyperCasual.Core
                         }
                         CurrentState.DisableLinks();
                         SetCurrentState(nextState);
-                        CurrentState.EnableLinks(); 
+                        CurrentState.EnableLinks();
                     }
                 }
 

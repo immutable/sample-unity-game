@@ -21,7 +21,7 @@ namespace HyperCasual.Runner
             m_ManagerPrefabs = managerPrefabs;
             m_SceneController = sceneController;
         }
-        
+
         public override IEnumerator Execute()
         {
             if (m_LevelDefinition == null)

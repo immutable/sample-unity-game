@@ -12,7 +12,7 @@ namespace HyperCasual.Core
         public override string Name => nameof(DelayState);
 
         readonly float m_DelayInSeconds;
-        
+
         /// <param name="delayInSeconds">delay in seconds</param>
         public DelayState(float delayInSeconds)
         {

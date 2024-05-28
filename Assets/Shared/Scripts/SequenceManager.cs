@@ -47,7 +47,7 @@ namespace HyperCasual.Gameplay
         [SerializeField]
         float m_SplashDelay = 2f;
 
-        readonly StateMachine m_StateMachine = new ();
+        readonly StateMachine m_StateMachine = new();
         IState m_SplashScreenState;
         IState m_MainMenuState;
         IState m_LevelSelectState;
@@ -55,19 +55,19 @@ namespace HyperCasual.Gameplay
         public IState m_CurrentLevel;
 
         SceneController m_SceneController;
-        
+
         /// <summary>
         /// Initializes the SequenceManager
         /// </summary>
         public void Initialize()
         {
             m_SceneController = new SceneController(SceneManager.GetActiveScene());
-            
+
             InstantiatePreloadedAssets();
 
             m_SplashScreenState = new State(ShowUI<SplashScreen>);
             m_StateMachine.Run(m_SplashScreenState);
-            
+
             CreateMenuNavigationSequence();
             CreateLevelSequences();
             SetStartingLevel(0);
@@ -87,7 +87,7 @@ namespace HyperCasual.Gameplay
             var splashDelay = new DelayState(m_SplashDelay);
             m_MainMenuState = new State(OnMainMenuDisplayed);
             m_LevelSelectState = new State(OnLevelSelectionDisplayed);
-            
+
             //Connect the states
             m_SplashScreenState.AddLink(new Link(splashDelay));
             splashDelay.AddLink(new Link(m_MainMenuState));
@@ -98,7 +98,7 @@ namespace HyperCasual.Gameplay
         void CreateLevelSequences()
         {
             m_LevelStates.Clear();
-            
+
             //Create and connect all level states
             IState lastState = null;
             foreach (var level in m_Levels)
@@ -144,7 +144,7 @@ namespace HyperCasual.Gameplay
         {
             return new LoadSceneState(m_SceneController, scenePath);
         }
-        
+
         /// <summary>
         /// Creates a level state from a level data
         /// </summary>
@@ -154,7 +154,7 @@ namespace HyperCasual.Gameplay
         {
             return new LoadLevelFromDef(m_SceneController, levelData, m_LevelManagers);
         }
-        
+
         IState AddLevelPeripheralStates(IState loadLevelState, IState quitState, IState lastState)
         {
             //Create states
@@ -180,7 +180,7 @@ namespace HyperCasual.Gameplay
             gameplayState.AddLink(new EventLink(m_WinEvent, winState));
             gameplayState.AddLink(new EventLink(m_LoseEvent, loseState));
             gameplayState.AddLink(new EventLink(m_PauseEvent, pauseState));
-            
+
             loseState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
             loseState.AddLink(new EventLink(m_BackEvent, unloadLose));
             unloadLose.AddLink(new Link(quitState));
@@ -195,7 +195,7 @@ namespace HyperCasual.Gameplay
             unlockedSkinState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
             unlockedSkinState.AddLink(new EventLink(m_CollectEvent, collectedSkinState));
             collectedSkinState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
-            
+
             return winState;
         }
 
@@ -206,8 +206,8 @@ namespace HyperCasual.Gameplay
         public void SetStartingLevel(int index)
         {
             m_LevelSelectState.RemoveAllLinks();
-            m_LevelSelectState.AddLink( new EventLink(m_ContinueEvent, m_LevelStates[index]));
-            m_LevelSelectState.AddLink(new EventLink(m_BackEvent, m_MainMenuState)); 
+            m_LevelSelectState.AddLink(new EventLink(m_ContinueEvent, m_LevelStates[index]));
+            m_LevelSelectState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
             m_LevelSelectState.EnableLinks();
         }
 
@@ -215,7 +215,7 @@ namespace HyperCasual.Gameplay
         {
             UIManager.Instance.Show<T>();
         }
-        
+
         void OnMainMenuDisplayed()
         {
             ShowUI<MainMenu>();
@@ -226,10 +226,10 @@ namespace HyperCasual.Gameplay
         {
             UIManager.Instance.Show<LevelCompleteScreen>();
             var currentLevelIndex = m_LevelStates.IndexOf(currentLevel);
-            
+
             if (currentLevelIndex == -1)
                 throw new Exception($"{nameof(currentLevel)} is invalid!");
-            
+
             var levelProgress = SaveManager.Instance.LevelProgress;
             if (currentLevelIndex == levelProgress && currentLevelIndex < m_LevelStates.Count - 1)
                 SaveManager.Instance.LevelProgress = levelProgress + 1;
@@ -240,7 +240,7 @@ namespace HyperCasual.Gameplay
             ShowUI<LevelSelectionScreen>();
             AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
         }
-        
+
         void OnGamePlayStarted(IState current)
         {
             m_CurrentLevel = current;

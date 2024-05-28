@@ -23,7 +23,7 @@ namespace HyperCasual.Runner
         public LevelDefinition LevelDefinition
         {
             get => m_LevelDefinition;
-            set 
+            set
             {
                 m_LevelDefinition = value;
 

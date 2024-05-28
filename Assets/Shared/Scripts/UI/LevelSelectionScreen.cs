@@ -47,7 +47,7 @@ namespace HyperCasual.Gameplay
         void OnEnable()
         {
             ResetButtonData();
-            
+
             m_QuickPlayButton.AddListener(OnQuickPlayButtonClicked);
             m_BackButton.AddListener(OnBackButtonClicked);
         }
@@ -71,7 +71,7 @@ namespace HyperCasual.Gameplay
                 button.SetData(i, unlocked, OnClick);
             }
         }
-        
+
         void OnClick(int startingIndex)
         {
             if (startingIndex < 0)
@@ -80,12 +80,12 @@ namespace HyperCasual.Gameplay
             SequenceManager.Instance.SetStartingLevel(startingIndex);
             m_NextLevelEvent.Raise();
         }
-        
+
         void OnQuickPlayButtonClicked()
         {
             OnClick(SaveManager.Instance.LevelProgress);
         }
-        
+
         void OnBackButtonClicked()
         {
             m_BackEvent.Raise();

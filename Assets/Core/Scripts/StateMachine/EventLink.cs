@@ -12,7 +12,7 @@ namespace HyperCasual.Core
         IState m_NextState;
         AbstractGameEvent m_GameEvent;
         bool m_EventRaised;
-        
+
         /// <param name="gameEvent">the event this link listens to</param>
         /// <param name="nextState">the next state</param>
         public EventLink(AbstractGameEvent gameEvent, IState nextState)
@@ -25,13 +25,13 @@ namespace HyperCasual.Core
         {
             nextState = null;
             bool result = false;
-            
+
             if (m_EventRaised)
             {
                 nextState = m_NextState;
                 result = true;
             }
-            
+
             return result;
         }
 
@@ -45,7 +45,7 @@ namespace HyperCasual.Core
             m_GameEvent.AddListener(this);
             m_EventRaised = false;
         }
-        
+
         public void Disable()
         {
             m_GameEvent.RemoveListener(this);

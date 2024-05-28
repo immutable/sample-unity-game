@@ -13,9 +13,9 @@ namespace HyperCasual.Core
         readonly string m_Scene;
         readonly SceneController m_SceneController;
         readonly Action m_OnLoadCompleted;
-        
+
         public override string Name => $"{nameof(LoadSceneState)}: {m_Scene}";
-        
+
         /// <param name="sceneController">The SceneController for the current loading operation</param>
         /// <param name="scene">The path to the scene</param>
         /// <param name="onLoadCompleted">An action that is invoked when scene loading is finished</param>
@@ -25,7 +25,7 @@ namespace HyperCasual.Core
             m_SceneController = sceneController;
             m_OnLoadCompleted = onLoadCompleted;
         }
-        
+
         public override IEnumerator Execute()
         {
             yield return m_SceneController.LoadScene(m_Scene);

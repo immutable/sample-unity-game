@@ -10,7 +10,7 @@ namespace HyperCasual.Core
     public class State : AbstractState
     {
         readonly Action m_OnExecute;
-        
+
         /// <param name="onExecute">An event that is invoked when the state is executed</param>
         public State(Action onExecute)
         {

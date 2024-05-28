@@ -15,7 +15,7 @@ namespace HyperCasual.Runner
     {
         [SerializeField]
         SoundID m_Sound = SoundID.None;
-        
+
         const string k_PlayerTag = "Player";
 
         public ItemPickedEvent m_Event;
@@ -31,7 +31,7 @@ namespace HyperCasual.Runner
         public override void ResetSpawnable()
         {
             m_Collected = false;
-            
+
             for (int i = 0; i < m_Renderers.Length; i++)
             {
                 m_Renderers[i].enabled = true;

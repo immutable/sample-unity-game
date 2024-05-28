@@ -12,12 +12,12 @@ namespace HyperCasual.Core
     {
         [SerializeField]
         AbstractGameEvent m_PauseEvent;
-        
+
         /// <summary>
         /// Returns the current pause state of the application
         /// </summary>
         public bool IsPaused { get; private set; }
-        
+
         void OnApplicationFocus(bool hasFocus)
         {
             IsPaused = !hasFocus;
@@ -29,7 +29,7 @@ namespace HyperCasual.Core
         void OnApplicationPause(bool pauseStatus)
         {
             IsPaused = pauseStatus;
-            
+
             if (IsPaused)
                 m_PauseEvent.Raise();
         }

@@ -29,7 +29,7 @@ namespace HyperCasual.Gameplay
         public Slider XpSlider => m_XpSlider;
 
         int m_FoodValue;
-        
+
         /// <summary>
         /// The amount of gold to display on the hud.
         /// The setter method also sets the hud text.
@@ -48,7 +48,7 @@ namespace HyperCasual.Gameplay
         }
 
         float m_XpValue;
-        
+
         /// <summary>
         /// The amount of XP to display on the hud.
         /// The setter method also sets the hud slider value.

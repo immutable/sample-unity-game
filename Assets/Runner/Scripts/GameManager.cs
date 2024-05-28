@@ -155,7 +155,7 @@ namespace HyperCasual.Runner
                 Vector3 scale = spawnableObject.Scale;
 
                 GameObject go = null;
-                
+
                 if (Application.isPlaying)
                 {
                     go = GameObject.Instantiate(spawnableObject.SpawnablePrefab, position, Quaternion.Euler(eulerAngles));
@@ -286,7 +286,7 @@ namespace HyperCasual.Runner
             Material nightSkyBox = Resources.Load("Skybox1", typeof(Material)) as Material;
             RenderSettings.skybox = nightSkyBox;
         }
-        
+
         public void Win()
         {
             m_WinEvent.Raise();

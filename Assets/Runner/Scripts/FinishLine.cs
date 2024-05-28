@@ -13,7 +13,7 @@ namespace HyperCasual.Runner
     public class FinishLine : Spawnable
     {
         const string k_PlayerTag = "Player";
-        
+
         void OnTriggerEnter(Collider col)
         {
             if (col.CompareTag(k_PlayerTag))

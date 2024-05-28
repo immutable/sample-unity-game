@@ -13,7 +13,7 @@ namespace HyperCasual.Core
         public virtual void Initialize()
         {
         }
-        
+
         /// <summary>
         /// Makes the View visible
         /// </summary>

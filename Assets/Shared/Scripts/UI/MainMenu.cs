@@ -33,11 +33,11 @@ namespace HyperCasual.Runner
             // Set listener to 'Logout' button
             m_LogoutButton.RemoveListener(OnLogoutButtonClick);
             m_LogoutButton.AddListener(OnLogoutButtonClick);
-            
+
             ShowLoading(false);
             ShowStartButton(true);
         }
-        
+
         void OnDisable()
         {
             m_StartButton.RemoveListener(OnStartButtonClick);

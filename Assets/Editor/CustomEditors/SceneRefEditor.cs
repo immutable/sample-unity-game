@@ -13,14 +13,14 @@ namespace HyperCasual.CustomEditors
     public class ScenePickerEditor : Editor
     {
         const string k_PropertyName = "m_ScenePath";
-        
+
         public override void OnInspectorGUI()
         {
             var sceneRef = target as SceneRef;
 
             if (sceneRef == null)
                 return;
-            
+
             var oldScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(sceneRef.m_ScenePath);
 
             serializedObject.Update();
