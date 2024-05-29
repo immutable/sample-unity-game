@@ -1,12 +1,8 @@
 ---
-name: Lint contract/
+name: Lint contracts/
 
 on:
   push:
-    branches-ignore: [main]
-  pull_request:
-    branches: [main]
-
 
 jobs:
   build:
@@ -23,12 +19,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Clean cache
-        working-directory: ./contracts
-        run: yarn cache clean
       - name: Install packages for contracts
         working-directory: ./contracts
-        run: yarn install
+        run: rm yarn.lock && yarn install --network-concurrency 1
       - name: Run eslint against contracts
         working-directory: ./contracts
         run: yarn lint

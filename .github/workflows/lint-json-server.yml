@@ -3,10 +3,6 @@ name: Lint json-server/
 
 on:
   push:
-    branches-ignore: [main]
-  pull_request:
-    branches: [main]
-
 
 jobs:
   build:
@@ -23,9 +19,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Clean cache
-        working-directory: ./json-server
-        run: yarn cache clean
       - name: Install packages for json-server
         working-directory: ./json-server
         run: yarn install

@@ -3,10 +3,6 @@ name: Lint mint-backend/
 
 on:
   push:
-    branches-ignore: [main]
-  pull_request:
-    branches: [main]
-
 
 jobs:
   build:
@@ -23,9 +19,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Clean cache
-        working-directory: ./mint-backend
-        run: yarn cache clean
       - name: Install packages for mint-backend
         working-directory: ./mint-backend
         run: yarn install
