@@ -56,7 +56,9 @@ namespace HyperCasual.Runner
                 bool success = await Passport.Instance.Login(useCachedSession: true);
                 // Update the login flag
                 SaveManager.Instance.IsLoggedIn = success;
-            } else {
+            }
+            else
+            {
                 // No saved credentials to re-login the player, reset the login flag
                 SaveManager.Instance.IsLoggedIn = false;
             }
