@@ -92,7 +92,7 @@ namespace HyperCasual.Runner
 #if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
                 await passport.LogoutPKCE();
 #else
-            await passport.Logout();
+                await passport.Logout();
 #endif
 
                 // Reset the login flag
