@@ -121,6 +121,25 @@ namespace HyperCasual.Runner
 
         private void OnContinueWithPassportButtonClicked()
         {
+            try
+            {
+                // Show loading
+                ShowContinueWithPassportButton(false);
+                ShowLoading(true);
+
+                // Log into Passport
+
+                // Show 'Next' button
+                ShowNextButton(true);
+                ShowLoading(false);
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Failed to log into Passport: {ex.Message}");
+                // Show Continue with Passport button again
+                ShowContinueWithPassportButton(true);
+                ShowLoading(false);
+            }
         }
 
         private void OnTryAgainButtonClicked()
