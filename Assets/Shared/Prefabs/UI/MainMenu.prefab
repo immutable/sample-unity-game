@@ -122,19 +122,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7544663396972842289}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8405303144418417603}
-        m_TargetAssemblyTypeName: HyperCasual.Runner.MainMenu, Unity.Hypercasual
-        m_MethodName: OnLogout
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1880825616676340313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1020,6 +1008,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_StartButton: {fileID: 2691304556920018293}
   m_StartButtonEvent: {fileID: 11400000, guid: b892538bd49f3487bbedf5106c094739, type: 2}
+  m_InventoryButton: {fileID: 9179871967287141984}
+  m_InventoryButtonEvent: {fileID: 11400000, guid: 96549880d681047edbcb5184d444f3b7,
+    type: 2}
   m_Email: {fileID: 0}
   m_LogoutButton: {fileID: 1880825616676340313}
   m_Loading: {fileID: 7960696323686974425}

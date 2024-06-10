@@ -120,7 +120,7 @@ namespace HyperCasual.Runner
             // Burn tokens and mint a new skin i.e. crafting a skin
             string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest()
             {
-                to = "YOUR_IMMUTABLE_RUNNER_TOKEN_CONTRACT_ADDRESS", // Immutable Runner Token contract address
+                to = "0x912cd5f1cd67F1143b7a5796fd9e5063D755DAbe", // Immutable Runner Token contract address
                 data = "0x1e957f1e", // Call craftSkin() in the contract
                 value = "0"
             });

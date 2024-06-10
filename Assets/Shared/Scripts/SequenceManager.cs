@@ -43,6 +43,8 @@ namespace HyperCasual.Gameplay
         AbstractGameEvent m_UnlockedSkinEvent;
         [SerializeField]
         AbstractGameEvent m_CollectEvent;
+        [SerializeField]
+        AbstractGameEvent m_InventoryEvent;
         [Header("Other")]
         [SerializeField]
         float m_SplashDelay = 2f;
@@ -50,6 +52,7 @@ namespace HyperCasual.Gameplay
         readonly StateMachine m_StateMachine = new();
         IState m_SplashScreenState;
         IState m_MainMenuState;
+        IState m_InventoryState;
         IState m_LevelSelectState;
         readonly List<IState> m_LevelStates = new();
         public IState m_CurrentLevel;
@@ -86,12 +89,14 @@ namespace HyperCasual.Gameplay
             // Create states
             var splashDelay = new DelayState(m_SplashDelay);
             m_MainMenuState = new State(OnMainMenuDisplayed);
+            m_InventoryState = new State(OnInventoryDisplayed);
             m_LevelSelectState = new State(OnLevelSelectionDisplayed);
 
             //Connect the states
             m_SplashScreenState.AddLink(new Link(splashDelay));
             splashDelay.AddLink(new Link(m_MainMenuState));
             m_MainMenuState.AddLink(new EventLink(m_ContinueEvent, m_LevelSelectState));
+            m_MainMenuState.AddLink(new EventLink(m_InventoryEvent, m_InventoryState));
             m_LevelSelectState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
         }
 
@@ -219,6 +224,12 @@ namespace HyperCasual.Gameplay
         void OnMainMenuDisplayed()
         {
             ShowUI<MainMenu>();
+            AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
+        }
+
+        void OnInventoryDisplayed()
+        {
+            ShowUI<InventoryView>();
             AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
         }
 

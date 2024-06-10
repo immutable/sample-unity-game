@@ -18,9 +18,14 @@ namespace HyperCasual.Runner
         [SerializeField]
         AbstractGameEvent m_StartButtonEvent;
         [SerializeField]
+        HyperCasualButton m_InventoryButton;
+        [SerializeField]
+        AbstractGameEvent m_InventoryButtonEvent;
+        [SerializeField]
         TextMeshProUGUI m_Email;
         [SerializeField]
         HyperCasualButton m_LogoutButton;
+
         [SerializeField]
         GameObject m_Loading;
 
@@ -36,9 +41,12 @@ namespace HyperCasual.Runner
             // Set listener to 'Logout' button
             m_LogoutButton.RemoveListener(OnLogoutButtonClick);
             m_LogoutButton.AddListener(OnLogoutButtonClick);
+            // Set listener to 'Inventory' button
+            m_InventoryButton.RemoveListener(OnInventoryButtonClick);
+            m_InventoryButton.AddListener(OnInventoryButtonClick);
 
             // Initialise Passport
-            string clientId = "YOUR_IMMUTABLE_CLIENT_ID";
+            string clientId = "ZJL7JvetcDFBNDlgRs5oJoxuAUUl6uQj";
             string environment = Immutable.Passport.Model.Environment.SANDBOX;
             string redirectUri = null;
             string logoutUri = null;
@@ -72,6 +80,8 @@ namespace HyperCasual.Runner
             ShowLoading(false);
             // Show the logout button if the player is logged in
             ShowLogoutButton(SaveManager.Instance.IsLoggedIn);
+            // Show the inventory button if the player is logged in
+            ShowInventoryButton(SaveManager.Instance.IsLoggedIn);
         }
 
         void OnDisable()
@@ -134,9 +144,20 @@ namespace HyperCasual.Runner
             m_LogoutButton.gameObject.SetActive(show);
         }
 
+        void ShowInventoryButton(bool show)
+        {
+            m_InventoryButton.gameObject.SetActive(show);
+        }
+
         void ShowEmail(bool show)
         {
             m_Email.gameObject.SetActive(show);
+        }
+
+        public void OnInventoryButtonClick()
+        {
+            m_InventoryButtonEvent.Raise();
+            AudioManager.Instance.PlayEffect(SoundID.ButtonSound);
         }
     }
 }

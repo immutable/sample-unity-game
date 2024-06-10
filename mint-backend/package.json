@@ -24,9 +24,10 @@
     "typescript-eslint": "^7.11.0"
   },
   "dependencies": {
+    "@imtbl/sdk": "^1.40.4",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "ethers": "^6.11.1",
+    "ethers": "^5.7.2",
     "express": "^4.19.2",
     "morgan": "^1.10.0"
   }

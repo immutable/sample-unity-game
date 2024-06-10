@@ -6,9 +6,11 @@ import express, {
 } from 'express';
 import cors from 'cors';
 import http from 'http';
-import { JsonRpcProvider, Wallet, Contract } from 'ethers';
+import { providers, Wallet, Contract, PopulatedTransaction, TypedDataDomain } from 'ethers';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import { config, orderbook } from '@imtbl/sdk';
+import { PrepareListingResponse, SignableAction } from '@imtbl/sdk/dist/orderbook';
 
 dotenv.config();
 
@@ -19,11 +21,12 @@ app.use(express.json()); // Handle JSON
 app.use(cors()); // Enable CORS
 const router: Router = express.Router();
 
-const zkEvmProvider = new JsonRpcProvider('https://rpc.testnet.immutable.com');
+const zkEvmProvider = new providers.JsonRpcProvider('https://rpc.testnet.immutable.com');
 
 // Contract addresses
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
 const tokenContractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
+const skinContractAddress = process.env.SKIN_CONTRACT_ADDRESS;
 // Private key of wallet with minter role
 const privateKey = process.env.PRIVATE_KEY;
 
@@ -98,6 +101,144 @@ router.post('/mint/token', async (req: Request, res: Response) => {
   }
 },
 );
+
+const client = new orderbook.Orderbook({
+  baseConfig: {
+    environment: config.Environment.SANDBOX,
+    publishableKey: "pk_imapik-test-DKZd2qi8Ta9JUSZoySQQ",
+  },
+});
+
+const prepareERC721Listing = async (
+  offererAddress: string,
+  amountToSell: string,
+  tokenId: string,
+  // client: orderbook.Orderbook,
+  // signer: Wallet,
+  // provider: Provider,
+): Promise<{ preparedListing: orderbook.PrepareListingResponse, transactionToSend: PopulatedTransaction | undefined, toSign: string | undefined }> => {
+  if (!skinContractAddress) {
+    throw new Error('Immutable Runner Skin contract address not defined');
+  }
+  if (!tokenContractAddress) {
+    throw new Error('Immutable Runner Token contract address not defined');
+  }
+
+  const preparedListing = await client.prepareListing({
+    makerAddress: offererAddress,
+    // ERC20 payment token
+    buy: {
+      amount: amountToSell,
+      type: 'ERC20',
+      contractAddress: tokenContractAddress,
+    },
+    // ERC721 sell token
+    sell: {
+      contractAddress: skinContractAddress,
+      tokenId: tokenId,
+      type: 'ERC721',
+    },
+  });
+
+  let orderSignature = ''
+  let transactionToSend: PopulatedTransaction | undefined;
+  let toSign: string | undefined = undefined;
+  for (const action of preparedListing.actions) {
+    // If the user hasn't yet approved the Immutable Seaport contract to transfer assets from this
+    // collection on their behalf they'll need to do so before they create an order
+    if (action.type === orderbook.ActionType.TRANSACTION) {
+      const builtTx = await action.buildTransaction()
+      // builtTx.nonce = await signer.getTransactionCount();
+      console.log(`Submitting ${action.purpose} transaction`)
+      transactionToSend = builtTx;
+      // await signer.sendTransaction(builtTx);
+    }
+
+    // For an order to be created (and subsequently filled), Immutable needs a valid signature for the order data.
+    // This signature is stored off-chain and is later provided to any user wishing to fulfil the open order.
+    // The signature only allows the order to be fulfilled if it meets the conditions specified by the user that created the listing.
+    if (action.type === orderbook.ActionType.SIGNABLE) {
+      toSign = JSON.stringify(action.message);
+      // orderSignature = await signer._signTypedData(
+      //   action.message.domain,
+      //   action.message.types,
+      //   action.message.value,
+      // )
+    }
+  }
+
+  return { preparedListing, transactionToSend, toSign }
+};
+
+
+// Prepare listing
+router.post('/prepareListing/skin', async (req: Request, res: Response) => {
+  try {
+    // Get the address of the seller
+    let offererAddress: string = req.body.offererAddress ?? null;
+    if (!offererAddress) {
+      throw Error("Missng offererAddress");
+    }
+    // Get the price to sell
+    let amount: string = req.body.amount ?? null;
+    if (!amount) {
+      throw Error("Missng amount");
+    }
+    // Get the token ID of the skin to sell
+    let tokenId: string = req.body.tokenId ?? null;
+    if (!tokenId) {
+      throw Error("Missng tokenId");
+    }
+
+    // Prepare listting
+    let response = await prepareERC721Listing(offererAddress, amount, tokenId);
+
+    return res.status(200).json({
+      preparedListing: JSON.stringify(response.preparedListing),
+      transactionToSend: response.transactionToSend,
+      toSign: response.toSign
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: 'Failed prepare listing' });
+  }
+},
+);
+
+// Create listing
+router.post('/createListing/skin', async (req: Request, res: Response) => {
+  try {
+    // Get the address of the seller
+    let signature: string = req.body.signature ?? null;
+    if (!signature) {
+      throw Error("Missng signature");
+    }
+    // Get prepared listing
+    let preparedListingString: string = req.body.preparedListing ?? null;
+    if (!preparedListingString) {
+      throw Error("Missing preparedListing");
+    } else {
+      console.log(`preparedListing ${preparedListingString}`);
+    }
+    let preparedListing: orderbook.PrepareListingResponse = JSON.parse(preparedListingString);
+
+    const order = await client.createListing({
+      orderComponents: preparedListing.orderComponents,
+      orderHash: preparedListing.orderHash,
+      orderSignature: signature,
+      makerFees: []
+    });
+
+    return res.status(200).json(order);
+
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: 'Failed prepare listing' });
+  }
+},
+);
+
 
 app.use('/', router);
 
