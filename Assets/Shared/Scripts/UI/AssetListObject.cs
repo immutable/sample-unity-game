@@ -41,6 +41,7 @@ namespace HyperCasual.Runner
 
         private TokenModel asset;
         private string preparedListing;
+        private string listingId;
 
         /// <summary>
         /// Initialises the ui asset based on AssetWithOrders object
@@ -68,6 +69,7 @@ namespace HyperCasual.Runner
             }
             m_SellButton.AddListener(OnSellButtonClick);
             m_ConfirmButton.AddListener(ConfirmSell);
+            m_CancelButton.AddListener(OnCancel);
         }
 
         private async UniTask<bool> IsOnSale(string tokenId)
@@ -78,13 +80,21 @@ namespace HyperCasual.Runner
                 string skinContractAddress = "0x52A1016eCca06bDBbdd9440E7AA9166bD5366aE1";
 
                 using var client = new HttpClient();
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings?sell_item_contract_address={skinContractAddress}&sell_item_token_id={tokenId}";
+                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings?sell_item_contract_address={skinContractAddress}&sell_item_token_id={tokenId}&status=ACTIVE";
                 HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
                     ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
-                    return listingResponse.result.Length > 0;
+                    if (listingResponse.result.Length > 0)
+                    {
+                        listingId = listingResponse.result[0].id;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
@@ -120,7 +130,7 @@ namespace HyperCasual.Runner
                 new KeyValuePair<string, string>("tokenId", asset.token_id)
             };
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:3000/prepareListing/skin") { Content = new FormUrlEncodedContent(nvc) };
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/prepareListing/skin") { Content = new FormUrlEncodedContent(nvc) };
                 using var res = await client.SendAsync(req);
 
                 string responseBody = await res.Content.ReadAsStringAsync();
@@ -173,7 +183,7 @@ namespace HyperCasual.Runner
                 new KeyValuePair<string, string>("preparedListing", preparedListing),
             };
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:3000/createListing/skin") { Content = new FormUrlEncodedContent(nvc) };
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/createListing/skin") { Content = new FormUrlEncodedContent(nvc) };
                 using var res = await client.SendAsync(req);
 
                 if (res.IsSuccessStatusCode)
@@ -197,6 +207,47 @@ namespace HyperCasual.Runner
             {
                 Debug.Log($"Failed to confirm sell: {ex.Message}");
                 m_SellButton.gameObject.SetActive(true);
+                progress.SetActive(false);
+            }
+        }
+
+        private async void OnCancel()
+        {
+            try
+            {
+                m_CancelButton.gameObject.SetActive(false);
+                progress.SetActive(true);
+
+                string address = await GetWalletAddress();
+                var nvc = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("offererAddress", address),
+                new KeyValuePair<string, string>("listingId", listingId),
+                new KeyValuePair<string, string>("type", "hard")
+            };
+                using var client = new HttpClient();
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/cancelListing/skin") { Content = new FormUrlEncodedContent(nvc) };
+                using var res = await client.SendAsync(req);
+
+                string responseBody = await res.Content.ReadAsStringAsync();
+                TransactionToSend response = JsonUtility.FromJson<TransactionToSend>(responseBody);
+                if (response != null && response.to != null)
+                {
+                    string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest()
+                    {
+                        to = response.to, // Immutable seaport contract
+                        data = response.data, // fd9f1e10 cancel
+                        value = "0"
+                    });
+                }
+
+                m_SellButton.gameObject.SetActive(true);
+                progress.SetActive(false);
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Failed to cancel {ex.Message}");
+                m_CancelButton.gameObject.SetActive(true);
                 progress.SetActive(false);
             }
         }

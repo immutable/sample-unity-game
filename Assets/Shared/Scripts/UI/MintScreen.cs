@@ -131,7 +131,7 @@ namespace HyperCasual.Runner
                     new KeyValuePair<string, string>("to", address)
                 };
                     using var client = new HttpClient();
-                    string url = $"http://localhost:3000/mint/fox"; // Endpoint to mint fox
+                    string url = $"http://localhost:6060/mint/fox"; // Endpoint to mint fox
                     using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
                     using var res = await client.SendAsync(req);
                     return res.IsSuccessStatusCode;
@@ -176,7 +176,7 @@ namespace HyperCasual.Runner
                     new KeyValuePair<string, string>("quantity", quantity.ToString())
                 };
                     using var client = new HttpClient();
-                    string url = $"http://localhost:3000/mint/token"; // Endpoint to mint token
+                    string url = $"http://localhost:6060/mint/token"; // Endpoint to mint token
                     using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
                     using var res = await client.SendAsync(req);
                     return res.IsSuccessStatusCode;

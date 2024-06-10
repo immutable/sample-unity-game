@@ -98,6 +98,7 @@ namespace HyperCasual.Gameplay
             m_MainMenuState.AddLink(new EventLink(m_ContinueEvent, m_LevelSelectState));
             m_MainMenuState.AddLink(new EventLink(m_InventoryEvent, m_InventoryState));
             m_LevelSelectState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
+            m_InventoryState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
         }
 
         void CreateLevelSequences()

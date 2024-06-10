@@ -209,7 +209,7 @@ router.post('/prepareListing/skin', async (req: Request, res: Response) => {
 // Create listing
 router.post('/createListing/skin', async (req: Request, res: Response) => {
   try {
-    // Get the address of the seller
+    // Get the order signature
     let signature: string = req.body.signature ?? null;
     if (!signature) {
       throw Error("Missng signature");
@@ -239,10 +239,84 @@ router.post('/createListing/skin', async (req: Request, res: Response) => {
 },
 );
 
+// Cancel listing
+router.post('/cancelListing/skin', async (req: Request, res: Response) => {
+  try {
+    // Get the address of the seller
+    let offererAddress: string = req.body.offererAddress ?? null;
+    if (!offererAddress) {
+      throw Error("Missng offererAddress");
+    }
+    // Get the listing id
+    let listingId: string = req.body.listingId ?? null;
+    if (!listingId) {
+      throw Error("Missng listingId");
+    }
+    // Type of cancel
+    let type: string = req.body.type ?? null;
+    if (!type) {
+      throw Error("Missing type");
+    }
+    if (type != 'hard' && type != 'soft') {
+      throw Error(`The type can only be 'hard' or 'soft'`);
+    }
+
+    if (type == 'hard') {
+      console.log("Starting hard cancel...");
+      const { cancellationAction } = await client.cancelOrdersOnChain([listingId], offererAddress);
+      const unsignedCancelOrderTransaction = await cancellationAction.buildTransaction();
+
+      console.log(`unsignedCancelOrderTransaction: ${unsignedCancelOrderTransaction}`);
+
+      return res.status(200).json(unsignedCancelOrderTransaction);
+    } else if (type == 'soft') {
+      const { signableAction } = await client.prepareOrderCancellations([listingId]);
+      return res.status(200).json({
+        toSign: JSON.stringify(signableAction.message)
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: 'Failed prepare listing' });
+  }
+},
+);
+
+// Confirm cancel listing for soft cancel
+router.post('/confirmCancelListing/skin', async (req: Request, res: Response) => {
+  try {
+    // Get the address of the seller
+    let offererAddress: string = req.body.offererAddress ?? null;
+    if (!offererAddress) {
+      throw Error("Missng offererAddress");
+    }
+    // Get the listing id
+    let listingId: string = req.body.listingId ?? null;
+    if (!listingId) {
+      throw Error("Missng listingId");
+    }
+    // Signature
+    let signature: string = req.body.signature ?? null;
+    if (!signature) {
+      throw Error("Missing signature");
+    }
+
+    const response = await client.cancelOrders([listingId], offererAddress, signature);
+
+    console.log(`response: ${response}`);
+
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: 'Failed prepare listing' });
+  }
+},
+);
+
 
 app.use('/', router);
 
 http.createServer(app).listen(
-  3000,
-  () => console.log('Listening on port 3000'),
+  6060,
+  () => console.log('Listening on port 6060'),
 );

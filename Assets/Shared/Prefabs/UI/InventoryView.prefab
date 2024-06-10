@@ -1379,6 +1379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BackButton: {fileID: 1959949333993756089}
+  m_BackEvent: {fileID: 11400000, guid: 58f804667e2cb4eb789b6d2dfb3c4ce3, type: 2}
   assetObj: {fileID: 9058881605653984377}
   listParent: {fileID: 5215714299094789106}
 --- !u!1 &7596518424612789233

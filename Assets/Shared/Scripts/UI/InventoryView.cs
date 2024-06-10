@@ -15,6 +15,8 @@ namespace HyperCasual.Runner
         [SerializeField]
         HyperCasualButton m_BackButton;
         [SerializeField]
+        AbstractGameEvent m_BackEvent;
+        [SerializeField]
         private AssetListObject assetObj = null;
         [SerializeField]
         private Transform listParent = null;
@@ -106,7 +108,7 @@ namespace HyperCasual.Runner
 
         void OnBackButtonClick()
         {
-            UIManager.Instance.GoBack();
+            m_BackEvent.Raise();
         }
     }
 }
