@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Net.Http;
 using HyperCasual.Core;
 using UnityEngine;
@@ -13,20 +14,17 @@ using Immutable.Passport.Model;
 
 namespace HyperCasual.Runner
 {
-    public class AssetListObject : MonoBehaviour
+    public class OrderListObject : MonoBehaviour
     {
         [SerializeField]
-        HyperCasualButton m_SellButton;
+        HyperCasualButton m_BuyButton;
         [SerializeField]
         HyperCasualButton m_CancelButton;
         [SerializeField]
         private TextMeshProUGUI nameText = null;
 
         [SerializeField]
-        private TextMeshProUGUI tokenIdText = null;
-
-        [SerializeField]
-        private TextMeshProUGUI collectionText = null;
+        private TextMeshProUGUI amountText = null;
 
         [SerializeField]
         private RawImage collectionImage = null;
@@ -39,72 +37,64 @@ namespace HyperCasual.Runner
         [SerializeField]
         HyperCasualButton m_ConfirmButton;
 
-        private TokenModel asset;
+        private OrderModel order;
         private string preparedListing;
         private string listingId;
 
-        /// <summary>
-        /// Initialises the ui asset based on AssetWithOrders object
-        /// </summary>
-        /// <param name="asset">Immutable X asset</param>
-        public async void Initialise(TokenModel asset)
+        public async void Initialise(OrderModel order)
         {
-            this.asset = asset;
-            nameText.text = $"Name: {asset.name}";
-            tokenIdText.text = $"Token ID: {asset.token_id}";
-            collectionText.text = $"Contract: {asset.contract_address}";
+            this.order = order;
+            if (order.buy.Length > 0)
+            {
+                string amount = order.buy[0].amount;
+                decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
+                amountText.text = $"Amount: {quantity} IMR";
+            }
 
-            // Check sale status and show appropriate button
-            bool isOnSale = await IsOnSale(asset.token_id);
-            m_SellButton.gameObject.SetActive(!isOnSale);
-            m_CancelButton.gameObject.SetActive(isOnSale);
+            // Check is it's the user's listing
+            string address = await GetWalletAddress();
+            bool IsUsersListing = order.account_address == address;
+            m_BuyButton.gameObject.SetActive(!IsUsersListing);
+            m_CancelButton.gameObject.SetActive(IsUsersListing);
+
+            // Get NFT
+            await GetNft(order.sell[0].token_id);
 
             // Hide progress and signature input
             progress.SetActive(false);
             signatureContainer.gameObject.SetActive(false);
 
-            if (asset.image != null)
-            {
-                StartCoroutine(DownloadImage(asset.image));
-            }
-            m_SellButton.AddListener(OnSellButtonClick);
+            m_BuyButton.AddListener(OnBuyButtonClick);
             m_ConfirmButton.AddListener(ConfirmSell);
             m_CancelButton.AddListener(OnCancel);
         }
 
-        private async UniTask<bool> IsOnSale(string tokenId)
+        private async UniTask GetNft(string tokenId)
         {
-            Debug.Log("Getting user skins fox...");
             try
             {
                 string skinContractAddress = "0x52A1016eCca06bDBbdd9440E7AA9166bD5366aE1";
 
                 using var client = new HttpClient();
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings?sell_item_contract_address={skinContractAddress}&sell_item_token_id={tokenId}&status=ACTIVE";
+                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/collections/{skinContractAddress}/nfts/{tokenId}";
                 HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
-                    ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
-                    if (listingResponse.result.Length > 0)
+                    TokenResponse tokenResponse = JsonUtility.FromJson<TokenResponse>(responseBody);
+                    if (tokenResponse != null && tokenResponse.result != null)
                     {
-                        listingId = listingResponse.result[0].id;
-                        return true;
+                        nameText.text = $"Name: {tokenResponse.result.name}";
+                        if (tokenResponse.result.image != null)
+                        {
+                            StartCoroutine(DownloadImage(tokenResponse.result.image));
+                        }
                     }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
                 }
             }
             catch (Exception ex)
             {
-                Debug.Log($"Failed to check sale status: {ex.Message}");
-                return false;
+                Debug.Log($"Failed to get NFT: {ex.Message}");
             }
         }
 
@@ -114,55 +104,56 @@ namespace HyperCasual.Runner
             return accounts[0]; // Get the first wallet address
         }
 
-        private async void OnSellButtonClick()
+        private async void OnBuyButtonClick()
         {
             try
             {
-                m_SellButton.gameObject.SetActive(false);
+                m_BuyButton.gameObject.SetActive(false);
                 progress.SetActive(true);
                 signatureContainer.gameObject.SetActive(false);
 
                 string address = await GetWalletAddress();
                 var nvc = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("offererAddress", address),
-                new KeyValuePair<string, string>("amount", "9000000000000000000"), // TODO allow user to enter any amount
-                new KeyValuePair<string, string>("tokenId", asset.token_id)
-            };
+                {
+                    new KeyValuePair<string, string>("fulfillerAddress", address),
+                    new KeyValuePair<string, string>("listingId", order.id),
+                    new KeyValuePair<string, string>("fees", order.fees.ToJson().Replace("recipient_address","recipientAddress")) // TODO
+                };
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/prepareListing/skin") { Content = new FormUrlEncodedContent(nvc) };
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/fillOrder/skin") { Content = new FormUrlEncodedContent(nvc) };
                 using var res = await client.SendAsync(req);
 
                 string responseBody = await res.Content.ReadAsStringAsync();
-                PrepareListingResponse response = JsonUtility.FromJson<PrepareListingResponse>(responseBody);
+                Debug.Log($"responseBody: {responseBody}");
+                FulfullOrderResponse response = JsonUtility.FromJson<FulfullOrderResponse>(responseBody);
 
-                // Approved the Immutable Seaport contract to transfer assets from skin collection on their behalf they'll need to do so before they create an order
-                if (response.transactionToSend != null && response.transactionToSend.to != null)
+                // One transaction to call Immutable Runner Token approve 095ea7b3
+
+                if (response.transactionsToSend != null)
                 {
-                    string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest()
+                    foreach (TransactionToSend tx in response.transactionsToSend)
                     {
-                        to = response.transactionToSend.to,
-                        data = response.transactionToSend.data, // a22cb465 setApprovalForAll
-                        value = "0"
-                    });
-                }
+                        string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest()
+                        {
+                            to = tx.to,
+                            data = tx.data,
+                            value = "0"
+                        });
+                    }
 
-                if (response.toSign != null && response.preparedListing != null)
-                {
-                    preparedListing = response.preparedListing;
-                    signatureContainer.gameObject.SetActive(true);
-                    Debug.Log($"Sign: {response.toSign}");
+                    m_BuyButton.gameObject.SetActive(false);
                 }
                 else
                 {
-                    m_SellButton.gameObject.SetActive(true);
+                    m_BuyButton.gameObject.SetActive(true);
                 }
+
                 progress.SetActive(false);
             }
             catch (Exception ex)
             {
                 Debug.Log($"Failed to sell {ex.Message}");
-                m_SellButton.gameObject.SetActive(true);
+                m_BuyButton.gameObject.SetActive(true);
                 progress.SetActive(false);
                 signatureContainer.gameObject.SetActive(false);
             }
@@ -172,7 +163,7 @@ namespace HyperCasual.Runner
         {
             try
             {
-                m_SellButton.gameObject.SetActive(false);
+                m_BuyButton.gameObject.SetActive(false);
                 progress.SetActive(true);
                 signatureContainer.gameObject.SetActive(false);
 
@@ -192,21 +183,20 @@ namespace HyperCasual.Runner
                     CreateListingResponse response = JsonUtility.FromJson<CreateListingResponse>(responseBody);
                     Debug.Log($"Listing ID: {response.result.id}");
 
-                    m_SellButton.gameObject.SetActive(false);
+                    m_BuyButton.gameObject.SetActive(false);
                     progress.SetActive(false);
-                    m_CancelButton.gameObject.SetActive(true);
                 }
                 else
                 {
                     Debug.Log($"Failed to confirm sell");
-                    m_SellButton.gameObject.SetActive(true);
+                    m_BuyButton.gameObject.SetActive(true);
                     progress.SetActive(false);
                 }
             }
             catch (Exception ex)
             {
                 Debug.Log($"Failed to confirm sell: {ex.Message}");
-                m_SellButton.gameObject.SetActive(true);
+                m_BuyButton.gameObject.SetActive(true);
                 progress.SetActive(false);
             }
         }
@@ -222,7 +212,7 @@ namespace HyperCasual.Runner
                 var nvc = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("offererAddress", address),
-                new KeyValuePair<string, string>("listingId", listingId),
+                new KeyValuePair<string, string>("listingId", order.id),
                 new KeyValuePair<string, string>("type", "hard")
             };
                 using var client = new HttpClient();
@@ -241,7 +231,6 @@ namespace HyperCasual.Runner
                     });
                 }
 
-                m_SellButton.gameObject.SetActive(true);
                 progress.SetActive(false);
             }
             catch (Exception ex)
@@ -267,4 +256,5 @@ namespace HyperCasual.Runner
             }
         }
     }
+
 }

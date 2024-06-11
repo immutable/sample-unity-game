@@ -268,5 +268,43 @@ router.post('/confirmCancelListing/skin', async (req, res) => {
         return res.status(400).json({ message: 'Failed prepare listing' });
     }
 });
+// Fill order
+router.post('/fillOrder/skin', async (req, res) => {
+    try {
+        // Get the address of the seller
+        let fulfillerAddress = req.body.fulfillerAddress ?? null;
+        if (!fulfillerAddress) {
+            throw Error("Missng fulfillerAddress");
+        }
+        // Get the listing id
+        let listingId = req.body.listingId ?? null;
+        if (!listingId) {
+            throw Error("Missng listingId");
+        }
+        // Get fees
+        let fees = req.body.fees ?? null;
+        if (!fees) {
+            throw Error("Missng fees");
+        }
+        const feesValue = JSON.parse(fees);
+        const { actions, expiration, order } = await client.fulfillOrder(listingId, fulfillerAddress, feesValue);
+        console.log(`Fulfilling listing ${order}, transaction expiry ${expiration}`);
+        const transactionsToSend = [];
+        for (const action of actions) {
+            if (action.type === sdk_1.orderbook.ActionType.TRANSACTION) {
+                const builtTx = await action.buildTransaction();
+                console.log(`Submitting ${action.purpose} transaction`);
+                console.log(`Transaction to send ${builtTx.value}`);
+                transactionsToSend.push(builtTx);
+            }
+        }
+        console.log(`Number of transactions to send ${transactionsToSend.length}`);
+        return res.status(200).json({ transactionsToSend: transactionsToSend });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(400).json({ message: 'Failed prepare listing' });
+    }
+});
 app.use('/', router);
 http_1.default.createServer(app).listen(6060, () => console.log('Listening on port 6060'));

@@ -10,7 +10,7 @@ import { providers, Wallet, Contract, PopulatedTransaction, TypedDataDomain } fr
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { config, orderbook } from '@imtbl/sdk';
-import { PrepareListingResponse, SignableAction } from '@imtbl/sdk/dist/orderbook';
+import { PrepareListingResponse, SignableAction, FeeValue } from '@imtbl/sdk/dist/orderbook';
 
 dotenv.config();
 
@@ -306,6 +306,50 @@ router.post('/confirmCancelListing/skin', async (req: Request, res: Response) =>
     console.log(`response: ${response}`);
 
     return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: 'Failed prepare listing' });
+  }
+},
+);
+
+// Fill order
+router.post('/fillOrder/skin', async (req: Request, res: Response) => {
+  try {
+    // Get the address of the seller
+    let fulfillerAddress: string = req.body.fulfillerAddress ?? null;
+    if (!fulfillerAddress) {
+      throw Error("Missng fulfillerAddress");
+    }
+    // Get the listing id
+    let listingId: string = req.body.listingId ?? null;
+    if (!listingId) {
+      throw Error("Missng listingId");
+    }
+    // Get fees
+    let fees: string = req.body.fees ?? null;
+    if (!fees) {
+      throw Error("Missng fees");
+    }
+    const feesValue: FeeValue[] = JSON.parse(fees);
+
+    const { actions, expiration, order } = await client.fulfillOrder(listingId, fulfillerAddress, feesValue);
+
+    console.log(`Fulfilling listing ${order}, transaction expiry ${expiration}`);
+
+    const transactionsToSend = [];
+    for (const action of actions) {
+      if (action.type === orderbook.ActionType.TRANSACTION) {
+        const builtTx = await action.buildTransaction();
+        console.log(`Submitting ${action.purpose} transaction`);
+        console.log(`Transaction to send ${builtTx.value}`);
+        transactionsToSend.push(builtTx);
+      }
+    }
+
+    console.log(`Number of transactions to send ${transactionsToSend.length}`);
+
+    return res.status(200).json({ transactionsToSend: transactionsToSend });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ message: 'Failed prepare listing' });

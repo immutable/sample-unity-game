@@ -10,17 +10,17 @@ using System.Net.Http;
 
 namespace HyperCasual.Runner
 {
-    public class InventoryView : View
+    public class MarketplaceView : View
     {
         [SerializeField]
         HyperCasualButton m_BackButton;
         [SerializeField]
         AbstractGameEvent m_BackEvent;
         [SerializeField]
-        private AssetListObject assetObj = null;
+        private OrderListObject assetObj = null;
         [SerializeField]
         private Transform listParent = null;
-        private List<AssetListObject> listedAssets = new List<AssetListObject>();
+        private List<OrderListObject> listedOrders = new List<OrderListObject>();
 
         private ApiService Api = new();
 
@@ -32,23 +32,23 @@ namespace HyperCasual.Runner
             {
                 // Get user skins
                 // TODO doesn't support pagingation
-                List<TokenModel> assets = await GetUserSkins();
+                List<OrderModel> assets = await GetOrders();
 
                 // Delete existing list
-                foreach (AssetListObject uiAsset in listedAssets)
+                foreach (OrderListObject uiAsset in listedOrders)
                 {
                     Destroy(uiAsset.gameObject);
                 }
-                listedAssets.Clear();
+                listedOrders.Clear();
 
                 // Populate UI list elements
-                foreach (TokenModel asset in assets)
+                foreach (OrderModel asset in assets)
                 {
-                    AssetListObject newAsset = GameObject.Instantiate(assetObj, listParent);
+                    OrderListObject newAsset = GameObject.Instantiate(assetObj, listParent);
                     newAsset.gameObject.SetActive(true);
 
                     newAsset.Initialise(asset);
-                    listedAssets.Add(newAsset);
+                    listedOrders.Add(newAsset);
                 }
             }
         }
@@ -59,9 +59,8 @@ namespace HyperCasual.Runner
             return accounts[0]; // Get the first wallet address
         }
 
-        private async UniTask<List<TokenModel>> GetUserSkins()
+        private async UniTask<List<OrderModel>> GetOrders()
         {
-            Debug.Log("Getting user skins fox...");
             try
             {
                 string address = await GetWalletAddress(); // Get the player's wallet address to mint the fox to
@@ -70,40 +69,40 @@ namespace HyperCasual.Runner
                 if (address != null)
                 {
                     using var client = new HttpClient();
-                    string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/{address}/nfts?contract_address={skinContractAddress}&page_size=10";
+                    string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings?sell_item_contract_address={skinContractAddress}&page_size=10&status=ACTIVE";
                     HttpResponseMessage response = await client.GetAsync(url);
                     if (response.IsSuccessStatusCode)
                     {
                         string responseBody = await response.Content.ReadAsStringAsync();
-                        Debug.Log($"Get Tokens response: {responseBody}");
-                        ListTokenResponse tokenResponse = JsonUtility.FromJson<ListTokenResponse>(responseBody);
-                        List<TokenModel> tokens = new List<TokenModel>();
-                        tokens.AddRange(tokenResponse.result);
-                        return tokens;
+                        Debug.Log($"Get listing response: {responseBody}");
+                        ListOrderResponse listOrderResponse = JsonUtility.FromJson<ListOrderResponse>(responseBody);
+                        List<OrderModel> orders = new List<OrderModel>();
+                        orders.AddRange(listOrderResponse.result);
+                        return orders;
                     }
                     else
                     {
-                        return new List<TokenModel>();
+                        return new List<OrderModel>();
                     }
                 }
 
-                return new List<TokenModel>();
+                return new List<OrderModel>();
             }
             catch (Exception ex)
             {
-                Debug.Log($"Failed to get user's skin: {ex.Message}");
-                return new List<TokenModel>();
+                Debug.Log($"Failed to get orders: {ex.Message}");
+                return new List<OrderModel>();
             }
         }
 
         void OnDisable()
         {
             m_BackButton.RemoveListener(OnBackButtonClick);
-            foreach (AssetListObject uiAsset in listedAssets)
+            foreach (OrderListObject uiAsset in listedOrders)
             {
                 Destroy(uiAsset.gameObject);
             }
-            listedAssets.Clear();
+            listedOrders.Clear();
         }
 
         void OnBackButtonClick()

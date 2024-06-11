@@ -22,6 +22,10 @@ namespace HyperCasual.Runner
         [SerializeField]
         AbstractGameEvent m_InventoryButtonEvent;
         [SerializeField]
+        HyperCasualButton m_MarketplaceButton;
+        [SerializeField]
+        AbstractGameEvent m_MarketplaceButtonEvent;
+        [SerializeField]
         TextMeshProUGUI m_Email;
         [SerializeField]
         HyperCasualButton m_LogoutButton;
@@ -44,6 +48,9 @@ namespace HyperCasual.Runner
             // Set listener to 'Inventory' button
             m_InventoryButton.RemoveListener(OnInventoryButtonClick);
             m_InventoryButton.AddListener(OnInventoryButtonClick);
+            // Set listener to 'Marketplace' button
+            m_MarketplaceButton.RemoveListener(OnMarketplaceButtonClick);
+            m_MarketplaceButton.AddListener(OnMarketplaceButtonClick);
 
             // Initialise Passport
             string clientId = "ZJL7JvetcDFBNDlgRs5oJoxuAUUl6uQj";
@@ -78,10 +85,10 @@ namespace HyperCasual.Runner
             }
 
             ShowLoading(false);
-            // Show the logout button if the player is logged in
+            // Show the logout, inventory and marketplace button if the player is logged in
             ShowLogoutButton(SaveManager.Instance.IsLoggedIn);
-            // Show the inventory button if the player is logged in
             ShowInventoryButton(SaveManager.Instance.IsLoggedIn);
+            ShowMarketplaceButton(SaveManager.Instance.IsLoggedIn);
         }
 
         void OnDisable()
@@ -101,6 +108,8 @@ namespace HyperCasual.Runner
             {
                 // Hide the 'Logout' button
                 ShowLogoutButton(false);
+                ShowInventoryButton(false);
+                ShowMarketplaceButton(false);
                 // Show loading
                 ShowLoading(true);
 
@@ -115,6 +124,8 @@ namespace HyperCasual.Runner
                 SaveManager.Instance.IsLoggedIn = false;
                 // Successfully logged out, hide 'Logout' button
                 ShowLogoutButton(false);
+                ShowInventoryButton(false);
+                ShowMarketplaceButton(false);
                 // Reset all other values
                 SaveManager.Instance.Clear();
             }
@@ -123,6 +134,8 @@ namespace HyperCasual.Runner
                 Debug.Log($"Failed to log out: {ex.Message}");
                 // Failed to logout so show 'Logout' button again
                 ShowLogoutButton(true);
+                ShowInventoryButton(true);
+                ShowMarketplaceButton(true);
             }
             // Hide loading
             ShowLoading(false);
@@ -149,6 +162,11 @@ namespace HyperCasual.Runner
             m_InventoryButton.gameObject.SetActive(show);
         }
 
+        void ShowMarketplaceButton(bool show)
+        {
+            m_MarketplaceButton.gameObject.SetActive(show);
+        }
+
         void ShowEmail(bool show)
         {
             m_Email.gameObject.SetActive(show);
@@ -157,6 +175,12 @@ namespace HyperCasual.Runner
         public void OnInventoryButtonClick()
         {
             m_InventoryButtonEvent.Raise();
+            AudioManager.Instance.PlayEffect(SoundID.ButtonSound);
+        }
+
+        public void OnMarketplaceButtonClick()
+        {
+            m_MarketplaceButtonEvent.Raise();
             AudioManager.Instance.PlayEffect(SoundID.ButtonSound);
         }
     }
