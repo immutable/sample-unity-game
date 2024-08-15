@@ -236,7 +236,7 @@ namespace HyperCasual.Gameplay
 
         void OnInventoryDisplayed()
         {
-            ShowUI<InventoryView>();
+            ShowUI<InventoryScreen>();
             AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
         }
 
@@ -271,7 +271,7 @@ namespace HyperCasual.Gameplay
             ShowUI<Hud>();
             AudioManager.Instance.StopMusic();
 
-            MemoryCache.CurrentLevel = m_LevelStates.IndexOf(current) + 1;
+            MemoryCache.s_CurrentLevel = m_LevelStates.IndexOf(current) + 1;
         }
     }
 }
