@@ -12,7 +12,7 @@ using TMPro;
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// The inventory view which displays the user's assets (e.g. skins).
+    /// The inventory view which displays the player's assets (e.g. skins).
     /// </summary>
     public class InventoryScreen : View
     {
@@ -20,12 +20,11 @@ namespace HyperCasual.Runner
         [SerializeField] private AbstractGameEvent m_BackEvent;
         [SerializeField] private AssetListObject m_AssetObj = null;
         [SerializeField] private Transform m_ListParent = null;
-        [SerializeField] private TextMeshProUGUI m_ErrorMessage = null;
 
         private List<AssetListObject> m_ListedAssets = new List<AssetListObject>();
 
         /// <summary>
-        /// Sets up the inventory list and fetches the user's assets.
+        /// Sets up the inventory list and fetches the player's assets.
         /// </summary>
         private async void OnEnable()
         {
@@ -34,7 +33,7 @@ namespace HyperCasual.Runner
 
             if (Passport.Instance != null)
             {
-                // Get user's assets
+                // Get player's assets
                 List<TokenModel> assets = await GetAssets();
 
                 // Clear existing assets from the list before populating the list with new assets
@@ -70,7 +69,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Retrieves the users's wallet address.
+        /// Retrieves the players's wallet address.
         /// </summary>
         private async UniTask<string> GetWalletAddress()
         {
@@ -79,40 +78,49 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Fetches the user's skins from the API based on the wallet address.
+        /// Parses the JSON response body to extract asset tokens.
         /// </summary>
-        /// <returns>A list of user's assets.</returns>
+        private List<TokenModel> ParseAssetsResponse(string responseBody)
+        {
+            ListTokenResponse tokenResponse = JsonUtility.FromJson<ListTokenResponse>(responseBody);
+            return tokenResponse.result ?? new List<TokenModel>();
+        }
+
+        /// <summary>
+        /// Fetches the player's skins.
+        /// </summary>
+        /// <returns>A list of player's assets.</returns>
         private async UniTask<List<TokenModel>> GetAssets()
         {
-            Debug.Log("Fetching user assets...");
+            Debug.Log("Fetching player assets...");
+
             List<TokenModel> tokens = new List<TokenModel>();
 
             try
             {
                 string address = await GetWalletAddress();
-                if (!string.IsNullOrEmpty(address))
+
+                if (string.IsNullOrEmpty(address))
                 {
-                    using var client = new HttpClient();
-                    string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/{address}/nfts?contract_address={Contract.SKIN_CONTRACT}&page_size=10";
-                    HttpResponseMessage response = await client.GetAsync(url);
+                    Debug.LogError("Could not get player's wallet");
+                    return tokens;
+                }
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string responseBody = await response.Content.ReadAsStringAsync();
-                        Debug.Log($"Response: {responseBody}");
+                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/{address}/nfts?contract_address={Contract.SKIN_CONTRACT}&page_size=10";
+                using var client = new HttpClient();
+                HttpResponseMessage response = await client.GetAsync(url);
 
-                        ListTokenResponse tokenResponse = JsonUtility.FromJson<ListTokenResponse>(responseBody);
-                        tokens.AddRange(tokenResponse.result);
-                    }
-                    else
-                    {
-                        m_ErrorMessage.gameObject.SetActive(true);
-                        m_ErrorMessage.text = "Failed to fetch assets";
-                    }
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    Debug.Log($"Assets response: {responseBody}");
+
+                    tokens = ParseAssetsResponse(responseBody);
                 }
                 else
                 {
-                    Debug.Log($"Failed to the user's wallet address");
+                    // TODO use dialogs
+                    Debug.Log($"Failed to fetch assets");
                 }
             }
             catch (Exception ex)
