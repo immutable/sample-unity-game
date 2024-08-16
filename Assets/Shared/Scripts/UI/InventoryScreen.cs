@@ -20,52 +20,71 @@ namespace HyperCasual.Runner
         [SerializeField] private AbstractGameEvent m_BackEvent;
         [SerializeField] private AssetListObject m_AssetObj = null;
         [SerializeField] private Transform m_ListParent = null;
+        [SerializeField] private InfiniteScrollView m_ScrollView;
+        private List<AssetModel> m_Assets = new List<AssetModel>();
 
-        private List<AssetListObject> m_ListedAssets = new List<AssetListObject>();
+        // Pagination
+        private bool m_IsLoadingMore = false;
+        private PageModel m_Page;
 
         /// <summary>
         /// Sets up the inventory list and fetches the player's assets.
         /// </summary>
         private async void OnEnable()
         {
-            m_AssetObj.gameObject.SetActive(false); // Disable the template asset object initially
-            m_BackButton.AddListener(OnBackButtonClick); // Listen for back button click
+            // Hide asset template item
+            m_AssetObj.gameObject.SetActive(false);
+
+            // Add listener to back button
+            m_BackButton.AddListener(OnBackButtonClick);
 
             if (Passport.Instance != null)
             {
-                // Get player's assets
-                List<TokenModel> assets = await GetAssets();
-
-                // Clear existing assets from the list before populating the list with new assets
-                ClearListedAssets();
-                PopulateAssetList(assets);
+                // Setup infinite scroll view and load assets
+                m_ScrollView.OnCreateItemView += OnCreateItemView;
+                LoadAssets();
             }
         }
 
         /// <summary>
-        /// Clears all currently listed assets from the list.
+        /// Configures the asset list item view
         /// </summary>
-        private void ClearListedAssets()
+        private void OnCreateItemView(int index, GameObject item)
         {
-            foreach (AssetListObject uiAsset in m_ListedAssets)
+            if (index < m_Assets.Count)
             {
-                Destroy(uiAsset.gameObject);
+                // Initialise the view with asset
+                var itemComponent = item.GetComponent<AssetListObject>();
+                itemComponent.Initialise(m_Assets[index]);
             }
-            m_ListedAssets.Clear();
+
+            // Load more assets if nearing the end of the list
+            if (index >= m_Assets.Count - 5 && !m_IsLoadingMore)
+            {
+                LoadAssets();
+            }
         }
 
         /// <summary>
-        /// Populates the list with the given assets.
+        /// Loads assets and adds them to the scroll view.
         /// </summary>
-        private void PopulateAssetList(List<TokenModel> assets)
+        private async void LoadAssets()
         {
-            foreach (TokenModel asset in assets)
+            if (m_IsLoadingMore)
             {
-                AssetListObject newAsset = Instantiate(m_AssetObj, m_ListParent); // Create a new asset object
-                newAsset.gameObject.SetActive(true);
-                newAsset.Initialise(asset); // Initialise the asset with data
-                m_ListedAssets.Add(newAsset); // Add to the list of displayed assets
+                return;
             }
+
+            m_IsLoadingMore = true;
+
+            List<AssetModel> assets = await GetAssets();
+            if (assets != null && assets.Count > 0)
+            {
+                m_Assets.AddRange(assets);
+                m_ScrollView.TotalItemCount = m_Assets.Count;
+            }
+
+            m_IsLoadingMore = false;
         }
 
         /// <summary>
@@ -79,22 +98,38 @@ namespace HyperCasual.Runner
 
         /// <summary>
         /// Parses the JSON response body to extract asset tokens.
+        /// Updates the pagination info from the response.
         /// </summary>
-        private List<TokenModel> ParseAssetsResponse(string responseBody)
+        private List<AssetModel> ParseAssetsResponse(string responseBody)
         {
-            ListTokenResponse tokenResponse = JsonUtility.FromJson<ListTokenResponse>(responseBody);
-            return tokenResponse.result ?? new List<TokenModel>();
+            if (string.IsNullOrEmpty(responseBody))
+            {
+                Debug.LogWarning("Response body is null or empty.");
+                return new List<AssetModel>();
+            }
+
+            AssetsResponse response = JsonUtility.FromJson<AssetsResponse>(responseBody);
+            if (response == null)
+            {
+                Debug.LogWarning("Failed to parse response body into AssetsResponse.");
+                return new List<AssetModel>();
+            }
+
+            // Update pagination information
+            m_Page = response.page;
+
+            return response.result ?? new List<AssetModel>();
         }
 
         /// <summary>
         /// Fetches the player's skins.
         /// </summary>
         /// <returns>A list of player's assets.</returns>
-        private async UniTask<List<TokenModel>> GetAssets()
+        private async UniTask<List<AssetModel>> GetAssets()
         {
             Debug.Log("Fetching player assets...");
 
-            List<TokenModel> tokens = new List<TokenModel>();
+            List<AssetModel> tokens = new List<AssetModel>();
 
             try
             {
@@ -106,7 +141,19 @@ namespace HyperCasual.Runner
                     return tokens;
                 }
 
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/{address}/nfts?contract_address={Contract.SKIN_CONTRACT}&page_size=10";
+                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/{address}/nfts?contract_address={Contract.SKIN_CONTRACT}&page_size=6";
+
+                // Pagination
+                if (m_Page?.next_cursor != null)
+                {
+                    url += $"&page_cursor={m_Page.next_cursor}";
+                }
+                else if (m_Page != null && m_Page.next_cursor != null)
+                {
+                    Debug.Log("No more player assets to load");
+                    return tokens;
+                }
+
                 using var client = new HttpClient();
                 HttpResponseMessage response = await client.GetAsync(url);
 
@@ -132,13 +179,24 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Cleans up listeners and UI elements.
+        /// Cleans up event listeners and views
         /// </summary>
         private void OnDisable()
         {
+            // Remove listener from the back button
             m_BackButton.RemoveListener(OnBackButtonClick);
-            ClearListedAssets();
+
+            // Clear the asset list
+            m_Assets.Clear();
+
+            // Reset pagination information
+            m_Page = null;
+
+            // Reset the InfiniteScrollView
+            m_ScrollView.TotalItemCount = 0;
+            m_ScrollView.Clear(); // Resets the scroll view
         }
+
 
         /// <summary>
         /// Handles the back button click

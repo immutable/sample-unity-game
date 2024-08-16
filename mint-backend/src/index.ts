@@ -9,7 +9,7 @@ import http from 'http';
 import { providers, Wallet, Contract, PopulatedTransaction, TypedDataDomain } from 'ethers';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import { config, orderbook } from '@imtbl/sdk';
+import { config, orderbook, blockchainData } from '@imtbl/sdk';
 import { PrepareListingResponse, SignableAction, FeeValue } from '@imtbl/sdk/dist/orderbook';
 
 dotenv.config();
@@ -89,6 +89,100 @@ router.post('/mint/token', async (req: Request, res: Response) => {
       // Mints the number of tokens specified
       const tx = await contract.mint(to, quantity, gasOverrides);
       await tx.wait();
+
+      return res.status(200).json({});
+    } else {
+      return res.status(500).json({});
+    }
+
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: 'Failed to mint to user' });
+  }
+},
+);
+
+router.post('/mint/skin', async (req: Request, res: Response) => {
+  try {
+    if ('0xad826e89cde60e4ee248980d35c0f5c1196ad059' && privateKey) {
+      // Get the address to mint the token to
+      let to: string = req.body.to ?? null;
+      // Get the quantity to mint if specified, default is one
+      let quantity = BigInt(req.body.quantity ?? '1');
+
+      // Connect to wallet with minter role
+      const signer = new Wallet(privateKey).connect(zkEvmProvider);
+
+      // Specify the function to call
+      const abi = ['function mint(address to, uint256 quantity)'];
+      // Connect contract to the signer
+      const contract = new Contract('0xad826e89cde60e4ee248980d35c0f5c1196ad059', abi, signer);
+
+      // Mints the number of tokens specified
+      const tx = await contract.mint(to, quantity, gasOverrides);
+      await tx.wait();
+
+      return res.status(200).json({});
+    } else {
+      return res.status(500).json({});
+    }
+
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: 'Failed to mint to user' });
+  }
+},
+);
+
+router.post('/refresh', async (req: Request, res: Response) => {
+  try {
+    if ('0xad826e89cde60e4ee248980d35c0f5c1196ad059' && privateKey) {
+      const client = new blockchainData.BlockchainData({
+        baseConfig: {
+          environment: config.Environment.SANDBOX,
+          apiKey: 'sk_imapik-test-vz9bQMU1i8zlIxoB4z-T_4a3ec4',
+          publishableKey: 'pk_imapik-test-DKZd2qi8Ta9JUSZoySQQ',
+        },
+      });
+
+      // const refreshNFTMetadata = async (
+      //   client: blockchainData.BlockchainData,
+      //   chainName: string,
+      //   contractAddress: string,
+      //   newName: string
+      // ) => {
+      const nftMetadata: blockchainData.Types.RefreshMetadataByTokenID[] = [
+        {
+          name: "Amaranth Pink Skin #5",
+          animation_url: null,
+          image: "https://rose-ministerial-termite-701.mypinata.cloud/ipfs/QmXDfVp7jf11wiAPSEEpJDGKN1vYkFDKTTpJfPhjABRd77",
+          external_url: null,
+          youtube_url: null,
+          description: null,
+          attributes: [
+            {
+              "trait_type": "Colour",
+              "value": "Amaranth Pink"
+            },
+            {
+              "trait_type": "Speed",
+              "value": "Fast"
+            }
+          ],
+          token_id: '5',
+        },
+      ];
+
+      const updatedNFT = await client.refreshNFTMetadata({
+        chainName: 'imtbl-zkevm-testnet',
+        contractAddress: '0xad826e89cde60e4ee248980d35c0f5c1196ad059',
+        refreshNFTMetadataByTokenIDRequest: {
+          nft_metadata: nftMetadata,
+        },
+      });
+      // };
+
+      console.log(updatedNFT);
 
       return res.status(200).json({});
     } else {

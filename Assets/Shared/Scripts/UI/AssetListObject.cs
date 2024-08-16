@@ -23,24 +23,24 @@ namespace HyperCasual.Runner
         [SerializeField] private TextMeshProUGUI m_StatusText = null;
         [SerializeField] private RawImage m_Image = null;
 
-        private TokenModel asset;
+        private AssetModel m_Asset;
 
         /// <summary>
         /// Initialises the asset object with relevant data and updates the UI.
         /// </summary>
-        public async void Initialise(TokenModel asset)
+        public async void Initialise(AssetModel asset)
         {
-            this.asset = asset;
+            m_Asset = asset;
             UpdateData();
 
             // Fetch sale status
-            bool isOnSale = await IsListed(asset.token_id);
+            bool isOnSale = await IsListed(m_Asset.token_id);
             m_StatusText.text = $"Status: {(isOnSale ? "Listed" : "Not listed")}";
 
             // Download and display the image
-            if (!string.IsNullOrEmpty(asset.image))
+            if (!string.IsNullOrEmpty(m_Asset.image))
             {
-                StartCoroutine(DownloadImage(asset.image));
+                StartCoroutine(DownloadImage(m_Asset.image));
             }
         }
 
@@ -49,9 +49,9 @@ namespace HyperCasual.Runner
         /// </summary>
         private void UpdateData()
         {
-            m_NameText.text = $"Name: {asset.name}";
-            m_TokenIdText.text = $"Token ID: {asset.token_id}";
-            m_CollectionText.text = $"Contract: {asset.contract_address}";
+            m_NameText.text = $"Name: {m_Asset.name}";
+            m_TokenIdText.text = $"Token ID: {m_Asset.token_id}";
+            m_CollectionText.text = $"Contract: {m_Asset.contract_address}";
         }
 
         /// <summary>
