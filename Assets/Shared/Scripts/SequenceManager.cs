@@ -25,28 +25,18 @@ namespace HyperCasual.Gameplay
         GameObject[] m_LevelManagers;
         public AbstractLevelData[] Levels => m_Levels;
         [Header("Events")]
-        [SerializeField]
-        AbstractGameEvent m_ContinueEvent;
-        [SerializeField]
-        AbstractGameEvent m_BackEvent;
-        [SerializeField]
-        AbstractGameEvent m_WinEvent;
-        [SerializeField]
-        AbstractGameEvent m_LoseEvent;
-        [SerializeField]
-        AbstractGameEvent m_PauseEvent;
-        [SerializeField]
-        AbstractGameEvent m_SetupWalletEvent;
-        [SerializeField]
-        AbstractGameEvent m_MintEvent;
-        [SerializeField]
-        AbstractGameEvent m_UnlockedSkinEvent;
-        [SerializeField]
-        AbstractGameEvent m_CollectEvent;
-        [SerializeField]
-        AbstractGameEvent m_InventoryEvent;
-        [SerializeField]
-        AbstractGameEvent m_MarketplaceEvent;
+        [SerializeField] AbstractGameEvent m_ContinueEvent;
+        [SerializeField] AbstractGameEvent m_BackEvent;
+        [SerializeField] AbstractGameEvent m_WinEvent;
+        [SerializeField] AbstractGameEvent m_LoseEvent;
+        [SerializeField] AbstractGameEvent m_PauseEvent;
+        [SerializeField] AbstractGameEvent m_SetupWalletEvent;
+        [SerializeField] AbstractGameEvent m_MintEvent;
+        [SerializeField] AbstractGameEvent m_UnlockedSkinEvent;
+        [SerializeField] AbstractGameEvent m_CollectEvent;
+        [SerializeField] AbstractGameEvent m_InventoryEvent;
+        [SerializeField] AssetItemClickedEvent m_AssetItemClickedEvent;
+        [SerializeField] AbstractGameEvent m_MarketplaceEvent;
         [Header("Other")]
         [SerializeField]
         float m_SplashDelay = 2f;
@@ -55,6 +45,7 @@ namespace HyperCasual.Gameplay
         IState m_SplashScreenState;
         IState m_MainMenuState;
         IState m_InventoryState;
+        IState m_AssetDetailsState;
         IState m_MarketplaceState;
         IState m_LevelSelectState;
         readonly List<IState> m_LevelStates = new();
@@ -93,6 +84,7 @@ namespace HyperCasual.Gameplay
             var splashDelay = new DelayState(m_SplashDelay);
             m_MainMenuState = new State(OnMainMenuDisplayed);
             m_InventoryState = new State(OnInventoryDisplayed);
+            m_AssetDetailsState = new DataState<AssetModel>(OnAssetDetailsDisplayed);
             m_MarketplaceState = new State(OnMarketplaceDisplayed);
             m_LevelSelectState = new State(OnLevelSelectionDisplayed);
 
@@ -103,7 +95,12 @@ namespace HyperCasual.Gameplay
             m_MainMenuState.AddLink(new EventLink(m_InventoryEvent, m_InventoryState));
             m_MainMenuState.AddLink(new EventLink(m_MarketplaceEvent, m_MarketplaceState));
             m_LevelSelectState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
+
             m_InventoryState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
+            m_InventoryState.AddLink(new DataEventLink<AssetModel>(m_AssetItemClickedEvent, m_AssetDetailsState));
+
+            m_AssetDetailsState.AddLink(new EventLink(m_BackEvent, m_InventoryState));
+
             m_MarketplaceState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
         }
 
@@ -237,6 +234,14 @@ namespace HyperCasual.Gameplay
         void OnInventoryDisplayed()
         {
             ShowUI<InventoryScreen>();
+            AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
+        }
+
+        void OnAssetDetailsDisplayed(AssetModel asset)
+        {
+            ShowUI<AssetDetailsView>();
+            AssetDetailsView view = UIManager.Instance.GetView<AssetDetailsView>();
+            view.Initialise(asset);
             AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
         }
 

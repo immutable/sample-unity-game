@@ -18,5 +18,14 @@ namespace HyperCasual.Runner
         public string image;
         public string name;
         public string contract_address;
+        public List<AssetAttribute> attributes;
     }
+
+    [Serializable]
+    public class AssetAttribute
+    {
+        public string trait_type;
+        public string value;
+    }
+
 }

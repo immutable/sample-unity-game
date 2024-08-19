@@ -51,7 +51,7 @@ namespace HyperCasual.Runner
         {
             m_NameText.text = $"Name: {m_Asset.name}";
             m_TokenIdText.text = $"Token ID: {m_Asset.token_id}";
-            m_CollectionText.text = $"Contract: {m_Asset.contract_address}";
+            m_CollectionText.text = $"Collection: {m_Asset.contract_address}";
         }
 
         /// <summary>

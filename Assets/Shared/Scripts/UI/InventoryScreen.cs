@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using HyperCasual.Core;
+using HyperCasual.Gameplay;
 using UnityEngine;
 using UnityEngine.UI;
 using Immutable.Passport;
@@ -21,6 +22,7 @@ namespace HyperCasual.Runner
         [SerializeField] private AssetListObject m_AssetObj = null;
         [SerializeField] private Transform m_ListParent = null;
         [SerializeField] private InfiniteScrollView m_ScrollView;
+        [SerializeField] private AssetItemClickedEvent m_AssetClickedEvent;
         private List<AssetModel> m_Assets = new List<AssetModel>();
 
         // Pagination
@@ -53,9 +55,21 @@ namespace HyperCasual.Runner
         {
             if (index < m_Assets.Count)
             {
+                AssetModel asset = m_Assets[index];
+
                 // Initialise the view with asset
                 var itemComponent = item.GetComponent<AssetListObject>();
-                itemComponent.Initialise(m_Assets[index]);
+                itemComponent.Initialise(asset);
+                // Set up click listener
+                var clickable = item.GetComponent<ClickableView>();
+                if (clickable != null)
+                {
+                    clickable.OnClick += () =>
+                    {
+                        Debug.Log($"Clicked on item: {index}");
+                        m_AssetClickedEvent.Raise(asset);
+                    };
+                }
             }
 
             // Load more assets if nearing the end of the list
@@ -141,7 +155,7 @@ namespace HyperCasual.Runner
                     return tokens;
                 }
 
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/{address}/nfts?contract_address={Contract.SKIN_CONTRACT}&page_size=6";
+                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/{address}/nfts?contract_address={Contract.SKIN_CONTRACT}&page_size=20";
 
                 // Pagination
                 if (m_Page?.next_cursor != null)
