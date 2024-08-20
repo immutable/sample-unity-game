@@ -50,7 +50,6 @@ namespace HyperCasual.Runner
         private void UpdateData()
         {
             m_NameText.text = m_Asset.name;
-            m_TokenIdText.text = $"Token ID: {m_Asset.token_id}";
             m_CollectionText.text = m_Asset.contract_address;
         }
 

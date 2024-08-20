@@ -247,7 +247,7 @@ namespace HyperCasual.Gameplay
 
         void OnMarketplaceDisplayed()
         {
-            ShowUI<MarketplaceView>();
+            ShowUI<MarketplaceScreen>();
             AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
         }
 

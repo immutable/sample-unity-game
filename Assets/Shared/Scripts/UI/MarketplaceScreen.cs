@@ -13,12 +13,14 @@ using TMPro;
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// The inventory view which displays the player's assets (e.g. skins).
+    /// The marketplace view which displays currently listed skins.
     /// </summary>
-    public class InventoryScreen : View
+    public class MarketplaceScreen : View
     {
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
+        [SerializeField] private TMP_Dropdown m_ColoursDropdown;
+        [SerializeField] private TMP_Dropdown m_SpeedDropdown;
         [SerializeField] private AssetListObject m_AssetObj = null;
         [SerializeField] private Transform m_ListParent = null;
         [SerializeField] private InfiniteScrollView m_ScrollView;
@@ -45,7 +47,26 @@ namespace HyperCasual.Runner
                 // Setup infinite scroll view and load assets
                 m_ScrollView.OnCreateItemView += OnCreateItemView;
                 LoadAssets();
+
+                // Setup filters
+                SetupFilters();
             }
+        }
+
+        /// <summary>
+        /// Configures the dropdown filters for asset colours and speeds.
+        /// </summary>
+        private void SetupFilters()
+        {
+            m_ColoursDropdown.ClearOptions();
+            var colours = new List<string> { "All", "Tropical Indigo", "Cyclamen", "Robin Egg Blue", "Mint", "Mindaro", "Amaranth Pink" };
+            m_ColoursDropdown.AddOptions(colours);
+            m_ColoursDropdown.value = 0; // Default to "All"
+
+            m_SpeedDropdown.ClearOptions();
+            var speeds = new List<string> { "All", "Slow", "Medium", "Fast" };
+            m_SpeedDropdown.AddOptions(speeds);
+            m_SpeedDropdown.value = 0; // Default to "All"
         }
 
         /// <summary>
@@ -214,7 +235,6 @@ namespace HyperCasual.Runner
         /// </summary>
         private void OnBackButtonClick()
         {
-            Debug.Log("hello");
             m_BackEvent.Raise();
         }
     }
