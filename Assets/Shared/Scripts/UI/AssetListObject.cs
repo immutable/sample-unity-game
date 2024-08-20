@@ -84,7 +84,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Downloads the image from the given URL and displays it.
+        /// Downloads and displays the image from the given URL.
         /// </summary>
         private IEnumerator DownloadImage(string url)
         {

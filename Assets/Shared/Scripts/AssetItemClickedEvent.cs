@@ -7,7 +7,7 @@ using HyperCasual.Runner;
 namespace HyperCasual.Gameplay
 {
     /// <summary>
-    /// The event is triggered when the player clicks on an asset
+    /// The event is triggered when the player clicks on an asset in the inventory
     /// </summary>
     [CreateAssetMenu(fileName = nameof(AssetItemClickedEvent),
         menuName = "Runner/" + nameof(AssetItemClickedEvent))]

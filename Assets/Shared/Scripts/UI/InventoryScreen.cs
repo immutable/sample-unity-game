@@ -135,7 +135,6 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Fetches the player's skins.
         /// </summary>
-        /// <returns>A list of player's assets.</returns>
         private async UniTask<List<AssetModel>> GetAssets()
         {
             Debug.Log("Fetching player assets...");
