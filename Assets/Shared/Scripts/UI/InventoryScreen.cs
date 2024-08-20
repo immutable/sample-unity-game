@@ -200,15 +200,15 @@ namespace HyperCasual.Runner
             // Remove listener from the back button
             m_BackButton.RemoveListener(OnBackButtonClick);
 
-            // Clear the asset list
-            m_Assets.Clear();
+            // // Clear the asset list
+            // m_Assets.Clear();
 
-            // Reset pagination information
-            m_Page = null;
+            // // Reset pagination information
+            // m_Page = null;
 
-            // Reset the InfiniteScrollView
-            m_ScrollView.TotalItemCount = 0;
-            m_ScrollView.Clear(); // Resets the scroll view
+            // // Reset the InfiniteScrollView
+            // m_ScrollView.TotalItemCount = 0;
+            // m_ScrollView.Clear(); // Resets the scroll view
         }
 
 

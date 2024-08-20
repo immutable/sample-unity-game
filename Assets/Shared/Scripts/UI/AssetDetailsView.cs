@@ -57,7 +57,7 @@ namespace HyperCasual.Runner
 
             // Fetch sale status
             bool isOnSale = await IsListed(m_Asset.token_id);
-            m_StatusText.text = $"Status: {(isOnSale ? "Listed" : "Not listed")}";
+            m_StatusText.text = isOnSale ? "Listed" : "Not listed";
             m_SellButton.gameObject.SetActive(!isOnSale);
             m_CancelButton.gameObject.SetActive(isOnSale);
 
@@ -82,7 +82,7 @@ namespace HyperCasual.Runner
         /// </summary>
         private void UpdateData()
         {
-            m_NameText.text = $"Name: {m_Asset.name}";
+            m_NameText.text = m_Asset.name;
             m_TokenIdText.text = $"Token ID: {m_Asset.token_id}";
             m_CollectionText.text = $"Collection: {m_Asset.contract_address}";
 
@@ -304,6 +304,23 @@ namespace HyperCasual.Runner
         private void OnBackButtonClick()
         {
             m_BackEvent.Raise();
+        }
+
+        /// <summary>
+        /// Cleans up event listeners and data
+        /// </summary>
+        private void OnDisable()
+        {
+            // Remove listener from the back button
+            m_BackButton.RemoveListener(OnBackButtonClick);
+
+            m_NameText.text = "";
+            m_TokenIdText.text = "";
+            m_CollectionText.text = "";
+            m_StatusText.text = "";
+            m_Image.texture = null;
+
+            m_Asset = null;
         }
     }
 }

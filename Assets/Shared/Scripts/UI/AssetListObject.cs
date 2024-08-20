@@ -35,7 +35,7 @@ namespace HyperCasual.Runner
 
             // Fetch sale status
             bool isOnSale = await IsListed(m_Asset.token_id);
-            m_StatusText.text = $"Status: {(isOnSale ? "Listed" : "Not listed")}";
+            m_StatusText.text = isOnSale ? "Listed" : "Not listed";
 
             // Download and display the image
             if (!string.IsNullOrEmpty(m_Asset.image))
@@ -49,9 +49,9 @@ namespace HyperCasual.Runner
         /// </summary>
         private void UpdateData()
         {
-            m_NameText.text = $"Name: {m_Asset.name}";
+            m_NameText.text = m_Asset.name;
             m_TokenIdText.text = $"Token ID: {m_Asset.token_id}";
-            m_CollectionText.text = $"Collection: {m_Asset.contract_address}";
+            m_CollectionText.text = m_Asset.contract_address;
         }
 
         /// <summary>
