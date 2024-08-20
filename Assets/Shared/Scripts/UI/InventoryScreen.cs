@@ -151,7 +151,7 @@ namespace HyperCasual.Runner
                     return tokens;
                 }
 
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/{address}/nfts?contract_address={Contract.SKIN_CONTRACT}&page_size=20";
+                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/{address}/nfts?contract_address={Contract.SKIN}&page_size=20";
 
                 // Pagination
                 if (m_Page?.next_cursor != null)

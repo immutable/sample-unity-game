@@ -12,6 +12,12 @@ namespace HyperCasual.Runner
     }
 
     [Serializable]
+    public class AssetResponse
+    {
+        public AssetModel result;
+    }
+
+    [Serializable]
     public class AssetModel
     {
         public string token_id;

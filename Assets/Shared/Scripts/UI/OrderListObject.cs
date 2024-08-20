@@ -70,13 +70,13 @@ namespace HyperCasual.Runner
                 if (response.IsSuccessStatusCode)
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
-                    TokenResponse tokenResponse = JsonUtility.FromJson<TokenResponse>(responseBody);
-                    if (tokenResponse?.result != null)
+                    AssetResponse assetResponse = JsonUtility.FromJson<AssetResponse>(responseBody);
+                    if (assetResponse?.result != null)
                     {
-                        m_NameText.text = tokenResponse.result.name;
-                        if (!string.IsNullOrEmpty(tokenResponse.result.image))
+                        m_NameText.text = assetResponse.result.name;
+                        if (!string.IsNullOrEmpty(assetResponse.result.image))
                         {
-                            StartCoroutine(DownloadImage(tokenResponse.result.image));
+                            StartCoroutine(DownloadImage(assetResponse.result.image));
                         }
                     }
                 }

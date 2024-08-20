@@ -19,6 +19,7 @@ namespace HyperCasual.Runner
         public Buy[] buy;
         public Sell[] sell;
         public Fee[] fees;
+        public AssetModel asset; // TODO remove
     }
 
     [Serializable]
