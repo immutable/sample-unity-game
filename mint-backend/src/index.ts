@@ -6,9 +6,11 @@ import express, {
 } from 'express';
 import cors from 'cors';
 import http from 'http';
-import { JsonRpcProvider, Wallet, Contract } from 'ethers';
+import { providers, Wallet, Contract, PopulatedTransaction, TypedDataDomain } from 'ethers';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import { config, orderbook, blockchainData } from '@imtbl/sdk';
+import { PrepareListingResponse, SignableAction, FeeValue } from '@imtbl/sdk/dist/orderbook';
 
 dotenv.config();
 
@@ -19,11 +21,13 @@ app.use(express.json()); // Handle JSON
 app.use(cors()); // Enable CORS
 const router: Router = express.Router();
 
-const zkEvmProvider = new JsonRpcProvider('https://rpc.testnet.immutable.com');
+const zkEvmProvider = new providers.JsonRpcProvider('https://rpc.testnet.immutable.com');
 
 // Contract addresses
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
 const tokenContractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
+const skinContractAddress = process.env.SKIN_CONTRACT_ADDRESS;
+const skinColourContractAddress = process.env.SKIN_CONTRACT_ADDRESS_COLOUR;
 // Private key of wallet with minter role
 const privateKey = process.env.PRIVATE_KEY;
 
@@ -99,9 +103,147 @@ router.post('/mint/token', async (req: Request, res: Response) => {
 },
 );
 
+router.post('/mint/skin', async (req: Request, res: Response) => {
+  try {
+    if ('0xad826e89cde60e4ee248980d35c0f5c1196ad059' && privateKey) {
+      // Get the address to mint the token to
+      let to: string = req.body.to ?? null;
+      // Get the quantity to mint if specified, default is one
+      let quantity = BigInt(req.body.quantity ?? '1');
+
+      // Connect to wallet with minter role
+      const signer = new Wallet(privateKey).connect(zkEvmProvider);
+
+      // Specify the function to call
+      const abi = ['function mint(address to, uint256 quantity)'];
+      // Connect contract to the signer
+      const contract = new Contract('0xad826e89cde60e4ee248980d35c0f5c1196ad059', abi, signer);
+
+      // Mints the number of tokens specified
+      const tx = await contract.mint(to, quantity, gasOverrides);
+      await tx.wait();
+
+      return res.status(200).json({});
+    } else {
+      return res.status(500).json({});
+    }
+
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: 'Failed to mint to user' });
+  }
+},
+);
+
+// List item
+
+const client = new orderbook.Orderbook({
+  baseConfig: {
+    environment: config.Environment.SANDBOX,
+    publishableKey: process.env.PUBLISHABLE_KEY,
+  },
+});
+
+const prepareListing = async (
+  offererAddress: string,
+  amountToSell: string,
+  tokenId: string
+): Promise<{
+  preparedListing: orderbook.PrepareListingResponse;
+  transactionToSend: PopulatedTransaction | undefined;
+  payloadToSign: string | undefined;
+}> => {
+  if (!skinColourContractAddress) {
+    throw new Error('Immutable Runner Skin contract address not defined');
+  }
+  if (!tokenContractAddress) {
+    throw new Error('Immutable Runner Token contract address not defined');
+  }
+
+  const preparedListing = await client.prepareListing({
+    makerAddress: offererAddress,
+    buy: {
+      amount: amountToSell,
+      type: 'ERC20',
+      contractAddress: tokenContractAddress,
+    },
+    sell: {
+      contractAddress: skinColourContractAddress,
+      tokenId,
+      type: 'ERC721',
+    },
+  });
+
+  let transactionToSend: PopulatedTransaction | undefined;
+  let payloadToSign: string | undefined;
+
+  for (const action of preparedListing.actions) {
+    if (action.type === orderbook.ActionType.TRANSACTION) {
+      transactionToSend = await action.buildTransaction();
+    }
+
+    if (action.type === orderbook.ActionType.SIGNABLE) {
+      payloadToSign = JSON.stringify(action.message);
+    }
+  }
+
+  return { preparedListing, transactionToSend, payloadToSign };
+};
+
+router.post('/prepareListing/skin', async (req: Request, res: Response) => {
+  try {
+    const { offererAddress, amount, tokenId } = req.body;
+
+    if (!offererAddress || !amount || !tokenId) {
+      throw new Error('Missing required parameters: offererAddress, amount, or tokenId');
+    }
+
+    const response = await prepareListing(offererAddress, amount, tokenId);
+
+    return res.status(200).json({
+      preparedListing: JSON.stringify(response.preparedListing),
+      transactionToSend: response.transactionToSend,
+      toSign: response.payloadToSign,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ message: 'Failed to prepare listing' });
+  }
+});
+
+router.post('/createListing/skin', async (req: Request, res: Response) => {
+  try {
+    const { signature, preparedListing: preparedListingString } = req.body;
+
+    if (!signature) {
+      throw new Error("Missing signature");
+    }
+
+    if (!preparedListingString) {
+      throw new Error("Missing preparedListing");
+    }
+
+    console.log(`Prepared Listing: ${preparedListingString}`);
+    const preparedListing: orderbook.PrepareListingResponse = JSON.parse(preparedListingString);
+
+    const order = await client.createListing({
+      orderComponents: preparedListing.orderComponents,
+      orderHash: preparedListing.orderHash,
+      orderSignature: signature,
+      makerFees: []
+    });
+
+    return res.status(200).json(order);
+
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ message: 'Failed to prepare listing' });
+  }
+});
+
 app.use('/', router);
 
 http.createServer(app).listen(
-  3000,
-  () => console.log('Listening on port 3000'),
+  6060,
+  () => console.log('Listening on port 6060'),
 );

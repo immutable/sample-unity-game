@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2409724103615617141
 RectTransform:
   m_ObjectHideFlags: 0
@@ -38,7 +38,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 16, y: -61}
+  m_AnchoredPosition: {x: 32, y: -32}
   m_SizeDelta: {x: 100, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &9011842691013966689
@@ -122,19 +122,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7544663396972842289}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8405303144418417603}
-        m_TargetAssemblyTypeName: HyperCasual.Runner.MainMenu, Unity.Hypercasual
-        m_MethodName: OnLogout
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1880825616676340313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1020,6 +1008,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_StartButton: {fileID: 2691304556920018293}
   m_StartButtonEvent: {fileID: 11400000, guid: b892538bd49f3487bbedf5106c094739, type: 2}
+  m_InventoryButton: {fileID: 9179871967287141984}
+  m_InventoryButtonEvent: {fileID: 11400000, guid: 96549880d681047edbcb5184d444f3b7,
+    type: 2}
+  m_MarketplaceButton: {fileID: 3824136401208076516}
+  m_MarketplaceButtonEvent: {fileID: 11400000, guid: fb141ccb8e1754b60aaff66fb5f8f7e1,
+    type: 2}
   m_Email: {fileID: 0}
   m_LogoutButton: {fileID: 1880825616676340313}
   m_Loading: {fileID: 7960696323686974425}
@@ -1444,7 +1438,7 @@ GameObject:
   - component: {fileID: 8405303145268190458}
   - component: {fileID: 3824136401208076516}
   m_Layer: 5
-  m_Name: Shop Button
+  m_Name: Marketplace Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

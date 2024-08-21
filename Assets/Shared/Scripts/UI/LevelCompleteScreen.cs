@@ -178,7 +178,7 @@ namespace HyperCasual.Runner
                         new KeyValuePair<string, string>("quantity", quantity.ToString())
                     };
                         using var client = new HttpClient();
-                        string url = $"http://localhost:3000/mint/token"; // Endpoint to mint token
+                        string url = $"http://localhost:6060/mint/token"; // Endpoint to mint token
                         using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
                         using var res = await client.SendAsync(req);
                         success = res.IsSuccessStatusCode;
