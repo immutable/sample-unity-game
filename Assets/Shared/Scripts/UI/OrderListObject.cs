@@ -60,12 +60,10 @@ namespace HyperCasual.Runner
         /// <param name="tokenId">The token ID of the asset.</param>
         private async UniTask GetDetails(string tokenId)
         {
-            string skinContractAddress = "0x52A1016eCca06bDBbdd9440E7AA9166bD5366aE1";
-
             try
             {
                 using var client = new HttpClient();
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/collections/{skinContractAddress}/nfts/{tokenId}";
+                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/collections/{Contract.SKIN}/nfts/{tokenId}";
                 HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {

@@ -1,14 +1,14 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Net.Http;
 using HyperCasual.Core;
 using UnityEngine;
 using UnityEngine.UI;
-using Immutable.Passport;
 using TMPro;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
+using Immutable.Passport;
 using Immutable.Passport.Model;
 
 namespace HyperCasual.Runner
@@ -17,75 +17,53 @@ namespace HyperCasual.Runner
     {
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
-        [SerializeField] private TextMeshProUGUI m_NameText = null;
-        [SerializeField] private TextMeshProUGUI m_TokenIdText = null;
-        [SerializeField] private TextMeshProUGUI m_CollectionText = null;
-        [SerializeField] private TextMeshProUGUI m_StatusText = null;
-        [SerializeField] private Transform m_AttributesListParent = null;
-        [SerializeField] private AttributeView m_AttributeObj = null;
+        [SerializeField] private RawImage m_Image;
+        [SerializeField] private TextMeshProUGUI m_NameText;
+        [SerializeField] private TextMeshProUGUI m_TokenIdText;
+        [SerializeField] private TextMeshProUGUI m_CollectionText;
+        [SerializeField] private TextMeshProUGUI m_StatusText;
+        [SerializeField] private Transform m_AttributesListParent;
+        [SerializeField] private AttributeView m_AttributeObj;
+        [SerializeField] private HyperCasualButton m_SellButton;
+        [SerializeField] private HyperCasualButton m_CancelButton;
+        [SerializeField] private GameObject m_Progress;
+        [SerializeField] private CustomDialog m_CustomDialog;
+
         private List<AttributeView> m_Attributes = new List<AttributeView>();
-
-        [SerializeField] private RawImage m_Image = null;
-        [SerializeField] HyperCasualButton m_SellButton;
-        [SerializeField] HyperCasualButton m_CancelButton;
-        [SerializeField] private GameObject m_Progress = null;
-
-        // To remove
-        [SerializeField] private GameObject signatureContainer;
-        [SerializeField] private InputField orderSignature;
-        [SerializeField]
-        HyperCasualButton m_ConfirmButton;
-
         private AssetModel m_Asset;
-        private string preparedListing;
         private string listingId;
 
-        async void OnEnable()
+        private void OnEnable()
         {
             m_AttributeObj.gameObject.SetActive(false); // Disable the template attribute object
             m_BackButton.AddListener(OnBackButtonClick); // Listen for back button click
         }
 
         /// <summary>
-        /// Initialises the UI based on the asset
+        /// Initialises the UI based on the asset.
         /// </summary>
+        /// <param name="asset">The asset to display.</param>
         public async void Initialise(AssetModel asset)
         {
             m_Asset = asset;
             UpdateData();
 
-            // Fetch sale status
-            bool isOnSale = await IsListed(m_Asset.token_id);
-            m_StatusText.text = isOnSale ? "Listed" : "Not listed";
-            m_SellButton.gameObject.SetActive(!isOnSale);
-            m_CancelButton.gameObject.SetActive(isOnSale);
+            m_Progress.SetActive(false); // Hide progress
 
-            // Hide progress and signature input
-            m_Progress.SetActive(false);
-            signatureContainer.gameObject.SetActive(false);
-
-            // Download and display the image
-            if (!string.IsNullOrEmpty(m_Asset.image))
-            {
-                await DownloadImage(m_Asset.image);
-            }
-
-            // Set listeners to buttons
-            m_SellButton.AddListener(OnSellButtonClick);
-            m_ConfirmButton.AddListener(ConfirmSell);
+            m_SellButton.AddListener(OnSellButtonClicked);
             m_CancelButton.AddListener(OnCancel);
         }
 
         /// <summary>
-        /// Updates the text fields with asset data.
+        /// Updates the UI with the asset's details.
         /// </summary>
-        private void UpdateData()
+        private async void UpdateData()
         {
             m_NameText.text = m_Asset.name;
             m_TokenIdText.text = $"Token ID: {m_Asset.token_id}";
             m_CollectionText.text = $"Collection: {m_Asset.contract_address}";
 
-            // Clears all currently listed attributes.
+            // Clear existing attributes
             foreach (AttributeView attribute in m_Attributes)
             {
                 Destroy(attribute.gameObject);
@@ -95,10 +73,22 @@ namespace HyperCasual.Runner
             // Populate attributes
             foreach (AssetAttribute attribute in m_Asset.attributes)
             {
-                AttributeView newAttribute = Instantiate(m_AttributeObj, m_AttributesListParent); // Create a new asset object
+                AttributeView newAttribute = Instantiate(m_AttributeObj, m_AttributesListParent);
                 newAttribute.gameObject.SetActive(true);
-                newAttribute.Initialise(attribute); // Initialise the view with data
-                m_Attributes.Add(newAttribute); // Add to the list of displayed attributes
+                newAttribute.Initialise(attribute);
+                m_Attributes.Add(newAttribute);
+            }
+
+            // Update sale status
+            bool isOnSale = await IsListed(m_Asset.token_id);
+            m_StatusText.text = isOnSale ? "Listed" : "Not listed";
+            m_SellButton.gameObject.SetActive(!isOnSale);
+            m_CancelButton.gameObject.SetActive(isOnSale);
+
+            // Download and display the image
+            if (!string.IsNullOrEmpty(m_Asset.image))
+            {
+                await DownloadImage(m_Asset.image);
             }
         }
 
@@ -119,9 +109,7 @@ namespace HyperCasual.Runner
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
                     ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
-
-                    // Check if the listing exists
-                    return listingResponse.result.Length > 0;
+                    return listingResponse.result.Length > 0; // Check if the listing exists
                 }
             }
             catch (Exception ex)
@@ -132,27 +120,54 @@ namespace HyperCasual.Runner
             return false;
         }
 
+        /// <summary>
+        /// Retrieves the wallet address of the user.
+        /// </summary>
+        /// <returns>The wallet address.</returns>
         private async UniTask<string> GetWalletAddress()
         {
             List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
             return accounts[0]; // Get the first wallet address
         }
 
-        private async void OnSellButtonClick()
+        /// <summary>
+        /// Handles the click event for the sell button.
+        /// </summary>
+        private async void OnSellButtonClicked()
+        {
+            (bool result, string price) = await m_CustomDialog.ShowDialog(
+                $"List {m_Asset.name} for sale",
+                "Enter your price below (in IMR):",
+                "Confirm",
+                negativeButtonText: "Cancel",
+                showInputField: true
+            );
+
+            if (result)
+            {
+                decimal amount = Math.Floor(decimal.Parse(price) * (decimal)BigInteger.Pow(10, 18));
+                await PrepareListing($"{amount}");
+            }
+        }
+
+        /// <summary>
+        /// Prepares the listing for the asset.
+        /// </summary>
+        /// <param name="price">The price of the asset in smallest unit.</param>
+        private async UniTask PrepareListing(string price)
         {
             try
             {
                 m_SellButton.gameObject.SetActive(false);
                 m_Progress.SetActive(true);
-                signatureContainer.gameObject.SetActive(false);
 
                 string address = await GetWalletAddress();
                 var nvc = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("offererAddress", address),
-                new KeyValuePair<string, string>("amount", "9000000000000000000"), // TODO allow user to enter any amount
-                new KeyValuePair<string, string>("tokenId", m_Asset.token_id)
-            };
+                {
+                    new KeyValuePair<string, string>("offererAddress", address),
+                    new KeyValuePair<string, string>("amount", price),
+                    new KeyValuePair<string, string>("tokenId", m_Asset.token_id)
+                };
                 using var client = new HttpClient();
                 using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/prepareListing/skin") { Content = new FormUrlEncodedContent(nvc) };
                 using var res = await client.SendAsync(req);
@@ -160,22 +175,36 @@ namespace HyperCasual.Runner
                 string responseBody = await res.Content.ReadAsStringAsync();
                 PrepareListingResponse response = JsonUtility.FromJson<PrepareListingResponse>(responseBody);
 
-                // Approved the Immutable Seaport contract to transfer assets from skin collection on their behalf they'll need to do so before they create an order
-                if (response.transactionToSend != null && response.transactionToSend.to != null)
+                if (response.transactionToSend?.to != null)
                 {
-                    string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest()
+                    Debug.Log($"Transaction to: {response.transactionToSend.to}");
+                    Debug.Log($"Transaction data: {response.transactionToSend.data}");
+                    string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest
                     {
                         to = response.transactionToSend.to,
-                        data = response.transactionToSend.data, // a22cb465 setApprovalForAll
+                        data = response.transactionToSend.data,
                         value = "0"
                     });
                 }
 
                 if (response.toSign != null && response.preparedListing != null)
                 {
-                    preparedListing = response.preparedListing;
-                    signatureContainer.gameObject.SetActive(true);
-                    Debug.Log($"Sign: {response.toSign}");
+                    // Prompt for signature
+                    (bool result, string signature) = await m_CustomDialog.ShowDialog(
+                        "Confirm listing",
+                        "Enter signed payload:",
+                        "Confirm",
+                        negativeButtonText: "Cancel",
+                        showInputField: true
+                    );
+                    if (result)
+                    {
+                        await ListAsset(signature, response.preparedListing, address);
+                    }
+                    else
+                    {
+                        m_SellButton.gameObject.SetActive(true);
+                    }
                 }
                 else
                 {
@@ -185,27 +214,30 @@ namespace HyperCasual.Runner
             }
             catch (Exception ex)
             {
-                Debug.Log($"Failed to sell {ex.Message}");
+                Debug.Log($"Failed to sell: {ex.Message}");
                 m_SellButton.gameObject.SetActive(true);
                 m_Progress.SetActive(false);
-                signatureContainer.gameObject.SetActive(false);
             }
         }
 
-        private async void ConfirmSell()
+        /// <summary>
+        /// Finalises the listing of the asset.
+        /// </summary>
+        /// <param name="signature">The signature for the listing.</param>
+        /// <param name="preparedListing">The prepared listing data.</param>
+        /// <param name="address">The wallet address of the user.</param>
+        private async UniTask ListAsset(string signature, string preparedListing, string address)
         {
             try
             {
                 m_SellButton.gameObject.SetActive(false);
                 m_Progress.SetActive(true);
-                signatureContainer.gameObject.SetActive(false);
 
-                string address = await GetWalletAddress();
                 var nvc = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("signature", orderSignature.text),
-                new KeyValuePair<string, string>("preparedListing", preparedListing),
-            };
+                {
+                    new KeyValuePair<string, string>("signature", signature),
+                    new KeyValuePair<string, string>("preparedListing", preparedListing)
+                };
                 using var client = new HttpClient();
                 using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/createListing/skin") { Content = new FormUrlEncodedContent(nvc) };
                 using var res = await client.SendAsync(req);
@@ -222,7 +254,7 @@ namespace HyperCasual.Runner
                 }
                 else
                 {
-                    Debug.Log($"Failed to confirm sell");
+                    Debug.Log("Failed to confirm sell");
                     m_SellButton.gameObject.SetActive(true);
                     m_Progress.SetActive(false);
                 }
@@ -235,6 +267,9 @@ namespace HyperCasual.Runner
             }
         }
 
+        /// <summary>
+        /// Cancels the listing of the asset.
+        /// </summary>
         private async void OnCancel()
         {
             try
@@ -244,82 +279,61 @@ namespace HyperCasual.Runner
 
                 string address = await GetWalletAddress();
                 var nvc = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("offererAddress", address),
-                new KeyValuePair<string, string>("listingId", listingId),
-                new KeyValuePair<string, string>("type", "hard")
-            };
+                {
+                    new KeyValuePair<string, string>("offererAddress", address),
+                    new KeyValuePair<string, string>("listingId", listingId),
+                    new KeyValuePair<string, string>("type", "hard")
+                };
                 using var client = new HttpClient();
                 using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/cancelListing/skin") { Content = new FormUrlEncodedContent(nvc) };
                 using var res = await client.SendAsync(req);
 
-                string responseBody = await res.Content.ReadAsStringAsync();
-                TransactionToSend response = JsonUtility.FromJson<TransactionToSend>(responseBody);
-                if (response != null && response.to != null)
+                if (res.IsSuccessStatusCode)
                 {
-                    string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest()
-                    {
-                        to = response.to, // Immutable seaport contract
-                        data = response.data, // fd9f1e10 cancel
-                        value = "0"
-                    });
-                }
+                    string responseBody = await res.Content.ReadAsStringAsync();
+                    CreateListingResponse response = JsonUtility.FromJson<CreateListingResponse>(responseBody);
+                    Debug.Log($"Listing cancelled: {response.result.id}");
 
-                m_SellButton.gameObject.SetActive(true);
+                    m_CancelButton.gameObject.SetActive(false);
+                }
+                else
+                {
+                    Debug.Log("Failed to cancel listing");
+                    m_CancelButton.gameObject.SetActive(true);
+                }
                 m_Progress.SetActive(false);
             }
             catch (Exception ex)
             {
-                Debug.Log($"Failed to cancel {ex.Message}");
+                Debug.Log($"Failed to cancel listing: {ex.Message}");
                 m_CancelButton.gameObject.SetActive(true);
                 m_Progress.SetActive(false);
             }
         }
 
-        /// <summary>
-        /// Downloads the image from the given URL and displays it.
-        /// </summary>
-        private async UniTask DownloadImage(string url)
-        {
-            using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(url))
-            {
-                await request.SendWebRequest();
-
-                if (request.result == UnityWebRequest.Result.Success)
-                {
-                    m_Image.texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
-                    m_Image.gameObject.SetActive(true);
-                }
-                else
-                {
-                    m_Image.gameObject.SetActive(false);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Handles the back button click
-        /// </summary>
         private void OnBackButtonClick()
         {
-            m_BackEvent.Raise();
+            m_BackEvent.Raise(); // Trigger the back event
         }
 
         /// <summary>
-        /// Cleans up event listeners and data
+        /// Downloads and displays the asset's image.
         /// </summary>
-        private void OnDisable()
+        /// <param name="url">The URL of the image.</param>
+        private async UniTask DownloadImage(string url)
         {
-            // Remove listener from the back button
-            m_BackButton.RemoveListener(OnBackButtonClick);
+            using var webRequest = UnityWebRequestTexture.GetTexture(url);
+            await webRequest.SendWebRequest();
 
-            m_NameText.text = "";
-            m_TokenIdText.text = "";
-            m_CollectionText.text = "";
-            m_StatusText.text = "";
-            m_Image.texture = null;
-
-            m_Asset = null;
+            if (webRequest.result == UnityWebRequest.Result.Success)
+            {
+                Texture2D texture = DownloadHandlerTexture.GetContent(webRequest);
+                m_Image.texture = texture;
+            }
+            else
+            {
+                Debug.Log($"Failed to download image: {webRequest.error}");
+            }
         }
     }
 }

@@ -172,8 +172,7 @@ namespace HyperCasual.Runner
                     return tokens;
                 }
 
-                string skinContractAddress = "0x52A1016eCca06bDBbdd9440E7AA9166bD5366aE1"; // TODO change to colour skin contract
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings?sell_item_contract_address={skinContractAddress}&page_size=5&status=ACTIVE";
+                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings?sell_item_contract_address={Contract.SKIN}&page_size=5&status=ACTIVE";
 
                 // Pagination
                 if (m_Page?.next_cursor != null)

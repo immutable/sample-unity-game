@@ -73,7 +73,7 @@ namespace HyperCasual.Runner
         private async void UpdateData()
         {
             // Get and display asset details
-            await GetDetails("1");//m_Order.sell[0].token_id);
+            await GetDetails(m_Order.sell[0].token_id);
 
             m_NameText.text = m_Order.asset.name;
             m_TokenIdText.text = $"Token ID: {m_Order.asset.token_id}";
@@ -107,12 +107,10 @@ namespace HyperCasual.Runner
         /// </summary>
         private async UniTask GetDetails(string tokenId)
         {
-            string skinContractAddress = Contract.SKIN;//"0x52A1016eCca06bDBbdd9440E7AA9166bD5366aE1";
-
             try
             {
                 using var client = new HttpClient();
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/collections/{skinContractAddress}/nfts/{tokenId}";
+                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/collections/{Contract.SKIN}/nfts/{tokenId}";
                 HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {

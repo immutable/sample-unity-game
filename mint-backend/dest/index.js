@@ -22,6 +22,7 @@ const zkEvmProvider = new ethers_1.providers.JsonRpcProvider('https://rpc.testne
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
 const tokenContractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
 const skinContractAddress = process.env.SKIN_CONTRACT_ADDRESS;
+const skinColourContractAddress = process.env.SKIN_CONTRACT_ADDRESS_COLOUR;
 // Private key of wallet with minter role
 const privateKey = process.env.PRIVATE_KEY;
 const gasOverrides = {
@@ -112,14 +113,15 @@ router.post('/mint/skin', async (req, res) => {
         return res.status(400).json({ message: 'Failed to mint to user' });
     }
 });
+// List item
 const client = new sdk_1.orderbook.Orderbook({
     baseConfig: {
         environment: sdk_1.config.Environment.SANDBOX,
-        publishableKey: "pk_imapik-test-DKZd2qi8Ta9JUSZoySQQ",
+        publishableKey: process.env.PUBLISHABLE_KEY,
     },
 });
-const prepareERC721Listing = async (offererAddress, amountToSell, tokenId) => {
-    if (!skinContractAddress) {
+const prepareListing = async (offererAddress, amountToSell, tokenId) => {
+    if (!skinColourContractAddress) {
         throw new Error('Immutable Runner Skin contract address not defined');
     }
     if (!tokenContractAddress) {
@@ -127,94 +129,58 @@ const prepareERC721Listing = async (offererAddress, amountToSell, tokenId) => {
     }
     const preparedListing = await client.prepareListing({
         makerAddress: offererAddress,
-        // ERC20 payment token
         buy: {
             amount: amountToSell,
             type: 'ERC20',
             contractAddress: tokenContractAddress,
         },
-        // ERC721 sell token
         sell: {
-            contractAddress: skinContractAddress,
-            tokenId: tokenId,
+            contractAddress: skinColourContractAddress,
+            tokenId,
             type: 'ERC721',
         },
     });
-    let orderSignature = '';
     let transactionToSend;
-    let toSign = undefined;
+    let payloadToSign;
     for (const action of preparedListing.actions) {
-        // If the user hasn't yet approved the Immutable Seaport contract to transfer assets from this
-        // collection on their behalf they'll need to do so before they create an order
         if (action.type === sdk_1.orderbook.ActionType.TRANSACTION) {
-            const builtTx = await action.buildTransaction();
-            // builtTx.nonce = await signer.getTransactionCount();
-            console.log(`Submitting ${action.purpose} transaction`);
-            transactionToSend = builtTx;
-            // await signer.sendTransaction(builtTx);
+            transactionToSend = await action.buildTransaction();
         }
-        // For an order to be created (and subsequently filled), Immutable needs a valid signature for the order data.
-        // This signature is stored off-chain and is later provided to any user wishing to fulfil the open order.
-        // The signature only allows the order to be fulfilled if it meets the conditions specified by the user that created the listing.
         if (action.type === sdk_1.orderbook.ActionType.SIGNABLE) {
-            toSign = JSON.stringify(action.message);
-            // orderSignature = await signer._signTypedData(
-            //   action.message.domain,
-            //   action.message.types,
-            //   action.message.value,
-            // )
+            payloadToSign = JSON.stringify(action.message);
         }
     }
-    return { preparedListing, transactionToSend, toSign };
+    return { preparedListing, transactionToSend, payloadToSign };
 };
-// Prepare listing
 router.post('/prepareListing/skin', async (req, res) => {
     try {
-        // Get the address of the seller
-        let offererAddress = req.body.offererAddress ?? null;
-        if (!offererAddress) {
-            throw Error("Missng offererAddress");
+        const { offererAddress, amount, tokenId } = req.body;
+        if (!offererAddress || !amount || !tokenId) {
+            throw new Error('Missing required parameters: offererAddress, amount, or tokenId');
         }
-        // Get the price to sell
-        let amount = req.body.amount ?? null;
-        if (!amount) {
-            throw Error("Missng amount");
-        }
-        // Get the token ID of the skin to sell
-        let tokenId = req.body.tokenId ?? null;
-        if (!tokenId) {
-            throw Error("Missng tokenId");
-        }
-        // Prepare listting
-        let response = await prepareERC721Listing(offererAddress, amount, tokenId);
+        const response = await prepareListing(offererAddress, amount, tokenId);
         return res.status(200).json({
             preparedListing: JSON.stringify(response.preparedListing),
             transactionToSend: response.transactionToSend,
-            toSign: response.toSign
+            toSign: response.payloadToSign,
         });
     }
     catch (error) {
-        console.log(error);
-        return res.status(400).json({ message: 'Failed prepare listing' });
+        console.error(error);
+        return res.status(400).json({ message: 'Failed to prepare listing' });
     }
 });
-// Create listing
 router.post('/createListing/skin', async (req, res) => {
     try {
-        // Get the order signature
-        let signature = req.body.signature ?? null;
+        const { signature, preparedListing: preparedListingString } = req.body;
         if (!signature) {
-            throw Error("Missng signature");
+            throw new Error("Missing signature");
         }
-        // Get prepared listing
-        let preparedListingString = req.body.preparedListing ?? null;
         if (!preparedListingString) {
-            throw Error("Missing preparedListing");
+            throw new Error("Missing preparedListing");
         }
-        else {
-            console.log(`preparedListing ${preparedListingString}`);
-        }
-        let preparedListing = JSON.parse(preparedListingString);
+        console.log(`Prepared Listing: ${preparedListingString}`);
+        const preparedListing = JSON.parse(preparedListingString);
         const order = await client.createListing({
             orderComponents: preparedListing.orderComponents,
             orderHash: preparedListing.orderHash,
@@ -224,113 +190,8 @@ router.post('/createListing/skin', async (req, res) => {
         return res.status(200).json(order);
     }
     catch (error) {
-        console.log(error);
-        return res.status(400).json({ message: 'Failed prepare listing' });
-    }
-});
-// Cancel listing
-router.post('/cancelListing/skin', async (req, res) => {
-    try {
-        // Get the address of the seller
-        let offererAddress = req.body.offererAddress ?? null;
-        if (!offererAddress) {
-            throw Error("Missng offererAddress");
-        }
-        // Get the listing id
-        let listingId = req.body.listingId ?? null;
-        if (!listingId) {
-            throw Error("Missng listingId");
-        }
-        // Type of cancel
-        let type = req.body.type ?? null;
-        if (!type) {
-            throw Error("Missing type");
-        }
-        if (type != 'hard' && type != 'soft') {
-            throw Error(`The type can only be 'hard' or 'soft'`);
-        }
-        if (type == 'hard') {
-            console.log("Starting hard cancel...");
-            const { cancellationAction } = await client.cancelOrdersOnChain([listingId], offererAddress);
-            const unsignedCancelOrderTransaction = await cancellationAction.buildTransaction();
-            console.log(`unsignedCancelOrderTransaction: ${unsignedCancelOrderTransaction}`);
-            return res.status(200).json(unsignedCancelOrderTransaction);
-        }
-        else if (type == 'soft') {
-            const { signableAction } = await client.prepareOrderCancellations([listingId]);
-            return res.status(200).json({
-                toSign: JSON.stringify(signableAction.message)
-            });
-        }
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(400).json({ message: 'Failed prepare listing' });
-    }
-});
-// Confirm cancel listing for soft cancel
-router.post('/confirmCancelListing/skin', async (req, res) => {
-    try {
-        // Get the address of the seller
-        let offererAddress = req.body.offererAddress ?? null;
-        if (!offererAddress) {
-            throw Error("Missng offererAddress");
-        }
-        // Get the listing id
-        let listingId = req.body.listingId ?? null;
-        if (!listingId) {
-            throw Error("Missng listingId");
-        }
-        // Signature
-        let signature = req.body.signature ?? null;
-        if (!signature) {
-            throw Error("Missing signature");
-        }
-        const response = await client.cancelOrders([listingId], offererAddress, signature);
-        console.log(`response: ${response}`);
-        return res.status(200).json(response);
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(400).json({ message: 'Failed prepare listing' });
-    }
-});
-// Fill order
-router.post('/fillOrder/skin', async (req, res) => {
-    try {
-        // Get the address of the seller
-        let fulfillerAddress = req.body.fulfillerAddress ?? null;
-        if (!fulfillerAddress) {
-            throw Error("Missng fulfillerAddress");
-        }
-        // Get the listing id
-        let listingId = req.body.listingId ?? null;
-        if (!listingId) {
-            throw Error("Missng listingId");
-        }
-        // Get fees
-        let fees = req.body.fees ?? null;
-        if (!fees) {
-            throw Error("Missng fees");
-        }
-        const feesValue = JSON.parse(fees);
-        const { actions, expiration, order } = await client.fulfillOrder(listingId, fulfillerAddress, feesValue);
-        console.log(`Fulfilling listing ${order}, transaction expiry ${expiration}`);
-        const transactionsToSend = [];
-        for (const action of actions) {
-            if (action.type === sdk_1.orderbook.ActionType.TRANSACTION) {
-                const builtTx = await action.buildTransaction();
-                console.log(`Submitting ${action.purpose} transaction`);
-                console.log(`Transaction to send ${builtTx.value}`);
-                transactionsToSend.push(builtTx);
-            }
-        }
-        console.log(`Number of transactions to send ${transactionsToSend.length}`);
-        return res.status(200).json({ transactionsToSend: transactionsToSend });
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(400).json({ message: 'Failed prepare listing' });
+        console.error(error);
+        return res.status(400).json({ message: 'Failed to prepare listing' });
     }
 });
 app.use('/', router);
