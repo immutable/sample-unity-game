@@ -98,7 +98,7 @@ namespace HyperCasual.Runner
             // Download and display the image
             if (!string.IsNullOrEmpty(m_Order.asset.image))
             {
-                StartCoroutine(DownloadImage(m_Order.asset.image));
+                await DownloadImage(m_Order.asset.image);
             }
         }
 
@@ -213,21 +213,21 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Downloads the image from the given URL and displays it.
         /// </summary>
-        private IEnumerator DownloadImage(string url)
+        private async UniTask DownloadImage(string url)
         {
-            UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
-
-            // Wait for the web request to complete
-            yield return request.SendWebRequest();
-
-            if (request.result == UnityWebRequest.Result.Success)
+            using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(url))
             {
-                m_Image.texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
-                m_Image.gameObject.SetActive(true);
-            }
-            else
-            {
-                m_Image.gameObject.SetActive(false);
+                await request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    m_Image.texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
+                    m_Image.gameObject.SetActive(true);
+                }
+                else
+                {
+                    m_Image.gameObject.SetActive(false);
+                }
             }
         }
 
