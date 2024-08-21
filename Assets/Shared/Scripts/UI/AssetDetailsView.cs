@@ -190,6 +190,7 @@ namespace HyperCasual.Runner
                 if (response.toSign != null && response.preparedListing != null)
                 {
                     // Prompt for signature
+                    Debug.Log($"Sign: {response.toSign}");
                     (bool result, string signature) = await m_CustomDialog.ShowDialog(
                         "Confirm listing",
                         "Enter signed payload:",
@@ -279,33 +280,33 @@ namespace HyperCasual.Runner
 
                 string address = await GetWalletAddress();
                 var nvc = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("offererAddress", address),
-                    new KeyValuePair<string, string>("listingId", listingId),
-                    new KeyValuePair<string, string>("type", "hard")
-                };
+            {
+                new KeyValuePair<string, string>("offererAddress", address),
+                new KeyValuePair<string, string>("listingId", listingId),
+                new KeyValuePair<string, string>("type", "hard")
+            };
                 using var client = new HttpClient();
                 using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/cancelListing/skin") { Content = new FormUrlEncodedContent(nvc) };
                 using var res = await client.SendAsync(req);
 
-                if (res.IsSuccessStatusCode)
+                string responseBody = await res.Content.ReadAsStringAsync();
+                TransactionToSend response = JsonUtility.FromJson<TransactionToSend>(responseBody);
+                if (response != null && response.to != null)
                 {
-                    string responseBody = await res.Content.ReadAsStringAsync();
-                    CreateListingResponse response = JsonUtility.FromJson<CreateListingResponse>(responseBody);
-                    Debug.Log($"Listing cancelled: {response.result.id}");
+                    string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest()
+                    {
+                        to = response.to, // Immutable seaport contract
+                        data = response.data, // fd9f1e10 cancel
+                        value = "0"
+                    });
+                }
 
-                    m_CancelButton.gameObject.SetActive(false);
-                }
-                else
-                {
-                    Debug.Log("Failed to cancel listing");
-                    m_CancelButton.gameObject.SetActive(true);
-                }
+                m_SellButton.gameObject.SetActive(true);
                 m_Progress.SetActive(false);
             }
             catch (Exception ex)
             {
-                Debug.Log($"Failed to cancel listing: {ex.Message}");
+                Debug.Log($"Failed to cancel {ex.Message}");
                 m_CancelButton.gameObject.SetActive(true);
                 m_Progress.SetActive(false);
             }
