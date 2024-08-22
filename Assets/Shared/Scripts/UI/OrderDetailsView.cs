@@ -17,6 +17,7 @@ namespace HyperCasual.Runner
     {
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
+        [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private TextMeshProUGUI m_NameText = null;
         [SerializeField] private TextMeshProUGUI m_TokenIdText = null;
         [SerializeField] private TextMeshProUGUI m_CollectionText = null;
@@ -43,6 +44,9 @@ namespace HyperCasual.Runner
         {
             m_AttributeObj.gameObject.SetActive(false); // Disable the template attribute object
             m_BackButton.AddListener(OnBackButtonClick); // Listen for back button click
+
+            // Gets the player's balance
+            m_Balance.UpdateBalance();
         }
 
         /// <summary>

@@ -19,6 +19,7 @@ namespace HyperCasual.Runner
     {
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
+        [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private AssetListObject m_AssetObj = null;
         [SerializeField] private Transform m_ListParent = null;
         [SerializeField] private InfiniteScrollView m_ScrollView;
@@ -37,7 +38,6 @@ namespace HyperCasual.Runner
             // Hide asset template item
             m_AssetObj.gameObject.SetActive(false);
 
-            // Add listener to back button
             m_BackButton.AddListener(OnBackButtonClick);
 
             if (Passport.Instance != null)
@@ -45,6 +45,9 @@ namespace HyperCasual.Runner
                 // Setup infinite scroll view and load assets
                 m_ScrollView.OnCreateItemView += OnCreateItemView;
                 LoadAssets();
+
+                // Gets the player's balance
+                m_Balance.UpdateBalance();
             }
         }
 

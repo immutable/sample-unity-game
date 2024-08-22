@@ -6,7 +6,7 @@ import express, {
 } from 'express';
 import cors from 'cors';
 import http from 'http';
-import { providers, Wallet, Contract, PopulatedTransaction, TypedDataDomain } from 'ethers';
+import { providers, Wallet, Contract, PopulatedTransaction, utils } from 'ethers';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { config, orderbook, blockchainData } from '@imtbl/sdk';
@@ -135,8 +135,33 @@ router.post('/mint/skin', async (req: Request, res: Response) => {
 },
 );
 
-// List item
+// In-game ERC20 balance
+router.get('/balance', async (req: Request, res: Response) => {
+  try {
+    if (tokenContractAddress && privateKey) {
+      // Get the address
+      let address = req.query.address ?? null;
 
+      // Call balanceOf
+      const abi = ['function balanceOf(address account) view returns (uint256)'];
+      const contract = new Contract(tokenContractAddress, abi, zkEvmProvider);
+      const balance = await contract.balanceOf(address);
+
+      return res.status(200).json({
+        quantity: utils.formatUnits(balance, 18)
+      });
+    } else {
+      return res.status(500).json({});
+    }
+
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: 'Failed to mint to user' });
+  }
+},
+);
+
+// List item
 const client = new orderbook.Orderbook({
   baseConfig: {
     environment: config.Environment.SANDBOX,

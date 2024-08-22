@@ -19,6 +19,7 @@ namespace HyperCasual.Runner
     {
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
+        [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private TMP_Dropdown m_ColoursDropdown;
         [SerializeField] private TMP_Dropdown m_SpeedDropdown;
         [SerializeField] private OrderListObject m_OrderObj = null;
@@ -50,6 +51,9 @@ namespace HyperCasual.Runner
 
                 // Setup filters
                 SetupFilters();
+
+                // Gets the player's balance
+                m_Balance.UpdateBalance();
             }
         }
 
