@@ -113,6 +113,29 @@ router.post('/mint/skin', async (req, res) => {
         return res.status(400).json({ message: 'Failed to mint to user' });
     }
 });
+// In-game ERC20 balance
+router.get('/balance', async (req, res) => {
+    try {
+        if (tokenContractAddress && privateKey) {
+            // Get the address
+            let address = req.query.address ?? null;
+            // Call balanceOf
+            const abi = ['function balanceOf(address account) view returns (uint256)'];
+            const contract = new ethers_1.Contract(tokenContractAddress, abi, zkEvmProvider);
+            const balance = await contract.balanceOf(address);
+            return res.status(200).json({
+                quantity: ethers_1.utils.formatUnits(balance, 18)
+            });
+        }
+        else {
+            return res.status(500).json({});
+        }
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(400).json({ message: 'Failed to mint to user' });
+    }
+});
 // List item
 const client = new sdk_1.orderbook.Orderbook({
     baseConfig: {
