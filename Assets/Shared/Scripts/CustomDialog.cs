@@ -11,6 +11,7 @@ namespace HyperCasual.Runner
         [SerializeField] private TextMeshProUGUI m_TitleText;
         [SerializeField] private TextMeshProUGUI m_MessageText;
         [SerializeField] private TMP_InputField m_InputField;
+        [SerializeField] private GameObject m_ButtonsContainer;
         [SerializeField] private Button m_PositiveButton;
         [SerializeField] private Button m_NegativeButton;
         [SerializeField] private TextMeshProUGUI m_PositiveButtonText;
