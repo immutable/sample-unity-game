@@ -25,7 +25,6 @@ namespace HyperCasual.Runner
         [SerializeField] private OrderListObject m_OrderObj = null;
         [SerializeField] private Transform m_ListParent = null;
         [SerializeField] private InfiniteScrollView m_ScrollView;
-        [SerializeField] private OrderItemClickedEvent m_OrderClickedEvent;
         private List<OrderModel> m_Orders = new List<OrderModel>();
 
         // Pagination
@@ -41,6 +40,7 @@ namespace HyperCasual.Runner
             m_OrderObj.gameObject.SetActive(false);
 
             // Add listener to back button
+            m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
 
             if (Passport.Instance != null)
@@ -89,9 +89,12 @@ namespace HyperCasual.Runner
                 var clickable = item.GetComponent<ClickableView>();
                 if (clickable != null)
                 {
+                    clickable.ClearAllSubscribers();
                     clickable.OnClick += () =>
                     {
-                        m_OrderClickedEvent.Raise(order);
+                        OrderDetailsView view = UIManager.Instance.GetView<OrderDetailsView>();
+                        UIManager.Instance.Show(view, true);
+                        view.Initialise(order);
                     };
                 }
             }
@@ -214,30 +217,21 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Cleans up event listeners and views
-        /// </summary>
-        private void OnDisable()
-        {
-            // Remove listener from the back button
-            m_BackButton.RemoveListener(OnBackButtonClick);
-
-            // // Clear the order list
-            // m_Orders.Clear();
-
-            // // Reset pagination information
-            // m_Page = null;
-
-            // // Reset the InfiniteScrollView
-            // m_ScrollView.TotalItemCount = 0;
-            // m_ScrollView.Clear(); // Resets the scroll view
-        }
-
-
-        /// <summary>
-        /// Handles the back button click
+        /// Cleans up views and handles the back button click
         /// </summary>
         private void OnBackButtonClick()
         {
+            // Clear the order list
+            m_Orders.Clear();
+
+            // Reset pagination information
+            m_Page = null;
+
+            // Reset the InfiniteScrollView
+            m_ScrollView.TotalItemCount = 0;
+            m_ScrollView.Clear(); // Resets the scroll view
+
+            // Trigger back button event
             m_BackEvent.Raise();
         }
     }

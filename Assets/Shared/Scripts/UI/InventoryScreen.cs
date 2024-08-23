@@ -23,7 +23,6 @@ namespace HyperCasual.Runner
         [SerializeField] private AssetListObject m_AssetObj = null;
         [SerializeField] private Transform m_ListParent = null;
         [SerializeField] private InfiniteScrollView m_ScrollView;
-        [SerializeField] private AssetItemClickedEvent m_AssetClickedEvent;
         private List<AssetModel> m_Assets = new List<AssetModel>();
 
         // Pagination
@@ -38,6 +37,7 @@ namespace HyperCasual.Runner
             // Hide asset template item
             m_AssetObj.gameObject.SetActive(false);
 
+            m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
 
             if (Passport.Instance != null)
@@ -67,9 +67,12 @@ namespace HyperCasual.Runner
                 var clickable = item.GetComponent<ClickableView>();
                 if (clickable != null)
                 {
+                    clickable.ClearAllSubscribers();
                     clickable.OnClick += () =>
                     {
-                        m_AssetClickedEvent.Raise(asset);
+                        AssetDetailsView view = UIManager.Instance.GetView<AssetDetailsView>();
+                        UIManager.Instance.Show(view, true);
+                        view.Initialise(asset);
                     };
                 }
             }
@@ -192,31 +195,21 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Cleans up event listeners and views
-        /// </summary>
-        private void OnDisable()
-        {
-            // Remove listener from the back button
-            m_BackButton.RemoveListener(OnBackButtonClick);
-
-            // // Clear the asset list
-            // m_Assets.Clear();
-
-            // // Reset pagination information
-            // m_Page = null;
-
-            // // Reset the InfiniteScrollView
-            // m_ScrollView.TotalItemCount = 0;
-            // m_ScrollView.Clear(); // Resets the scroll view
-        }
-
-
-        /// <summary>
-        /// Handles the back button click
+        /// Cleans up views and handles the back button click
         /// </summary>
         private void OnBackButtonClick()
         {
-            Debug.Log("hello");
+            // Clear the asset list
+            m_Assets.Clear();
+
+            // Reset pagination information
+            m_Page = null;
+
+            // Reset the InfiniteScrollView
+            m_ScrollView.TotalItemCount = 0;
+            m_ScrollView.Clear();
+
+            // Trigger back button event
             m_BackEvent.Raise();
         }
     }

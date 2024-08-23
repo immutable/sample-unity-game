@@ -92,6 +92,11 @@ namespace HyperCasual.Runner
             {
                 await request.SendWebRequest();
 
+                if (m_Image == null)
+                {
+                    return;
+                }
+
                 if (request.result == UnityWebRequest.Result.Success)
                 {
                     m_Image.texture = ((DownloadHandlerTexture)request.downloadHandler).texture;

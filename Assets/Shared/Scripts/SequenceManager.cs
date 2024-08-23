@@ -35,9 +35,7 @@ namespace HyperCasual.Gameplay
         [SerializeField] AbstractGameEvent m_UnlockedSkinEvent;
         [SerializeField] AbstractGameEvent m_CollectEvent;
         [SerializeField] AbstractGameEvent m_InventoryEvent;
-        [SerializeField] AssetItemClickedEvent m_AssetItemClickedEvent;
         [SerializeField] AbstractGameEvent m_MarketplaceEvent;
-        [SerializeField] OrderItemClickedEvent m_OrderItemClickedEvent;
         [Header("Other")]
         [SerializeField]
         float m_SplashDelay = 2f;
@@ -46,9 +44,7 @@ namespace HyperCasual.Gameplay
         IState m_SplashScreenState;
         IState m_MainMenuState;
         IState m_InventoryState;
-        IState m_AssetDetailsState;
         IState m_MarketplaceState;
-        IState m_OrderDetailsState;
         IState m_LevelSelectState;
         readonly List<IState> m_LevelStates = new();
         public IState m_CurrentLevel;
@@ -86,9 +82,7 @@ namespace HyperCasual.Gameplay
             var splashDelay = new DelayState(m_SplashDelay);
             m_MainMenuState = new State(OnMainMenuDisplayed);
             m_InventoryState = new State(OnInventoryDisplayed);
-            m_AssetDetailsState = new DataState<AssetModel>(OnAssetDetailsDisplayed);
             m_MarketplaceState = new State(OnMarketplaceDisplayed);
-            m_OrderDetailsState = new DataState<OrderModel>(OnOrderDetailsDisplayed);
             m_LevelSelectState = new State(OnLevelSelectionDisplayed);
 
             //Connect the states
@@ -98,16 +92,8 @@ namespace HyperCasual.Gameplay
             m_MainMenuState.AddLink(new EventLink(m_InventoryEvent, m_InventoryState));
             m_MainMenuState.AddLink(new EventLink(m_MarketplaceEvent, m_MarketplaceState));
             m_LevelSelectState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
-
             m_InventoryState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
-            m_InventoryState.AddLink(new DataEventLink<AssetModel>(m_AssetItemClickedEvent, m_AssetDetailsState));
-
-            m_AssetDetailsState.AddLink(new EventLink(m_BackEvent, m_InventoryState));
-
             m_MarketplaceState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
-            m_MarketplaceState.AddLink(new DataEventLink<OrderModel>(m_OrderItemClickedEvent, m_OrderDetailsState));
-
-            m_OrderDetailsState.AddLink(new EventLink(m_BackEvent, m_MarketplaceState));
         }
 
         void CreateLevelSequences()
@@ -243,25 +229,9 @@ namespace HyperCasual.Gameplay
             AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
         }
 
-        void OnAssetDetailsDisplayed(AssetModel asset)
-        {
-            ShowUI<AssetDetailsView>();
-            AssetDetailsView view = UIManager.Instance.GetView<AssetDetailsView>();
-            view.Initialise(asset);
-            AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
-        }
-
         void OnMarketplaceDisplayed()
         {
             ShowUI<MarketplaceScreen>();
-            AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
-        }
-
-        void OnOrderDetailsDisplayed(OrderModel order)
-        {
-            ShowUI<OrderDetailsView>();
-            OrderDetailsView view = UIManager.Instance.GetView<OrderDetailsView>();
-            view.Initialise(order);
             AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
         }
 
