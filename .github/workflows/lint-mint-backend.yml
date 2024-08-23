@@ -19,9 +19,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
       - name: Install packages for mint-backend
         working-directory: ./mint-backend
         run: yarn install
+
       - name: Run eslint against mint-backend
         working-directory: ./mint-backend
         run: yarn lint
