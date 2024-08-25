@@ -16,7 +16,6 @@ namespace HyperCasual.Runner
     public class AssetDetailsView : View
     {
         [SerializeField] private HyperCasualButton m_BackButton;
-        [SerializeField] private AbstractGameEvent m_BackEvent;
         [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private RawImage m_Image;
         [SerializeField] private TextMeshProUGUI m_NameText;
@@ -37,7 +36,9 @@ namespace HyperCasual.Runner
         private void OnEnable()
         {
             m_AttributeObj.gameObject.SetActive(false); // Disable the template attribute object
-            m_BackButton.AddListener(OnBackButtonClick); // Listen for back button click
+
+            m_BackButton.RemoveListener(OnBackButtonClick);
+            m_BackButton.AddListener(OnBackButtonClick);
 
             // Gets the player's balance
             m_Balance.UpdateBalance();
@@ -54,7 +55,9 @@ namespace HyperCasual.Runner
 
             m_Progress.SetActive(false); // Hide progress
 
+            m_SellButton.RemoveListener(OnSellButtonClicked);
             m_SellButton.AddListener(OnSellButtonClicked);
+            m_CancelButton.RemoveListener(OnCancel);
             m_CancelButton.AddListener(OnCancel);
         }
 
@@ -68,11 +71,7 @@ namespace HyperCasual.Runner
             m_CollectionText.text = $"Collection: {m_Asset.contract_address}";
 
             // Clear existing attributes
-            foreach (AttributeView attribute in m_Attributes)
-            {
-                Destroy(attribute.gameObject);
-            }
-            m_Attributes.Clear();
+            ClearAttributes();
 
             // Populate attributes
             foreach (AssetAttribute attribute in m_Asset.attributes)
@@ -94,6 +93,18 @@ namespace HyperCasual.Runner
             {
                 await DownloadImage(m_Asset.image);
             }
+        }
+
+        /// <summary>
+        /// Removes all the attribute views
+        /// </summary>
+        private void ClearAttributes()
+        {
+            foreach (AttributeView attribute in m_Attributes)
+            {
+                Destroy(attribute.gameObject);
+            }
+            m_Attributes.Clear();
         }
 
         /// <summary>
@@ -318,7 +329,7 @@ namespace HyperCasual.Runner
 
         private void OnBackButtonClick()
         {
-            m_BackEvent.Raise(); // Trigger the back event
+            UIManager.Instance.GoBack();
         }
 
         /// <summary>
@@ -339,6 +350,21 @@ namespace HyperCasual.Runner
             {
                 Debug.Log($"Failed to download image: {webRequest.error}");
             }
+        }
+
+        /// <summary>
+        /// Cleans up data
+        /// </summary>
+        private void OnDisable()
+        {
+            m_NameText.text = "";
+            m_TokenIdText.text = ""; ;
+            m_CollectionText.text = ""; ;
+            m_StatusText.text = ""; ;
+            m_Image.texture = null;
+
+            m_Asset = null;
+            ClearAttributes();
         }
     }
 }

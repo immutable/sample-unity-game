@@ -91,11 +91,6 @@ namespace HyperCasual.Runner
             ShowMarketplaceButton(SaveManager.Instance.IsLoggedIn);
         }
 
-        void OnDisable()
-        {
-            m_StartButton.RemoveListener(OnStartButtonClick);
-        }
-
         void OnStartButtonClick()
         {
             m_StartButtonEvent.Raise();

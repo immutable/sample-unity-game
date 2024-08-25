@@ -15,7 +15,7 @@ const skinImageUrls = [
   'QmRqKuUT3oHcg9ib7t4ePPomD7P1fmYv3Xu1Km4KTn4Ddj',
   'QmcC18L7DXz37GjihGQiLrH3kxgUwb29dXQfddEJjuLn1W',
   'Qmd6LMHBxAXau8ZWs9ydgxZtWLSjV89q9zb6awwscJZbQt',
-  'QmXDfVp7jf11wiAPSEEpJDGKN1vYkFDKTTpJfPhjABRd77'
+  'QmXDfVp7jf11wiAPSEEpJDGKN1vYkFDKTTpJfPhjABRd77',
 ];
 const skinSpeeds = ['Slow', 'Medium', 'Fast'];
 
@@ -43,22 +43,20 @@ router.get(
 router.get(
   '/skin/celestial-blue/:id',
   async (req: Request, res: Response) => {
-    const id = parseInt(req.params.id);
-
     const json = {
       id: parseInt(req.params.id),
       name: `Celestial Blue Skin #${req.params.id}`,
       image: 'https://rose-ministerial-termite-701.mypinata.cloud/ipfs/QmNZeG8wkW3mFw4PrqEj34NPA88impcvemYjhAkJAM4YcK',
       attributes: [
         {
-          "trait_type": "Colour",
-          "value": "Celestial Blue"
+          'trait_type': 'Colour',
+          'value': 'Celestial Blue',
         },
         {
-          "trait_type": "Speed",
-          "value": "Fast"
-        }
-      ]
+          'trait_type': 'Speed',
+          'value': 'Fast',
+        },
+      ],
     };
 
     res.writeHead(200);
@@ -79,14 +77,14 @@ router.get(
       image: `https://rose-ministerial-termite-701.mypinata.cloud/ipfs/${skinImageUrls[id % 6]}`,
       attributes: [
         {
-          "trait_type": "Colour",
-          "value": skinColours[id % 6] // For demo purposes, the colour is deterministic
+          'trait_type': 'Colour',
+          'value': skinColours[id % 6], // For demo purposes, the colour is deterministic
         },
         {
-          "trait_type": "Speed",
-          "value": skinSpeeds[id % 3] // For demo purposes, the speed is deterministic
-        }
-      ]
+          'trait_type': 'Speed',
+          'value': skinSpeeds[id % 3], // For demo purposes, the speed is deterministic
+        },
+      ],
     };
 
     res.writeHead(200);
