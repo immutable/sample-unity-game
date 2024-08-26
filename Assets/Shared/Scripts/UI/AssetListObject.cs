@@ -80,10 +80,10 @@ namespace HyperCasual.Runner
                 if (response.IsSuccessStatusCode)
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
-                    ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
+                    ListingsResponse listingsResponse = JsonUtility.FromJson<ListingsResponse>(responseBody);
 
                     // Check if the listing exists
-                    return listingResponse.result.Length > 0;
+                    return listingsResponse.result.Length > 0;
                 }
             }
             catch (Exception ex)

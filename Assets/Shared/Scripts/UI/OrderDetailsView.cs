@@ -162,11 +162,11 @@ namespace HyperCasual.Runner
                 if (response.IsSuccessStatusCode)
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
-                    ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
+                    ListingsResponse listingsResponse = JsonUtility.FromJson<ListingsResponse>(responseBody);
 
-                    if (listingResponse.result.Length > 0)
+                    if (listingsResponse.result.Length > 0)
                     {
-                        m_Listing = listingResponse.result[0];
+                        m_Listing = listingsResponse.result[0];
                         return true;
                     }
                     return false;
