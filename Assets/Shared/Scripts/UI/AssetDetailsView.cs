@@ -31,7 +31,7 @@ namespace HyperCasual.Runner
 
         private List<AttributeView> m_Attributes = new List<AttributeView>();
         private AssetModel m_Asset;
-        private string listingId;
+        private Listing m_Listing;
 
         private void OnEnable()
         {
@@ -57,8 +57,8 @@ namespace HyperCasual.Runner
 
             m_SellButton.RemoveListener(OnSellButtonClicked);
             m_SellButton.AddListener(OnSellButtonClicked);
-            m_CancelButton.RemoveListener(OnCancel);
-            m_CancelButton.AddListener(OnCancel);
+            m_CancelButton.RemoveListener(OnCancelButtonClicked);
+            m_CancelButton.AddListener(OnCancelButtonClicked);
         }
 
         /// <summary>
@@ -124,7 +124,13 @@ namespace HyperCasual.Runner
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
                     ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
-                    return listingResponse.result.Length > 0; // Check if the listing exists
+
+                    if (listingResponse.result.Length > 0)
+                    {
+                        m_Listing = listingResponse.result[0];
+                        return true;
+                    }
+                    return false;
                 }
             }
             catch (Exception ex)
@@ -286,18 +292,17 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Cancels the listing of the asset.
         /// </summary>
-        private async void OnCancel()
+        private async void OnCancelButtonClicked()
         {
             try
             {
                 m_CancelButton.gameObject.SetActive(false);
-                m_Progress.SetActive(true);
 
                 string address = await GetWalletAddress();
                 var nvc = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("offererAddress", address),
-                new KeyValuePair<string, string>("listingId", listingId),
+                new KeyValuePair<string, string>("listingId", m_Listing.id),
                 new KeyValuePair<string, string>("type", "hard")
             };
                 using var client = new HttpClient();
