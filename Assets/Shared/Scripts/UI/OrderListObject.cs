@@ -33,10 +33,6 @@ namespace HyperCasual.Runner
             m_Order = order;
             UpdateData();
 
-            // Check if the order belongs to the current user
-            string address = await GetWalletAddress();
-            bool isUsersListing = order.account_address == address;
-
             // Get and display asset details
             await GetDetails(order.sell[0].token_id);
         }

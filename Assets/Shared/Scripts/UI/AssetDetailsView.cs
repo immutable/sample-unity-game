@@ -328,18 +328,18 @@ namespace HyperCasual.Runner
                 }
                 else
                 {
-                    m_SellButton.gameObject.SetActive(true);
-
+                    m_CancelButton.gameObject.SetActive(true);
                 }
+
+                m_Progress.SetActive(false);
             }
             catch (Exception ex)
             {
                 Debug.Log($"Failed to cancel: {ex.Message}");
                 m_CancelButton.gameObject.SetActive(true);
+                m_Progress.SetActive(false);
                 await m_CustomDialog.ShowDialog("Error", "Failed to cancel listing", "OK");
             }
-
-            m_Progress.SetActive(false);
         }
 
         private void OnBackButtonClick()

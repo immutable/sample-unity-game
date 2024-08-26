@@ -28,29 +28,40 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Initialises the asset object with relevant data and updates the UI.
         /// </summary>
-        public async void Initialise(AssetModel asset)
+        public void Initialise(AssetModel asset)
         {
             m_Asset = asset;
             UpdateData();
+        }
 
-            // Fetch sale status
-            bool isOnSale = await IsListed(m_Asset.token_id);
-            m_StatusText.text = isOnSale ? "Listed" : "Not listed";
-
-            // Download and display the image
-            if (!string.IsNullOrEmpty(m_Asset.image))
-            {
-                await DownloadImage(m_Asset.image);
-            }
+        /// <summary>
+        /// Sets up the inventory list and fetches the player's assets.
+        /// </summary>
+        private void OnEnable()
+        {
+            Debug.Log("AssetListObject OnEnable");
+            UpdateData();
         }
 
         /// <summary>
         /// Updates the text fields with asset data.
         /// </summary>
-        private void UpdateData()
+        private async void UpdateData()
         {
-            m_NameText.text = m_Asset.name;
-            m_CollectionText.text = m_Asset.contract_address;
+            if (m_Asset != null)
+            {
+                m_NameText.text = m_Asset.name;
+                m_CollectionText.text = m_Asset.contract_address;
+
+                // Fetch sale status
+                bool isOnSale = await IsListed(m_Asset.token_id);
+                m_StatusText.text = isOnSale ? "Listed" : "Not listed";
+
+                if (!string.IsNullOrEmpty(m_Asset.image))
+                {
+                    await DownloadImage(m_Asset.image);
+                }
+            }
         }
 
         /// <summary>
