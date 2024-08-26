@@ -227,6 +227,8 @@ namespace HyperCasual.Runner
                         });
                     }
 
+                    // Validate that order is fulfilled
+                    await ConfirmListingStatus();
                     m_BuyButton.gameObject.SetActive(false);
                     m_UsersAssetText.gameObject.SetActive(true);
                     m_Balance.UpdateBalance(); // Update user's balance on successful buy
@@ -244,6 +246,31 @@ namespace HyperCasual.Runner
                 m_BuyButton.gameObject.SetActive(true);
                 m_Progress.SetActive(false);
                 await m_CustomDialog.ShowDialog("Error", "Failed to buy", "OK");
+            }
+        }
+
+        /// <summary>
+        /// Polls the order status until it transitions to FULFILLED or the operation times out after 1 minute.
+        /// </summary>
+        private async UniTask ConfirmListingStatus()
+        {
+            Debug.Log($"Confirming order is filled...");
+
+            bool conditionMet = await PollingHelper.PollAsync(
+                $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_Order.id}",
+                (responseBody) =>
+                {
+                    ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
+                    return listingResponse.result?.status.name == "FILLED";
+                });
+
+            if (conditionMet)
+            {
+                Debug.Log($"Order confirmed as filled.");
+            }
+            else
+            {
+                await m_CustomDialog.ShowDialog("Error", $"Failed to confirm if order is filled", "OK");
             }
         }
 
