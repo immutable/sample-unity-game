@@ -31,7 +31,7 @@ namespace HyperCasual.Runner
 
         private List<AttributeView> m_Attributes = new List<AttributeView>();
         private AssetModel m_Asset;
-        private string listingId;
+        private Listing m_Listing;
 
         private void OnEnable()
         {
@@ -57,8 +57,8 @@ namespace HyperCasual.Runner
 
             m_SellButton.RemoveListener(OnSellButtonClicked);
             m_SellButton.AddListener(OnSellButtonClicked);
-            m_CancelButton.RemoveListener(OnCancel);
-            m_CancelButton.AddListener(OnCancel);
+            m_CancelButton.RemoveListener(OnCancelButtonClicked);
+            m_CancelButton.AddListener(OnCancelButtonClicked);
         }
 
         /// <summary>
@@ -124,7 +124,13 @@ namespace HyperCasual.Runner
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
                     ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
-                    return listingResponse.result.Length > 0; // Check if the listing exists
+
+                    if (listingResponse.result.Length > 0)
+                    {
+                        m_Listing = listingResponse.result[0];
+                        return true;
+                    }
+                    return false;
                 }
             }
             catch (Exception ex)
@@ -233,6 +239,7 @@ namespace HyperCasual.Runner
                 Debug.Log($"Failed to sell: {ex.Message}");
                 m_SellButton.gameObject.SetActive(true);
                 m_Progress.SetActive(false);
+                await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing", "OK");
             }
         }
 
@@ -265,28 +272,29 @@ namespace HyperCasual.Runner
                     Debug.Log($"Listing ID: {response.result.id}");
 
                     m_SellButton.gameObject.SetActive(false);
-                    m_Progress.SetActive(false);
                     m_CancelButton.gameObject.SetActive(true);
                 }
                 else
                 {
                     Debug.Log("Failed to confirm sell");
                     m_SellButton.gameObject.SetActive(true);
-                    m_Progress.SetActive(false);
                 }
+
+                m_Progress.SetActive(false);
             }
             catch (Exception ex)
             {
-                Debug.Log($"Failed to confirm sell: {ex.Message}");
+                Debug.Log($"Failed to list: {ex.Message}");
                 m_SellButton.gameObject.SetActive(true);
                 m_Progress.SetActive(false);
+                await m_CustomDialog.ShowDialog("Error", "Failed to list", "OK");
             }
         }
 
         /// <summary>
         /// Cancels the listing of the asset.
         /// </summary>
-        private async void OnCancel()
+        private async void OnCancelButtonClicked()
         {
             try
             {
@@ -295,11 +303,12 @@ namespace HyperCasual.Runner
 
                 string address = await GetWalletAddress();
                 var nvc = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("offererAddress", address),
-                new KeyValuePair<string, string>("listingId", listingId),
-                new KeyValuePair<string, string>("type", "hard")
-            };
+                {
+                    new KeyValuePair<string, string>("offererAddress", address),
+                    new KeyValuePair<string, string>("listingId", m_Listing.id),
+                    new KeyValuePair<string, string>("type", "hard")
+                };
+
                 using var client = new HttpClient();
                 using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/cancelListing/skin") { Content = new FormUrlEncodedContent(nvc) };
                 using var res = await client.SendAsync(req);
@@ -314,17 +323,23 @@ namespace HyperCasual.Runner
                         data = response.data, // fd9f1e10 cancel
                         value = "0"
                     });
-                }
 
-                m_SellButton.gameObject.SetActive(true);
-                m_Progress.SetActive(false);
+                    m_SellButton.gameObject.SetActive(true);
+                }
+                else
+                {
+                    m_SellButton.gameObject.SetActive(true);
+
+                }
             }
             catch (Exception ex)
             {
-                Debug.Log($"Failed to cancel {ex.Message}");
+                Debug.Log($"Failed to cancel: {ex.Message}");
                 m_CancelButton.gameObject.SetActive(true);
-                m_Progress.SetActive(false);
+                await m_CustomDialog.ShowDialog("Error", "Failed to cancel listing", "OK");
             }
+
+            m_Progress.SetActive(false);
         }
 
         private void OnBackButtonClick()

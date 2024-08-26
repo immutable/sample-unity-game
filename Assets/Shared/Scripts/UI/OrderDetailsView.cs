@@ -25,19 +25,13 @@ namespace HyperCasual.Runner
         private List<AttributeView> m_Attributes = new List<AttributeView>();
 
         [SerializeField] private RawImage m_Image = null;
-        [SerializeField] HyperCasualButton m_BuyButton;
-        [SerializeField] HyperCasualButton m_CancelButton;
+        [SerializeField] private HyperCasualButton m_BuyButton;
+        [SerializeField] private TextMeshProUGUI m_UsersAssetText = null;
         [SerializeField] private GameObject m_Progress = null;
-
-        // To remove
-        [SerializeField] private GameObject signatureContainer;
-        [SerializeField] private InputField orderSignature;
-        [SerializeField]
-        HyperCasualButton m_ConfirmButton;
+        [SerializeField] private CustomDialog m_CustomDialog;
 
         private OrderModel m_Order;
-        private string preparedListing;
-        private string listingId;
+        private Listing m_Listing;
 
         async void OnEnable()
         {
@@ -58,20 +52,29 @@ namespace HyperCasual.Runner
             m_Order = order;
             UpdateData();
 
-            // Fetch sale status
-            bool isOnSale = await IsListed(m_Order.asset.token_id);
-            m_BuyButton.gameObject.SetActive(!isOnSale);
-            m_CancelButton.gameObject.SetActive(isOnSale);
+            // Check if asset is the player's asset
+            string address = await GetWalletAddress();
+            bool isPlayersAsset = m_Order.account_address == address;
+            if (isPlayersAsset)
+            {
+                m_UsersAssetText.gameObject.SetActive(true);
+                m_BuyButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                m_UsersAssetText.gameObject.SetActive(false);
 
-            // Hide progress and signature input
+                // Fetch sale status
+                bool isOnSale = await IsListed(m_Order.asset.token_id);
+                m_BuyButton.gameObject.SetActive(!isOnSale);
+            }
+
+            // Hide progress
             m_Progress.SetActive(false);
-            signatureContainer.gameObject.SetActive(false);
 
-            // Set listeners to buttons
+            // Set listeners to button
             m_BuyButton.RemoveListener(OnBuyButtonClick);
             m_BuyButton.AddListener(OnBuyButtonClick);
-            m_CancelButton.RemoveListener(OnCancel);
-            m_CancelButton.AddListener(OnCancel);
         }
 
         /// <summary>
@@ -161,8 +164,12 @@ namespace HyperCasual.Runner
                     string responseBody = await response.Content.ReadAsStringAsync();
                     ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
 
-                    // Check if the listing exists
-                    return listingResponse.result.Length > 0;
+                    if (listingResponse.result.Length > 0)
+                    {
+                        m_Listing = listingResponse.result[0];
+                        return true;
+                    }
+                    return false;
                 }
             }
             catch (Exception ex)
@@ -173,53 +180,73 @@ namespace HyperCasual.Runner
             return false;
         }
 
+        /// <summary>
+        /// Retrieves the wallet address of the user.
+        /// </summary>
+        /// <returns>The wallet address.</returns>
         private async UniTask<string> GetWalletAddress()
         {
             List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
             return accounts[0]; // Get the first wallet address
         }
 
+        /// <summary>
+        /// Handles the buy button click event. Sends a request to fulfil an order, 
+        /// processes the response, and updates the UI accordingly.
+        /// </summary>
         private async void OnBuyButtonClick()
-        {
-        }
-
-        private async void OnCancel()
         {
             try
             {
-                m_CancelButton.gameObject.SetActive(false);
+                m_BuyButton.gameObject.SetActive(false);
                 m_Progress.SetActive(true);
 
                 string address = await GetWalletAddress();
                 var nvc = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("offererAddress", address),
-                new KeyValuePair<string, string>("listingId", listingId),
-                new KeyValuePair<string, string>("type", "hard")
-            };
+                {
+                    new KeyValuePair<string, string>("fulfillerAddress", address),
+                    new KeyValuePair<string, string>("listingId", m_Order.id),
+                    new KeyValuePair<string, string>("fees", m_Order.fees.ToJson().Replace("recipient_address", "recipientAddress"))
+                };
+
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/cancelListing/skin") { Content = new FormUrlEncodedContent(nvc) };
+                using var req = new HttpRequestMessage(HttpMethod.Post, "http://localhost:6060/fillOrder/skin")
+                {
+                    Content = new FormUrlEncodedContent(nvc)
+                };
                 using var res = await client.SendAsync(req);
 
                 string responseBody = await res.Content.ReadAsStringAsync();
-                TransactionToSend response = JsonUtility.FromJson<TransactionToSend>(responseBody);
-                if (response != null && response.to != null)
+                FulfullOrderResponse response = JsonUtility.FromJson<FulfullOrderResponse>(responseBody);
+                if (response.transactionsToSend != null)
                 {
-                    string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest()
+                    foreach (TransactionToSend tx in response.transactionsToSend)
                     {
-                        to = response.to, // Immutable seaport contract
-                        data = response.data, // fd9f1e10 cancel
-                        value = "0"
-                    });
+                        string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest
+                        {
+                            to = tx.to, // Immutable seaport contract
+                            data = tx.data, // 87201b41 fulfillAvailableAdvancedOrders
+                            value = "0"
+                        });
+                    }
+
+                    m_BuyButton.gameObject.SetActive(false);
+                    m_UsersAssetText.gameObject.SetActive(true);
+                    m_Balance.UpdateBalance(); // Update user's balance on successful buy
+                }
+                else
+                {
+                    m_BuyButton.gameObject.SetActive(true);
                 }
 
                 m_Progress.SetActive(false);
             }
             catch (Exception ex)
             {
-                Debug.Log($"Failed to cancel {ex.Message}");
-                m_CancelButton.gameObject.SetActive(true);
+                Debug.Log($"Failed to buy: {ex.Message}");
+                m_BuyButton.gameObject.SetActive(true);
                 m_Progress.SetActive(false);
+                await m_CustomDialog.ShowDialog("Error", "Failed to buy", "OK");
             }
         }
 

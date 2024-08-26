@@ -9,8 +9,8 @@ import http from 'http';
 import { providers, Wallet, Contract, PopulatedTransaction, utils } from 'ethers';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import { config, orderbook, blockchainData } from '@imtbl/sdk';
-import { PrepareListingResponse, SignableAction, FeeValue } from '@imtbl/sdk/dist/orderbook';
+import { config, orderbook } from '@imtbl/sdk';
+import { TransactionAction, FeeValue } from '@imtbl/sdk/dist/orderbook';
 
 dotenv.config();
 
@@ -260,6 +260,84 @@ router.post('/createListing/skin', async (req: Request, res: Response) => {
 
     return res.status(200).json(order);
 
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ message: 'Failed to prepare listing' });
+  }
+});
+
+// Cancel listing
+router.post('/cancelListing/skin', async (req: Request, res: Response) => {
+  try {
+    const offererAddress: string = req.body.offererAddress;
+    const listingId: string = req.body.listingId;
+    const type: string = req.body.type;
+
+    if (!offererAddress) {
+      throw new Error("Missing offererAddress");
+    }
+    if (!listingId) {
+      throw new Error("Missing listingId");
+    }
+    if (!type || (type !== 'hard' && type !== 'soft')) {
+      throw new Error("The type must be either 'hard' or 'soft'");
+    }
+
+    if (type === 'hard') {
+      const { cancellationAction } = await client.cancelOrdersOnChain([listingId], offererAddress);
+      const unsignedCancelOrderTransaction = await cancellationAction.buildTransaction();
+
+      console.log(`unsignedCancelOrderTransaction: ${unsignedCancelOrderTransaction}`);
+
+      return res.status(200).json(unsignedCancelOrderTransaction);
+    }
+
+    if (type === 'soft') {
+      const { signableAction } = await client.prepareOrderCancellations([listingId]);
+      return res.status(200).json({
+        toSign: JSON.stringify(signableAction.message),
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ message: 'Failed to prepare listing' });
+  }
+});
+
+// Fulfill order
+router.post('/fillOrder/skin', async (req: Request, res: Response) => {
+  try {
+    const fulfillerAddress: string = req.body.fulfillerAddress;
+    const listingId: string = req.body.listingId;
+    const fees: string = req.body.fees;
+
+    if (!fulfillerAddress) {
+      throw new Error("Missing fulfillerAddress");
+    }
+    if (!listingId) {
+      throw new Error("Missing listingId");
+    }
+    if (!fees) {
+      throw new Error("Missing fees");
+    }
+
+    const feesValue: FeeValue[] = JSON.parse(fees);
+    const { actions, expiration, order } = await client.fulfillOrder(listingId, fulfillerAddress, feesValue);
+
+    console.log(`Fulfilling listing ${order}, transaction expiry ${expiration}`);
+
+    const transactionsToSend = await Promise.all(
+      actions
+        .filter((action): action is TransactionAction => action.type === orderbook.ActionType.TRANSACTION)
+        .map(async action => {
+          const builtTx = await action.buildTransaction();
+          return builtTx;
+        })
+    );
+
+    console.log(`Number of transactions to send: ${transactionsToSend.length}`);
+
+    return res.status(200).json({ transactionsToSend });
   } catch (error) {
     console.error(error);
     return res.status(400).json({ message: 'Failed to prepare listing' });
