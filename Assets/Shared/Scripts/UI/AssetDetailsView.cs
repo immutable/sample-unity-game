@@ -55,8 +55,10 @@ namespace HyperCasual.Runner
 
             m_Progress.SetActive(false); // Hide progress
 
+            m_SellButton.gameObject.SetActive(false);
             m_SellButton.RemoveListener(OnSellButtonClicked);
             m_SellButton.AddListener(OnSellButtonClicked);
+            m_CancelButton.gameObject.SetActive(false);
             m_CancelButton.RemoveListener(OnCancelButtonClicked);
             m_CancelButton.AddListener(OnCancelButtonClicked);
         }
@@ -272,6 +274,9 @@ namespace HyperCasual.Runner
                     m_ListingId = response.result.id;
                     Debug.Log($"Listing ID: {m_ListingId}");
 
+                    // Validate that listing is active
+                    await ConfirmListingStatus("ACTIVE");
+                    m_StatusText.text = "Listed";
                     m_SellButton.gameObject.SetActive(false);
                     m_CancelButton.gameObject.SetActive(true);
                 }
@@ -332,7 +337,8 @@ namespace HyperCasual.Runner
                     if (transactionResponse.status == "1")
                     {
                         // Validate that listing has been cancelled
-                        await ConfirmCancelled();
+                        await ConfirmListingStatus("CANCELLED");
+                        m_StatusText.text = "Not listed";
                         m_SellButton.gameObject.SetActive(true);
                         m_Progress.SetActive(false);
                     }
@@ -360,50 +366,27 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Polls the order status until it transitions to "CANCELLED" or the operation times out after 1 minute.
+        /// Polls the listing status until it transitions to the given status or the operation times out after 1 minute.
         /// </summary>
-        private async UniTask ConfirmCancelled()
+        private async UniTask ConfirmListingStatus(string status)
         {
-            Debug.Log($"Confirming listing {m_ListingId} is cancelled...");
+            Debug.Log($"Confirming listing {m_ListingId} is {status}...");
 
-            using var client = new HttpClient();
-            string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_ListingId}";
-            bool isCancelled = false;
-            float timeoutMs = 60000f; // Timeout set to 1 minute
-            float startTimeMs = Time.time * 1000;
+            bool conditionMet = await PollingHelper.PollAsync(
+                $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_ListingId}",
+                (responseBody) =>
+                {
+                    ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
+                    return listingResponse.result?.status.name == status;
+                });
 
-            while (!isCancelled)
+            if (conditionMet)
             {
-                try
-                {
-                    HttpResponseMessage response = await client.GetAsync(url);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string responseBody = await response.Content.ReadAsStringAsync();
-                        ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
-                        isCancelled = listingResponse.result?.status.name == "CANCELLED";
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogException(ex);
-                }
-
-                if (!isCancelled)
-                {
-                    // Check if timeout has been reached
-                    if ((Time.time * 1000) - startTimeMs > timeoutMs)
-                    {
-                        Debug.LogWarning("Polling timed out after 1 minute.");
-                        break;
-                    }
-
-                    await UniTask.Delay(2000); // Wait for 2 seconds before polling again
-                }
-                else
-                {
-                    Debug.Log($"Confirmed listing {m_ListingId} is cancelled.");
-                }
+                Debug.Log($"Listing confirmed as {status}.");
+            }
+            else
+            {
+                await m_CustomDialog.ShowDialog("Error", $"Failed to confirm if listing is {status.ToLower()}", "OK");
             }
         }
 

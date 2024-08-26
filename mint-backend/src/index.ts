@@ -254,7 +254,7 @@ router.post('/createListing/skin', async (req: Request, res: Response) => {
       orderComponents: preparedListing.orderComponents,
       orderHash: preparedListing.orderHash,
       orderSignature: signature,
-      makerFees: []
+      makerFees: [],
     });
 
     return res.status(200).json(order);
@@ -279,7 +279,7 @@ router.post('/cancelListing/skin', async (req: Request, res: Response) => {
       throw new Error('Missing listingId');
     }
     if (!type || (type !== 'hard' && type !== 'soft')) {
-      throw new Error(`The type must be either 'hard' or 'soft'`);
+      throw new Error('The type must be either \'hard\' or \'soft\'');
     }
 
     if (type === 'hard') {
@@ -331,7 +331,7 @@ router.post('/fillOrder/skin', async (req: Request, res: Response) => {
         .map(async action => {
           const builtTx = await action.buildTransaction();
           return builtTx;
-        })
+        }),
     );
 
     console.log(`Number of transactions to send: ${transactionsToSend.length}`);
