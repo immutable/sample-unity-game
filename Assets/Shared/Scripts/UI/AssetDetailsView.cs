@@ -31,7 +31,7 @@ namespace HyperCasual.Runner
 
         private List<AttributeView> m_Attributes = new List<AttributeView>();
         private AssetModel m_Asset;
-        private Listing m_Listing;
+        private string m_ListingId;
 
         private void OnEnable()
         {
@@ -123,11 +123,11 @@ namespace HyperCasual.Runner
                 if (response.IsSuccessStatusCode)
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
-                    ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
+                    ListingsResponse listingsResponse = JsonUtility.FromJson<ListingsResponse>(responseBody);
 
-                    if (listingResponse.result.Length > 0)
+                    if (listingsResponse.result.Length > 0)
                     {
-                        m_Listing = listingResponse.result[0];
+                        m_ListingId = listingsResponse.result[0].id;
                         return true;
                     }
                     return false;
@@ -269,7 +269,8 @@ namespace HyperCasual.Runner
                 {
                     string responseBody = await res.Content.ReadAsStringAsync();
                     CreateListingResponse response = JsonUtility.FromJson<CreateListingResponse>(responseBody);
-                    Debug.Log($"Listing ID: {response.result.id}");
+                    m_ListingId = response.result.id;
+                    Debug.Log($"Listing ID: {m_ListingId}");
 
                     m_SellButton.gameObject.SetActive(false);
                     m_CancelButton.gameObject.SetActive(true);
@@ -305,40 +306,104 @@ namespace HyperCasual.Runner
                 var nvc = new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("offererAddress", address),
-                    new KeyValuePair<string, string>("listingId", m_Listing.id),
+                    new KeyValuePair<string, string>("listingId", m_ListingId),
                     new KeyValuePair<string, string>("type", "hard")
                 };
 
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/cancelListing/skin") { Content = new FormUrlEncodedContent(nvc) };
-                using var res = await client.SendAsync(req);
-
-                string responseBody = await res.Content.ReadAsStringAsync();
-                TransactionToSend response = JsonUtility.FromJson<TransactionToSend>(responseBody);
-                if (response != null && response.to != null)
+                using var req = new HttpRequestMessage(HttpMethod.Post, "http://localhost:6060/cancelListing/skin")
                 {
-                    string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest()
+                    Content = new FormUrlEncodedContent(nvc)
+                };
+
+                using var res = await client.SendAsync(req);
+                string responseBody = await res.Content.ReadAsStringAsync();
+
+                TransactionToSend response = JsonUtility.FromJson<TransactionToSend>(responseBody);
+                if (response?.to != null)
+                {
+                    var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest()
                     {
                         to = response.to, // Immutable seaport contract
                         data = response.data, // fd9f1e10 cancel
                         value = "0"
                     });
 
-                    m_SellButton.gameObject.SetActive(true);
+                    if (transactionResponse.status == "1")
+                    {
+                        // Validate that listing has been cancelled
+                        await ConfirmCancelled();
+                        m_SellButton.gameObject.SetActive(true);
+                        m_Progress.SetActive(false);
+                    }
+                    else
+                    {
+                        Debug.Log($"Failed to cancel");
+                        m_CancelButton.gameObject.SetActive(true);
+                        m_Progress.SetActive(false);
+                        await m_CustomDialog.ShowDialog("Error", "Failed to cancel listing", "OK");
+                    }
                 }
                 else
                 {
+                    m_Progress.SetActive(false);
                     m_CancelButton.gameObject.SetActive(true);
                 }
-
-                m_Progress.SetActive(false);
             }
             catch (Exception ex)
             {
-                Debug.Log($"Failed to cancel: {ex.Message}");
+                Debug.LogException(ex);
                 m_CancelButton.gameObject.SetActive(true);
                 m_Progress.SetActive(false);
                 await m_CustomDialog.ShowDialog("Error", "Failed to cancel listing", "OK");
+            }
+        }
+
+        /// <summary>
+        /// Polls the order status until it transitions to "CANCELLED" or the operation times out after 1 minute.
+        /// </summary>
+        private async UniTask ConfirmCancelled()
+        {
+            Debug.Log($"Confirming listing {m_ListingId} is cancelled...");
+
+            using var client = new HttpClient();
+            string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_ListingId}";
+            bool isCancelled = false;
+            float timeoutMs = 60000f; // Timeout set to 1 minute
+            float startTimeMs = Time.time * 1000;
+
+            while (!isCancelled)
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(url);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+                        ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
+                        isCancelled = listingResponse.result?.status.name == "CANCELLED";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
+
+                if (!isCancelled)
+                {
+                    // Check if timeout has been reached
+                    if ((Time.time * 1000) - startTimeMs > timeoutMs)
+                    {
+                        Debug.LogWarning("Polling timed out after 1 minute.");
+                        break;
+                    }
+
+                    await UniTask.Delay(2000); // Wait for 2 seconds before polling again
+                }
+                else
+                {
+                    Debug.Log($"Confirmed listing {m_ListingId} is cancelled.");
+                }
             }
         }
 

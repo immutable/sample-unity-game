@@ -9,16 +9,4 @@ namespace HyperCasual.Runner
     {
         public Listing result;
     }
-
-    [Serializable]
-    public class ListingResponse
-    {
-        public Listing[] result;
-    }
-
-    [Serializable]
-    public class Listing
-    {
-        public string id;
-    }
 }

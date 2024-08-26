@@ -26,7 +26,6 @@ const zkEvmProvider = new providers.JsonRpcProvider('https://rpc.testnet.immutab
 // Contract addresses
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
 const tokenContractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
-const skinContractAddress = process.env.SKIN_CONTRACT_ADDRESS;
 const skinColourContractAddress = process.env.SKIN_CONTRACT_ADDRESS_COLOUR;
 // Private key of wallet with minter role
 const privateKey = process.env.PRIVATE_KEY;
@@ -148,7 +147,7 @@ router.get('/balance', async (req: Request, res: Response) => {
       const balance = await contract.balanceOf(address);
 
       return res.status(200).json({
-        quantity: utils.formatUnits(balance, 18)
+        quantity: utils.formatUnits(balance, 18),
       });
     } else {
       return res.status(500).json({});
@@ -172,7 +171,7 @@ const client = new orderbook.Orderbook({
 const prepareListing = async (
   offererAddress: string,
   amountToSell: string,
-  tokenId: string
+  tokenId: string,
 ): Promise<{
   preparedListing: orderbook.PrepareListingResponse;
   transactionToSend: PopulatedTransaction | undefined;
@@ -241,11 +240,11 @@ router.post('/createListing/skin', async (req: Request, res: Response) => {
     const { signature, preparedListing: preparedListingString } = req.body;
 
     if (!signature) {
-      throw new Error("Missing signature");
+      throw new Error('Missing signature');
     }
 
     if (!preparedListingString) {
-      throw new Error("Missing preparedListing");
+      throw new Error('Missing preparedListing');
     }
 
     console.log(`Prepared Listing: ${preparedListingString}`);
@@ -274,13 +273,13 @@ router.post('/cancelListing/skin', async (req: Request, res: Response) => {
     const type: string = req.body.type;
 
     if (!offererAddress) {
-      throw new Error("Missing offererAddress");
+      throw new Error('Missing offererAddress');
     }
     if (!listingId) {
-      throw new Error("Missing listingId");
+      throw new Error('Missing listingId');
     }
     if (!type || (type !== 'hard' && type !== 'soft')) {
-      throw new Error("The type must be either 'hard' or 'soft'");
+      throw new Error(`The type must be either 'hard' or 'soft'`);
     }
 
     if (type === 'hard') {
@@ -312,13 +311,13 @@ router.post('/fillOrder/skin', async (req: Request, res: Response) => {
     const fees: string = req.body.fees;
 
     if (!fulfillerAddress) {
-      throw new Error("Missing fulfillerAddress");
+      throw new Error('Missing fulfillerAddress');
     }
     if (!listingId) {
-      throw new Error("Missing listingId");
+      throw new Error('Missing listingId');
     }
     if (!fees) {
-      throw new Error("Missing fees");
+      throw new Error('Missing fees');
     }
 
     const feesValue: FeeValue[] = JSON.parse(fees);
