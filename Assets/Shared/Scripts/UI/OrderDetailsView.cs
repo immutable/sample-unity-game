@@ -28,6 +28,7 @@ namespace HyperCasual.Runner
         [SerializeField] private HyperCasualButton m_BuyButton;
         [SerializeField] private TextMeshProUGUI m_UsersAssetText = null;
         [SerializeField] private GameObject m_Progress = null;
+        [SerializeField] private CustomDialog m_CustomDialog;
 
         private OrderModel m_Order;
         private Listing m_Listing;
@@ -189,8 +190,64 @@ namespace HyperCasual.Runner
             return accounts[0]; // Get the first wallet address
         }
 
+        /// <summary>
+        /// Handles the buy button click event. Sends a request to fulfil an order, 
+        /// processes the response, and updates the UI accordingly.
+        /// </summary>
         private async void OnBuyButtonClick()
         {
+            try
+            {
+                m_BuyButton.gameObject.SetActive(false);
+                m_Progress.SetActive(true);
+
+                string address = await GetWalletAddress();
+                var nvc = new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>("fulfillerAddress", address),
+                    new KeyValuePair<string, string>("listingId", m_Order.id),
+                    new KeyValuePair<string, string>("fees", m_Order.fees.ToJson().Replace("recipient_address", "recipientAddress"))
+                };
+
+                using var client = new HttpClient();
+                using var req = new HttpRequestMessage(HttpMethod.Post, "http://localhost:6060/fillOrder/skin")
+                {
+                    Content = new FormUrlEncodedContent(nvc)
+                };
+                using var res = await client.SendAsync(req);
+
+                string responseBody = await res.Content.ReadAsStringAsync();
+                FulfullOrderResponse response = JsonUtility.FromJson<FulfullOrderResponse>(responseBody);
+                if (response.transactionsToSend != null)
+                {
+                    foreach (TransactionToSend tx in response.transactionsToSend)
+                    {
+                        string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest
+                        {
+                            to = tx.to, // Immutable seaport contract
+                            data = tx.data, // 87201b41 fulfillAvailableAdvancedOrders
+                            value = "0"
+                        });
+                    }
+
+                    m_BuyButton.gameObject.SetActive(false);
+                    m_UsersAssetText.gameObject.SetActive(true);
+                    m_Balance.UpdateBalance(); // Update user's balance on successful buy
+                }
+                else
+                {
+                    m_BuyButton.gameObject.SetActive(true);
+                }
+
+                m_Progress.SetActive(false);
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Failed to buy: {ex.Message}");
+                m_BuyButton.gameObject.SetActive(true);
+                m_Progress.SetActive(false);
+                await m_CustomDialog.ShowDialog("Error", "Failed to buy", "OK");
+            }
         }
 
         /// <summary>
