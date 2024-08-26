@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Numerics;
 using HyperCasual.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,13 +21,14 @@ namespace HyperCasual.Runner
         [SerializeField] private TextMeshProUGUI m_NameText = null;
         [SerializeField] private TextMeshProUGUI m_TokenIdText = null;
         [SerializeField] private TextMeshProUGUI m_CollectionText = null;
+        [SerializeField] private TextMeshProUGUI m_AmountText = null;
         [SerializeField] private Transform m_AttributesListParent = null;
         [SerializeField] private AttributeView m_AttributeObj = null;
         private List<AttributeView> m_Attributes = new List<AttributeView>();
 
         [SerializeField] private ImageUrlObject m_Image = null;
         [SerializeField] private HyperCasualButton m_BuyButton;
-        [SerializeField] private TextMeshProUGUI m_UsersAssetText = null;
+        [SerializeField] private TextMeshProUGUI m_PlayersListingText = null;
         [SerializeField] private GameObject m_Progress = null;
         [SerializeField] private CustomDialog m_CustomDialog;
 
@@ -57,12 +59,12 @@ namespace HyperCasual.Runner
             bool isPlayersAsset = m_Order.account_address == address;
             if (isPlayersAsset)
             {
-                m_UsersAssetText.gameObject.SetActive(true);
+                m_PlayersListingText.gameObject.SetActive(true);
                 m_BuyButton.gameObject.SetActive(false);
             }
             else
             {
-                m_UsersAssetText.gameObject.SetActive(false);
+                m_PlayersListingText.gameObject.SetActive(false);
 
                 // Fetch sale status
                 bool isOnSale = await IsListed(m_Order.asset.token_id);
@@ -88,6 +90,14 @@ namespace HyperCasual.Runner
             m_NameText.text = m_Order.asset.name;
             m_TokenIdText.text = $"Token ID: {m_Order.asset.token_id}";
             m_CollectionText.text = $"Collection: {m_Order.asset.contract_address}";
+
+            // Price
+            if (m_Order.buy.Length > 0)
+            {
+                string amount = m_Order.buy[0].amount;
+                decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
+                m_AmountText.text = $"{quantity} IMR";
+            }
 
             // Clears all existing attributes
             ClearAttributes();
@@ -230,7 +240,7 @@ namespace HyperCasual.Runner
                     // Validate that order is fulfilled
                     await ConfirmListingStatus();
                     m_BuyButton.gameObject.SetActive(false);
-                    m_UsersAssetText.gameObject.SetActive(true);
+                    m_PlayersListingText.gameObject.SetActive(true);
                     m_Balance.UpdateBalance(); // Update user's balance on successful buy
                 }
                 else
