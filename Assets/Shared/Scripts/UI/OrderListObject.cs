@@ -20,7 +20,7 @@ namespace HyperCasual.Runner
     {
         [SerializeField] private TextMeshProUGUI m_NameText;
         [SerializeField] private TextMeshProUGUI m_AmountText;
-        [SerializeField] private RawImage m_Image;
+        [SerializeField] private ImageUrlObject m_Image;
 
         private OrderModel m_Order;
 
@@ -68,10 +68,7 @@ namespace HyperCasual.Runner
                     if (assetResponse?.result != null)
                     {
                         m_NameText.text = assetResponse.result.name;
-                        if (!string.IsNullOrEmpty(assetResponse.result.image))
-                        {
-                            await DownloadImage(assetResponse.result.image);
-                        }
+                        m_Image.LoadUrl(assetResponse.result.image);
                     }
                 }
             }
@@ -88,32 +85,6 @@ namespace HyperCasual.Runner
         {
             List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
             return accounts.Count > 0 ? accounts[0] : string.Empty; // Return the first wallet address
-        }
-
-        /// <summary>
-        /// Downloads and displays the image from the given URL.
-        /// </summary>
-        private async UniTask DownloadImage(string url)
-        {
-            using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(url))
-            {
-                await request.SendWebRequest();
-
-                if (m_Image == null)
-                {
-                    return;
-                }
-
-                if (request.result == UnityWebRequest.Result.Success)
-                {
-                    m_Image.texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
-                    m_Image.gameObject.SetActive(true);
-                }
-                else
-                {
-                    m_Image.gameObject.SetActive(false);
-                }
-            }
         }
     }
 }

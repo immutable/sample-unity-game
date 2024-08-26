@@ -21,7 +21,7 @@ namespace HyperCasual.Runner
         [SerializeField] private TextMeshProUGUI m_TokenIdText = null;
         [SerializeField] private TextMeshProUGUI m_CollectionText = null;
         [SerializeField] private TextMeshProUGUI m_StatusText = null;
-        [SerializeField] private RawImage m_Image = null;
+        [SerializeField] private ImageUrlObject m_Image = null;
 
         private AssetModel m_Asset;
 
@@ -57,10 +57,7 @@ namespace HyperCasual.Runner
                 bool isOnSale = await IsListed(m_Asset.token_id);
                 m_StatusText.text = isOnSale ? "Listed" : "Not listed";
 
-                if (!string.IsNullOrEmpty(m_Asset.image))
-                {
-                    await DownloadImage(m_Asset.image);
-                }
+                m_Image.LoadUrl(m_Asset.image);
             }
         }
 
@@ -92,32 +89,6 @@ namespace HyperCasual.Runner
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Downloads and displays the image from the given URL.
-        /// </summary>
-        private async UniTask DownloadImage(string url)
-        {
-            using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(url))
-            {
-                await request.SendWebRequest();
-
-                if (m_Image == null)
-                {
-                    return;
-                }
-
-                if (request.result == UnityWebRequest.Result.Success)
-                {
-                    m_Image.texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
-                    m_Image.gameObject.SetActive(true);
-                }
-                else
-                {
-                    m_Image.gameObject.SetActive(false);
-                }
-            }
         }
     }
 }
