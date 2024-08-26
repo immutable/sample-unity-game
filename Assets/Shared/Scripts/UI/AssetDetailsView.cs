@@ -17,7 +17,7 @@ namespace HyperCasual.Runner
     {
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private BalanceObject m_Balance;
-        [SerializeField] private RawImage m_Image;
+        [SerializeField] private ImageUrlObject m_Image;
         [SerializeField] private TextMeshProUGUI m_NameText;
         [SerializeField] private TextMeshProUGUI m_TokenIdText;
         [SerializeField] private TextMeshProUGUI m_CollectionText;
@@ -90,11 +90,7 @@ namespace HyperCasual.Runner
             m_SellButton.gameObject.SetActive(!isOnSale);
             m_CancelButton.gameObject.SetActive(isOnSale);
 
-            // Download and display the image
-            if (!string.IsNullOrEmpty(m_Asset.image))
-            {
-                await DownloadImage(m_Asset.image);
-            }
+            m_Image.LoadUrl(m_Asset.image);
         }
 
         /// <summary>
@@ -396,26 +392,6 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Downloads and displays the asset's image.
-        /// </summary>
-        /// <param name="url">The URL of the image.</param>
-        private async UniTask DownloadImage(string url)
-        {
-            using var webRequest = UnityWebRequestTexture.GetTexture(url);
-            await webRequest.SendWebRequest();
-
-            if (webRequest.result == UnityWebRequest.Result.Success)
-            {
-                Texture2D texture = DownloadHandlerTexture.GetContent(webRequest);
-                m_Image.texture = texture;
-            }
-            else
-            {
-                Debug.Log($"Failed to download image: {webRequest.error}");
-            }
-        }
-
-        /// <summary>
         /// Cleans up data
         /// </summary>
         private void OnDisable()
@@ -424,7 +400,6 @@ namespace HyperCasual.Runner
             m_TokenIdText.text = ""; ;
             m_CollectionText.text = ""; ;
             m_StatusText.text = ""; ;
-            m_Image.texture = null;
 
             m_Asset = null;
             ClearAttributes();

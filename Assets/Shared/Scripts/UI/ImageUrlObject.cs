@@ -15,7 +15,6 @@ namespace HyperCasual.Runner
     public class ImageUrlObject : MonoBehaviour
     {
         [SerializeField] private RawImage m_Image;
-        [SerializeField] private RawImage m_Placeholder;
 
         /// <summary>
         /// Downloads and displays the image from the given URL.
@@ -23,7 +22,6 @@ namespace HyperCasual.Runner
         public async UniTask LoadUrl(string url)
         {
             m_Image.gameObject.SetActive(false);
-            m_Placeholder.gameObject.SetActive(true);
 
             if (string.IsNullOrEmpty(url))
             {
@@ -43,14 +41,17 @@ namespace HyperCasual.Runner
                 {
                     m_Image.texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
                     m_Image.gameObject.SetActive(true);
-                    m_Placeholder.gameObject.SetActive(false);
                 }
                 else
                 {
                     m_Image.gameObject.SetActive(false);
-                    m_Placeholder.gameObject.SetActive(true);
                 }
             }
+        }
+
+        private void OnDisable()
+        {
+            m_Image.texture = null;
         }
     }
 }

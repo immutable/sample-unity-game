@@ -24,7 +24,7 @@ namespace HyperCasual.Runner
         [SerializeField] private AttributeView m_AttributeObj = null;
         private List<AttributeView> m_Attributes = new List<AttributeView>();
 
-        [SerializeField] private RawImage m_Image = null;
+        [SerializeField] private ImageUrlObject m_Image = null;
         [SerializeField] private HyperCasualButton m_BuyButton;
         [SerializeField] private TextMeshProUGUI m_UsersAssetText = null;
         [SerializeField] private GameObject m_Progress = null;
@@ -102,10 +102,7 @@ namespace HyperCasual.Runner
             }
 
             // Download and display the image
-            if (!string.IsNullOrEmpty(m_Order.asset.image))
-            {
-                await DownloadImage(m_Order.asset.image);
-            }
+            m_Image.LoadUrl(m_Order.asset.image);
         }
 
         /// <summary>
@@ -251,27 +248,6 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Downloads the image from the given URL and displays it.
-        /// </summary>
-        private async UniTask DownloadImage(string url)
-        {
-            using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(url))
-            {
-                await request.SendWebRequest();
-
-                if (request.result == UnityWebRequest.Result.Success)
-                {
-                    m_Image.texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
-                    m_Image.gameObject.SetActive(true);
-                }
-                else
-                {
-                    m_Image.gameObject.SetActive(false);
-                }
-            }
-        }
-
-        /// <summary>
         /// Handles the back button click
         /// </summary>
         private void OnBackButtonClick()
@@ -287,7 +263,6 @@ namespace HyperCasual.Runner
             m_NameText.text = "";
             m_TokenIdText.text = "";
             m_CollectionText.text = "";
-            m_Image.texture = null;
 
             m_Order = null;
             ClearAttributes();
