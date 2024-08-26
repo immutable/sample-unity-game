@@ -31,7 +31,7 @@ namespace HyperCasual.Runner
 
         private List<AttributeView> m_Attributes = new List<AttributeView>();
         private AssetModel m_Asset;
-        private Listing m_Listing;
+        private string m_ListingId;
 
         private void OnEnable()
         {
@@ -127,7 +127,7 @@ namespace HyperCasual.Runner
 
                     if (listingsResponse.result.Length > 0)
                     {
-                        m_Listing = listingsResponse.result[0];
+                        m_ListingId = listingsResponse.result[0].id;
                         return true;
                     }
                     return false;
@@ -269,7 +269,8 @@ namespace HyperCasual.Runner
                 {
                     string responseBody = await res.Content.ReadAsStringAsync();
                     CreateListingResponse response = JsonUtility.FromJson<CreateListingResponse>(responseBody);
-                    Debug.Log($"Listing ID: {response.result.id}");
+                    m_ListingId = response.result.id;
+                    Debug.Log($"Listing ID: {m_ListingId}");
 
                     m_SellButton.gameObject.SetActive(false);
                     m_CancelButton.gameObject.SetActive(true);
@@ -305,7 +306,7 @@ namespace HyperCasual.Runner
                 var nvc = new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("offererAddress", address),
-                    new KeyValuePair<string, string>("listingId", m_Listing.id),
+                    new KeyValuePair<string, string>("listingId", m_ListingId),
                     new KeyValuePair<string, string>("type", "hard")
                 };
 
@@ -333,16 +334,19 @@ namespace HyperCasual.Runner
                         // Validate that listing has been cancelled
                         await ConfirmCancelled();
                         m_SellButton.gameObject.SetActive(true);
+                        m_Progress.SetActive(false);
                     }
                     else
                     {
                         Debug.Log($"Failed to cancel");
                         m_CancelButton.gameObject.SetActive(true);
+                        m_Progress.SetActive(false);
                         await m_CustomDialog.ShowDialog("Error", "Failed to cancel listing", "OK");
                     }
                 }
                 else
                 {
+                    m_Progress.SetActive(false);
                     m_CancelButton.gameObject.SetActive(true);
                 }
             }
@@ -350,11 +354,8 @@ namespace HyperCasual.Runner
             {
                 Debug.LogException(ex);
                 m_CancelButton.gameObject.SetActive(true);
-                await m_CustomDialog.ShowDialog("Error", "Failed to cancel listing", "OK");
-            }
-            finally
-            {
                 m_Progress.SetActive(false);
+                await m_CustomDialog.ShowDialog("Error", "Failed to cancel listing", "OK");
             }
         }
 
@@ -363,10 +364,10 @@ namespace HyperCasual.Runner
         /// </summary>
         private async UniTask ConfirmCancelled()
         {
-            Debug.Log($"Confirming listing {m_Listing.id} is cancelled...");
+            Debug.Log($"Confirming listing {m_ListingId} is cancelled...");
 
             using var client = new HttpClient();
-            string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_Listing.id}";
+            string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_ListingId}";
             bool isCancelled = false;
             float timeoutMs = 60000f; // Timeout set to 1 minute
             float startTimeMs = Time.time * 1000;
@@ -401,7 +402,7 @@ namespace HyperCasual.Runner
                 }
                 else
                 {
-                    Debug.Log($"Confirmed listing {m_Listing.id} is cancelled.");
+                    Debug.Log($"Confirmed listing {m_ListingId} is cancelled.");
                 }
             }
         }
