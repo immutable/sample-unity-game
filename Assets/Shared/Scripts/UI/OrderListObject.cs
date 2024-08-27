@@ -32,15 +32,12 @@ namespace HyperCasual.Runner
         {
             m_Order = order;
             UpdateData();
-
-            // Get and display asset details
-            await GetDetails(order.sell[0].token_id);
         }
 
         /// <summary>
         /// Updates the UI elements with the order data.
         /// </summary>
-        private void UpdateData()
+        private async void UpdateData()
         {
             if (m_Order.buy.Length > 0)
             {
@@ -48,6 +45,51 @@ namespace HyperCasual.Runner
                 decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
                 m_AmountText.text = $"{quantity} IMR";
             }
+
+            // Get and display asset details
+            await GetDetails(m_Order.sell[0].token_id);
+        }
+
+        public async void OnEnable()
+        {
+            bool isOnSale = await IsListed();
+            if (isOnSale)
+            {
+                UpdateData();
+            }
+            else
+            {
+                m_AmountText.text = "Not listed";
+                await GetDetails(m_Order.sell[0].token_id);
+            }
+        }
+
+        /// <summary>
+        /// Checks if the asset is listed for sale.
+        /// </summary>
+        private async UniTask<bool> IsListed()
+        {
+            try
+            {
+                using var client = new HttpClient();
+                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_Order.id}";
+
+                HttpResponseMessage response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
+
+                    // Check if the listing exists
+                    return listingResponse.result?.status.name == "ACTIVE";
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Failed to check sale status: {ex.Message}");
+            }
+
+            return false;
         }
 
         /// <summary>
