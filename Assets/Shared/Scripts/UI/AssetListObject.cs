@@ -23,12 +23,12 @@ namespace HyperCasual.Runner
         [SerializeField] private TextMeshProUGUI m_StatusText = null;
         [SerializeField] private ImageUrlObject m_Image = null;
 
-        private AssetModel m_Asset;
+        private StacksResult m_Asset;
 
         /// <summary>
         /// Initialises the asset object with relevant data and updates the UI.
         /// </summary>
-        public void Initialise(AssetModel asset)
+        public void Initialise(StacksResult asset)
         {
             m_Asset = asset;
             UpdateData();
@@ -39,7 +39,6 @@ namespace HyperCasual.Runner
         /// </summary>
         private void OnEnable()
         {
-            Debug.Log("AssetListObject OnEnable");
             UpdateData();
         }
 
@@ -50,45 +49,11 @@ namespace HyperCasual.Runner
         {
             if (m_Asset != null)
             {
-                m_NameText.text = m_Asset.name;
-                m_CollectionText.text = m_Asset.contract_address;
-
-                // Fetch sale status
-                bool isOnSale = await IsListed(m_Asset.token_id);
-                m_StatusText.text = isOnSale ? "Listed" : "Not listed";
-
-                m_Image.LoadUrl(m_Asset.image);
+                m_NameText.text = m_Asset.stack.name;
+                m_CollectionText.text = m_Asset.stack.contract_address;
+                m_StatusText.text = m_Asset.listings?.Count > 0 == true ? "Listed" : "Not listed";
+                m_Image.LoadUrl(m_Asset.stack.image);
             }
-        }
-
-        /// <summary>
-        /// Checks if the asset is listed for sale.
-        /// </summary>
-        /// <param name="tokenId">The token ID of the asset.</param>
-        /// <returns>True if the asset is listed, otherwise false.</returns>
-        private async UniTask<bool> IsListed(string tokenId)
-        {
-            try
-            {
-                using var client = new HttpClient();
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings?sell_item_contract_address={Contract.SKIN}&sell_item_token_id={tokenId}&status=ACTIVE";
-
-                HttpResponseMessage response = await client.GetAsync(url);
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    ListingsResponse listingsResponse = JsonUtility.FromJson<ListingsResponse>(responseBody);
-
-                    // Check if the listing exists
-                    return listingsResponse.result.Length > 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.Log($"Failed to check sale status: {ex.Message}");
-            }
-
-            return false;
         }
     }
 }

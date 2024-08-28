@@ -30,7 +30,7 @@ namespace HyperCasual.Runner
         [SerializeField] private CustomDialog m_CustomDialog;
 
         private List<AttributeView> m_Attributes = new List<AttributeView>();
-        private AssetModel m_Asset;
+        private StacksResult m_Asset;
         private string m_ListingId;
 
         private void OnEnable()
@@ -48,7 +48,7 @@ namespace HyperCasual.Runner
         /// Initialises the UI based on the asset.
         /// </summary>
         /// <param name="asset">The asset to display.</param>
-        public async void Initialise(AssetModel asset)
+        public async void Initialise(StacksResult asset)
         {
             m_Asset = asset;
             UpdateData();
@@ -68,15 +68,15 @@ namespace HyperCasual.Runner
         /// </summary>
         private async void UpdateData()
         {
-            m_NameText.text = m_Asset.name;
-            m_TokenIdText.text = $"Token ID: {m_Asset.token_id}";
-            m_CollectionText.text = $"Collection: {m_Asset.contract_address}";
+            m_NameText.text = m_Asset.stack.name;
+            // m_TokenIdText.text = $"Token ID: {m_Asset.token_id}";
+            m_CollectionText.text = $"Collection: {m_Asset.stack.contract_address}";
 
             // Clear existing attributes
             ClearAttributes();
 
             // Populate attributes
-            foreach (AssetAttribute attribute in m_Asset.attributes)
+            foreach (AssetAttribute attribute in m_Asset.stack.attributes)
             {
                 AttributeView newAttribute = Instantiate(m_AttributeObj, m_AttributesListParent);
                 newAttribute.gameObject.SetActive(true);
@@ -85,12 +85,12 @@ namespace HyperCasual.Runner
             }
 
             // Update sale status
-            bool isOnSale = await IsListed(m_Asset.token_id);
+            bool isOnSale = m_Asset.listings?.Count > 0 == true;
             m_StatusText.text = isOnSale ? "Listed" : "Not listed";
             m_SellButton.gameObject.SetActive(!isOnSale);
             m_CancelButton.gameObject.SetActive(isOnSale);
 
-            m_Image.LoadUrl(m_Asset.image);
+            m_Image.LoadUrl(m_Asset.stack.image);
         }
 
         /// <summary>
@@ -103,40 +103,6 @@ namespace HyperCasual.Runner
                 Destroy(attribute.gameObject);
             }
             m_Attributes.Clear();
-        }
-
-        /// <summary>
-        /// Checks if the asset is listed for sale.
-        /// </summary>
-        /// <param name="tokenId">The token ID of the asset.</param>
-        /// <returns>True if the asset is listed, otherwise false.</returns>
-        private async UniTask<bool> IsListed(string tokenId)
-        {
-            try
-            {
-                using var client = new HttpClient();
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings?sell_item_contract_address={Contract.SKIN}&sell_item_token_id={tokenId}&status=ACTIVE";
-
-                HttpResponseMessage response = await client.GetAsync(url);
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    ListingsResponse listingsResponse = JsonUtility.FromJson<ListingsResponse>(responseBody);
-
-                    if (listingsResponse.result.Length > 0)
-                    {
-                        m_ListingId = listingsResponse.result[0].id;
-                        return true;
-                    }
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.Log($"Failed to check sale status: {ex.Message}");
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -155,7 +121,7 @@ namespace HyperCasual.Runner
         private async void OnSellButtonClicked()
         {
             (bool result, string price) = await m_CustomDialog.ShowDialog(
-                $"List {m_Asset.name} for sale",
+                $"List {m_Asset.stack.name} for sale",
                 "Enter your price below (in IMR):",
                 "Confirm",
                 negativeButtonText: "Cancel",
@@ -185,7 +151,7 @@ namespace HyperCasual.Runner
                 {
                     new KeyValuePair<string, string>("offererAddress", address),
                     new KeyValuePair<string, string>("amount", price),
-                    new KeyValuePair<string, string>("tokenId", m_Asset.token_id)
+                    // new KeyValuePair<string, string>("tokenId", m_Asset.token_id)
                 };
                 using var client = new HttpClient();
                 using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/prepareListing/skin") { Content = new FormUrlEncodedContent(nvc) };

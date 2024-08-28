@@ -27,11 +27,4 @@ namespace HyperCasual.Runner
         public List<AssetAttribute> attributes;
     }
 
-    [Serializable]
-    public class AssetAttribute
-    {
-        public string trait_type;
-        public string value;
-    }
-
 }
