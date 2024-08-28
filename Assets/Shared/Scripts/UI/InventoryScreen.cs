@@ -103,12 +103,6 @@ namespace HyperCasual.Runner
                 m_Assets.AddRange(assets);
                 m_ScrollView.TotalItemCount = m_Assets.Count;
             }
-            // List<AssetModel> assets = await GetAssets();
-            // if (assets != null && assets.Count > 0)
-            // {
-            //     m_Assets.AddRange(assets);
-            //     m_ScrollView.TotalItemCount = m_Assets.Count;
-            // }
 
             m_IsLoadingMore = false;
         }
@@ -142,7 +136,7 @@ namespace HyperCasual.Runner
                 string url = $"http://localhost:6060/v1/chains/imtbl-zkevm-testnet/search/stacks?account_address={address}&contract_address={Contract.SKIN}&page_size=6";
 
                 // Pagination
-                if (m_Page?.next_cursor != null)
+                if (!string.IsNullOrEmpty(m_Page?.next_cursor))
                 {
                     url += $"&page_cursor={m_Page.next_cursor}";
                 }

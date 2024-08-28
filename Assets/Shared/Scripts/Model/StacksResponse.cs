@@ -108,5 +108,7 @@ namespace HyperCasual.Runner
         public Price price;
         public string token_id;
         public int quantity;
+        public string account_address;
+        public Fee[] fees;
     }
 }

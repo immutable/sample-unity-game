@@ -22,13 +22,13 @@ namespace HyperCasual.Runner
         [SerializeField] private TextMeshProUGUI m_AmountText;
         [SerializeField] private ImageUrlObject m_Image;
 
-        private OrderModel m_Order;
+        private StacksResult m_Order;
 
         /// <summary>
         /// Initialises the order list item with the given order data.
         /// </summary>
         /// <param name="order">The order data to display.</param>
-        public async void Initialise(OrderModel order)
+        public async void Initialise(StacksResult order)
         {
             m_Order = order;
             UpdateData();
@@ -39,15 +39,16 @@ namespace HyperCasual.Runner
         /// </summary>
         private async void UpdateData()
         {
-            if (m_Order.buy.Length > 0)
+            if (m_Order.listings.Count > 0)
             {
-                string amount = m_Order.buy[0].amount;
+                string amount = m_Order.listings[0].price.amount.value;
                 decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
                 m_AmountText.text = $"{quantity} IMR";
             }
 
             // Get and display asset details
-            await GetDetails(m_Order.sell[0].token_id);
+            m_NameText.text = m_Order.stack.name;
+            m_Image.LoadUrl(m_Order.stack.image);
         }
 
         public async void OnEnable()
@@ -60,7 +61,6 @@ namespace HyperCasual.Runner
             else
             {
                 m_AmountText.text = "Not listed";
-                await GetDetails(m_Order.sell[0].token_id);
             }
         }
 
@@ -72,7 +72,7 @@ namespace HyperCasual.Runner
             try
             {
                 using var client = new HttpClient();
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_Order.id}";
+                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_Order.listings[0].listing_id}";
 
                 HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
@@ -90,43 +90,6 @@ namespace HyperCasual.Runner
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Fetches and displays asset details for the given token ID.
-        /// </summary>
-        /// <param name="tokenId">The token ID of the asset.</param>
-        private async UniTask GetDetails(string tokenId)
-        {
-            try
-            {
-                using var client = new HttpClient();
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/collections/{Contract.SKIN}/nfts/{tokenId}";
-                HttpResponseMessage response = await client.GetAsync(url);
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    AssetResponse assetResponse = JsonUtility.FromJson<AssetResponse>(responseBody);
-                    if (assetResponse?.result != null)
-                    {
-                        m_NameText.text = assetResponse.result.name;
-                        m_Image.LoadUrl(assetResponse.result.image);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Failed to get details: {ex.Message}");
-            }
-        }
-
-        /// <summary>
-        /// Retrieves the player's wallet address.
-        /// </summary>
-        private async UniTask<string> GetWalletAddress()
-        {
-            List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
-            return accounts.Count > 0 ? accounts[0] : string.Empty; // Return the first wallet address
         }
     }
 }
