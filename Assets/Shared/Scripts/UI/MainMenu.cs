@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Immutable.Passport;
+using Cysharp.Threading.Tasks;
 
 namespace HyperCasual.Runner
 {
@@ -38,6 +39,7 @@ namespace HyperCasual.Runner
         async void OnEnable()
         {
             ShowLoading(true);
+            m_Email.gameObject.SetActive(false);
 
             // Set listener to 'Start' button
             m_StartButton.RemoveListener(OnStartButtonClick);
@@ -76,6 +78,7 @@ namespace HyperCasual.Runner
                 {
                     await Passport.Instance.ConnectEvm();
                     await Passport.Instance.ZkEvmRequestAccounts();
+                    await GetPlayersEmail();
                 }
             }
             else
@@ -89,6 +92,20 @@ namespace HyperCasual.Runner
             ShowLogoutButton(SaveManager.Instance.IsLoggedIn);
             ShowInventoryButton(SaveManager.Instance.IsLoggedIn);
             ShowMarketplaceButton(SaveManager.Instance.IsLoggedIn);
+        }
+
+        private async UniTask GetPlayersEmail()
+        {
+            try
+            {
+                m_Email.text = await Passport.Instance.GetEmail();
+                m_Email.gameObject.SetActive(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.Log("Failed to get player's email");
+                m_Email.gameObject.SetActive(false);
+            }
         }
 
         void OnStartButtonClick()
@@ -123,6 +140,8 @@ namespace HyperCasual.Runner
                 ShowMarketplaceButton(false);
                 // Reset all other values
                 SaveManager.Instance.Clear();
+                m_Email.text = "";
+                m_Email.gameObject.SetActive(false);
             }
             catch (Exception ex)
             {
