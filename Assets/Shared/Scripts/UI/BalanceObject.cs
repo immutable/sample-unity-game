@@ -62,7 +62,7 @@ namespace HyperCasual.Runner
                 Debug.Log($"Failed to get balance: {ex.Message}");
             }
 
-            gameObject.SetActive(true);
+            gameObject?.SetActive(true);
         }
 
         /// <summary>

@@ -358,7 +358,7 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks', async (req, res) => {
                 }
             };
             const listingResponse = await axios_1.default.get(`https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings?sell_item_contract_address=${contractAddress}&sell_item_token_id=${item.token_id}&status=ACTIVE&sort_direction=asc&page_size=5&sort_by=buy_item_amount`);
-            const listings = listingResponse.data.result.map((listing) => {
+            const listings1 = listingResponse.data.result.map((listing) => {
                 return {
                     listing_id: listing.id,
                     price: {
@@ -375,7 +375,24 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks', async (req, res) => {
                     quantity: 1,
                 };
             });
-            result.push({ stack, market, listings, });
+            const listings2 = listingResponse.data.result.map((listing) => {
+                return {
+                    listing_id: listing.id,
+                    price: {
+                        token: {
+                            type: 'ERC20',
+                            symbol: 'IMR',
+                        },
+                        amount: {
+                            value: listing.buy[0].amount,
+                            value_in_eth: '100000000000000000',
+                        }
+                    },
+                    token_id: item.token_id,
+                    quantity: 1,
+                };
+            });
+            result.push({ stack, market, listings: listings1.concat(listings2), });
         }
         return res.status(200).json({ result, page: nftsResponse.data.page, });
     }
@@ -473,7 +490,24 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks/marketplace', async (re
                             value_in_eth: '100000000000000000',
                         }
                     },
-                    token_id: item.token_id,
+                    token_id: item.sell[0].token_id,
+                    fees: item.fees,
+                    quantity: 1,
+                },
+                {
+                    listing_id: item.id,
+                    account_address: item.account_address,
+                    price: {
+                        token: {
+                            type: 'ERC20',
+                            symbol: 'IMR',
+                        },
+                        amount: {
+                            value: item.buy[0].amount,
+                            value_in_eth: '100000000000000000',
+                        }
+                    },
+                    token_id: item.sell[0].token_id,
                     fees: item.fees,
                     quantity: 1,
                 }
