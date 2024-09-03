@@ -121,16 +121,6 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Retrieves the wallet address of the user.
-        /// </summary>
-        /// <returns>The wallet address.</returns>
-        private async UniTask<string> GetWalletAddress()
-        {
-            List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
-            return accounts[0]; // Get the first wallet address
-        }
-
-        /// <summary>
         /// Handles the buy button click event. Sends a request to fulfil an order, 
         /// processes the response, and updates the UI accordingly.
         /// </summary>
@@ -138,7 +128,7 @@ namespace HyperCasual.Runner
         {
             try
             {
-                string address = await GetWalletAddress();
+                string address = SaveManager.Instance.WalletAddress;
                 var nvc = new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("fulfillerAddress", address),

@@ -77,7 +77,8 @@ namespace HyperCasual.Runner
                 if (success)
                 {
                     await Passport.Instance.ConnectEvm();
-                    await Passport.Instance.ZkEvmRequestAccounts();
+                    List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
+                    SaveManager.Instance.WalletAddress = accounts[0];
                     await GetPlayersEmail();
                 }
             }
@@ -85,6 +86,7 @@ namespace HyperCasual.Runner
             {
                 // No saved credentials to re-login the player, reset the login flag
                 SaveManager.Instance.IsLoggedIn = false;
+                SaveManager.Instance.WalletAddress = null;
             }
 
             ShowLoading(false);
@@ -142,6 +144,7 @@ namespace HyperCasual.Runner
                 SaveManager.Instance.Clear();
                 m_Email.text = "";
                 m_Email.gameObject.SetActive(false);
+                SaveManager.Instance.WalletAddress = null;
             }
             catch (Exception ex)
             {

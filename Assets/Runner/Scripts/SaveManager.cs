@@ -25,6 +25,7 @@ namespace HyperCasual.Runner
         const string k_QualityLevel = "QualityLevel";
         const string k_IsLoggedIn = "IsLoggedIn";
         const string k_UseNewSkin = "UseNewSkin";
+        const string k_WalletAddress = "WalletAddress";
 
         void Awake()
         {
@@ -84,6 +85,12 @@ namespace HyperCasual.Runner
         {
             get => PlayerPrefs.GetInt(k_UseNewSkin) == 1;
             set => PlayerPrefs.SetInt(k_UseNewSkin, value ? 1 : 0);
+        }
+
+        public string WalletAddress
+        {
+            get => PlayerPrefs.GetString(k_WalletAddress);
+            set => PlayerPrefs.SetString(k_WalletAddress, value);
         }
 
         public void Clear()

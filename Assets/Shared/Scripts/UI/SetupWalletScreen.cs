@@ -57,7 +57,8 @@ namespace HyperCasual.Runner
                 // Set up provider
                 await Passport.Instance.ConnectEvm();
                 // Set up wallet (includes creating a wallet for new players)
-                await Passport.Instance.ZkEvmRequestAccounts();
+                List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
+                SaveManager.Instance.WalletAddress = accounts[0]; // Grab player's first wallet
 
                 m_Title.text = "Your wallet has been successfully set up!";
                 ShowLoading(false);

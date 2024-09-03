@@ -104,15 +104,6 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Gets the wallet address of the player.
-        /// </summary>
-        private async UniTask<string> GetWalletAddress()
-        {
-            List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
-            return accounts[0]; // Get the first wallet address
-        }
-
-        /// <summary>
         /// Mints a fox (i.e. Immutable Runner Fox) to the player's wallet
         /// </summary>
         /// <returns>True if minted a fox successfully to player's wallet. Otherwise, false.</returns>
@@ -121,7 +112,7 @@ namespace HyperCasual.Runner
             Debug.Log("Minting fox...");
             try
             {
-                string address = await GetWalletAddress(); // Get the player's wallet address to mint the fox to
+                string address = SaveManager.Instance.WalletAddress; // Get the player's wallet address to mint the fox to
 
                 if (address != null)
                 {
@@ -161,7 +152,7 @@ namespace HyperCasual.Runner
                     return true;
                 }
 
-                string address = await GetWalletAddress(); // Get the player's wallet address to mint the coins to
+                string address = SaveManager.Instance.WalletAddress; // Get the player's wallet address to mint the coins to
                 if (address != null)
                 {
                     // Calculate the quantity to mint
@@ -259,7 +250,7 @@ namespace HyperCasual.Runner
         private async void OnWalletClicked()
         {
             // Get the player's wallet address to mint the fox to
-            string address = await GetWalletAddress();
+            string address = SaveManager.Instance.WalletAddress;
             // Show the player's tokens on the block explorer page.
             Application.OpenURL($"https://explorer.testnet.immutable.com/address/{address}?tab=tokens");
         }

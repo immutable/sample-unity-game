@@ -38,7 +38,7 @@ namespace HyperCasual.Runner
             UpdateData();
 
             // Check if asset is the player's asset
-            string address = await GetWalletAddress();
+            string address = SaveManager.Instance.WalletAddress;
             bool isPlayersAsset = m_Listing.account_address == address; // TODO added myself
             m_PlayersListingText.gameObject.SetActive(isPlayersAsset);
             m_BuyButton.gameObject.SetActive(!isPlayersAsset);
@@ -62,16 +62,6 @@ namespace HyperCasual.Runner
             string amount = m_Listing.price.amount.value;
             decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
             m_AmountText.text = $"{quantity} IMR";
-        }
-
-        /// <summary>
-        /// Retrieves the wallet address of the user.
-        /// </summary>
-        /// <returns>The wallet address.</returns>
-        private async UniTask<string> GetWalletAddress()
-        {
-            List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
-            return accounts[0]; // Get the first wallet address
         }
 
         /// <summary>

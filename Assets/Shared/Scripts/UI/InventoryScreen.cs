@@ -107,15 +107,6 @@ namespace HyperCasual.Runner
             m_IsLoadingMore = false;
         }
 
-        /// <summary>
-        /// Retrieves the players's wallet address.
-        /// </summary>
-        private async UniTask<string> GetWalletAddress()
-        {
-            List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
-            return accounts.Count > 0 ? accounts[0] : string.Empty; // Return the first wallet address
-        }
-
         // Uses mocked stacks endpoint
         private async UniTask<List<StacksResult>> GetStacks()
         {
@@ -125,7 +116,7 @@ namespace HyperCasual.Runner
 
             try
             {
-                string address = await GetWalletAddress();
+                string address = SaveManager.Instance.WalletAddress;
 
                 if (string.IsNullOrEmpty(address))
                 {

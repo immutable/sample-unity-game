@@ -160,8 +160,7 @@ namespace HyperCasual.Runner
                 else
                 {
                     // Get the player's wallet address to mint the coins to
-                    List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
-                    string address = accounts[0];
+                    string address = SaveManager.Instance.WalletAddress;
                     if (address != null)
                     {
                         // Calculate the quantity to mint
