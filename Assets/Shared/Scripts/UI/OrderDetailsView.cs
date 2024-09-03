@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Numerics;
 using HyperCasual.Core;
@@ -88,7 +89,7 @@ namespace HyperCasual.Runner
             // Populate listings
             foreach (StackListing stackListing in m_Order.listings)
             {
-                ListingObject newListing = Instantiate(m_ListingObj, m_ListingParent); // Create a new asset object
+                ListingObject newListing = Instantiate(m_ListingObj, m_ListingParent);
                 newListing.gameObject.SetActive(true);
                 newListing.Initialise(stackListing, OnBuyButtonClick); // Initialise the view with data
                 m_ListingViews.Add(newListing); // Add to the list of displayed attributes
@@ -141,8 +142,8 @@ namespace HyperCasual.Runner
                 var nvc = new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("fulfillerAddress", address),
-                    new KeyValuePair<string, string>("listingId", m_Order.listings[0].listing_id),
-                    new KeyValuePair<string, string>("fees", m_Order.listings[0].fees.ToJson().Replace("recipient_address", "recipientAddress"))
+                    new KeyValuePair<string, string>("listingId", listing.listing_id),
+                    new KeyValuePair<string, string>("fees", listing.fees.ToJson().Replace("recipient_address", "recipientAddress"))
                 };
 
                 using var client = new HttpClient();
@@ -175,6 +176,14 @@ namespace HyperCasual.Runner
                     // Validate that order is fulfilled
                     await ConfirmListingStatus();
                     m_Balance.UpdateBalance(); // Update user's balance on successful buy
+
+                    // Locally update stack listing
+                    var listingToRemove = m_Order.listings.FirstOrDefault(l => l.listing_id == listing.listing_id);
+                    if (listingToRemove != null)
+                    {
+                        m_Order.listings.Remove(listingToRemove);
+                    }
+
                     return true;
                 }
 
@@ -205,11 +214,11 @@ namespace HyperCasual.Runner
 
             if (conditionMet)
             {
-                Debug.Log($"Order confirmed as filled.");
+                await m_CustomDialog.ShowDialog("Success", $"Order is filled.", "OK");
             }
             else
             {
-                await m_CustomDialog.ShowDialog("Error", $"Failed to confirm if order is filled", "OK");
+                await m_CustomDialog.ShowDialog("Error", $"Failed to confirm if order is filled.", "OK");
             }
         }
 
@@ -231,6 +240,7 @@ namespace HyperCasual.Runner
 
             m_Order = null;
             ClearAttributes();
+            ClearListings();
         }
     }
 }

@@ -12,6 +12,12 @@ namespace HyperCasual.Runner
     }
 
     [Serializable]
+    public class OrderResponse
+    {
+        public OrderModel result;
+    }
+
+    [Serializable]
     public class OrderModel
     {
         public string id;
@@ -20,6 +26,7 @@ namespace HyperCasual.Runner
         public Sell[] sell;
         public Fee[] fees;
         public AssetModel asset; // TODO remove
+        public ListingStatus status;
     }
 
     [Serializable]

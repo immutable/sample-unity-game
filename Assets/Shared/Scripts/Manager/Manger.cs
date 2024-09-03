@@ -8,7 +8,7 @@ using System;
 
 namespace HyperCasual.Core
 {
-    public class ApiService
+    public class Manager
     {
     }
 }

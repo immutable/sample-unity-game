@@ -20,7 +20,6 @@ namespace HyperCasual.Runner
         [SerializeField] private TextMeshProUGUI m_NameText = null;
         [SerializeField] private TextMeshProUGUI m_TokenIdText = null;
         [SerializeField] private TextMeshProUGUI m_CollectionText = null;
-        [SerializeField] private TextMeshProUGUI m_StatusText = null;
         [SerializeField] private ImageUrlObject m_Image = null;
 
         private StacksResult m_Asset;
@@ -51,7 +50,6 @@ namespace HyperCasual.Runner
             {
                 m_NameText.text = m_Asset.stack.name;
                 m_CollectionText.text = m_Asset.stack.contract_address;
-                m_StatusText.text = m_Asset.listings?.Count > 0 == true ? "Listed" : "Not listed";
                 m_Image.LoadUrl(m_Asset.stack.image);
             }
         }

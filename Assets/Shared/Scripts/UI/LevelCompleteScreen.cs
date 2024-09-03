@@ -50,8 +50,6 @@ namespace HyperCasual.Runner
 
         int m_FoodValue;
 
-        private ApiService Api = new();
-
         /// <summary>
         /// The amount of food to display on the celebration screen.
         /// The setter method also sets the celebration screen text.

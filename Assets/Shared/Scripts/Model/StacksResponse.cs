@@ -17,6 +17,7 @@ namespace HyperCasual.Runner
         public Stack stack;
         public Market market;
         public List<StackListing> listings;
+        public List<StackListing> notListed; // Added myself, this will actually be another API call
     }
 
     [Serializable]
