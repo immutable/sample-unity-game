@@ -23,7 +23,7 @@ namespace HyperCasual.Runner
         [SerializeField] private AssetListObject m_AssetObj = null;
         [SerializeField] private Transform m_ListParent = null;
         [SerializeField] private InfiniteScrollView m_ScrollView;
-        private List<AssetModel> m_Assets = new List<AssetModel>();
+        private List<StacksResult> m_Assets = new List<StacksResult>();
 
         // Pagination
         private bool m_IsLoadingMore = false;
@@ -58,7 +58,8 @@ namespace HyperCasual.Runner
         {
             if (index < m_Assets.Count)
             {
-                AssetModel asset = m_Assets[index];
+                // AssetModel asset = m_Assets[index];
+                StacksResult asset = m_Assets[index];
 
                 // Initialise the view with asset
                 var itemComponent = item.GetComponent<AssetListObject>();
@@ -96,7 +97,7 @@ namespace HyperCasual.Runner
 
             m_IsLoadingMore = true;
 
-            List<AssetModel> assets = await GetAssets();
+            List<StacksResult> assets = await GetStacks();
             if (assets != null && assets.Count > 0)
             {
                 m_Assets.AddRange(assets);
@@ -106,68 +107,34 @@ namespace HyperCasual.Runner
             m_IsLoadingMore = false;
         }
 
-        /// <summary>
-        /// Retrieves the players's wallet address.
-        /// </summary>
-        private async UniTask<string> GetWalletAddress()
+        // Uses mocked stacks endpoint
+        private async UniTask<List<StacksResult>> GetStacks()
         {
-            List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
-            return accounts.Count > 0 ? accounts[0] : string.Empty; // Return the first wallet address
-        }
+            Debug.Log("Fetching stacks assets...");
 
-        /// <summary>
-        /// Parses the JSON response body to extract asset tokens.
-        /// Updates the pagination info from the response.
-        /// </summary>
-        private List<AssetModel> ParseAssetsResponse(string responseBody)
-        {
-            if (string.IsNullOrEmpty(responseBody))
-            {
-                return new List<AssetModel>();
-            }
-
-            AssetsResponse response = JsonUtility.FromJson<AssetsResponse>(responseBody);
-            if (response == null)
-            {
-                return new List<AssetModel>();
-            }
-
-            // Update pagination information
-            m_Page = response.page;
-
-            return response.result ?? new List<AssetModel>();
-        }
-
-        /// <summary>
-        /// Fetches the player's skins.
-        /// </summary>
-        private async UniTask<List<AssetModel>> GetAssets()
-        {
-            Debug.Log("Fetching player assets...");
-
-            List<AssetModel> tokens = new List<AssetModel>();
+            List<StacksResult> stacks = new List<StacksResult>();
 
             try
             {
-                string address = await GetWalletAddress();
+                string address = SaveManager.Instance.WalletAddress;
 
                 if (string.IsNullOrEmpty(address))
                 {
                     Debug.LogError("Could not get player's wallet");
-                    return tokens;
+                    return stacks;
                 }
 
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/{address}/nfts?contract_address={Contract.SKIN}&page_size=20";
+                string url = $"http://localhost:6060/v1/chains/imtbl-zkevm-testnet/search/stacks?account_address={address}&contract_address={Contract.SKIN}&page_size=6";
 
                 // Pagination
-                if (m_Page?.next_cursor != null)
+                if (!string.IsNullOrEmpty(m_Page?.next_cursor))
                 {
                     url += $"&page_cursor={m_Page.next_cursor}";
                 }
                 else if (m_Page != null && m_Page.next_cursor != null)
                 {
                     Debug.Log("No more player assets to load");
-                    return tokens;
+                    return stacks;
                 }
 
                 using var client = new HttpClient();
@@ -178,7 +145,14 @@ namespace HyperCasual.Runner
                     string responseBody = await response.Content.ReadAsStringAsync();
                     Debug.Log($"Assets response: {responseBody}");
 
-                    tokens = ParseAssetsResponse(responseBody);
+                    if (!string.IsNullOrEmpty(responseBody))
+                    {
+                        StacksResponse stacksResponse = JsonUtility.FromJson<StacksResponse>(responseBody);
+                        stacks = stacksResponse?.result ?? new List<StacksResult>();
+
+                        // Update pagination information
+                        m_Page = stacksResponse?.page;
+                    }
                 }
                 else
                 {
@@ -191,7 +165,7 @@ namespace HyperCasual.Runner
                 Debug.Log($"Failed to fetch assets: {ex.Message}");
             }
 
-            return tokens;
+            return stacks;
         }
 
         /// <summary>

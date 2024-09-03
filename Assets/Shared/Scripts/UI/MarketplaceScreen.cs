@@ -25,7 +25,7 @@ namespace HyperCasual.Runner
         [SerializeField] private OrderListObject m_OrderObj = null;
         [SerializeField] private Transform m_ListParent = null;
         [SerializeField] private InfiniteScrollView m_ScrollView;
-        private List<OrderModel> m_Orders = new List<OrderModel>();
+        private List<StacksResult> m_Orders = new List<StacksResult>();
 
         // Pagination
         private bool m_IsLoadingMore = false;
@@ -80,7 +80,7 @@ namespace HyperCasual.Runner
         {
             if (index < m_Orders.Count)
             {
-                OrderModel order = m_Orders[index];
+                StacksResult order = m_Orders[index];
 
                 // Initialise the view with order
                 var itemComponent = item.GetComponent<OrderListObject>();
@@ -118,7 +118,7 @@ namespace HyperCasual.Runner
 
             m_IsLoadingMore = true;
 
-            List<OrderModel> orders = await GetOrders();
+            List<StacksResult> orders = await GetStacks();
             if (orders != null && orders.Count > 0)
             {
                 m_Orders.AddRange(orders);
@@ -128,68 +128,34 @@ namespace HyperCasual.Runner
             m_IsLoadingMore = false;
         }
 
-        /// <summary>
-        /// Retrieves the players's wallet address.
-        /// </summary>
-        private async UniTask<string> GetWalletAddress()
+        // Uses mocked stacks endpoint
+        private async UniTask<List<StacksResult>> GetStacks()
         {
-            List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
-            return accounts.Count > 0 ? accounts[0] : string.Empty; // Return the first wallet address
-        }
+            Debug.Log("Fetching stacks assets...");
 
-        /// <summary>
-        /// Parses the JSON response body to extract orders.
-        /// Updates the pagination info from the response.
-        /// </summary>
-        private List<OrderModel> ParseOrdersResponse(string responseBody)
-        {
-            if (string.IsNullOrEmpty(responseBody))
-            {
-                return new List<OrderModel>();
-            }
-
-            OrdersResponse response = JsonUtility.FromJson<OrdersResponse>(responseBody);
-            if (response == null)
-            {
-                return new List<OrderModel>();
-            }
-
-            // Update pagination information
-            m_Page = response.page;
-
-            return response.result ?? new List<OrderModel>();
-        }
-
-        /// <summary>
-        /// Fetches active orders.
-        /// </summary>
-        private async UniTask<List<OrderModel>> GetOrders()
-        {
-            Debug.Log("Fetching active orders...");
-
-            List<OrderModel> tokens = new List<OrderModel>();
+            List<StacksResult> stacks = new List<StacksResult>();
 
             try
             {
-                string address = await GetWalletAddress();
+                string address = SaveManager.Instance.WalletAddress;
 
                 if (string.IsNullOrEmpty(address))
                 {
                     Debug.LogError("Could not get player's wallet");
-                    return tokens;
+                    return stacks;
                 }
 
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings?sell_item_contract_address={Contract.SKIN}&page_size=5&status=ACTIVE";
+                string url = $"http://localhost:6060/v1/chains/imtbl-zkevm-testnet/search/stacks/marketplace?contract_address={Contract.SKIN}&page_size=6";
 
                 // Pagination
-                if (m_Page?.next_cursor != null)
+                if (!string.IsNullOrEmpty(m_Page?.next_cursor))
                 {
                     url += $"&page_cursor={m_Page.next_cursor}";
                 }
                 else if (m_Page != null && m_Page.next_cursor != null)
                 {
-                    Debug.Log("No more orders to load");
-                    return tokens;
+                    Debug.Log("No more player assets to load");
+                    return stacks;
                 }
 
                 using var client = new HttpClient();
@@ -198,22 +164,29 @@ namespace HyperCasual.Runner
                 if (response.IsSuccessStatusCode)
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
-                    Debug.Log($"Orders response: {responseBody}");
+                    Debug.Log($"Assets response: {responseBody}");
 
-                    tokens = ParseOrdersResponse(responseBody);
+                    if (!string.IsNullOrEmpty(responseBody))
+                    {
+                        StacksResponse stacksResponse = JsonUtility.FromJson<StacksResponse>(responseBody);
+                        stacks = stacksResponse?.result ?? new List<StacksResult>();
+
+                        // Update pagination information
+                        m_Page = stacksResponse?.page;
+                    }
                 }
                 else
                 {
                     // TODO use dialogs
-                    Debug.Log($"Failed to fetch orders");
+                    Debug.Log($"Failed to fetch assets");
                 }
             }
             catch (Exception ex)
             {
-                Debug.Log($"Failed to fetch orders: {ex.Message}");
+                Debug.Log($"Failed to fetch assets: {ex.Message}");
             }
 
-            return tokens;
+            return stacks;
         }
 
         /// <summary>

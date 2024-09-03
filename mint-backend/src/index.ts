@@ -4,6 +4,7 @@ import express, {
   Request,
   Response,
 } from 'express';
+import axios from 'axios';
 import cors from 'cors';
 import http from 'http';
 import { providers, Wallet, Contract, PopulatedTransaction, utils } from 'ethers';
@@ -11,6 +12,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { config, orderbook } from '@imtbl/sdk';
 import { TransactionAction, FeeValue } from '@imtbl/sdk/dist/orderbook';
+import { v4 as uuidv4 } from 'uuid';
 
 dotenv.config();
 
@@ -340,6 +342,229 @@ router.post('/fillOrder/skin', async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     return res.status(400).json({ message: 'Failed to prepare listing' });
+  }
+});
+
+// Mock search NFT stacks
+// `market` is hardcoded
+router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks', async (req: Request, res: Response) => {
+  try {
+    const accountAddress = req.query.account_address;
+    const contractAddress = req.query.contract_address;
+    const pageCursor = req.query.page_cursor ?? null;
+    const pageSize = req.query.page_size ?? 5;
+    const traits = req.query.trait;
+
+    let nftUrl = `https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/${accountAddress}/nfts?contract_address=${contractAddress}&page_size=${pageSize}`;
+    if (pageCursor != null) {
+      nftUrl += `&page_cursor=${pageCursor}`;
+    }
+
+    const nftsResponse = await axios.get(nftUrl);
+    const result: any[] = [];
+    for (var item of nftsResponse.data.result) {
+      const stack = {
+        stack_id: uuidv4(),
+        chain: 'imtbl-zkevm-testnet',
+        contract_address: contractAddress,
+        name: item.name,
+        description: item.description,
+        image: item.image,
+        attributes: item.attributes,
+        total_count: 1,
+      };
+
+      // Hardcoded
+      const market = {
+        floor_listing: {
+          listing_id: uuidv4(),
+          price: {
+            token: {
+              type: 'ERC20',
+              symbol: 'IMR',
+            },
+            amount: {
+              value: '100000000000000000',
+              value_in_eth: '100000000000000000',
+            }
+          },
+          quantity: 1,
+          created_at: '2022-08-16T17:43:26.991388Z',
+        },
+        top_bid: {
+          bid_id: uuidv4(),
+          price: {
+            token: {
+              type: 'ERC20',
+              symbol: 'IMR',
+            },
+            amount: {
+              value: '99000000000000000000',
+              value_in_eth: '99000000000000000000',
+            }
+          },
+          quantity: 1,
+          created_at: '2022-08-16T17:43:26.991388Z',
+        },
+        last_trade: {
+          trade_id: uuidv4(),
+          price: {
+            token: {
+              type: 'ERC20',
+              symbol: 'IMR',
+            },
+            amount: {
+              value: '9750000000000000000',
+              value_in_eth: '9750000000000000000',
+            }
+          },
+          quantity: 1,
+          created_at: '2022-08-16T17:43:26.991388Z',
+        }
+      }
+
+      const listingResponse = await axios.get(`https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings?sell_item_contract_address=${contractAddress}&sell_item_token_id=${item.token_id}&status=ACTIVE&sort_direction=asc&page_size=5&sort_by=buy_item_amount`);
+      const listings = listingResponse.data.result.map((listing: any) => {
+        return {
+          listing_id: listing.id,
+          price: {
+            token: {
+              type: 'ERC20',
+              symbol: 'IMR',
+            },
+            amount: {
+              value: listing.buy[0].amount,
+              value_in_eth: '100000000000000000',
+            }
+          },
+          token_id: item.token_id,
+          quantity: 1,
+        }
+      });
+
+      const notListed = [];
+      if (listings.length == 0) { // Added myself, this will actually be another API call
+        notListed.push({
+          token_id: item.token_id,
+        });
+      }
+
+      result.push({ stack, market, listings, notListed });
+    }
+
+    return res.status(200).json({ result, page: nftsResponse.data.page, });
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ message: 'Failed to get stacks' });
+  }
+});
+
+router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks/marketplace', async (req: Request, res: Response) => {
+  try {
+    const accountAddress = req.query.account_address;
+    const contractAddress = req.query.contract_address;
+    const pageCursor = req.query.page_cursor ?? null;
+    const pageSize = req.query.page_size ?? 5;
+    const traits = req.query.trait;
+
+    let ordersUrl = `https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings?sell_item_contract_address=${contractAddress}&status=ACTIVE&sort_direction=asc&page_size=5&sort_by=buy_item_amount`;
+    if (pageCursor != null) {
+      ordersUrl += `&page_cursor=${pageCursor}`;
+    }
+    console.log(`ordersUrl: ${ordersUrl}`);
+
+    const ordersResponse = await axios.get(ordersUrl);
+    const result: any[] = [];
+    for (var item of ordersResponse.data.result) {
+      let nftResponse = await axios.get(`https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/collections/${contractAddress}/nfts/${item.sell[0].token_id}`);
+      let nft = nftResponse.data.result;
+      const stack = {
+        stack_id: uuidv4(),
+        chain: 'imtbl-zkevm-testnet',
+        contract_address: contractAddress,
+        name: nft.name,
+        description: nft.description,
+        image: nft.image,
+        attributes: nft.attributes,
+        total_count: 1,
+      };
+
+      // Hardcoded
+      const market = {
+        floor_listing: {
+          listing_id: uuidv4(),
+          price: {
+            token: {
+              type: 'ERC20',
+              symbol: 'IMR',
+            },
+            amount: {
+              value: '100000000000000000',
+              value_in_eth: '100000000000000000',
+            }
+          },
+          quantity: 1,
+          created_at: '2022-08-16T17:43:26.991388Z',
+        },
+        top_bid: {
+          bid_id: uuidv4(),
+          price: {
+            token: {
+              type: 'ERC20',
+              symbol: 'IMR',
+            },
+            amount: {
+              value: '99000000000000000000',
+              value_in_eth: '99000000000000000000',
+            }
+          },
+          quantity: 1,
+          created_at: '2022-08-16T17:43:26.991388Z',
+        },
+        last_trade: {
+          trade_id: uuidv4(),
+          price: {
+            token: {
+              type: 'ERC20',
+              symbol: 'IMR',
+            },
+            amount: {
+              value: '9750000000000000000',
+              value_in_eth: '9750000000000000000',
+            }
+          },
+          quantity: 1,
+          created_at: '2022-08-16T17:43:26.991388Z',
+        }
+      }
+
+      const listings = [
+        {
+          listing_id: item.id,
+          account_address: item.account_address,
+          price: {
+            token: {
+              type: 'ERC20',
+              symbol: 'IMR',
+            },
+            amount: {
+              value: item.buy[0].amount,
+              value_in_eth: '100000000000000000',
+            }
+          },
+          token_id: item.sell[0].token_id,
+          fees: item.fees,
+          quantity: 1,
+        }
+      ];
+
+      result.push({ stack, market, listings, });
+    }
+
+    return res.status(200).json({ result, page: ordersResponse.data.page, });
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ message: 'Failed to get stacks' });
   }
 });
 

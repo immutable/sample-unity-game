@@ -50,8 +50,6 @@ namespace HyperCasual.Runner
 
         int m_FoodValue;
 
-        private ApiService Api = new();
-
         /// <summary>
         /// The amount of food to display on the celebration screen.
         /// The setter method also sets the celebration screen text.
@@ -162,8 +160,7 @@ namespace HyperCasual.Runner
                 else
                 {
                     // Get the player's wallet address to mint the coins to
-                    List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
-                    string address = accounts[0];
+                    string address = SaveManager.Instance.WalletAddress;
                     if (address != null)
                     {
                         // Calculate the quantity to mint
