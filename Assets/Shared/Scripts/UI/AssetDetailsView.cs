@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Net.Http;
+using System.Text;
 using System.Linq;
 using HyperCasual.Core;
 using UnityEngine;
@@ -179,9 +180,9 @@ namespace HyperCasual.Runner
                     m_Asset.listings.Insert(0, await GetListing(listingId));
 
                     UpdateLists();
-                }
 
-                return true;
+                    return true;
+                }
             }
 
             return false;
@@ -241,17 +242,32 @@ namespace HyperCasual.Runner
         /// <returns>The listing ID is asset was successfully listed</returns>
         private async UniTask<string> PrepareListing(StackListing asset, string price)
         {
+            string address = SaveManager.Instance.WalletAddress;
+
+            var data = new PrepareListingRequest
+            {
+                makerAddress = address,
+                sell = new PrepareListingERC721Item
+                {
+                    contractAddress = Contract.SKIN,
+                    tokenId = asset.token_id,
+                },
+                buy = new PrepareListingERC20Item
+                {
+                    amount = price,
+                    contractAddress = Contract.TOKEN,
+                }
+            };
+
             try
             {
-                string address = SaveManager.Instance.WalletAddress;
-                var nvc = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("offererAddress", address),
-                    new KeyValuePair<string, string>("amount", price),
-                    new KeyValuePair<string, string>("tokenId", asset.token_id)
-                };
+                var json = JsonUtility.ToJson(data);
+
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/prepareListing/skin") { Content = new FormUrlEncodedContent(nvc) };
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"https://api.sandbox.immutable.com/v1/ts-sdk/v1/orderbook/prepareListing")
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                };
                 using var res = await client.SendAsync(req);
 
                 if (!res.IsSuccessStatusCode)
@@ -263,44 +279,38 @@ namespace HyperCasual.Runner
                 string responseBody = await res.Content.ReadAsStringAsync();
                 PrepareListingResponse response = JsonUtility.FromJson<PrepareListingResponse>(responseBody);
 
-                if (response.transactionToSend?.to != null)
+                var transaction = response.actions.FirstOrDefault(action => action.type == "TRANSACTION");
+                // TODO after API returns transaction details
+                //     var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
+                //     {
+                //         to = response.transactionToSend.to,
+                //         data = response.transactionToSend.data,
+                //         value = "0"
+                //     });
+
+                //     if (transactionResponse.status != "1")
+                //     {
+                //         await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing.", "OK");
+                //         return null;
+                //     }
+
+                var signable = response.actions.FirstOrDefault(action => action.type == "SIGNABLE");
+                Debug.Log($"Sign: {JsonUtility.ToJson(signable.message)}");
+                (bool result, string signature) = await m_CustomDialog.ShowDialog(
+                    "Confirm listing",
+                    "Enter signed payload:",
+                    "Confirm",
+                    negativeButtonText: "Cancel",
+                    showInputField: true
+                );
+                if (result)
                 {
-                    var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
-                    {
-                        to = response.transactionToSend.to,
-                        data = response.transactionToSend.data,
-                        value = "0"
-                    });
-
-                    if (transactionResponse.status != "1")
-                    {
-                        await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing.", "OK");
-                        return null;
-                    }
+                    return await ListAsset(signature, response, address);
                 }
-
-                if (response.toSign != null && response.preparedListing != null)
+                else
                 {
-                    // Prompt for signature
-                    Debug.Log($"Sign: {response.toSign}");
-                    (bool result, string signature) = await m_CustomDialog.ShowDialog(
-                        "Confirm listing",
-                        "Enter signed payload:",
-                        "Confirm",
-                        negativeButtonText: "Cancel",
-                        showInputField: true
-                    );
-                    if (result)
-                    {
-                        return await ListAsset(signature, response.preparedListing, address);
-                    }
-                    else
-                    {
-                        return null;
-                    }
+                    return null;
                 }
-
-                return null;
             }
             catch (Exception ex)
             {
@@ -316,18 +326,29 @@ namespace HyperCasual.Runner
         /// <param name="signature">The signature for the listing.</param>
         /// <param name="preparedListing">The prepared listing data.</param>
         /// <param name="address">The wallet address of the user.</param>
-        private async UniTask<string?> ListAsset(string signature, string preparedListing, string address)
+        private async UniTask<string?> ListAsset(string signature, PrepareListingResponse preparedListing, string address)
         {
+            var data = new CreateListingRequest
+            {
+                makerFees = new List<CreateListingFeeValue>(),
+                orderComponents = preparedListing.orderComponents,
+                orderHash = preparedListing.orderHash,
+                orderSignature = signature
+            };
+
             try
             {
-                var nvc = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("signature", signature),
-                    new KeyValuePair<string, string>("preparedListing", preparedListing)
-                };
+                var json = JsonUtility.ToJson(data);
+                Debug.Log($"json = ${json}");
+
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/createListing/skin") { Content = new FormUrlEncodedContent(nvc) };
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"https://api.sandbox.immutable.com/v1/ts-sdk/v1/orderbook/createListing")
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                };
                 using var res = await client.SendAsync(req);
+
+                Debug.Log($"Status code = {res.StatusCode}");
 
                 if (!res.IsSuccessStatusCode)
                 {
