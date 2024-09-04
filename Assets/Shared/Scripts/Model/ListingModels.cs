@@ -40,16 +40,17 @@ namespace HyperCasual.Runner
     [Serializable]
     public class PrepareListingResponse
     {
-        public List<PrepareListingAction> actions;
+        public List<ListingAction> actions;
         public CreateListingOrderComponents orderComponents;
         public string orderHash;
     }
 
     [Serializable]
-    public class PrepareListingAction
+    public class ListingAction
     {
         public string type;
         public string purpose;
+        public Transaction transaction;
         public SignableMessage message;
     }
 

@@ -7,6 +7,6 @@ namespace HyperCasual.Runner
     [Serializable]
     public class FulfullOrderResponse
     {
-        public TransactionToSend[] transactionsToSend;
+        public Transaction[] transactionsToSend;
     }
 }

@@ -153,7 +153,7 @@ namespace HyperCasual.Runner
                 FulfullOrderResponse response = JsonUtility.FromJson<FulfullOrderResponse>(responseBody);
                 if (response.transactionsToSend != null)
                 {
-                    foreach (TransactionToSend tx in response.transactionsToSend)
+                    foreach (Transaction tx in response.transactionsToSend)
                     {
                         string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest
                         {

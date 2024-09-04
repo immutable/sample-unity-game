@@ -114,42 +114,6 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Removes all the attribute views
-        /// </summary>
-        private void ClearAttributes()
-        {
-            foreach (AttributeView attribute in m_Attributes)
-            {
-                Destroy(attribute.gameObject);
-            }
-            m_Attributes.Clear();
-        }
-
-        /// <summary>
-        /// Removes all the not for sale views
-        /// </summary>
-        private void ClearNotListedList()
-        {
-            foreach (AssetNotListedObject listing in m_NotListedViews)
-            {
-                Destroy(listing.gameObject);
-            }
-            m_NotListedViews.Clear();
-        }
-
-        /// <summary>
-        /// Removes all the listing views
-        /// </summary>
-        private void ClearListings()
-        {
-            foreach (AssetListingObject listing in m_ListingViews)
-            {
-                Destroy(listing.gameObject);
-            }
-            m_ListingViews.Clear();
-        }
-
-        /// <summary>
         /// Handles the click event for the sell button.
         /// </summary>
         private async UniTask<bool> OnSellButtonClicked(StackListing listing)
@@ -169,6 +133,7 @@ namespace HyperCasual.Runner
 
                 if (listingId != null)
                 {
+                    // TODO update to use get stack bundle by stack ID endpoint instead
                     // Locally remove token from not listed list
                     var listingToRemove = m_Asset.notListed.FirstOrDefault(l => l.token_id == listing.token_id);
                     if (listingToRemove != null)
@@ -264,7 +229,7 @@ namespace HyperCasual.Runner
                 var json = JsonUtility.ToJson(data);
 
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"https://api.sandbox.immutable.com/v1/ts-sdk/v1/orderbook/prepareListing")
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:8080/v1/ts-sdk/v1/orderbook/prepareListing")
                 {
                     Content = new StringContent(json, Encoding.UTF8, "application/json")
                 };
@@ -279,45 +244,49 @@ namespace HyperCasual.Runner
                 string responseBody = await res.Content.ReadAsStringAsync();
                 PrepareListingResponse response = JsonUtility.FromJson<PrepareListingResponse>(responseBody);
 
+                // Send transaction if required
                 var transaction = response.actions.FirstOrDefault(action => action.type == "TRANSACTION");
-                // TODO after API returns transaction details
-                //     var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
-                //     {
-                //         to = response.transactionToSend.to,
-                //         data = response.transactionToSend.data,
-                //         value = "0"
-                //     });
-
-                //     if (transactionResponse.status != "1")
-                //     {
-                //         await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing.", "OK");
-                //         return null;
-                //     }
-
-                var signable = response.actions.FirstOrDefault(action => action.type == "SIGNABLE");
-                Debug.Log($"Sign: {JsonUtility.ToJson(signable.message)}");
-                (bool result, string signature) = await m_CustomDialog.ShowDialog(
-                    "Confirm listing",
-                    "Enter signed payload:",
-                    "Confirm",
-                    negativeButtonText: "Cancel",
-                    showInputField: true
-                );
-                if (result)
+                if (transaction != null)
                 {
-                    return await ListAsset(signature, response, address);
+                    var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
+                    {
+                        to = transaction.transaction.to,
+                        data = transaction.transaction.data,
+                        value = "0"
+                    });
+
+                    if (transactionResponse.status != "1")
+                    {
+                        await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing.", "OK");
+                        return null;
+                    }
                 }
-                else
+
+                // Sign payload
+                var signable = response.actions.FirstOrDefault(action => action.type == "SIGNABLE");
+                if (signable != null)
                 {
-                    return null;
+                    Debug.Log($"Sign: {JsonUtility.ToJson(signable.message)}");
+                    (bool result, string signature) = await m_CustomDialog.ShowDialog(
+                        "Confirm listing",
+                        "Enter signed payload:",
+                        "Confirm",
+                        negativeButtonText: "Cancel",
+                        showInputField: true
+                    );
+                    if (result)
+                    {
+                        return await ListAsset(signature, response, address);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Debug.Log($"Failed to sell: {ex.Message}");
                 await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing", "OK");
-                return null;
             }
+
+            return null;
         }
 
         /// <summary>
@@ -339,7 +308,6 @@ namespace HyperCasual.Runner
             try
             {
                 var json = JsonUtility.ToJson(data);
-                Debug.Log($"json = ${json}");
 
                 using var client = new HttpClient();
                 using var req = new HttpRequestMessage(HttpMethod.Post, $"https://api.sandbox.immutable.com/v1/ts-sdk/v1/orderbook/createListing")
@@ -347,8 +315,6 @@ namespace HyperCasual.Runner
                     Content = new StringContent(json, Encoding.UTF8, "application/json")
                 };
                 using var res = await client.SendAsync(req);
-
-                Debug.Log($"Status code = {res.StatusCode}");
 
                 if (!res.IsSuccessStatusCode)
                 {
@@ -381,20 +347,22 @@ namespace HyperCasual.Runner
         {
             Debug.Log($"Cancel listing {listing.listing_id}");
 
+            string address = SaveManager.Instance.WalletAddress;
+            var data = new CancelListingRequest
+            {
+                accountAddress = address,
+                orderIds = new List<string> { listing.listing_id }
+            };
+
             try
             {
-                string address = SaveManager.Instance.WalletAddress;
-                var nvc = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("offererAddress", address),
-                    new KeyValuePair<string, string>("listingId", listing.listing_id),
-                    new KeyValuePair<string, string>("type", "hard")
-                };
+                var json = JsonUtility.ToJson(data);
+                Debug.Log($"json = {json}");
 
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, "http://localhost:6060/cancelListing/skin")
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:8080/v1/ts-sdk/v1/orderbook/cancelOrdersOnChain")
                 {
-                    Content = new FormUrlEncodedContent(nvc)
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
                 };
 
                 using var res = await client.SendAsync(req);
@@ -406,14 +374,15 @@ namespace HyperCasual.Runner
                 }
 
                 string responseBody = await res.Content.ReadAsStringAsync();
+                Debug.Log($"responseBody = {responseBody}");
 
-                TransactionToSend response = JsonUtility.FromJson<TransactionToSend>(responseBody);
-                if (response?.to != null)
+                CancelListingResponse response = JsonUtility.FromJson<CancelListingResponse>(responseBody);
+                if (response?.transaction.to != null)
                 {
                     var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest()
                     {
-                        to = response.to, // Immutable seaport contract
-                        data = response.data, // fd9f1e10 cancel
+                        to = response.transaction.to, // Immutable seaport contract
+                        data = response.transaction.data, // fd9f1e10 cancel
                         value = "0"
                     });
 
@@ -422,6 +391,7 @@ namespace HyperCasual.Runner
                         // Validate that listing has been cancelled
                         await ConfirmListingStatus(listing.listing_id, "CANCELLED");
 
+                        // TODO update to use get stack bundle by stack ID endpoint instead
                         // Locally remove listing
                         var listingToRemove = m_Asset.listings.FirstOrDefault(l => l.listing_id == listing.listing_id);
                         if (listingToRemove != null)
@@ -481,6 +451,42 @@ namespace HyperCasual.Runner
         private void OnBackButtonClick()
         {
             UIManager.Instance.GoBack();
+        }
+
+        /// <summary>
+        /// Removes all the attribute views
+        /// </summary>
+        private void ClearAttributes()
+        {
+            foreach (AttributeView attribute in m_Attributes)
+            {
+                Destroy(attribute.gameObject);
+            }
+            m_Attributes.Clear();
+        }
+
+        /// <summary>
+        /// Removes all the not for sale views
+        /// </summary>
+        private void ClearNotListedList()
+        {
+            foreach (AssetNotListedObject listing in m_NotListedViews)
+            {
+                Destroy(listing.gameObject);
+            }
+            m_NotListedViews.Clear();
+        }
+
+        /// <summary>
+        /// Removes all the listing views
+        /// </summary>
+        private void ClearListings()
+        {
+            foreach (AssetListingObject listing in m_ListingViews)
+            {
+                Destroy(listing.gameObject);
+            }
+            m_ListingViews.Clear();
         }
 
         /// <summary>
