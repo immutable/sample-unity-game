@@ -14,6 +14,12 @@ namespace HyperCasual.Runner
     [Serializable]
     public class CancelListingResponse
     {
-        public Transaction transaction;
+        public CancellationAction cancellationAction;
+    }
+
+    [Serializable]
+    public class CancellationAction
+    {
+        public Transaction populatedTransaction;
     }
 }

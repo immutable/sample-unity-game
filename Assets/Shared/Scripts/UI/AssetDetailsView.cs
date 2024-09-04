@@ -250,8 +250,8 @@ namespace HyperCasual.Runner
                 {
                     var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
                     {
-                        to = transaction.transaction.to,
-                        data = transaction.transaction.data,
+                        to = transaction.populatedTransaction.to,
+                        data = transaction.populatedTransaction.data,
                         value = "0"
                     });
 
@@ -308,6 +308,7 @@ namespace HyperCasual.Runner
             try
             {
                 var json = JsonUtility.ToJson(data);
+                Debug.Log($"json = {json}");
 
                 using var client = new HttpClient();
                 using var req = new HttpRequestMessage(HttpMethod.Post, $"https://api.sandbox.immutable.com/v1/ts-sdk/v1/orderbook/createListing")
@@ -377,12 +378,12 @@ namespace HyperCasual.Runner
                 Debug.Log($"responseBody = {responseBody}");
 
                 CancelListingResponse response = JsonUtility.FromJson<CancelListingResponse>(responseBody);
-                if (response?.transaction.to != null)
+                if (response?.cancellationAction.populatedTransaction.to != null)
                 {
                     var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest()
                     {
-                        to = response.transaction.to, // Immutable seaport contract
-                        data = response.transaction.data, // fd9f1e10 cancel
+                        to = response.cancellationAction.populatedTransaction.to, // Immutable seaport contract
+                        data = response.cancellationAction.populatedTransaction.data, // fd9f1e10 cancel
                         value = "0"
                     });
 
