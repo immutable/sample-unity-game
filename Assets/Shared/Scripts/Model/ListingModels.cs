@@ -50,7 +50,7 @@ namespace HyperCasual.Runner
     {
         public string type;
         public string purpose;
-        public Transaction populatedTransaction;
+        public Transaction populatedTransactions;
         public SignableMessage message;
     }
 

@@ -227,6 +227,7 @@ namespace HyperCasual.Runner
             try
             {
                 var json = JsonUtility.ToJson(data);
+                Debug.Log($"json = {json}");
 
                 using var client = new HttpClient();
                 using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:8080/v1/ts-sdk/v1/orderbook/prepareListing")
@@ -250,8 +251,8 @@ namespace HyperCasual.Runner
                 {
                     var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
                     {
-                        to = transaction.populatedTransaction.to,
-                        data = transaction.populatedTransaction.data,
+                        to = transaction.populatedTransactions.to,
+                        data = transaction.populatedTransactions.data,
                         value = "0"
                     });
 
