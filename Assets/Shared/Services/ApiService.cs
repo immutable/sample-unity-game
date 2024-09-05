@@ -22,7 +22,7 @@ namespace Shared.Services
             UnityWebRequest request = UnityWebRequest.Post(url, form);
 
             await request.SendWebRequest().ToUniTask();
-            success = request.result == UnityWebRequest.Result.Success && 
+            success = request.result == UnityWebRequest.Result.Success &&
                                 request.responseCode >= 200 && request.responseCode < 300;
 #else
             var nvc = new List<KeyValuePair<string, string>>
@@ -40,7 +40,7 @@ namespace Shared.Services
 #endif
             return success;
         }
-        
+
         public static async UniTask<bool> MintFox(string to)
         {
 #if UNITY_WEBGL
@@ -52,7 +52,7 @@ namespace Shared.Services
             UnityWebRequest request = UnityWebRequest.Post(url, form);
 
             await request.SendWebRequest().ToUniTask();
-            return request.result == UnityWebRequest.Result.Success && 
+            return request.result == UnityWebRequest.Result.Success &&
                                 request.responseCode >= 200 && request.responseCode < 300;
 #else
             var nvc = new List<KeyValuePair<string, string>>
