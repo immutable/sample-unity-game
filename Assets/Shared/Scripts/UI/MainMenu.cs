@@ -55,7 +55,7 @@ namespace HyperCasual.Runner
             m_MarketplaceButton.AddListener(OnMarketplaceButtonClick);
 
             // Initialise Passport
-            string clientId = "ZJL7JvetcDFBNDlgRs5oJoxuAUUl6uQj";
+            string clientId = "UnB98ngnXIZIEJWGJOjVe1BpCx5ix7qc";
             string environment = Immutable.Passport.Model.Environment.SANDBOX;
             string redirectUri = null;
             string logoutUri = null;
@@ -63,11 +63,25 @@ namespace HyperCasual.Runner
 #if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
             redirectUri = "immutablerunner://callback";
             logoutUri = "immutablerunner://logout";
+#elif UNITY_WEBGL
+            string url = Application.absoluteURL;
+            Uri uri = new Uri(url);
+            string scheme = uri.Scheme;
+            string hostWithPort = uri.IsDefaultPort ? uri.Host : $"{uri.Host}:{uri.Port}";
+            string domainWithSchemeAndPort = $"{scheme}://{hostWithPort}";
+            redirectUri = $"{domainWithSchemeAndPort}/callback.html";
+            logoutUri = $"{domainWithSchemeAndPort}/logout.html";
 #endif
             passport = await Passport.Init(clientId, environment, redirectUri, logoutUri);
 
+            Debug.Log($"SaveManager.Instance.IsLoggedIn: {SaveManager.Instance.IsLoggedIn}");
+            Debug.Log($"Passport.Instance.HasCredentialsSaved(): {await Passport.Instance.HasCredentialsSaved()}");
             // Check if the player is supposed to be logged in and if there are credentials saved
+#if UNITY_WEBGL
+            if (await Passport.Instance.HasCredentialsSaved())
+#else 
             if (SaveManager.Instance.IsLoggedIn && await Passport.Instance.HasCredentialsSaved())
+#endif
             {
                 // Try to log in using saved credentials
                 bool success = await Passport.Instance.Login(useCachedSession: true);
