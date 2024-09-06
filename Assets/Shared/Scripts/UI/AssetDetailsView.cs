@@ -230,7 +230,7 @@ namespace HyperCasual.Runner
                 Debug.Log($"json = {json}");
 
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:8080/v1/ts-sdk/v1/orderbook/prepareListing")
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/v1/ts-sdk/v1/orderbook/prepareListing")
                 {
                     Content = new StringContent(json, Encoding.UTF8, "application/json")
                 };
@@ -268,6 +268,27 @@ namespace HyperCasual.Runner
                 if (signable != null)
                 {
                     Debug.Log($"Sign: {JsonUtility.ToJson(signable.message)}");
+
+                    signable.message.types.EIP712Domain = new List<NameType>
+                    {
+                        new NameType { name = "name", type = "string" },
+                        new NameType { name = "version", type = "string" },
+                        new NameType { name = "chainId", type = "uint256" },
+                        new NameType { name = "verifyingContract", type = "address" }
+                    };
+
+                    var eip712TypedData = new EIP712TypedData
+                    {
+                        domain = signable.message.domain,
+                        types = signable.message.types,
+                        message = signable.message.value,
+                        primaryType = "OrderComponents"
+                    };
+
+                    Debug.Log($"EIP712TypedData: {JsonUtility.ToJson(eip712TypedData)}");
+                    // string signature = await Passport.Instance.ZkEvmSignTypedDataV4(JsonUtility.ToJson(eip712TypedData));
+                    // Debug.Log($"Signature: {signature}");
+
                     (bool result, string signature) = await m_CustomDialog.ShowDialog(
                         "Confirm listing",
                         "Enter signed payload:",
@@ -312,7 +333,7 @@ namespace HyperCasual.Runner
                 Debug.Log($"json = {json}");
 
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"https://api.sandbox.immutable.com/v1/ts-sdk/v1/orderbook/createListing")
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/v1/ts-sdk/v1/orderbook/createListing")
                 {
                     Content = new StringContent(json, Encoding.UTF8, "application/json")
                 };
@@ -320,6 +341,8 @@ namespace HyperCasual.Runner
 
                 if (!res.IsSuccessStatusCode)
                 {
+                    string errorBody = await res.Content.ReadAsStringAsync();
+                    Debug.Log($"Error: {errorBody}");
                     await m_CustomDialog.ShowDialog("Error", "Failed to list", "OK");
                     return null;
                 }
@@ -433,7 +456,7 @@ namespace HyperCasual.Runner
             Debug.Log($"Confirming listing {listingId} is {status}...");
 
             bool conditionMet = await PollingHelper.PollAsync(
-                $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{listingId}",
+                $"https://api.dev.immutable.com/v1/chains/imtbl-zkevm-devnet/orders/listings/{listingId}",
                 (responseBody) =>
                 {
                     ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);

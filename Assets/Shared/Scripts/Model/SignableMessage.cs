@@ -5,6 +5,15 @@ using System.Collections.Generic;
 namespace HyperCasual.Runner
 {
     [Serializable]
+    public class EIP712TypedData
+    {
+        public SignableDomain domain;
+        public SignableTypes types;
+        public SignableValue message;
+        public string primaryType;
+    }
+
+    [Serializable]
     public class SignableMessage
     {
         public SignableDomain domain;
@@ -24,20 +33,14 @@ namespace HyperCasual.Runner
     [Serializable]
     public class SignableTypes
     {
-        public List<SignableTypeOrderComponent> OrderComponents;
-        public List<SignableTypeOfferItem> OfferItem;
+        public List<NameType> OrderComponents;
+        public List<NameType> OfferItem;
         public List<SignableTypeConsiderationItem> ConsiderationItem;
+        public List<NameType> EIP712Domain;
     }
 
     [Serializable]
-    public class SignableTypeOrderComponent
-    {
-        public string name;
-        public string type;
-    }
-
-    [Serializable]
-    public class SignableTypeOfferItem
+    public class NameType
     {
         public string name;
         public string type;
