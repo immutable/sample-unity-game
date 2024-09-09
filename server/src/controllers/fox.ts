@@ -8,6 +8,11 @@ const gasOverrides = {
   maxPriorityFeePerGas: 10e9, // 10 Gwei. This must exceed minimum gas fee expectation from the chain
   maxFeePerGas: 15e9, // 15 Gwei
 };
+
+const zkEvmProvider = new providers.JsonRpcProvider(
+  "https://rpc.testnet.immutable.com",
+);
+
 export const mintFoxToken = async (req: Request, res: Response) => {
   try {
     if (env.foxTokenAddress && env.privateKey) {
@@ -15,10 +20,6 @@ export const mintFoxToken = async (req: Request, res: Response) => {
       let to: string = req.body?.to ?? null;
       // Get the quantity to mint if specified, default is one
       let quantity = BigInt(req.body?.quantity ?? "1");
-
-      const zkEvmProvider = new providers.JsonRpcProvider(
-        "https://rpc.testnet.immutable.com",
-      );
       // Connect to wallet with minter role
       const signer = new Wallet(env.privateKey).connect(zkEvmProvider);
 
@@ -37,7 +38,7 @@ export const mintFoxToken = async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: "Failed to mint to user" });
+    return res.status(400).json({ message: "Failed to mint token: " + error?.toString() });
   }
 };
 
@@ -47,16 +48,13 @@ export const mintFox = async (req: Request, res: Response) => {
       // Get the address to mint the fox to
       let to: string = req.body.to ?? null;
       // Get the quantity to mint if specified, default is one
-      let quantity = parseInt(req.body.quantity ?? '1');
+      let quantity = parseInt(req.body.quantity ?? "1");
 
-      const zkEvmProvider = new providers.JsonRpcProvider(
-        "https://rpc.testnet.immutable.com",
-      );
       // Connect to wallet with minter role
       const signer = new Wallet(env.privateKey).connect(zkEvmProvider);
 
       // Specify the function to call
-      const abi = ['function mintByQuantity(address to, uint256 quantity)'];
+      const abi = ["function mintByQuantity(address to, uint256 quantity)"];
       // Connect contract to the signer
       const contract = new Contract(env.foxContractAddress, abi, signer);
 
@@ -68,9 +66,8 @@ export const mintFox = async (req: Request, res: Response) => {
     } else {
       return res.status(500).json({});
     }
-
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: 'Failed to mint to user' });
+    return res.status(400).json({ message: "Failed to mint skin: " + error?.toString() });
   }
-}
+};

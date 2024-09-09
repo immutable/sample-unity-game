@@ -22,6 +22,4 @@ export default {
   foxContractAddress: getEnv("FOX_CONTRACT_ADDRESS"),
   // For Mint Skin
   foxSkinAddress: getEnv("FOX_SKIN_CONTRACT_ADDRESS"),
-  // For Mint Colour Skin
-  foxColourSkinAddress: getEnv("FOX_COLOUR_SKIN_CONTRACT_ADDRESS"),
 };

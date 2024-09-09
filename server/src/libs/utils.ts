@@ -14,7 +14,7 @@ export function getEnv(
   if (defaultValue !== undefined) {
     return defaultValue;
   }
-  return '';
+  return "";
 }
 
 export function requireEnvironmentVariable(key: string): string {
