@@ -7,6 +7,6 @@ namespace HyperCasual.Runner
     [Serializable]
     public class CreateListingResponse
     {
-        public Listing result;
+        public OldListing result;
     }
 }

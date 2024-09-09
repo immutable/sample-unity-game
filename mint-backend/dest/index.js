@@ -19,9 +19,9 @@ app.use(express_1.default.urlencoded({ extended: false })); // Parse request
 app.use(express_1.default.json()); // Handle JSON
 app.use((0, cors_1.default)()); // Enable CORS
 const router = express_1.default.Router();
-const apiEnv = 'sandbox';
-const chainName = 'imtbl-zkevm-testnet';
-const zkEvmProvider = new ethers_1.providers.JsonRpcProvider(`https://rpc.testnet.immutable.com`);
+const apiEnv = 'dev';
+const chainName = 'imtbl-zkevm-devnet';
+const zkEvmProvider = new ethers_1.providers.JsonRpcProvider(`https://rpc.dev.immutable.com`);
 // Contract addresses
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
 const tokenContractAddress = process.env.TOKEN_CONTRACT_ADDRESS;

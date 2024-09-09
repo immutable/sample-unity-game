@@ -9,6 +9,7 @@ using Immutable.Passport;
 using TMPro;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
+using Immutable.Search.Model;
 
 namespace HyperCasual.Runner
 {
@@ -20,10 +21,10 @@ namespace HyperCasual.Runner
         [SerializeField] private TextMeshProUGUI m_Type = null;
         [SerializeField] private TextMeshProUGUI m_Value = null;
 
-        public async void Initialise(AssetAttribute attribute)
+        public async void Initialise(NFTMetadataAttribute attribute)
         {
-            m_Type.text = attribute.trait_type;
-            m_Value.text = attribute.value;
+            m_Type.text = attribute.TraitType;
+            m_Value.text = attribute.Value.GetString();
         }
 
     }

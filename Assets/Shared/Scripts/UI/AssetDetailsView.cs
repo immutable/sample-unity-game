@@ -12,6 +12,7 @@ using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
 using Immutable.Passport;
 using Immutable.Passport.Model;
+using Immutable.Search.Model;
 
 namespace HyperCasual.Runner
 {
@@ -40,7 +41,7 @@ namespace HyperCasual.Runner
         [SerializeField] private CustomDialog m_CustomDialog;
 
         private List<AttributeView> m_Attributes = new List<AttributeView>();
-        private StacksResult m_Asset;
+        private StackBundle m_Asset;
 
         private void OnEnable()
         {
@@ -59,18 +60,18 @@ namespace HyperCasual.Runner
         /// Initialises the UI based on the asset.
         /// </summary>
         /// <param name="asset">The asset to display.</param>
-        public async void Initialise(StacksResult asset)
+        public async void Initialise(StackBundle asset)
         {
             m_Asset = asset;
 
-            m_NameText.text = m_Asset.stack.name;
-            m_CollectionText.text = $"Collection: {m_Asset.stack.contract_address}";
+            m_NameText.text = m_Asset.Stack.Name;
+            m_CollectionText.text = $"Collection: {m_Asset.Stack.ContractAddress}";
 
             // Clear existing attributes
             ClearAttributes();
 
             // Populate attributes
-            foreach (AssetAttribute attribute in m_Asset.stack.attributes)
+            foreach (NFTMetadataAttribute attribute in m_Asset.Stack.Attributes)
             {
                 AttributeView newAttribute = Instantiate(m_AttributeObj, m_AttributesListParent);
                 newAttribute.gameObject.SetActive(true);
@@ -79,7 +80,7 @@ namespace HyperCasual.Runner
             }
 
             // Download and display the image
-            m_Image.LoadUrl(m_Asset.stack.image);
+            m_Image.LoadUrl(m_Asset.Stack.Image);
 
             UpdateLists();
         }
@@ -90,27 +91,27 @@ namespace HyperCasual.Runner
             ClearNotListedList();
 
             // Populate not listed items
-            foreach (StackListing stackListing in m_Asset.notListed)
-            {
-                AssetNotListedObject item = Instantiate(m_NotListedObj, m_NotListedParent);
-                item.gameObject.SetActive(true);
-                item.Initialise(stackListing, OnSellButtonClicked); // Initialise the view with data
-                m_NotListedViews.Add(item); // Add to the list of displayed attributes
-            }
-            m_EmptyNotListed.SetActive(m_Asset.notListed.Count == 0);
+            // foreach (StackListing stackListing in m_Asset.notListed)
+            // {
+            //     AssetNotListedObject item = Instantiate(m_NotListedObj, m_NotListedParent);
+            //     item.gameObject.SetActive(true);
+            //     item.Initialise(stackListing, OnSellButtonClicked); // Initialise the view with data
+            //     m_NotListedViews.Add(item); // Add to the list of displayed attributes
+            // }
+            // m_EmptyNotListed.SetActive(m_Asset.notListed.Count == 0);
 
             // Clear all existing listings
             ClearListings();
 
             // Populate listings
-            foreach (StackListing stackListing in m_Asset.listings)
+            foreach (Listing stackListing in m_Asset.Listings)
             {
                 AssetListingObject item = Instantiate(m_ListingObj, m_ListingParent);
                 item.gameObject.SetActive(true);
                 item.Initialise(stackListing, OnCancelButtonClicked); // Initialise the view with data
                 m_ListingViews.Add(item); // Add to the list of displayed attributes
             }
-            m_EmptyListing.SetActive(m_Asset.listings.Count == 0);
+            m_EmptyListing.SetActive(m_Asset.Listings.Count == 0);
         }
 
         /// <summary>
@@ -119,7 +120,7 @@ namespace HyperCasual.Runner
         private async UniTask<bool> OnSellButtonClicked(StackListing listing)
         {
             (bool result, string price) = await m_CustomDialog.ShowDialog(
-                $"List {m_Asset.stack.name} for sale",
+                $"List {m_Asset.Stack.Name} for sale",
                 "Enter your price below (in IMR):",
                 "Confirm",
                 negativeButtonText: "Cancel",
@@ -135,14 +136,14 @@ namespace HyperCasual.Runner
                 {
                     // TODO update to use get stack bundle by stack ID endpoint instead
                     // Locally remove token from not listed list
-                    var listingToRemove = m_Asset.notListed.FirstOrDefault(l => l.token_id == listing.token_id);
-                    if (listingToRemove != null)
-                    {
-                        m_Asset.notListed.Remove(listingToRemove);
-                    }
+                    // var listingToRemove = m_Asset.notListed.FirstOrDefault(l => l.token_id == listing.token_id);
+                    // if (listingToRemove != null)
+                    // {
+                    //     m_Asset.notListed.Remove(listingToRemove);
+                    // }
 
                     // Locally add listing to listing
-                    m_Asset.listings.Insert(0, await GetListing(listingId));
+                    m_Asset.Listings.Insert(0, await GetListing(listingId));
 
                     UpdateLists();
 
@@ -156,7 +157,7 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Gets the details for the listing
         /// </summary>
-        private async UniTask<StackListing> GetListing(string listingId) // TODO To replace with get stack by ID endpoint
+        private async UniTask<Listing> GetListing(string listingId) // TODO To replace with get stack by ID endpoint
         {
             try
             {
@@ -169,25 +170,25 @@ namespace HyperCasual.Runner
                     string responseBody = await response.Content.ReadAsStringAsync();
                     OrderResponse orderResponse = JsonUtility.FromJson<OrderResponse>(responseBody);
 
-                    return new StackListing
+                    return new Listing
                     {
-                        listing_id = orderResponse.result.id,
-                        price = new Price
+                        ListingId = orderResponse.result.id,
+                        PriceDetails = new PriceDetails
                         {
-                            token = new Token
+                            Token = new PriceDetailsToken(new ERC20Token(symbol: "IMR")),
+                            Amount = new PaymentAmount
                             {
-                                type = "ERC20",
-                                symbol = "IMR"
+                                Value = orderResponse.result.buy[0].amount
                             },
-                            amount = new Amount
+                            Fees = orderResponse.result.fees.Select(fee => new Immutable.Search.Model.Fee
                             {
-                                value = orderResponse.result.buy[0].amount
-                            }
+                                Amount = fee.amount,
+                                RecipientAddress = fee.recipient_address,
+                            }).ToList()
                         },
-                        token_id = orderResponse.result.sell[0].token_id,
-                        quantity = 1,
-                        account_address = orderResponse.result.account_address,
-                        fees = orderResponse.result.fees
+                        TokenId = orderResponse.result.sell[0].token_id,
+                        // account_address = orderResponse.result.account_address,
+
                     };
                 }
             }
@@ -368,15 +369,15 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Cancels the listing of the asset.
         /// </summary>
-        private async UniTask<bool> OnCancelButtonClicked(StackListing listing)
+        private async UniTask<bool> OnCancelButtonClicked(Listing listing)
         {
-            Debug.Log($"Cancel listing {listing.listing_id}");
+            Debug.Log($"Cancel listing {listing.ListingId}");
 
             string address = SaveManager.Instance.WalletAddress;
             var data = new CancelListingRequest
             {
                 accountAddress = address,
-                orderIds = new List<string> { listing.listing_id }
+                orderIds = new List<string> { listing.ListingId }
             };
 
             try
@@ -414,18 +415,18 @@ namespace HyperCasual.Runner
                     if (transactionResponse.status == "1")
                     {
                         // Validate that listing has been cancelled
-                        await ConfirmListingStatus(listing.listing_id, "CANCELLED");
+                        await ConfirmListingStatus(listing.ListingId, "CANCELLED");
 
                         // TODO update to use get stack bundle by stack ID endpoint instead
                         // Locally remove listing
-                        var listingToRemove = m_Asset.listings.FirstOrDefault(l => l.listing_id == listing.listing_id);
+                        var listingToRemove = m_Asset.Listings.FirstOrDefault(l => l.ListingId == listing.ListingId);
                         if (listingToRemove != null)
                         {
-                            m_Asset.listings.Remove(listingToRemove);
+                            m_Asset.Listings.Remove(listingToRemove);
                         }
 
                         // Locally add asset to not listed list
-                        m_Asset.notListed.Insert(0, listing);
+                        // m_Asset.notListed.Insert(0, listing); // TODO
 
                         UpdateLists();
 

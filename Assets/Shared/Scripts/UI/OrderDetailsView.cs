@@ -13,6 +13,7 @@ using TMPro;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
 using Immutable.Passport.Model;
+using Immutable.Search.Model;
 
 namespace HyperCasual.Runner
 {
@@ -34,7 +35,7 @@ namespace HyperCasual.Runner
         private List<ListingObject> m_ListingViews = new List<ListingObject>();
         [SerializeField] private ListingObject m_ListingObj = null;
 
-        private StacksResult m_Order;
+        private StackBundle m_Order;
         private Listing m_Listing;
 
         async void OnEnable()
@@ -52,7 +53,7 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Initialises the UI based on the order
         /// </summary>
-        public async void Initialise(StacksResult order)
+        public async void Initialise(StackBundle order)
         {
             m_Order = order;
             UpdateData();
@@ -66,14 +67,14 @@ namespace HyperCasual.Runner
         /// </summary>
         private async void UpdateData()
         {
-            m_NameText.text = m_Order.stack.name;
-            m_CollectionText.text = $"Collection: {m_Order.stack.contract_address}";
+            m_NameText.text = m_Order.Stack.Name;
+            m_CollectionText.text = $"Collection: {m_Order.Stack.ContractAddress}";
 
             // Clears all existing attributes
             ClearAttributes();
 
             // Populate attributes
-            foreach (AssetAttribute attribute in m_Order.stack.attributes)
+            foreach (NFTMetadataAttribute attribute in m_Order.Stack.Attributes)
             {
                 AttributeView newAttribute = Instantiate(m_AttributeObj, m_AttributesListParent); // Create a new asset object
                 newAttribute.gameObject.SetActive(true);
@@ -82,13 +83,13 @@ namespace HyperCasual.Runner
             }
 
             // Download and display the image
-            m_Image.LoadUrl(m_Order.stack.image);
+            m_Image.LoadUrl(m_Order.Stack.Image);
 
             // Clear all existing listings
             ClearListings();
 
             // Populate listings
-            foreach (StackListing stackListing in m_Order.listings)
+            foreach (Listing stackListing in m_Order.Listings)
             {
                 ListingObject newListing = Instantiate(m_ListingObj, m_ListingParent);
                 newListing.gameObject.SetActive(true);
@@ -125,17 +126,17 @@ namespace HyperCasual.Runner
         /// Handles the buy button click event. Sends a request to fulfil an order, 
         /// processes the response, and updates the UI accordingly.
         /// </summary>
-        private async UniTask<bool> OnBuyButtonClick(StackListing listing)
+        private async UniTask<bool> OnBuyButtonClick(Listing listing)
         {
             string address = SaveManager.Instance.WalletAddress;
             var data = new FulfullOrderRequest
             {
                 takerAddress = address,
-                listingId = listing.listing_id,
-                takerFees = listing.fees.Select(fee => new FulfullOrderRequestFee
+                listingId = listing.ListingId,
+                takerFees = listing.PriceDetails.Fees.Select(fee => new FulfullOrderRequestFee
                 {
-                    amount = fee.amount,
-                    recipientAddress = fee.recipient_address
+                    amount = fee.Amount,
+                    recipientAddress = fee.RecipientAddress
                 }).ToArray()
             };
 
@@ -179,10 +180,10 @@ namespace HyperCasual.Runner
 
                     // TODO update to use get stack bundle by stack ID endpoint later
                     // Locally update stack listing
-                    var listingToRemove = m_Order.listings.FirstOrDefault(l => l.listing_id == listing.listing_id);
+                    var listingToRemove = m_Order.Listings.FirstOrDefault(l => l.ListingId == listing.ListingId);
                     if (listingToRemove != null)
                     {
-                        m_Order.listings.Remove(listingToRemove);
+                        m_Order.Listings.Remove(listingToRemove);
                     }
 
                     return true;
@@ -206,7 +207,7 @@ namespace HyperCasual.Runner
             Debug.Log($"Confirming order is filled...");
 
             bool conditionMet = await PollingHelper.PollAsync(
-                $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_Order.listings[0].listing_id}",
+                $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_Order.Listings[0].ListingId}",
                 (responseBody) =>
                 {
                     ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);

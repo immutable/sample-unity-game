@@ -11,6 +11,7 @@ using TMPro;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
 using Immutable.Passport.Model;
+using Immutable.Search.Model;
 
 namespace HyperCasual.Runner
 {
@@ -21,8 +22,8 @@ namespace HyperCasual.Runner
         [SerializeField] private HyperCasualButton m_BuyButton;
         [SerializeField] private TextMeshProUGUI m_PlayersListingText = null;
         [SerializeField] private GameObject m_Progress = null;
-        private StackListing m_Listing;
-        private Func<StackListing, UniTask<bool>> m_OnBuy;
+        private Listing m_Listing;
+        private Func<Listing, UniTask<bool>> m_OnBuy;
 
         async void OnEnable()
         {
@@ -31,7 +32,7 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Initialises the UI based on the order
         /// </summary>
-        public async void Initialise(StackListing listing, Func<StackListing, UniTask<bool>> onBuy)
+        public async void Initialise(Listing listing, Func<Listing, UniTask<bool>> onBuy)
         {
             m_Listing = listing;
             m_OnBuy = onBuy;
@@ -39,9 +40,9 @@ namespace HyperCasual.Runner
 
             // Check if asset is the player's asset
             string address = SaveManager.Instance.WalletAddress;
-            bool isPlayersAsset = m_Listing.account_address == address; // TODO added myself
-            m_PlayersListingText.gameObject.SetActive(isPlayersAsset);
-            m_BuyButton.gameObject.SetActive(!isPlayersAsset);
+            // bool isPlayersAsset = m_Listing.account_address == address; // TODO added myself
+            // m_PlayersListingText.gameObject.SetActive(isPlayersAsset);
+            // m_BuyButton.gameObject.SetActive(!isPlayersAsset);
 
             // Hide progress
             m_Progress.SetActive(false);
@@ -56,10 +57,10 @@ namespace HyperCasual.Runner
         /// </summary>
         private async void UpdateData()
         {
-            m_TokenIdText.text = $"Token ID: {m_Listing.token_id}";
+            m_TokenIdText.text = $"Token ID: {m_Listing.TokenId}";
 
             // Price
-            string amount = m_Listing.price.amount.value;
+            string amount = m_Listing.PriceDetails.Amount.Value;
             decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
             m_AmountText.text = $"{quantity} IMR";
         }
