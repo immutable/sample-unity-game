@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Net.Http;
+using System.Text;
 using System.Linq;
 using HyperCasual.Core;
 using UnityEngine;
@@ -113,42 +114,6 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Removes all the attribute views
-        /// </summary>
-        private void ClearAttributes()
-        {
-            foreach (AttributeView attribute in m_Attributes)
-            {
-                Destroy(attribute.gameObject);
-            }
-            m_Attributes.Clear();
-        }
-
-        /// <summary>
-        /// Removes all the not for sale views
-        /// </summary>
-        private void ClearNotListedList()
-        {
-            foreach (AssetNotListedObject listing in m_NotListedViews)
-            {
-                Destroy(listing.gameObject);
-            }
-            m_NotListedViews.Clear();
-        }
-
-        /// <summary>
-        /// Removes all the listing views
-        /// </summary>
-        private void ClearListings()
-        {
-            foreach (AssetListingObject listing in m_ListingViews)
-            {
-                Destroy(listing.gameObject);
-            }
-            m_ListingViews.Clear();
-        }
-
-        /// <summary>
         /// Handles the click event for the sell button.
         /// </summary>
         private async UniTask<bool> OnSellButtonClicked(StackListing listing)
@@ -168,6 +133,7 @@ namespace HyperCasual.Runner
 
                 if (listingId != null)
                 {
+                    // TODO update to use get stack bundle by stack ID endpoint instead
                     // Locally remove token from not listed list
                     var listingToRemove = m_Asset.notListed.FirstOrDefault(l => l.token_id == listing.token_id);
                     if (listingToRemove != null)
@@ -179,9 +145,9 @@ namespace HyperCasual.Runner
                     m_Asset.listings.Insert(0, await GetListing(listingId));
 
                     UpdateLists();
-                }
 
-                return true;
+                    return true;
+                }
             }
 
             return false;
@@ -241,17 +207,33 @@ namespace HyperCasual.Runner
         /// <returns>The listing ID is asset was successfully listed</returns>
         private async UniTask<string> PrepareListing(StackListing asset, string price)
         {
+            string address = SaveManager.Instance.WalletAddress;
+
+            var data = new PrepareListingRequest
+            {
+                makerAddress = address,
+                sell = new PrepareListingERC721Item
+                {
+                    contractAddress = Contract.SKIN,
+                    tokenId = asset.token_id,
+                },
+                buy = new PrepareListingERC20Item
+                {
+                    amount = price,
+                    contractAddress = Contract.TOKEN,
+                }
+            };
+
             try
             {
-                string address = SaveManager.Instance.WalletAddress;
-                var nvc = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("offererAddress", address),
-                    new KeyValuePair<string, string>("amount", price),
-                    new KeyValuePair<string, string>("tokenId", asset.token_id)
-                };
+                var json = JsonUtility.ToJson(data);
+                Debug.Log($"json = {json}");
+
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/prepareListing/skin") { Content = new FormUrlEncodedContent(nvc) };
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/v1/ts-sdk/v1/orderbook/prepareListing")
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                };
                 using var res = await client.SendAsync(req);
 
                 if (!res.IsSuccessStatusCode)
@@ -263,12 +245,14 @@ namespace HyperCasual.Runner
                 string responseBody = await res.Content.ReadAsStringAsync();
                 PrepareListingResponse response = JsonUtility.FromJson<PrepareListingResponse>(responseBody);
 
-                if (response.transactionToSend?.to != null)
+                // Send transaction if required
+                var transaction = response.actions.FirstOrDefault(action => action.type == "TRANSACTION");
+                if (transaction != null)
                 {
                     var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
                     {
-                        to = response.transactionToSend.to,
-                        data = response.transactionToSend.data,
+                        to = transaction.populatedTransactions.to,
+                        data = transaction.populatedTransactions.data,
                         value = "0"
                     });
 
@@ -279,10 +263,32 @@ namespace HyperCasual.Runner
                     }
                 }
 
-                if (response.toSign != null && response.preparedListing != null)
+                // Sign payload
+                var signable = response.actions.FirstOrDefault(action => action.type == "SIGNABLE");
+                if (signable != null)
                 {
-                    // Prompt for signature
-                    Debug.Log($"Sign: {response.toSign}");
+                    Debug.Log($"Sign: {JsonUtility.ToJson(signable.message)}");
+
+                    signable.message.types.EIP712Domain = new List<NameType>
+                    {
+                        new NameType { name = "name", type = "string" },
+                        new NameType { name = "version", type = "string" },
+                        new NameType { name = "chainId", type = "uint256" },
+                        new NameType { name = "verifyingContract", type = "address" }
+                    };
+
+                    var eip712TypedData = new EIP712TypedData
+                    {
+                        domain = signable.message.domain,
+                        types = signable.message.types,
+                        message = signable.message.value,
+                        primaryType = "OrderComponents"
+                    };
+
+                    Debug.Log($"EIP712TypedData: {JsonUtility.ToJson(eip712TypedData)}");
+                    // string signature = await Passport.Instance.ZkEvmSignTypedDataV4(JsonUtility.ToJson(eip712TypedData));
+                    // Debug.Log($"Signature: {signature}");
+
                     (bool result, string signature) = await m_CustomDialog.ShowDialog(
                         "Confirm listing",
                         "Enter signed payload:",
@@ -292,22 +298,17 @@ namespace HyperCasual.Runner
                     );
                     if (result)
                     {
-                        return await ListAsset(signature, response.preparedListing, address);
-                    }
-                    else
-                    {
-                        return null;
+                        return await ListAsset(signature, response, address);
                     }
                 }
-
-                return null;
             }
             catch (Exception ex)
             {
                 Debug.Log($"Failed to sell: {ex.Message}");
                 await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing", "OK");
-                return null;
             }
+
+            return null;
         }
 
         /// <summary>
@@ -316,21 +317,32 @@ namespace HyperCasual.Runner
         /// <param name="signature">The signature for the listing.</param>
         /// <param name="preparedListing">The prepared listing data.</param>
         /// <param name="address">The wallet address of the user.</param>
-        private async UniTask<string?> ListAsset(string signature, string preparedListing, string address)
+        private async UniTask<string?> ListAsset(string signature, PrepareListingResponse preparedListing, string address)
         {
+            var data = new CreateListingRequest
+            {
+                makerFees = new List<CreateListingFeeValue>(),
+                orderComponents = preparedListing.orderComponents,
+                orderHash = preparedListing.orderHash,
+                orderSignature = signature
+            };
+
             try
             {
-                var nvc = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("signature", signature),
-                    new KeyValuePair<string, string>("preparedListing", preparedListing)
-                };
+                var json = JsonUtility.ToJson(data);
+                Debug.Log($"json = {json}");
+
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/createListing/skin") { Content = new FormUrlEncodedContent(nvc) };
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/v1/ts-sdk/v1/orderbook/createListing")
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                };
                 using var res = await client.SendAsync(req);
 
                 if (!res.IsSuccessStatusCode)
                 {
+                    string errorBody = await res.Content.ReadAsStringAsync();
+                    Debug.Log($"Error: {errorBody}");
                     await m_CustomDialog.ShowDialog("Error", "Failed to list", "OK");
                     return null;
                 }
@@ -360,20 +372,22 @@ namespace HyperCasual.Runner
         {
             Debug.Log($"Cancel listing {listing.listing_id}");
 
+            string address = SaveManager.Instance.WalletAddress;
+            var data = new CancelListingRequest
+            {
+                accountAddress = address,
+                orderIds = new List<string> { listing.listing_id }
+            };
+
             try
             {
-                string address = SaveManager.Instance.WalletAddress;
-                var nvc = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("offererAddress", address),
-                    new KeyValuePair<string, string>("listingId", listing.listing_id),
-                    new KeyValuePair<string, string>("type", "hard")
-                };
+                var json = JsonUtility.ToJson(data);
+                Debug.Log($"json = {json}");
 
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, "http://localhost:6060/cancelListing/skin")
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:8080/v1/ts-sdk/v1/orderbook/cancelOrdersOnChain")
                 {
-                    Content = new FormUrlEncodedContent(nvc)
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
                 };
 
                 using var res = await client.SendAsync(req);
@@ -385,14 +399,15 @@ namespace HyperCasual.Runner
                 }
 
                 string responseBody = await res.Content.ReadAsStringAsync();
+                Debug.Log($"responseBody = {responseBody}");
 
-                TransactionToSend response = JsonUtility.FromJson<TransactionToSend>(responseBody);
-                if (response?.to != null)
+                CancelListingResponse response = JsonUtility.FromJson<CancelListingResponse>(responseBody);
+                if (response?.cancellationAction.populatedTransaction.to != null)
                 {
                     var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest()
                     {
-                        to = response.to, // Immutable seaport contract
-                        data = response.data, // fd9f1e10 cancel
+                        to = response.cancellationAction.populatedTransaction.to, // Immutable seaport contract
+                        data = response.cancellationAction.populatedTransaction.data, // fd9f1e10 cancel
                         value = "0"
                     });
 
@@ -401,6 +416,7 @@ namespace HyperCasual.Runner
                         // Validate that listing has been cancelled
                         await ConfirmListingStatus(listing.listing_id, "CANCELLED");
 
+                        // TODO update to use get stack bundle by stack ID endpoint instead
                         // Locally remove listing
                         var listingToRemove = m_Asset.listings.FirstOrDefault(l => l.listing_id == listing.listing_id);
                         if (listingToRemove != null)
@@ -440,7 +456,7 @@ namespace HyperCasual.Runner
             Debug.Log($"Confirming listing {listingId} is {status}...");
 
             bool conditionMet = await PollingHelper.PollAsync(
-                $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{listingId}",
+                $"https://api.dev.immutable.com/v1/chains/imtbl-zkevm-devnet/orders/listings/{listingId}",
                 (responseBody) =>
                 {
                     ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
@@ -460,6 +476,42 @@ namespace HyperCasual.Runner
         private void OnBackButtonClick()
         {
             UIManager.Instance.GoBack();
+        }
+
+        /// <summary>
+        /// Removes all the attribute views
+        /// </summary>
+        private void ClearAttributes()
+        {
+            foreach (AttributeView attribute in m_Attributes)
+            {
+                Destroy(attribute.gameObject);
+            }
+            m_Attributes.Clear();
+        }
+
+        /// <summary>
+        /// Removes all the not for sale views
+        /// </summary>
+        private void ClearNotListedList()
+        {
+            foreach (AssetNotListedObject listing in m_NotListedViews)
+            {
+                Destroy(listing.gameObject);
+            }
+            m_NotListedViews.Clear();
+        }
+
+        /// <summary>
+        /// Removes all the listing views
+        /// </summary>
+        private void ClearListings()
+        {
+            foreach (AssetListingObject listing in m_ListingViews)
+            {
+                Destroy(listing.gameObject);
+            }
+            m_ListingViews.Clear();
         }
 
         /// <summary>

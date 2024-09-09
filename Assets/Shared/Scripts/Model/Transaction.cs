@@ -5,8 +5,9 @@ using System.Collections.Generic;
 namespace HyperCasual.Runner
 {
     [Serializable]
-    public class FulfullOrderResponse
+    public class Transaction
     {
-        public TransactionToSend[] transactionsToSend;
+        public string to;
+        public string data;
     }
 }

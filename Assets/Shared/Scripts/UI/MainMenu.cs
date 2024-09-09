@@ -55,16 +55,8 @@ namespace HyperCasual.Runner
             m_MarketplaceButton.AddListener(OnMarketplaceButtonClick);
 
             // Initialise Passport
-            string clientId = "ZJL7JvetcDFBNDlgRs5oJoxuAUUl6uQj";
             string environment = Immutable.Passport.Model.Environment.SANDBOX;
-            string redirectUri = null;
-            string logoutUri = null;
-
-#if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
-            redirectUri = "immutablerunner://callback";
-            logoutUri = "immutablerunner://logout";
-#endif
-            passport = await Passport.Init(clientId, environment, redirectUri, logoutUri);
+            passport = await Passport.Init(Config.CLIENT_ID, environment, Config.REDIRECT_URI, Config.LOGOUT_REIDIRECT_URI);
 
             // Check if the player is supposed to be logged in and if there are credentials saved
             if (SaveManager.Instance.IsLoggedIn && await Passport.Instance.HasCredentialsSaved())
