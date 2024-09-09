@@ -19,7 +19,9 @@ app.use(express_1.default.urlencoded({ extended: false })); // Parse request
 app.use(express_1.default.json()); // Handle JSON
 app.use((0, cors_1.default)()); // Enable CORS
 const router = express_1.default.Router();
-const zkEvmProvider = new ethers_1.providers.JsonRpcProvider('https://rpc.dev.immutable.com');
+const apiEnv = 'sandbox';
+const chainName = 'imtbl-zkevm-testnet';
+const zkEvmProvider = new ethers_1.providers.JsonRpcProvider(`https://rpc.testnet.immutable.com`);
 // Contract addresses
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
 const tokenContractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
@@ -89,7 +91,7 @@ router.post('/mint/token', async (req, res) => {
 });
 router.post('/mint/skin', async (req, res) => {
     try {
-        if ('0x9c8b8f69a900df9fe800e3f7cb13ca464339888c' && privateKey) {
+        if (skinColourContractAddress && privateKey) {
             // Get the address to mint the token to
             let to = req.body.to ?? null;
             // Get the quantity to mint if specified, default is one
@@ -99,7 +101,7 @@ router.post('/mint/skin', async (req, res) => {
             // Specify the function to call
             const abi = ['function mint(address to, uint256 tokenId)'];
             // Connect contract to the signer
-            const contract = new ethers_1.Contract('0x9c8b8f69a900df9fe800e3f7cb13ca464339888c', abi, signer);
+            const contract = new ethers_1.Contract(skinColourContractAddress, abi, signer);
             // Mints the number of tokens specified
             const tx = await contract.mint(to, tokenId, gasOverrides);
             await tx.wait();
@@ -143,13 +145,6 @@ const client = new sdk_1.orderbook.Orderbook({
         environment: sdk_1.config.Environment.SANDBOX,
         publishableKey: process.env.PUBLISHABLE_KEY,
     },
-    overrides: {
-        seaportContractAddress: '0xbA22c310787e9a3D74343B17AB0Ab946c28DFB52',
-        zoneContractAddress: '0xb71EB38e6B51Ee7A45A632d46f17062e249580bE', // ImmutableSignedZoneV2
-        apiEndpoint: 'https://api.dev.immutable.com',
-        chainName: 'imtbl-zkevm-devnet',
-        jsonRpcProviderUrl: 'https://rpc.dev.immutable.com'
-    }
 });
 // Prepare listing
 router.post('/v1/ts-sdk/v1/orderbook/prepareListing', async (req, res) => {
@@ -272,7 +267,7 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks', async (req, res) => {
         const pageCursor = req.query.page_cursor ?? null;
         const pageSize = req.query.page_size ?? 5;
         const traits = req.query.trait;
-        let nftUrl = `https://api.dev.immutable.com/v1/chains/imtbl-zkevm-devnet/accounts/${accountAddress}/nfts?contract_address=${contractAddress}&page_size=${pageSize}`;
+        let nftUrl = `https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/accounts/${accountAddress}/nfts?contract_address=${contractAddress}&page_size=${pageSize}`;
         console.log(`nftUrl: ${nftUrl}`);
         if (pageCursor != null) {
             nftUrl += `&page_cursor=${pageCursor}`;
@@ -338,7 +333,7 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks', async (req, res) => {
                     created_at: '2022-08-16T17:43:26.991388Z',
                 }
             };
-            const listingResponse = await axios_1.default.get(`https://api.dev.immutable.com/v1/chains/imtbl-zkevm-devnet/orders/listings?sell_item_contract_address=${contractAddress}&sell_item_token_id=${item.token_id}&status=ACTIVE&sort_direction=asc&page_size=5&sort_by=buy_item_amount`);
+            const listingResponse = await axios_1.default.get(`https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/orders/listings?sell_item_contract_address=${contractAddress}&sell_item_token_id=${item.token_id}&status=ACTIVE&sort_direction=asc&page_size=5&sort_by=buy_item_amount`);
             const listings = listingResponse.data.result.map((listing) => {
                 return {
                     listing_id: listing.id,
@@ -378,7 +373,7 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks/marketplace', async (re
         const pageCursor = req.query.page_cursor ?? null;
         const pageSize = req.query.page_size ?? 5;
         const traits = req.query.trait;
-        let ordersUrl = `https://api.dev.immutable.com/v1/chains/imtbl-zkevm-devnet/orders/listings?sell_item_contract_address=${contractAddress}&status=ACTIVE&sort_direction=asc&page_size=5&sort_by=buy_item_amount`;
+        let ordersUrl = `https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/orders/listings?sell_item_contract_address=${contractAddress}&status=ACTIVE&sort_direction=asc&page_size=5&sort_by=buy_item_amount`;
         if (pageCursor != null) {
             ordersUrl += `&page_cursor=${pageCursor}`;
         }
@@ -386,7 +381,7 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks/marketplace', async (re
         const ordersResponse = await axios_1.default.get(ordersUrl);
         const result = [];
         for (var item of ordersResponse.data.result) {
-            let nftResponse = await axios_1.default.get(`https://api.dev.immutable.com/v1/chains/imtbl-zkevm-devnet/collections/${contractAddress}/nfts/${item.sell[0].token_id}`);
+            let nftResponse = await axios_1.default.get(`https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/collections/${contractAddress}/nfts/${item.sell[0].token_id}`);
             let nft = nftResponse.data.result;
             const stack = {
                 stack_id: (0, uuid_1.v4)(),

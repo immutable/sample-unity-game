@@ -23,9 +23,9 @@ app.use(express.json()); // Handle JSON
 app.use(cors()); // Enable CORS
 const router: Router = express.Router();
 
-const apiEnv = 'testnet';
+const apiEnv = 'sandbox';
 const chainName = 'imtbl-zkevm-testnet';
-const zkEvmProvider = new providers.JsonRpcProvider(`https://rpc.${apiEnv}.immutable.com`);
+const zkEvmProvider = new providers.JsonRpcProvider(`https://rpc.testnet.immutable.com`);
 
 // Contract addresses
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
