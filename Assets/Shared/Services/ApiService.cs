@@ -9,15 +9,17 @@ namespace Shared.Services
 {
     public static class ApiService
     {
+        // static readonly string serverHost = "https://sample-passport-unity-game-api.dev.immutable.com";
+        static readonly string serverHost = "http://localhost:6060";
         public static async UniTask<bool> MintCoins(string to, string quantity)
         {
             bool success = false;
+            string url = $"{serverHost}/fox/mint/token";
 #if UNITY_WEBGL
             var form = new WWWForm();
             form.AddField("to", to);
             form.AddField("quantity", quantity);
 
-            string url = "http://localhost:6060/mint/token";
 
             UnityWebRequest request = UnityWebRequest.Post(url, form);
 
@@ -33,7 +35,6 @@ namespace Shared.Services
                 new KeyValuePair<string, string>("quantity", quantity)
             };
             using var client = new HttpClient();
-            string url = $"http://localhost:6060/mint/token"; // Endpoint to mint token
             using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
             using var res = await client.SendAsync(req);
             success = res.IsSuccessStatusCode;
@@ -43,11 +44,10 @@ namespace Shared.Services
 
         public static async UniTask<bool> MintFox(string to)
         {
+            string url = $"{serverHost}/mint/fox";
 #if UNITY_WEBGL
             var form = new WWWForm();
             form.AddField("to", to);
-
-            string url = "http://localhost:6060/mint/token";
 
             UnityWebRequest request = UnityWebRequest.Post(url, form);
 
@@ -61,7 +61,6 @@ namespace Shared.Services
                 new KeyValuePair<string, string>("to", to)
             };
             using var client = new HttpClient();
-            string url = $"http://localhost:6060/mint/fox"; // Endpoint to mint fox
             using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
             using var res = await client.SendAsync(req);
             return res.IsSuccessStatusCode;

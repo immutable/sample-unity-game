@@ -68,9 +68,18 @@ namespace HyperCasual.Runner
             Uri uri = new Uri(url);
             string scheme = uri.Scheme;
             string hostWithPort = uri.IsDefaultPort ? uri.Host : $"{uri.Host}:{uri.Port}";
-            string domainWithSchemeAndPort = $"{scheme}://{hostWithPort}";
-            redirectUri = $"{domainWithSchemeAndPort}/callback.html";
-            logoutUri = $"{domainWithSchemeAndPort}/logout.html";
+
+            string fullPath = uri.AbsolutePath;
+            Debug.Log($"fullPath: {fullPath}");
+            if (!fullPath.EndsWith("/"))
+            {
+                fullPath = fullPath.Substring(0, fullPath.LastIndexOf('/') + 1);
+            }
+
+            redirectUri = $"{scheme}://{hostWithPort}{fullPath}callback.html";
+            logoutUri = $"{scheme}://{hostWithPort}{fullPath}logout.html";
+            Debug.Log($"redirectUri: {redirectUri}");
+
 #endif
             passport = await Passport.Init(clientId, environment, redirectUri, logoutUri);
 
