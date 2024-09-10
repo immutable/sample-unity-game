@@ -5,7 +5,8 @@
     "esModuleInterop": true,
     "outDir": "./dest",
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
+    "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
       "src/*": [

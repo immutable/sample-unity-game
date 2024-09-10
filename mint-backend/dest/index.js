@@ -38,9 +38,9 @@ router.post('/mint/fox', async (req, res) => {
     try {
         if (foxContractAddress && privateKey) {
             // Get the address to mint the fox to
-            let to = req.body.to ?? null;
+            const to = req.body.to ?? null;
             // Get the quantity to mint if specified, default is one
-            let quantity = parseInt(req.body.quantity ?? '1');
+            const quantity = parseInt(req.body.quantity ?? '1');
             // Connect to wallet with minter role
             const signer = new ethers_1.Wallet(privateKey).connect(zkEvmProvider);
             // Specify the function to call
@@ -66,9 +66,9 @@ router.post('/mint/token', async (req, res) => {
     try {
         if (tokenContractAddress && privateKey) {
             // Get the address to mint the token to
-            let to = req.body.to ?? null;
+            const to = req.body.to ?? null;
             // Get the quantity to mint if specified, default is one
-            let quantity = BigInt(req.body.quantity ?? '1');
+            const quantity = BigInt(req.body.quantity ?? '1');
             // Connect to wallet with minter role
             const signer = new ethers_1.Wallet(privateKey).connect(zkEvmProvider);
             // Specify the function to call
@@ -93,9 +93,9 @@ router.post('/mint/skin', async (req, res) => {
     try {
         if (skinColourContractAddress && privateKey) {
             // Get the address to mint the token to
-            let to = req.body.to ?? null;
+            const to = req.body.to ?? null;
             // Get the quantity to mint if specified, default is one
-            let tokenId = BigInt(req.body.tokenId ?? '1');
+            const tokenId = BigInt(req.body.tokenId ?? '1');
             // Connect to wallet with minter role
             const signer = new ethers_1.Wallet(privateKey).connect(zkEvmProvider);
             // Specify the function to call
@@ -121,7 +121,7 @@ router.get('/balance', async (req, res) => {
     try {
         if (tokenContractAddress && privateKey) {
             // Get the address
-            let address = req.query.address ?? null;
+            const address = req.query.address ?? null;
             // Call balanceOf
             const abi = ['function balanceOf(address account) view returns (uint256)'];
             const contract = new ethers_1.Contract(tokenContractAddress, abi, zkEvmProvider);
@@ -266,7 +266,6 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks', async (req, res) => {
         const contractAddress = req.query.contract_address;
         const pageCursor = req.query.page_cursor ?? null;
         const pageSize = req.query.page_size ?? 5;
-        const traits = req.query.trait;
         let nftUrl = `https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/accounts/${accountAddress}/nfts?contract_address=${contractAddress}&page_size=${pageSize}`;
         console.log(`nftUrl: ${nftUrl}`);
         if (pageCursor != null) {
@@ -274,7 +273,7 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks', async (req, res) => {
         }
         const nftsResponse = await axios_1.default.get(nftUrl);
         const result = [];
-        for (var item of nftsResponse.data.result) {
+        for (const item of nftsResponse.data.result) {
             const stack = {
                 stack_id: (0, uuid_1.v4)(),
                 chain: 'imtbl-zkevm-testnet',
@@ -368,11 +367,8 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks', async (req, res) => {
 });
 router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks/marketplace', async (req, res) => {
     try {
-        const accountAddress = req.query.account_address;
         const contractAddress = req.query.contract_address;
         const pageCursor = req.query.page_cursor ?? null;
-        const pageSize = req.query.page_size ?? 5;
-        const traits = req.query.trait;
         let ordersUrl = `https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/orders/listings?sell_item_contract_address=${contractAddress}&status=ACTIVE&sort_direction=asc&page_size=5&sort_by=buy_item_amount`;
         if (pageCursor != null) {
             ordersUrl += `&page_cursor=${pageCursor}`;
@@ -380,9 +376,9 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks/marketplace', async (re
         console.log(`ordersUrl: ${ordersUrl}`);
         const ordersResponse = await axios_1.default.get(ordersUrl);
         const result = [];
-        for (var item of ordersResponse.data.result) {
-            let nftResponse = await axios_1.default.get(`https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/collections/${contractAddress}/nfts/${item.sell[0].token_id}`);
-            let nft = nftResponse.data.result;
+        for (const item of ordersResponse.data.result) {
+            const nftResponse = await axios_1.default.get(`https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/collections/${contractAddress}/nfts/${item.sell[0].token_id}`);
+            const nft = nftResponse.data.result;
             const stack = {
                 stack_id: (0, uuid_1.v4)(),
                 chain: 'imtbl-zkevm-testnet',
@@ -460,7 +456,7 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks/marketplace', async (re
                     quantity: 1,
                 }
             ];
-            result.push({ stack, market, listings, });
+            result.push({ stack, market, listings });
         }
         return res.status(200).json({ result, page: ordersResponse.data.page, });
     }
