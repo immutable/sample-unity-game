@@ -18,6 +18,7 @@ namespace HyperCasual.Runner
     public class InventoryScreen : View
     {
         [SerializeField] private HyperCasualButton m_BackButton;
+        [SerializeField] private HyperCasualButton m_AddButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
         [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private AssetListObject m_AssetObj = null;
@@ -39,6 +40,9 @@ namespace HyperCasual.Runner
 
             m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
+            
+            m_AddButton.RemoveListener(OnAddFundsButtonClick);
+            m_AddButton.AddListener(OnAddFundsButtonClick);
 
             if (Passport.Instance != null)
             {
@@ -185,6 +189,14 @@ namespace HyperCasual.Runner
 
             // Trigger back button event
             m_BackEvent.Raise();
+        }
+        
+        /// <summary>
+        ///  handles the add funds button click
+        /// </summary>
+        private void OnAddFundsButtonClick()
+        {
+            Debug.Log($"OnAddFundsButtonClick");
         }
     }
 }
