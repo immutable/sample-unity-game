@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using Immutable.Passport;
 using Cysharp.Threading.Tasks;
 using System.Numerics;
-using System.Net.Http;
+using Shared.Services;
 
 namespace HyperCasual.Runner
 {
@@ -167,18 +167,7 @@ namespace HyperCasual.Runner
                         // Need to take into account Immutable Runner Token decimal value i.e. 18
                         BigInteger quantity = BigInteger.Multiply(new BigInteger(m_CoinCount), BigInteger.Pow(10, 18));
                         Debug.Log($"Quantity: {quantity}");
-                        var nvc = new List<KeyValuePair<string, string>>
-                    {
-                        // Set 'to' to the player's wallet address
-                        new KeyValuePair<string, string>("to", address),
-                        // Set 'quanity' to the number of coins collected
-                        new KeyValuePair<string, string>("quantity", quantity.ToString())
-                    };
-                        using var client = new HttpClient();
-                        string url = $"http://localhost:6060/mint/token"; // Endpoint to mint token
-                        using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
-                        using var res = await client.SendAsync(req);
-                        success = res.IsSuccessStatusCode;
+                        success = await ApiService.MintCoins(address, quantity.ToString());
                     }
                 }
             }
@@ -201,7 +190,7 @@ namespace HyperCasual.Runner
                 ShowLoading(true);
 
                 // Log into Passport
-#if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
+#if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX || UNITY_WEBGL
                 await Passport.Instance.LoginPKCE();
 #else
                 await Passport.Instance.Login();

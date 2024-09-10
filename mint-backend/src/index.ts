@@ -7,7 +7,7 @@ import express, {
 import axios from 'axios';
 import cors from 'cors';
 import http from 'http';
-import { providers, Wallet, Contract, PopulatedTransaction, utils } from 'ethers';
+import { providers, Wallet, Contract, utils } from 'ethers';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { config, orderbook } from '@imtbl/sdk';
@@ -45,9 +45,9 @@ router.post('/mint/fox', async (req: Request, res: Response) => {
   try {
     if (foxContractAddress && privateKey) {
       // Get the address to mint the fox to
-      let to: string = req.body.to ?? null;
+      const to: string = req.body.to ?? null;
       // Get the quantity to mint if specified, default is one
-      let quantity = parseInt(req.body.quantity ?? '1');
+      const quantity = parseInt(req.body.quantity ?? '1');
 
       // Connect to wallet with minter role
       const signer = new Wallet(privateKey).connect(zkEvmProvider);
@@ -78,9 +78,9 @@ router.post('/mint/token', async (req: Request, res: Response) => {
   try {
     if (tokenContractAddress && privateKey) {
       // Get the address to mint the token to
-      let to: string = req.body.to ?? null;
+      const to: string = req.body.to ?? null;
       // Get the quantity to mint if specified, default is one
-      let quantity = BigInt(req.body.quantity ?? '1');
+      const quantity = BigInt(req.body.quantity ?? '1');
 
       // Connect to wallet with minter role
       const signer = new Wallet(privateKey).connect(zkEvmProvider);
@@ -110,9 +110,9 @@ router.post('/mint/skin', async (req: Request, res: Response) => {
   try {
     if (skinColourContractAddress && privateKey) {
       // Get the address to mint the token to
-      let to: string = req.body.to ?? null;
+      const to: string = req.body.to ?? null;
       // Get the quantity to mint if specified, default is one
-      let tokenId = BigInt(req.body.tokenId ?? '1');
+      const tokenId = BigInt(req.body.tokenId ?? '1');
 
       // Connect to wallet with minter role
       const signer = new Wallet(privateKey).connect(zkEvmProvider);
@@ -143,7 +143,7 @@ router.get('/balance', async (req: Request, res: Response) => {
   try {
     if (tokenContractAddress && privateKey) {
       // Get the address
-      let address = req.query.address ?? null;
+      const address = req.query.address ?? null;
 
       // Call balanceOf
       const abi = ['function balanceOf(address account) view returns (uint256)'];
@@ -319,7 +319,10 @@ router.get(`/experimental/chains/${chainName}/search/stacks`, async (req: Reques
     const contractAddress = req.query.contract_address;
     const pageCursor = req.query.page_cursor ?? null;
     const pageSize = req.query.page_size ?? 5;
-    const traits = req.query.trait;
+
+    if (!accountAddress) {
+      return getMarketplace(req, res);
+    }
 
     if (!accountAddress) {
       return getMarketplace(req, res);
@@ -332,8 +335,8 @@ router.get(`/experimental/chains/${chainName}/search/stacks`, async (req: Reques
     }
 
     const nftsResponse = await axios.get(nftUrl);
-    const result: any[] = [];
-    for (var item of nftsResponse.data.result) {
+    const result = [];
+    for (const item of nftsResponse.data.result) {
       const stack = {
         stack_id: uuidv4(),
         chain: { id: uuidv4(), name: chainName },
@@ -421,7 +424,7 @@ router.get(`/experimental/chains/${chainName}/search/stacks`, async (req: Reques
       }
 
       const listingResponse = await axios.get(`https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/orders/listings?sell_item_contract_address=${contractAddress}&sell_item_token_id=${item.token_id}&status=ACTIVE&sort_direction=asc&page_size=5&sort_by=buy_item_amount`);
-      const listings = listingResponse.data.result.map((listing: any) => {
+      const listings = listingResponse.data.result.map((listing) => {
         return {
           listing_id: listing.id,
           creator: accountAddress,
@@ -492,11 +495,8 @@ router.get(`/experimental/chains/${chainName}/search/stacks`, async (req: Reques
 
 const getMarketplace = async (req: Request, res: Response) => {
   try {
-    const accountAddress = req.query.account_address;
     const contractAddress = req.query.contract_address;
     const pageCursor = req.query.page_cursor ?? null;
-    const pageSize = req.query.page_size ?? 5;
-    const traits = req.query.trait;
 
     let ordersUrl = `https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/orders/listings?sell_item_contract_address=${contractAddress}&status=ACTIVE&sort_direction=asc&page_size=5&sort_by=buy_item_amount`;
     if (pageCursor != null) {
@@ -505,10 +505,10 @@ const getMarketplace = async (req: Request, res: Response) => {
     console.log(`ordersUrl: ${ordersUrl}`);
 
     const ordersResponse = await axios.get(ordersUrl);
-    const result: any[] = [];
-    for (var item of ordersResponse.data.result) {
-      let nftResponse = await axios.get(`https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/collections/${contractAddress}/nfts/${item.sell[0].token_id}`);
-      let nft = nftResponse.data.result;
+    const result = [];
+    for (const item of ordersResponse.data.result) {
+      const nftResponse = await axios.get(`https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/collections/${contractAddress}/nfts/${item.sell[0].token_id}`);
+      const nft = nftResponse.data.result;
       const stack = {
         stack_id: uuidv4(),
         chain: { id: uuidv4(), name: chainName },
@@ -613,7 +613,7 @@ const getMarketplace = async (req: Request, res: Response) => {
         }
       ];
 
-      result.push({ stack, market, listings, });
+      result.push({ stack, market, listings });
     }
 
     return res.status(200).json({ result, page: ordersResponse.data.page, });
