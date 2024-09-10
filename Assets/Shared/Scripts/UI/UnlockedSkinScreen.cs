@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Immutable.Passport;
 using Immutable.Passport.Model;
 
@@ -98,7 +98,7 @@ namespace HyperCasual.Runner
                 case CraftSkinState.Crafted:
                     // Skin crafted successfully, go to collect skin screen
                     // Need to add some delay otherwise game even won't get triggered
-                    await Task.Delay(TimeSpan.FromMilliseconds(1));
+                    await UniTask.Delay(TimeSpan.FromMilliseconds(1), DelayType.Realtime);
                     CollectSkin();
                     break;
                 case CraftSkinState.Failed:
@@ -120,7 +120,7 @@ namespace HyperCasual.Runner
             // Burn tokens and mint a new skin i.e. crafting a skin
             string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest()
             {
-                to = "0x912cd5f1cd67F1143b7a5796fd9e5063D755DAbe", // Immutable Runner Token contract address
+                to = Contract.TOKEN, // Immutable Runner Token contract address
                 data = "0x1e957f1e", // Call craftSkin() in the contract
                 value = "0"
             });

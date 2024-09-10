@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "node ./dest/index.js",
+    "start": "node ./dist/index.js",
     "build": "yarn clean && tsc --build",
-    "clean": "rm -rf ./dest",
+    "clean": "rm -rf ./dist",
     "lint": "eslint .",
     "bundle": "parcel build --no-cache --no-scope-hoist"
   },
