@@ -7,11 +7,11 @@ namespace HyperCasual.Runner
     [Serializable]
     public class ListingResponse
     {
-        public Listing result;
+        public OldListing result;
     }
 
     [Serializable]
-    public class Listing
+    public class OldListing
     {
         public string id;
         public ListingStatus status;

@@ -11,6 +11,7 @@ using TMPro;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
 using Immutable.Passport.Model;
+using Immutable.Search.Model;
 
 namespace HyperCasual.Runner
 {
@@ -19,8 +20,8 @@ namespace HyperCasual.Runner
         [SerializeField] private TextMeshProUGUI m_TokenIdText = null;
         [SerializeField] private HyperCasualButton m_CancelButton;
         [SerializeField] private GameObject m_Progress = null;
-        private StackListing m_Asset;
-        private Func<StackListing, UniTask<bool>> m_OnCancel;
+        private Listing m_Asset;
+        private Func<Listing, UniTask<bool>> m_OnCancel;
 
         async void OnEnable()
         {
@@ -29,11 +30,11 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Initialises the UI based on the order
         /// </summary>
-        public async void Initialise(StackListing listing, Func<StackListing, UniTask<bool>> onCancel)
+        public async void Initialise(Listing listing, Func<Listing, UniTask<bool>> onCancel)
         {
             m_Asset = listing;
             m_OnCancel = onCancel;
-            m_TokenIdText.text = $"Token ID: {m_Asset.token_id}";
+            m_TokenIdText.text = $"Token ID: {m_Asset.TokenId}";
 
             // Hide progress
             m_Progress.SetActive(false);
