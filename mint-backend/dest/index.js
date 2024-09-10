@@ -19,7 +19,9 @@ app.use(express_1.default.urlencoded({ extended: false })); // Parse request
 app.use(express_1.default.json()); // Handle JSON
 app.use((0, cors_1.default)()); // Enable CORS
 const router = express_1.default.Router();
-const zkEvmProvider = new ethers_1.providers.JsonRpcProvider('https://rpc.testnet.immutable.com');
+const apiEnv = 'sandbox';
+const chainName = 'imtbl-zkevm-testnet';
+const zkEvmProvider = new ethers_1.providers.JsonRpcProvider(`https://rpc.testnet.immutable.com`);
 // Contract addresses
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
 const tokenContractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
@@ -89,19 +91,19 @@ router.post('/mint/token', async (req, res) => {
 });
 router.post('/mint/skin', async (req, res) => {
     try {
-        if ('0xad826e89cde60e4ee248980d35c0f5c1196ad059' && privateKey) {
+        if (skinColourContractAddress && privateKey) {
             // Get the address to mint the token to
             let to = req.body.to ?? null;
             // Get the quantity to mint if specified, default is one
-            let quantity = BigInt(req.body.quantity ?? '1');
+            let tokenId = BigInt(req.body.tokenId ?? '1');
             // Connect to wallet with minter role
             const signer = new ethers_1.Wallet(privateKey).connect(zkEvmProvider);
             // Specify the function to call
-            const abi = ['function mint(address to, uint256 quantity)'];
+            const abi = ['function mint(address to, uint256 tokenId)'];
             // Connect contract to the signer
-            const contract = new ethers_1.Contract('0xad826e89cde60e4ee248980d35c0f5c1196ad059', abi, signer);
+            const contract = new ethers_1.Contract(skinColourContractAddress, abi, signer);
             // Mints the number of tokens specified
-            const tx = await contract.mint(to, quantity, gasOverrides);
+            const tx = await contract.mint(to, tokenId, gasOverrides);
             await tx.wait();
             return res.status(200).json({});
         }
@@ -144,78 +146,51 @@ const client = new sdk_1.orderbook.Orderbook({
         publishableKey: process.env.PUBLISHABLE_KEY,
     },
 });
-const prepareListing = async (offererAddress, amountToSell, tokenId) => {
-    if (!skinColourContractAddress) {
-        throw new Error('Immutable Runner Skin contract address not defined');
-    }
-    if (!tokenContractAddress) {
-        throw new Error('Immutable Runner Token contract address not defined');
-    }
-    const preparedListing = await client.prepareListing({
-        makerAddress: offererAddress,
-        buy: {
-            amount: amountToSell,
-            type: 'ERC20',
-            contractAddress: tokenContractAddress,
-        },
-        sell: {
-            contractAddress: skinColourContractAddress,
-            tokenId,
-            type: 'ERC721',
-        },
-    });
-    let transactionToSend;
-    let payloadToSign;
-    for (const action of preparedListing.actions) {
-        if (action.type === sdk_1.orderbook.ActionType.TRANSACTION) {
-            transactionToSend = await action.buildTransaction();
-        }
-        if (action.type === sdk_1.orderbook.ActionType.SIGNABLE) {
-            payloadToSign = JSON.stringify(action.message);
-        }
-    }
-    return { preparedListing, transactionToSend, payloadToSign };
-};
-router.post('/prepareListing/skin', async (req, res) => {
+// Prepare listing
+router.post('/v1/ts-sdk/v1/orderbook/prepareListing', async (req, res) => {
     try {
-        const { offererAddress, amount, tokenId } = req.body;
-        if (!offererAddress || !amount || !tokenId) {
-            throw new Error('Missing required parameters: offererAddress, amount, or tokenId');
-        }
-        const response = await prepareListing(offererAddress, amount, tokenId);
+        const response = await client.prepareListing({
+            makerAddress: req.body.makerAddress,
+            buy: req.body.buy,
+            sell: req.body.sell,
+            orderExpiry: req.body.orderExpiry ? new Date() : undefined,
+        });
         return res.status(200).json({
-            preparedListing: JSON.stringify(response.preparedListing),
-            transactionToSend: response.transactionToSend,
-            toSign: response.payloadToSign,
+            actions: await Promise.all(response.actions.map(async (action) => {
+                if (action.type === sdk_1.orderbook.ActionType.TRANSACTION) {
+                    const builtTx = await action.buildTransaction();
+                    return {
+                        populatedTransactions: builtTx,
+                        ...action,
+                    };
+                }
+                else {
+                    return action;
+                }
+            })),
+            orderComponents: response.orderComponents,
+            orderHash: response.orderHash,
         });
     }
     catch (error) {
-        console.error(error);
-        return res.status(400).json({ message: 'Failed to prepare listing' });
+        console.log(error);
+        return res.status(400).json({ message: 'Failed prepare listing' });
     }
 });
-router.post('/createListing/skin', async (req, res) => {
+router.post('/v1/ts-sdk/v1/orderbook/createListing', async (req, res) => {
     try {
-        const { signature, preparedListing: preparedListingString } = req.body;
-        if (!signature) {
-            throw new Error('Missing signature');
-        }
-        if (!preparedListingString) {
-            throw new Error('Missing preparedListing');
-        }
-        console.log(`Prepared Listing: ${preparedListingString}`);
-        const preparedListing = JSON.parse(preparedListingString);
         const order = await client.createListing({
-            orderComponents: preparedListing.orderComponents,
-            orderHash: preparedListing.orderHash,
-            orderSignature: signature,
-            makerFees: [],
+            makerFees: req.body.makerFees,
+            orderComponents: req.body.orderComponents,
+            orderHash: req.body.orderHash,
+            orderSignature: req.body.orderSignature,
         });
+        console.log(`createListing: ${JSON.stringify(order)}`);
         return res.status(200).json(order);
     }
     catch (error) {
-        console.error(error);
-        return res.status(400).json({ message: 'Failed to prepare listing' });
+        console.log(error);
+        return res.status(400).json({ message: 'Failed prepare listing' });
     }
 });
 // Cancel listing
@@ -292,7 +267,8 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks', async (req, res) => {
         const pageCursor = req.query.page_cursor ?? null;
         const pageSize = req.query.page_size ?? 5;
         const traits = req.query.trait;
-        let nftUrl = `https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/${accountAddress}/nfts?contract_address=${contractAddress}&page_size=${pageSize}`;
+        let nftUrl = `https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/accounts/${accountAddress}/nfts?contract_address=${contractAddress}&page_size=${pageSize}`;
+        console.log(`nftUrl: ${nftUrl}`);
         if (pageCursor != null) {
             nftUrl += `&page_cursor=${pageCursor}`;
         }
@@ -357,7 +333,7 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks', async (req, res) => {
                     created_at: '2022-08-16T17:43:26.991388Z',
                 }
             };
-            const listingResponse = await axios_1.default.get(`https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings?sell_item_contract_address=${contractAddress}&sell_item_token_id=${item.token_id}&status=ACTIVE&sort_direction=asc&page_size=5&sort_by=buy_item_amount`);
+            const listingResponse = await axios_1.default.get(`https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/orders/listings?sell_item_contract_address=${contractAddress}&sell_item_token_id=${item.token_id}&status=ACTIVE&sort_direction=asc&page_size=5&sort_by=buy_item_amount`);
             const listings = listingResponse.data.result.map((listing) => {
                 return {
                     listing_id: listing.id,
@@ -381,6 +357,7 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks', async (req, res) => {
                     token_id: item.token_id,
                 });
             }
+            console.log(stack, market, listings, notListed);
             result.push({ stack, market, listings, notListed });
         }
         return res.status(200).json({ result, page: nftsResponse.data.page, });
@@ -397,7 +374,7 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks/marketplace', async (re
         const pageCursor = req.query.page_cursor ?? null;
         const pageSize = req.query.page_size ?? 5;
         const traits = req.query.trait;
-        let ordersUrl = `https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings?sell_item_contract_address=${contractAddress}&status=ACTIVE&sort_direction=asc&page_size=5&sort_by=buy_item_amount`;
+        let ordersUrl = `https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/orders/listings?sell_item_contract_address=${contractAddress}&status=ACTIVE&sort_direction=asc&page_size=5&sort_by=buy_item_amount`;
         if (pageCursor != null) {
             ordersUrl += `&page_cursor=${pageCursor}`;
         }
@@ -405,7 +382,7 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks/marketplace', async (re
         const ordersResponse = await axios_1.default.get(ordersUrl);
         const result = [];
         for (var item of ordersResponse.data.result) {
-            let nftResponse = await axios_1.default.get(`https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/collections/${contractAddress}/nfts/${item.sell[0].token_id}`);
+            let nftResponse = await axios_1.default.get(`https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/collections/${contractAddress}/nfts/${item.sell[0].token_id}`);
             let nft = nftResponse.data.result;
             const stack = {
                 stack_id: (0, uuid_1.v4)(),

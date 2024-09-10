@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Net.Http;
 using System.Numerics;
 using HyperCasual.Core;
@@ -126,39 +127,48 @@ namespace HyperCasual.Runner
         /// </summary>
         private async UniTask<bool> OnBuyButtonClick(StackListing listing)
         {
+            string address = SaveManager.Instance.WalletAddress;
+            var data = new FulfullOrderRequest
+            {
+                takerAddress = address,
+                listingId = listing.listing_id,
+                takerFees = listing.fees.Select(fee => new FulfullOrderRequestFee
+                {
+                    amount = fee.amount,
+                    recipientAddress = fee.recipient_address
+                }).ToArray()
+            };
+
             try
             {
-                string address = SaveManager.Instance.WalletAddress;
-                var nvc = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("fulfillerAddress", address),
-                    new KeyValuePair<string, string>("listingId", listing.listing_id),
-                    new KeyValuePair<string, string>("fees", listing.fees.ToJson().Replace("recipient_address", "recipientAddress"))
-                };
+                var json = JsonUtility.ToJson(data);
+                Debug.Log($"json = {json}");
 
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, "http://localhost:6060/fillOrder/skin")
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:8080/v1/ts-sdk/v1/orderbook/fulfillOrder")
                 {
-                    Content = new FormUrlEncodedContent(nvc)
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
                 };
                 using var res = await client.SendAsync(req);
 
                 if (!res.IsSuccessStatusCode)
                 {
+                    string errorBody = await res.Content.ReadAsStringAsync();
+                    Debug.Log($"errorBody = {errorBody}");
                     await m_CustomDialog.ShowDialog("Error", "Failed to buy", "OK");
                     return false;
                 }
 
                 string responseBody = await res.Content.ReadAsStringAsync();
                 FulfullOrderResponse response = JsonUtility.FromJson<FulfullOrderResponse>(responseBody);
-                if (response.transactionsToSend != null)
+                if (response.transactions != null)
                 {
-                    foreach (TransactionToSend tx in response.transactionsToSend)
+                    foreach (Transaction transaction in response.transactions)
                     {
                         string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest
                         {
-                            to = tx.to, // Immutable seaport contract
-                            data = tx.data, // 87201b41 fulfillAvailableAdvancedOrders
+                            to = transaction.to, // Immutable seaport contract
+                            data = transaction.data, // 87201b41 fulfillAvailableAdvancedOrders
                             value = "0"
                         });
                     }
@@ -167,6 +177,7 @@ namespace HyperCasual.Runner
                     await ConfirmListingStatus();
                     m_Balance.UpdateBalance(); // Update user's balance on successful buy
 
+                    // TODO update to use get stack bundle by stack ID endpoint later
                     // Locally update stack listing
                     var listingToRemove = m_Order.listings.FirstOrDefault(l => l.listing_id == listing.listing_id);
                     if (listingToRemove != null)

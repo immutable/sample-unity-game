@@ -5,13 +5,6 @@ using System.Collections.Generic;
 namespace HyperCasual.Runner
 {
     [Serializable]
-    public class OrdersResponse
-    {
-        public List<OrderModel> result;
-        public PageModel page;
-    }
-
-    [Serializable]
     public class OrderResponse
     {
         public OrderModel result;

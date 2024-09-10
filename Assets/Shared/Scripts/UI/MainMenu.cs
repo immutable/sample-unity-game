@@ -55,42 +55,13 @@ namespace HyperCasual.Runner
             m_MarketplaceButton.AddListener(OnMarketplaceButtonClick);
 
             // Initialise Passport
-            string clientId = "UnB98ngnXIZIEJWGJOjVe1BpCx5ix7qc";
             string environment = Immutable.Passport.Model.Environment.SANDBOX;
-            string redirectUri = null;
-            string logoutUri = null;
-
-#if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
-            redirectUri = "immutablerunner://callback";
-            logoutUri = "immutablerunner://logout";
-#elif UNITY_WEBGL
-            string url = Application.absoluteURL;
-            Uri uri = new Uri(url);
-            string scheme = uri.Scheme;
-            string hostWithPort = uri.IsDefaultPort ? uri.Host : $"{uri.Host}:{uri.Port}";
-
-            string fullPath = uri.AbsolutePath;
-            Debug.Log($"fullPath: {fullPath}");
-            if (!fullPath.EndsWith("/"))
-            {
-                fullPath = fullPath.Substring(0, fullPath.LastIndexOf('/') + 1);
-            }
-
-            redirectUri = $"{scheme}://{hostWithPort}{fullPath}callback.html";
-            logoutUri = $"{scheme}://{hostWithPort}{fullPath}logout.html";
-            Debug.Log($"redirectUri: {redirectUri}");
-
-#endif
-            passport = await Passport.Init(clientId, environment, redirectUri, logoutUri);
+            passport = await Passport.Init(Config.CLIENT_ID, environment, Config.REDIRECT_URI, Config.LOGOUT_REIDIRECT_URI);
 
             Debug.Log($"SaveManager.Instance.IsLoggedIn: {SaveManager.Instance.IsLoggedIn}");
             Debug.Log($"Passport.Instance.HasCredentialsSaved(): {await Passport.Instance.HasCredentialsSaved()}");
             // Check if the player is supposed to be logged in and if there are credentials saved
-#if UNITY_WEBGL
-            if (await Passport.Instance.HasCredentialsSaved())
-#else 
             if (SaveManager.Instance.IsLoggedIn && await Passport.Instance.HasCredentialsSaved())
-#endif
             {
                 // Try to log in using saved credentials
                 bool success = await Passport.Instance.Login(useCachedSession: true);
