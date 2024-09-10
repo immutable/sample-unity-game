@@ -417,6 +417,7 @@ router.get(`/experimental/chains/${chainName}/search/stacks`, async (req: Reques
       const listings = listingResponse.data.result.map((listing: any) => {
         return {
           listing_id: listing.id,
+          creator: accountAddress,
           price_details: {
             token: {
               type: 'ERC20',
@@ -435,7 +436,33 @@ router.get(`/experimental/chains/${chainName}/search/stacks`, async (req: Reques
       const notListed = [];
       if (listings.length == 0) { // Added myself, this will actually be another API call
         notListed.push({
+          listing_id: uuidv4(),
+          creator: accountAddress,
+          price_details: {
+            token: {
+              type: 'ERC20',
+              symbol: 'IMR',
+              contract_address: '0x328766302e7617d0de5901f8da139dca49f3ec75',
+              decimals: '18',
+            },
+            amount: {
+              value: '',
+              value_in_eth: '100000000000000000',
+            },
+            fee_inclusive_amount: {
+              value: '100000000000000000',
+              value_in_eth: '100000000000000000',
+            },
+            fees: [
+              {
+                amount: '10000',
+                type: 'ROYALTY',
+                recipient_address: '0xaddress',
+              }
+            ],
+          },
           token_id: item.token_id,
+          amount: 1
         });
       }
 

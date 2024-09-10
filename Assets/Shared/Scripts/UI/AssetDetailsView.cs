@@ -91,14 +91,14 @@ namespace HyperCasual.Runner
             ClearNotListedList();
 
             // Populate not listed items
-            // foreach (StackListing stackListing in m_Asset.notListed)
-            // {
-            //     AssetNotListedObject item = Instantiate(m_NotListedObj, m_NotListedParent);
-            //     item.gameObject.SetActive(true);
-            //     item.Initialise(stackListing, OnSellButtonClicked); // Initialise the view with data
-            //     m_NotListedViews.Add(item); // Add to the list of displayed attributes
-            // }
-            // m_EmptyNotListed.SetActive(m_Asset.notListed.Count == 0);
+            foreach (Listing stackListing in m_Asset.NotListed)
+            {
+                AssetNotListedObject item = Instantiate(m_NotListedObj, m_NotListedParent);
+                item.gameObject.SetActive(true);
+                item.Initialise(stackListing, OnSellButtonClicked); // Initialise the view with data
+                m_NotListedViews.Add(item); // Add to the list of displayed attributes
+            }
+            m_EmptyNotListed.SetActive(m_Asset.NotListed.Count == 0);
 
             // Clear all existing listings
             ClearListings();
@@ -117,7 +117,7 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Handles the click event for the sell button.
         /// </summary>
-        private async UniTask<bool> OnSellButtonClicked(StackListing listing)
+        private async UniTask<bool> OnSellButtonClicked(Listing listing)
         {
             (bool result, string price) = await m_CustomDialog.ShowDialog(
                 $"List {m_Asset.Stack.Name} for sale",
@@ -187,7 +187,7 @@ namespace HyperCasual.Runner
                             }).ToList()
                         },
                         TokenId = orderResponse.result.sell[0].token_id,
-                        // account_address = orderResponse.result.account_address,
+                        Creator = orderResponse.result.account_address,
 
                     };
                 }
@@ -206,7 +206,7 @@ namespace HyperCasual.Runner
         /// <param name="listing">The asset to prepare for listing.</param>
         /// <param name="price">The price of the asset in smallest unit.</param>
         /// <returns>The listing ID is asset was successfully listed</returns>
-        private async UniTask<string> PrepareListing(StackListing asset, string price)
+        private async UniTask<string> PrepareListing(Listing asset, string price)
         {
             string address = SaveManager.Instance.WalletAddress;
 
@@ -216,7 +216,7 @@ namespace HyperCasual.Runner
                 sell = new PrepareListingERC721Item
                 {
                     contractAddress = Contract.SKIN,
-                    tokenId = asset.token_id,
+                    tokenId = asset.TokenId,
                 },
                 buy = new PrepareListingERC20Item
                 {
