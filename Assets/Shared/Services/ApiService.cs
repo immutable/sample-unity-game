@@ -9,12 +9,10 @@ namespace Shared.Services
 {
     public static class ApiService
     {
-        static readonly string serverHost = "https://sample-passport-unity-game-api.dev.immutable.com/fox";
-        // static readonly string serverHost = "http://localhost:6060";
         public static async UniTask<bool> MintCoins(string to, string quantity)
         {
             bool success = false;
-            string url = $"{serverHost}/mint/token";
+            string url = $"{Config.SERVER_URL}/mint/token";
             Debug.Log($"MintCoins url: {url}");
 #if UNITY_WEBGL
             var form = new WWWForm();
@@ -44,7 +42,7 @@ namespace Shared.Services
 
         public static async UniTask<bool> MintFox(string to)
         {
-            string url = $"{serverHost}/mint/fox";
+            string url = $"{Config.SERVER_URL}/mint/fox";
             Debug.Log($"MintFox url: {url}");
 #if UNITY_WEBGL
             var form = new WWWForm();
