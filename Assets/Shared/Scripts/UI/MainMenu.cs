@@ -58,8 +58,6 @@ namespace HyperCasual.Runner
             string environment = Immutable.Passport.Model.Environment.SANDBOX;
             passport = await Passport.Init(Config.CLIENT_ID, environment, Config.REDIRECT_URI, Config.LOGOUT_REIDIRECT_URI);
 
-            Debug.Log($"SaveManager.Instance.IsLoggedIn: {SaveManager.Instance.IsLoggedIn}");
-            Debug.Log($"Passport.Instance.HasCredentialsSaved(): {await Passport.Instance.HasCredentialsSaved()}");
             // Check if the player is supposed to be logged in and if there are credentials saved
             if (SaveManager.Instance.IsLoggedIn && await Passport.Instance.HasCredentialsSaved())
             {

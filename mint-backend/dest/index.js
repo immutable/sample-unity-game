@@ -357,7 +357,6 @@ router.get('/v1/chains/imtbl-zkevm-testnet/search/stacks', async (req, res) => {
                     token_id: item.token_id,
                 });
             }
-            console.log(stack, market, listings, notListed);
             result.push({ stack, market, listings, notListed });
         }
         return res.status(200).json({ result, page: nftsResponse.data.page, });
