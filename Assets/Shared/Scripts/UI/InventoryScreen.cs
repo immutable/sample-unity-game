@@ -40,7 +40,7 @@ namespace HyperCasual.Runner
 
             m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
-            
+
             m_AddButton.RemoveListener(OnAddFundsButtonClick);
             m_AddButton.AddListener(OnAddFundsButtonClick);
 
@@ -190,13 +190,13 @@ namespace HyperCasual.Runner
             // Trigger back button event
             m_BackEvent.Raise();
         }
-        
+
         /// <summary>
         ///  handles the add funds button click
         /// </summary>
         private void OnAddFundsButtonClick()
         {
-            Debug.Log($"OnAddFundsButtonClick");
+            Application.OpenURL("https://checkout-playground.sandbox.immutable.com/add-funds/");
         }
     }
 }
