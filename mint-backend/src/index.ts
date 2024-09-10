@@ -23,9 +23,9 @@ app.use(express.json()); // Handle JSON
 app.use(cors()); // Enable CORS
 const router: Router = express.Router();
 
-const apiEnv = 'sandbox';
-const chainName = 'imtbl-zkevm-testnet';
-const zkEvmProvider = new providers.JsonRpcProvider(`https://rpc.testnet.immutable.com`);
+const apiEnv = 'dev';
+const chainName = 'imtbl-zkevm-devnet';
+const zkEvmProvider = new providers.JsonRpcProvider(`https://rpc.dev.immutable.com`);
 
 // Contract addresses
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
@@ -170,13 +170,13 @@ const client = new orderbook.Orderbook({
     environment: config.Environment.SANDBOX,
     publishableKey: process.env.PUBLISHABLE_KEY,
   },
-  // overrides: {
-  //   seaportContractAddress: '0xbA22c310787e9a3D74343B17AB0Ab946c28DFB52',
-  //   zoneContractAddress: '0xb71EB38e6B51Ee7A45A632d46f17062e249580bE', // ImmutableSignedZoneV2
-  //   apiEndpoint: 'https://api.dev.immutable.com',
-  //   chainName: 'imtbl-zkevm-devnet',
-  //   jsonRpcProviderUrl: 'https://rpc.dev.immutable.com'
-  // }
+  overrides: {
+    seaportContractAddress: '0xbA22c310787e9a3D74343B17AB0Ab946c28DFB52',
+    zoneContractAddress: '0xb71EB38e6B51Ee7A45A632d46f17062e249580bE', // ImmutableSignedZoneV2
+    apiEndpoint: 'https://api.dev.immutable.com',
+    chainName: 'imtbl-zkevm-devnet',
+    jsonRpcProviderUrl: 'https://rpc.dev.immutable.com'
+  }
 });
 
 // Prepare listing

@@ -287,20 +287,20 @@ namespace HyperCasual.Runner
                     };
 
                     Debug.Log($"EIP712TypedData: {JsonUtility.ToJson(eip712TypedData)}");
-                    // string signature = await Passport.Instance.ZkEvmSignTypedDataV4(JsonUtility.ToJson(eip712TypedData));
-                    // Debug.Log($"Signature: {signature}");
+                    string signature = await Passport.Instance.ZkEvmSignTypedDataV4(JsonUtility.ToJson(eip712TypedData));
+                    Debug.Log($"Signature: {signature}");
 
-                    (bool result, string signature) = await m_CustomDialog.ShowDialog(
-                        "Confirm listing",
-                        "Enter signed payload:",
-                        "Confirm",
-                        negativeButtonText: "Cancel",
-                        showInputField: true
-                    );
-                    if (result)
-                    {
-                        return await ListAsset(signature, response, address);
-                    }
+                    // (bool result, string signature) = await m_CustomDialog.ShowDialog(
+                    //     "Confirm listing",
+                    //     "Enter signed payload:",
+                    //     "Confirm",
+                    //     negativeButtonText: "Cancel",
+                    //     showInputField: true
+                    // );
+                    // if (result)
+                    // {
+                    return await ListAsset(signature, response, address);
+                    // }
                 }
             }
             catch (Exception ex)
