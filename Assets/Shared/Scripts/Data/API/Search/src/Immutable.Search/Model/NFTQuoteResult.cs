@@ -39,12 +39,19 @@ namespace Immutable.Search.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="NFTQuoteResult" /> class.
         /// </summary>
+        /// <param name="chain">chain (required).</param>
         /// <param name="tokenId">tokenId (required).</param>
         /// <param name="marketStack">marketStack (required).</param>
         /// <param name="marketNft">marketNft (required).</param>
         /// <param name="marketCollection">marketCollection (required).</param>
-        public NFTQuoteResult(string tokenId = default(string), Market marketStack = default(Market), Market marketNft = default(Market), Market marketCollection = default(Market))
+        public NFTQuoteResult(Chain chain = default(Chain), string tokenId = default(string), Market marketStack = default(Market), Market marketNft = default(Market), Market marketCollection = default(Market))
         {
+            // to ensure "chain" is required (not null)
+            if (chain == null)
+            {
+                throw new ArgumentNullException("chain is a required property for NFTQuoteResult and cannot be null");
+            }
+            this.Chain = chain;
             // to ensure "tokenId" is required (not null)
             if (tokenId == null)
             {
@@ -70,6 +77,12 @@ namespace Immutable.Search.Model
             }
             this.MarketCollection = marketCollection;
         }
+
+        /// <summary>
+        /// Gets or Sets Chain
+        /// </summary>
+        [DataMember(Name = "chain", IsRequired = true, EmitDefaultValue = true)]
+        public Chain Chain { get; set; }
 
         /// <summary>
         /// Gets or Sets TokenId
@@ -103,6 +116,7 @@ namespace Immutable.Search.Model
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("class NFTQuoteResult {\n");
+            sb.Append("  Chain: ").Append(Chain).Append("\n");
             sb.Append("  TokenId: ").Append(TokenId).Append("\n");
             sb.Append("  MarketStack: ").Append(MarketStack).Append("\n");
             sb.Append("  MarketNft: ").Append(MarketNft).Append("\n");

@@ -39,11 +39,18 @@ namespace Immutable.Search.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="StackQuoteResult" /> class.
         /// </summary>
+        /// <param name="chain">chain (required).</param>
         /// <param name="stackId">stackId (required).</param>
         /// <param name="marketStack">marketStack (required).</param>
         /// <param name="marketCollection">marketCollection (required).</param>
-        public StackQuoteResult(string stackId = default(string), Market marketStack = default(Market), Market marketCollection = default(Market))
+        public StackQuoteResult(Chain chain = default(Chain), string stackId = default(string), Market marketStack = default(Market), Market marketCollection = default(Market))
         {
+            // to ensure "chain" is required (not null)
+            if (chain == null)
+            {
+                throw new ArgumentNullException("chain is a required property for StackQuoteResult and cannot be null");
+            }
+            this.Chain = chain;
             // to ensure "stackId" is required (not null)
             if (stackId == null)
             {
@@ -63,6 +70,12 @@ namespace Immutable.Search.Model
             }
             this.MarketCollection = marketCollection;
         }
+
+        /// <summary>
+        /// Gets or Sets Chain
+        /// </summary>
+        [DataMember(Name = "chain", IsRequired = true, EmitDefaultValue = true)]
+        public Chain Chain { get; set; }
 
         /// <summary>
         /// Gets or Sets StackId
@@ -90,6 +103,7 @@ namespace Immutable.Search.Model
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("class StackQuoteResult {\n");
+            sb.Append("  Chain: ").Append(Chain).Append("\n");
             sb.Append("  StackId: ").Append(StackId).Append("\n");
             sb.Append("  MarketStack: ").Append(MarketStack).Append("\n");
             sb.Append("  MarketCollection: ").Append(MarketCollection).Append("\n");

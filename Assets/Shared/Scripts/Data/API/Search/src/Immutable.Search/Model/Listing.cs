@@ -42,8 +42,9 @@ namespace Immutable.Search.Model
         /// <param name="listingId">Global Order identifier (required).</param>
         /// <param name="priceDetails">priceDetails (required).</param>
         /// <param name="tokenId">Token ID (required).</param>
+        /// <param name="creator">ETH Address of listing creator (required).</param>
         /// <param name="amount">Amount of token included in the listing (required).</param>
-        public Listing(string listingId = default(string), PriceDetails priceDetails = default(PriceDetails), string tokenId = default(string), string amount = default(string))
+        public Listing(string listingId = default(string), PriceDetails priceDetails = default(PriceDetails), string tokenId = default(string), string creator = default(string), string amount = default(string))
         {
             // to ensure "listingId" is required (not null)
             if (listingId == null)
@@ -63,6 +64,12 @@ namespace Immutable.Search.Model
                 throw new ArgumentNullException("tokenId is a required property for Listing and cannot be null");
             }
             this.TokenId = tokenId;
+            // to ensure "creator" is required (not null)
+            if (creator == null)
+            {
+                throw new ArgumentNullException("creator is a required property for Listing and cannot be null");
+            }
+            this.Creator = creator;
             // to ensure "amount" is required (not null)
             if (amount == null)
             {
@@ -94,6 +101,14 @@ namespace Immutable.Search.Model
         public string TokenId { get; set; }
 
         /// <summary>
+        /// ETH Address of listing creator
+        /// </summary>
+        /// <value>ETH Address of listing creator</value>
+        /// <example>1334120697966828340666039427861105342297873844179</example>
+        [DataMember(Name = "creator", IsRequired = true, EmitDefaultValue = true)]
+        public string Creator { get; set; }
+
+        /// <summary>
         /// Amount of token included in the listing
         /// </summary>
         /// <value>Amount of token included in the listing</value>
@@ -112,6 +127,7 @@ namespace Immutable.Search.Model
             sb.Append("  ListingId: ").Append(ListingId).Append("\n");
             sb.Append("  PriceDetails: ").Append(PriceDetails).Append("\n");
             sb.Append("  TokenId: ").Append(TokenId).Append("\n");
+            sb.Append("  Creator: ").Append(Creator).Append("\n");
             sb.Append("  Amount: ").Append(Amount).Append("\n");
             sb.Append("}\n");
             return sb.ToString();

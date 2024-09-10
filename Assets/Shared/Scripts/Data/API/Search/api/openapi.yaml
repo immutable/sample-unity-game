@@ -88,7 +88,6 @@ paths:
         required: false
         schema:
           example: sword
-          pattern: "^[a-zA-Z0-9]*$"
           type: string
         style: form
       - description: Number of results to return per page
@@ -495,7 +494,8 @@ components:
         result:
         - market: ""
           listings:
-          - amount: "1"
+          - creator: 1334120697966828340666039427861105342297873844179
+            amount: "1"
             listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
             token_id: "1"
             price_details:
@@ -510,7 +510,8 @@ components:
               fee_inclusive_amount:
                 value_in_eth: "9750000000000000000"
                 value: "9750000000000000000"
-          - amount: "1"
+          - creator: 1334120697966828340666039427861105342297873844179
+            amount: "1"
             listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
             token_id: "1"
             price_details:
@@ -525,7 +526,8 @@ components:
               fee_inclusive_amount:
                 value_in_eth: "9750000000000000000"
                 value: "9750000000000000000"
-          - amount: "1"
+          - creator: 1334120697966828340666039427861105342297873844179
+            amount: "1"
             listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
             token_id: "1"
             price_details:
@@ -540,7 +542,8 @@ components:
               fee_inclusive_amount:
                 value_in_eth: "9750000000000000000"
                 value: "9750000000000000000"
-          - amount: "1"
+          - creator: 1334120697966828340666039427861105342297873844179
+            amount: "1"
             listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
             token_id: "1"
             price_details:
@@ -555,7 +558,8 @@ components:
               fee_inclusive_amount:
                 value_in_eth: "9750000000000000000"
                 value: "9750000000000000000"
-          - amount: "1"
+          - creator: 1334120697966828340666039427861105342297873844179
+            amount: "1"
             listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
             token_id: "1"
             price_details:
@@ -595,7 +599,8 @@ components:
           stack_count: 1
         - market: ""
           listings:
-          - amount: "1"
+          - creator: 1334120697966828340666039427861105342297873844179
+            amount: "1"
             listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
             token_id: "1"
             price_details:
@@ -610,7 +615,8 @@ components:
               fee_inclusive_amount:
                 value_in_eth: "9750000000000000000"
                 value: "9750000000000000000"
-          - amount: "1"
+          - creator: 1334120697966828340666039427861105342297873844179
+            amount: "1"
             listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
             token_id: "1"
             price_details:
@@ -625,7 +631,8 @@ components:
               fee_inclusive_amount:
                 value_in_eth: "9750000000000000000"
                 value: "9750000000000000000"
-          - amount: "1"
+          - creator: 1334120697966828340666039427861105342297873844179
+            amount: "1"
             listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
             token_id: "1"
             price_details:
@@ -640,7 +647,8 @@ components:
               fee_inclusive_amount:
                 value_in_eth: "9750000000000000000"
                 value: "9750000000000000000"
-          - amount: "1"
+          - creator: 1334120697966828340666039427861105342297873844179
+            amount: "1"
             listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
             token_id: "1"
             price_details:
@@ -655,7 +663,8 @@ components:
               fee_inclusive_amount:
                 value_in_eth: "9750000000000000000"
                 value: "9750000000000000000"
-          - amount: "1"
+          - creator: 1334120697966828340666039427861105342297873844179
+            amount: "1"
             listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
             token_id: "1"
             price_details:
@@ -713,7 +722,8 @@ components:
       example:
         market: ""
         listings:
-        - amount: "1"
+        - creator: 1334120697966828340666039427861105342297873844179
+          amount: "1"
           listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
           token_id: "1"
           price_details:
@@ -728,7 +738,8 @@ components:
             fee_inclusive_amount:
               value_in_eth: "9750000000000000000"
               value: "9750000000000000000"
-        - amount: "1"
+        - creator: 1334120697966828340666039427861105342297873844179
+          amount: "1"
           listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
           token_id: "1"
           price_details:
@@ -743,7 +754,8 @@ components:
             fee_inclusive_amount:
               value_in_eth: "9750000000000000000"
               value: "9750000000000000000"
-        - amount: "1"
+        - creator: 1334120697966828340666039427861105342297873844179
+          amount: "1"
           listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
           token_id: "1"
           price_details:
@@ -758,7 +770,8 @@ components:
             fee_inclusive_amount:
               value_in_eth: "9750000000000000000"
               value: "9750000000000000000"
-        - amount: "1"
+        - creator: 1334120697966828340666039427861105342297873844179
+          amount: "1"
           listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
           token_id: "1"
           price_details:
@@ -773,7 +786,8 @@ components:
             fee_inclusive_amount:
               value_in_eth: "9750000000000000000"
               value: "9750000000000000000"
-        - amount: "1"
+        - creator: 1334120697966828340666039427861105342297873844179
+          amount: "1"
           listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
           token_id: "1"
           price_details:
@@ -838,7 +852,10 @@ components:
       description: Quotes for stacks result
       example:
         result:
-        - market_collection:
+        - chain:
+            name: imtbl-zkevm-testnet
+            id: eip155:13372
+          market_collection:
             last_trade:
               amount: "1"
               trade_id: 4e28df8d-f65c-4c11-ba04-6a9dd47b179b
@@ -899,7 +916,10 @@ components:
                   value: "9750000000000000000"
               created_at: 2022-08-16T17:43:26.991388Z
             floor_listing: ""
-        - market_collection:
+        - chain:
+            name: imtbl-zkevm-testnet
+            id: eip155:13372
+          market_collection:
             last_trade:
               amount: "1"
               trade_id: 4e28df8d-f65c-4c11-ba04-6a9dd47b179b
@@ -978,6 +998,9 @@ components:
     StackQuoteResult:
       description: Stack quote result
       example:
+        chain:
+          name: imtbl-zkevm-testnet
+          id: eip155:13372
         market_collection:
           last_trade:
             amount: "1"
@@ -1040,6 +1063,8 @@ components:
             created_at: 2022-08-16T17:43:26.991388Z
           floor_listing: ""
       properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
         stack_id:
           type: string
         market_stack:
@@ -1047,6 +1072,7 @@ components:
         market_collection:
           $ref: '#/components/schemas/Market'
       required:
+      - chain
       - market_collection
       - market_stack
       - stack_id
@@ -1055,7 +1081,10 @@ components:
       description: Quotes for NFTs result
       example:
         result:
-        - token_id: token_id
+        - chain:
+            name: imtbl-zkevm-testnet
+            id: eip155:13372
+          token_id: token_id
           market_collection:
             last_trade:
               amount: "1"
@@ -1146,7 +1175,10 @@ components:
                   value: "9750000000000000000"
               created_at: 2022-08-16T17:43:26.991388Z
             floor_listing: ""
-        - token_id: token_id
+        - chain:
+            name: imtbl-zkevm-testnet
+            id: eip155:13372
+          token_id: token_id
           market_collection:
             last_trade:
               amount: "1"
@@ -1255,6 +1287,9 @@ components:
     NFTQuoteResult:
       description: NFT quote result
       example:
+        chain:
+          name: imtbl-zkevm-testnet
+          id: eip155:13372
         token_id: token_id
         market_collection:
           last_trade:
@@ -1347,6 +1382,8 @@ components:
             created_at: 2022-08-16T17:43:26.991388Z
           floor_listing: ""
       properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
         token_id:
           type: string
         market_stack:
@@ -1356,6 +1393,7 @@ components:
         market_collection:
           $ref: '#/components/schemas/Market'
       required:
+      - chain
       - market_collection
       - market_nft
       - market_stack
@@ -1595,6 +1633,7 @@ components:
     Listing:
       description: Listing
       example:
+        creator: 1334120697966828340666039427861105342297873844179
         amount: "1"
         listing_id: 018792C9-4AD7-8EC4-4038-9E05C598534A
         token_id: "1"
@@ -1621,12 +1660,17 @@ components:
           description: Token ID
           example: "1"
           type: string
+        creator:
+          description: ETH Address of listing creator
+          example: "1334120697966828340666039427861105342297873844179"
+          type: string
         amount:
           description: Amount of token included in the listing
           example: "1"
           type: string
       required:
       - amount
+      - creator
       - listing_id
       - price_details
       - token_id
@@ -1643,6 +1687,7 @@ components:
         symbol:
           description: The symbol of token
           example: IMX
+          nullable: true
           type: string
       required:
       - symbol
@@ -1663,10 +1708,12 @@ components:
         symbol:
           description: The symbol of token
           example: ETH
+          nullable: true
           type: string
         decimals:
           description: The decimals of token
           example: 18
+          nullable: true
           type: integer
       required:
       - contract_address

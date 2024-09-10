@@ -5,6 +5,7 @@ Stack quote result
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**Chain** | [**Chain**](Chain.md) |  | 
 **StackId** | **string** |  | 
 **MarketStack** | [**Market**](Market.md) |  | 
 **MarketCollection** | [**Market**](Market.md) |  | 

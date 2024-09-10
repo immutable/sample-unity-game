@@ -40,9 +40,9 @@ namespace HyperCasual.Runner
 
             // Check if asset is the player's asset
             string address = SaveManager.Instance.WalletAddress;
-            // bool isPlayersAsset = m_Listing.account_address == address; // TODO added myself
-            // m_PlayersListingText.gameObject.SetActive(isPlayersAsset);
-            // m_BuyButton.gameObject.SetActive(!isPlayersAsset);
+            bool isPlayersAsset = m_Listing.Creator == address;
+            m_PlayersListingText.gameObject.SetActive(isPlayersAsset);
+            m_BuyButton.gameObject.SetActive(!isPlayersAsset);
 
             // Hide progress
             m_Progress.SetActive(false);

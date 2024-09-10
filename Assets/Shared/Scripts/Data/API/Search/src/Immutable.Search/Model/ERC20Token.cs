@@ -65,7 +65,7 @@ namespace Immutable.Search.Model
         /// <param name="contractAddress">Address of ERC20 token (required).</param>
         /// <param name="symbol">The symbol of token (required).</param>
         /// <param name="decimals">The decimals of token (required).</param>
-        public ERC20Token(TypeEnum type = default(TypeEnum), string contractAddress = default(string), string symbol = default(string), int decimals = default(int))
+        public ERC20Token(TypeEnum type = default(TypeEnum), string contractAddress = default(string), string symbol = default(string), int? decimals = default(int?))
         {
             this.Type = type;
             // to ensure "contractAddress" is required (not null)
@@ -80,6 +80,11 @@ namespace Immutable.Search.Model
                 throw new ArgumentNullException("symbol is a required property for ERC20Token and cannot be null");
             }
             this.Symbol = symbol;
+            // to ensure "decimals" is required (not null)
+            if (decimals == null)
+            {
+                throw new ArgumentNullException("decimals is a required property for ERC20Token and cannot be null");
+            }
             this.Decimals = decimals;
         }
 
@@ -105,7 +110,7 @@ namespace Immutable.Search.Model
         /// <value>The decimals of token</value>
         /// <example>18</example>
         [DataMember(Name = "decimals", IsRequired = true, EmitDefaultValue = true)]
-        public int Decimals { get; set; }
+        public int? Decimals { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

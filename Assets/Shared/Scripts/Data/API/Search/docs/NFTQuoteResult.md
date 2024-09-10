@@ -5,6 +5,7 @@ NFT quote result
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**Chain** | [**Chain**](Chain.md) |  | 
 **TokenId** | **string** |  | 
 **MarketStack** | [**Market**](Market.md) |  | 
 **MarketNft** | [**Market**](Market.md) |  | 
