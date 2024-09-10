@@ -19,9 +19,9 @@ app.use(express_1.default.urlencoded({ extended: false })); // Parse request
 app.use(express_1.default.json()); // Handle JSON
 app.use((0, cors_1.default)()); // Enable CORS
 const router = express_1.default.Router();
-const apiEnv = 'dev';
-const chainName = 'imtbl-zkevm-devnet';
-const zkEvmProvider = new ethers_1.providers.JsonRpcProvider(`https://rpc.dev.immutable.com`);
+const apiEnv = 'sandbox';
+const chainName = 'imtbl-zkevm-testnet';
+const zkEvmProvider = new ethers_1.providers.JsonRpcProvider(`https://rpc.testnet.immutable.com`);
 // Contract addresses
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
 const tokenContractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
@@ -145,6 +145,13 @@ const client = new sdk_1.orderbook.Orderbook({
         environment: sdk_1.config.Environment.SANDBOX,
         publishableKey: process.env.PUBLISHABLE_KEY,
     },
+    // overrides: {
+    //   seaportContractAddress: '0xbA22c310787e9a3D74343B17AB0Ab946c28DFB52',
+    //   zoneContractAddress: '0xb71EB38e6B51Ee7A45A632d46f17062e249580bE', // ImmutableSignedZoneV2
+    //   apiEndpoint: 'https://api.dev.immutable.com',
+    //   chainName: 'imtbl-zkevm-devnet',
+    //   jsonRpcProviderUrl: 'https://rpc.dev.immutable.com'
+    // }
 });
 // Prepare listing
 router.post('/v1/ts-sdk/v1/orderbook/prepareListing', async (req, res) => {
@@ -371,11 +378,18 @@ router.get(`/experimental/chains/${chainName}/search/stacks`, async (req, res) =
                         token: {
                             type: 'ERC20',
                             symbol: 'IMR',
+                            contract_address: '0x328766302e7617d0de5901f8da139dca49f3ec75',
+                            decimals: '18',
                         },
                         amount: {
                             value: listing.buy[0].amount,
                             value_in_eth: '100000000000000000',
-                        }
+                        },
+                        fee_inclusive_amount: {
+                            value: '100000000000000000',
+                            value_in_eth: '100000000000000000',
+                        },
+                        fees: listing.fees,
                     },
                     token_id: item.token_id,
                     amount: 1,

@@ -23,9 +23,9 @@ app.use(express.json()); // Handle JSON
 app.use(cors()); // Enable CORS
 const router: Router = express.Router();
 
-const apiEnv = 'dev';
-const chainName = 'imtbl-zkevm-devnet';
-const zkEvmProvider = new providers.JsonRpcProvider(`https://rpc.dev.immutable.com`);
+const apiEnv = 'sandbox';
+const chainName = 'imtbl-zkevm-testnet';
+const zkEvmProvider = new providers.JsonRpcProvider(`https://rpc.testnet.immutable.com`);
 
 // Contract addresses
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
@@ -170,6 +170,13 @@ const client = new orderbook.Orderbook({
     environment: config.Environment.SANDBOX,
     publishableKey: process.env.PUBLISHABLE_KEY,
   },
+  // overrides: {
+  //   seaportContractAddress: '0xbA22c310787e9a3D74343B17AB0Ab946c28DFB52',
+  //   zoneContractAddress: '0xb71EB38e6B51Ee7A45A632d46f17062e249580bE', // ImmutableSignedZoneV2
+  //   apiEndpoint: 'https://api.dev.immutable.com',
+  //   chainName: 'imtbl-zkevm-devnet',
+  //   jsonRpcProviderUrl: 'https://rpc.dev.immutable.com'
+  // }
 });
 
 // Prepare listing
@@ -422,11 +429,18 @@ router.get(`/experimental/chains/${chainName}/search/stacks`, async (req: Reques
             token: {
               type: 'ERC20',
               symbol: 'IMR',
+              contract_address: '0x328766302e7617d0de5901f8da139dca49f3ec75',
+              decimals: '18',
             },
             amount: {
               value: listing.buy[0].amount,
               value_in_eth: '100000000000000000',
-            }
+            },
+            fee_inclusive_amount: {
+              value: '100000000000000000',
+              value_in_eth: '100000000000000000',
+            },
+            fees: listing.fees,
           },
           token_id: item.token_id,
           amount: 1,
