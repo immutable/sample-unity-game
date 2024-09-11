@@ -233,6 +233,24 @@ router.post('/v1/ts-sdk/v1/orderbook/createListing', async (req: Request, res: R
 },
 );
 
+router.post('/v1/ts-sdk/v1/orderbook/cancelOrdersOnChain', async (req: Request, res: Response) => {
+  try {
+    const { cancellationAction } = await client.cancelOrdersOnChain(req.body.orderIds, req.body.accountAddress);
+    const unsignedCancelOrderTransaction = await cancellationAction.buildTransaction();
+
+    return res.status(200).json({
+      cancellationAction: {
+        ...cancellationAction,
+        populatedTransaction: unsignedCancelOrderTransaction
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: 'Failed prepare listing' });
+  }
+},
+);
+
 // Cancel listing
 router.post('/cancelListing/skin', async (req: Request, res: Response) => {
   try {

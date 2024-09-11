@@ -136,11 +136,11 @@ namespace HyperCasual.Runner
                 {
                     // TODO update to use get stack bundle by stack ID endpoint instead
                     // Locally remove token from not listed list
-                    // var listingToRemove = m_Asset.notListed.FirstOrDefault(l => l.token_id == listing.token_id);
-                    // if (listingToRemove != null)
-                    // {
-                    //     m_Asset.notListed.Remove(listingToRemove);
-                    // }
+                    var listingToRemove = m_Asset.NotListed.FirstOrDefault(l => l.TokenId == listing.TokenId);
+                    if (listingToRemove != null)
+                    {
+                        m_Asset.NotListed.Remove(listingToRemove);
+                    }
 
                     // Locally add listing to listing
                     m_Asset.Listings.Insert(0, await GetListing(listingId));
@@ -162,7 +162,8 @@ namespace HyperCasual.Runner
             try
             {
                 using var client = new HttpClient();
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{listingId}";
+                string url = $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/orders/listings/{listingId}";
+                Debug.Log($"Get listing URL: {url}");
 
                 HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
@@ -170,31 +171,31 @@ namespace HyperCasual.Runner
                     string responseBody = await response.Content.ReadAsStringAsync();
                     OrderResponse orderResponse = JsonUtility.FromJson<OrderResponse>(responseBody);
 
-                    return new Listing
-                    {
-                        ListingId = orderResponse.result.id,
-                        PriceDetails = new PriceDetails
-                        {
-                            Token = new PriceDetailsToken(new ERC20Token(symbol: "IMR")),
-                            Amount = new PaymentAmount
-                            {
-                                Value = orderResponse.result.buy[0].amount
-                            },
-                            Fees = orderResponse.result.fees.Select(fee => new Immutable.Search.Model.Fee
-                            {
-                                Amount = fee.amount,
-                                RecipientAddress = fee.recipient_address,
-                            }).ToList()
-                        },
-                        TokenId = orderResponse.result.sell[0].token_id,
-                        Creator = orderResponse.result.account_address,
+                    return new Listing(
 
-                    };
+                        listingId: orderResponse.result.id,
+                        priceDetails: new PriceDetails
+                        (
+                            token: new PriceDetailsToken(new ERC20Token(symbol: "IMR", contractAddress: Contract.TOKEN, decimals: 18)),
+                            amount: new PaymentAmount(orderResponse.result.buy[0].amount, orderResponse.result.buy[0].amount),
+                            feeInclusiveAmount: new PaymentAmount(orderResponse.result.buy[0].amount, orderResponse.result.buy[0].amount), // Mocked
+                            fees: orderResponse.result.fees.Select(fee => new Immutable.Search.Model.Fee(
+                                fee.amount, Immutable.Search.Model.Fee.TypeEnum.ROYALTY, fee.recipient_address)).ToList()
+                        ),
+                        tokenId: orderResponse.result.sell[0].token_id,
+                        creator: orderResponse.result.account_address,
+                        amount: "1"
+                    );
+                }
+                else
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    Debug.Log($"Failed to get listing: {responseBody}");
                 }
             }
             catch (Exception ex)
             {
-                Debug.Log($"Failed to check sale status: {ex.Message}");
+                Debug.Log($"Failed to get listing: {ex.Message}");
             }
 
             return null;
@@ -386,7 +387,7 @@ namespace HyperCasual.Runner
                 Debug.Log($"json = {json}");
 
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:8080/v1/ts-sdk/v1/orderbook/cancelOrdersOnChain")
+                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/v1/ts-sdk/v1/orderbook/cancelOrdersOnChain")
                 {
                     Content = new StringContent(json, Encoding.UTF8, "application/json")
                 };
@@ -426,7 +427,7 @@ namespace HyperCasual.Runner
                         }
 
                         // Locally add asset to not listed list
-                        // m_Asset.notListed.Insert(0, listing); // TODO
+                        m_Asset.NotListed.Insert(0, listing); // TODO
 
                         UpdateLists();
 
