@@ -10,6 +10,7 @@ using TMPro;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
 using Immutable.Passport.Model;
+using Immutable.Search.Model;
 
 namespace HyperCasual.Runner
 {
@@ -22,13 +23,13 @@ namespace HyperCasual.Runner
         [SerializeField] private TextMeshProUGUI m_AmountText;
         [SerializeField] private ImageUrlObject m_Image;
 
-        private StacksResult m_Order;
+        private StackBundle m_Order;
 
         /// <summary>
         /// Initialises the order list item with the given order data.
         /// </summary>
         /// <param name="order">The order data to display.</param>
-        public async void Initialise(StacksResult order)
+        public async void Initialise(StackBundle order)
         {
             m_Order = order;
             UpdateData();
@@ -39,16 +40,16 @@ namespace HyperCasual.Runner
         /// </summary>
         private async void UpdateData()
         {
-            if (m_Order.listings.Count > 0)
+            if (m_Order.Listings.Count > 0)
             {
-                string amount = m_Order.listings[0].price.amount.value;
+                string amount = m_Order.Listings[0].PriceDetails.Amount.Value;
                 decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
                 m_AmountText.text = $"{quantity} IMR";
             }
 
             // Get and display asset details
-            m_NameText.text = m_Order.stack.name;
-            m_Image.LoadUrl(m_Order.stack.image);
+            m_NameText.text = m_Order.Stack.Name;
+            m_Image.LoadUrl(m_Order.Stack.Image);
         }
 
         public async void OnEnable()
@@ -72,7 +73,7 @@ namespace HyperCasual.Runner
             try
             {
                 using var client = new HttpClient();
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_Order.listings[0].listing_id}";
+                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_Order.Listings[0].ListingId}";
 
                 HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)

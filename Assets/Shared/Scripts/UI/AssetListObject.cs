@@ -9,6 +9,7 @@ using Immutable.Passport;
 using TMPro;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
+using Immutable.Search.Model;
 
 namespace HyperCasual.Runner
 {
@@ -22,12 +23,12 @@ namespace HyperCasual.Runner
         [SerializeField] private TextMeshProUGUI m_CollectionText = null;
         [SerializeField] private ImageUrlObject m_Image = null;
 
-        private StacksResult m_Asset;
+        private StackBundle m_Asset;
 
         /// <summary>
         /// Initialises the asset object with relevant data and updates the UI.
         /// </summary>
-        public void Initialise(StacksResult asset)
+        public void Initialise(StackBundle asset)
         {
             m_Asset = asset;
             UpdateData();
@@ -48,9 +49,9 @@ namespace HyperCasual.Runner
         {
             if (m_Asset != null)
             {
-                m_NameText.text = m_Asset.stack.name;
-                m_CollectionText.text = m_Asset.stack.contract_address;
-                m_Image.LoadUrl(m_Asset.stack.image);
+                m_NameText.text = m_Asset.Stack.Name;
+                m_CollectionText.text = m_Asset.Stack.ContractAddress;
+                m_Image.LoadUrl(m_Asset.Stack.Image);
             }
         }
     }
