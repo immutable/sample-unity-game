@@ -41,7 +41,7 @@ namespace Immutable.Search.Model
         public NFTMetadataAttributeValue(string actualInstance)
         {
             this.IsNullable = false;
-            this.SchemaType= "oneOf";
+            this.SchemaType = "oneOf";
             this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
@@ -53,7 +53,7 @@ namespace Immutable.Search.Model
         public NFTMetadataAttributeValue(decimal actualInstance)
         {
             this.IsNullable = false;
-            this.SchemaType= "oneOf";
+            this.SchemaType = "oneOf";
             this.ActualInstance = actualInstance;
         }
 
@@ -65,7 +65,7 @@ namespace Immutable.Search.Model
         public NFTMetadataAttributeValue(bool actualInstance)
         {
             this.IsNullable = false;
-            this.SchemaType= "oneOf";
+            this.SchemaType = "oneOf";
             this.ActualInstance = actualInstance;
         }
 
@@ -271,13 +271,13 @@ namespace Immutable.Search.Model
         /// <returns>The object converted from the JSON string</returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            switch(reader.TokenType) 
+            switch (reader.TokenType)
             {
-                case JsonToken.String: 
+                case JsonToken.String:
                     return new NFTMetadataAttributeValue(Convert.ToString(reader.Value));
-                case JsonToken.Float: 
+                case JsonToken.Float:
                     return new NFTMetadataAttributeValue(Convert.ToDecimal(reader.Value));
-                case JsonToken.Boolean: 
+                case JsonToken.Boolean:
                     return new NFTMetadataAttributeValue(Convert.ToBoolean(reader.Value));
                 case JsonToken.StartObject:
                     return NFTMetadataAttributeValue.FromJson(JObject.Load(reader).ToString(Formatting.None));
