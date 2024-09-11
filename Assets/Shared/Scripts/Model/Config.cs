@@ -31,6 +31,7 @@ namespace HyperCasual.Runner
         public const string BASE_URL = "https://api.dev.immutable.com";
 
         public const string SEARCH_BASE_URL = "http://localhost:6060";//"https://api.dev.immutable.com";
+        public const string TS_BASE_URL = "http://localhost:8080";//"https://api.dev.immutable.com";
         public const int PAGE_SIZE = 6;
     }
 

@@ -54,14 +54,17 @@ namespace HyperCasual.Runner
 
         public async void OnEnable()
         {
-            bool isOnSale = await IsListed();
-            if (isOnSale)
+            if (m_Order != null)
             {
-                UpdateData();
-            }
-            else
-            {
-                m_AmountText.text = "Not listed";
+                bool isOnSale = await IsListed();
+                if (isOnSale)
+                {
+                    UpdateData();
+                }
+                else
+                {
+                    m_AmountText.text = "Not listed";
+                }
             }
         }
 
@@ -73,7 +76,7 @@ namespace HyperCasual.Runner
             try
             {
                 using var client = new HttpClient();
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_Order.Listings[0].ListingId}";
+                string url = $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/orders/listings/{m_Order.Listings[0].ListingId}";
 
                 HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)

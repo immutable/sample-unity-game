@@ -94,7 +94,7 @@ namespace Immutable.Search.Model
         public List<Listing> Listings { get; set; }
 
         [DataMember(Name = "notListed", IsRequired = true, EmitDefaultValue = true)]
-        public List<Listing> NotListed { get; set; }
+        public List<Listing>? NotListed { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

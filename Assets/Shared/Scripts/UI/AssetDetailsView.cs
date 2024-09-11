@@ -13,6 +13,9 @@ using Cysharp.Threading.Tasks;
 using Immutable.Passport;
 using Immutable.Passport.Model;
 using Immutable.Search.Model;
+using Immutable.Ts.Client;
+using Immutable.Ts.Api;
+using Immutable.Ts.Model;
 
 namespace HyperCasual.Runner
 {
@@ -91,14 +94,15 @@ namespace HyperCasual.Runner
             ClearNotListedList();
 
             // Populate not listed items
-            foreach (Listing stackListing in m_Asset.NotListed)
+            List<Listing> notListed = m_Asset?.NotListed ?? new List<Listing>();
+            foreach (Listing stackListing in notListed)
             {
                 AssetNotListedObject item = Instantiate(m_NotListedObj, m_NotListedParent);
                 item.gameObject.SetActive(true);
                 item.Initialise(stackListing, OnSellButtonClicked); // Initialise the view with data
                 m_NotListedViews.Add(item); // Add to the list of displayed attributes
             }
-            m_EmptyNotListed.SetActive(m_Asset.NotListed.Count == 0);
+            m_EmptyNotListed.SetActive(notListed.Count == 0);
 
             // Clear all existing listings
             ClearListings();
@@ -136,10 +140,10 @@ namespace HyperCasual.Runner
                 {
                     // TODO update to use get stack bundle by stack ID endpoint instead
                     // Locally remove token from not listed list
-                    var listingToRemove = m_Asset.NotListed.FirstOrDefault(l => l.TokenId == listing.TokenId);
+                    var listingToRemove = m_Asset.NotListed?.FirstOrDefault(l => l.TokenId == listing.TokenId);
                     if (listingToRemove != null)
                     {
-                        m_Asset.NotListed.Remove(listingToRemove);
+                        m_Asset.NotListed?.Remove(listingToRemove);
                     }
 
                     // Locally add listing to listing
@@ -226,8 +230,75 @@ namespace HyperCasual.Runner
                 }
             };
 
+            // Configuration config = new Configuration();
+            // config.BasePath = Config.TS_BASE_URL;
+            // var apiInstance = new DefaultApi(config);
+
             try
             {
+                //     V1TsSdkV1OrderbookPrepareListingPost200Response response = await apiInstance.V1TsSdkV1OrderbookPrepareListingPostAsync(new V1TsSdkV1OrderbookPrepareListingPostRequest
+                //     (
+                //         makerAddress: address,
+                //         sell: new V1TsSdkV1OrderbookPrepareListingPostRequestSell(
+                //             new PrepareListingReqBodyERC721Item(contractAddress: Contract.SKIN, tokenId: asset.TokenId, type: "ERC721")),
+                //         buy: new V1TsSdkV1OrderbookPrepareListingPostRequestBuy(
+                //             new PrepareListingReqBodyERC20Item(amount: price, contractAddress: Contract.TOKEN, type: "ERC20"))
+                //     ));
+
+                //     var transaction = response.Actions.FirstOrDefault(action => action.Type == "TRANSACTION");
+                //     if (transaction != null)
+                //     {
+                //         var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
+                //         {
+                //             to = transaction.populatedTransactions.to,
+                //             data = transaction.populatedTransactions.data,
+                //             value = "0"
+                //         });
+
+                //         if (transactionResponse.status != "1")
+                //         {
+                //             await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing.", "OK");
+                //             return null;
+                //         }
+                //     }
+
+                //     // Sign payload
+                //     var signable = response.Actions.FirstOrDefault(action => action.Type == "SIGNABLE");
+                //     if (signable?.Message != null)
+                //     {
+                //         signable.message.types.EIP712Domain = new List<NameType>
+                //         {
+                //             new NameType { name = "name", type = "string" },
+                //             new NameType { name = "version", type = "string" },
+                //             new NameType { name = "chainId", type = "uint256" },
+                //             new NameType { name = "verifyingContract", type = "address" }
+                //         };
+
+                //         var eip712TypedData = new TsEIP712TypedData
+                //         {
+                //             domain = signable.Message.Domain,
+                //             types = signable.Message.Types,
+                //             message = signable.Message.Value,
+                //             primaryType = "OrderComponents"
+                //         };
+
+                //         Debug.Log($"EIP712TypedData: {JsonUtility.ToJson(eip712TypedData)}");
+                //         string signature = await Passport.Instance.ZkEvmSignTypedDataV4(JsonUtility.ToJson(eip712TypedData));
+                //         Debug.Log($"Signature: {signature}");
+
+                //         // (bool result, string signature) = await m_CustomDialog.ShowDialog(
+                //         //     "Confirm listing",
+                //         //     "Enter signed payload:",
+                //         //     "Confirm",
+                //         //     negativeButtonText: "Cancel",
+                //         //     showInputField: true
+                //         // );
+                //         // if (result)
+                //         // {
+                //         return await ListAsset(signature, response, address);
+                //         // }
+                //     }
+
                 var json = JsonUtility.ToJson(data);
                 Debug.Log($"json = {json}");
 
@@ -427,6 +498,10 @@ namespace HyperCasual.Runner
                         }
 
                         // Locally add asset to not listed list
+                        if (m_Asset.NotListed == null)
+                        {
+                            m_Asset.NotListed = new List<Listing>();
+                        }
                         m_Asset.NotListed.Insert(0, listing); // TODO
 
                         UpdateLists();

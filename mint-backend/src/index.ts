@@ -342,10 +342,6 @@ router.get(`/experimental/chains/${chainName}/search/stacks`, async (req: Reques
       return getMarketplace(req, res);
     }
 
-    if (!accountAddress) {
-      return getMarketplace(req, res);
-    }
-
     let nftUrl = `https://api.${apiEnv}.immutable.com/v1/chains/${chainName}/accounts/${accountAddress}/nfts?contract_address=${contractAddress}&page_size=${pageSize}`;
     console.log(`nftUrl: ${nftUrl}`);
     if (pageCursor != null) {
@@ -610,11 +606,13 @@ const getMarketplace = async (req: Request, res: Response) => {
       const listings = [
         {
           listing_id: item.id,
-          account_address: item.account_address,
+          creator: item.account_address,
           price_details: {
             token: {
               type: 'ERC20',
               symbol: 'IMR',
+              contract_address: '0x328766302e7617d0de5901f8da139dca49f3ec75',
+              decimals: '18',
             },
             amount: {
               value: item.buy[0].amount,
@@ -631,7 +629,7 @@ const getMarketplace = async (req: Request, res: Response) => {
         }
       ];
 
-      result.push({ stack, market, listings });
+      result.push({ stack, market, listings, notListed: [], stack_count: 1 });
     }
 
     return res.status(200).json({ result, page: ordersResponse.data.page, });

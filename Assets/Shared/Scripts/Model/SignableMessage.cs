@@ -1,9 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Immutable.Ts.Model;
 
 namespace HyperCasual.Runner
 {
+    [Serializable]
+    public class TsEIP712TypedData
+    {
+        public PrepareListingResBodyTypedDataDomain domain;
+        public Dictionary<string, List<PrepareListingResBodyRecordStringTypedDataFieldValueInner>> types;
+        public Dictionary<string, Object> message;
+        public string primaryType;
+    }
+
     [Serializable]
     public class EIP712TypedData
     {

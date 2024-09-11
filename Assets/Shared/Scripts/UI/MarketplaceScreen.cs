@@ -144,7 +144,6 @@ namespace HyperCasual.Runner
 
             try
             {
-
                 string? nextCursor = null;
                 if (!string.IsNullOrEmpty(m_Page?.NextCursor))
                 {
