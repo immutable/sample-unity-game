@@ -340,7 +340,7 @@ router.get(`/experimental/chains/${chainName}/search/stacks`, async (req: Reques
         name: item.name,
         description: item.description,
         image: item.image,
-        attributes: item.attributes?.map((a: any) => {
+        attributes: item.attributes?.map((a) => {
           return {
             display_type: a.display_type,
             trait_type: a.trait_type ?? '',
