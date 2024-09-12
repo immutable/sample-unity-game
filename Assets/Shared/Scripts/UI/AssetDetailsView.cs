@@ -106,10 +106,16 @@ namespace HyperCasual.Runner
             m_CancelButton.gameObject.SetActive(m_Listing != null);
 
             // Price if it's listed
-            m_AmountText.gameObject.SetActive(m_Listing != null);
-            string amount = m_Listing.buy[0].amount;
-            decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
-            m_AmountText.text = $"{quantity} IMR";
+            if (m_Listing != null)
+            {
+                string amount = m_Listing.buy[0].amount;
+                decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
+                m_AmountText.text = $"{quantity} IMR";
+            }
+            else
+            {
+                m_AmountText.text = "Not listed";
+            }
         }
 
         // TODO not required one we have the NFT search endpoint
@@ -213,7 +219,6 @@ namespace HyperCasual.Runner
                     // UpdateLists();
 
                     m_AmountText.text = $"{price} IMR";
-                    m_AmountText.gameObject.SetActive(true);
 
                     return;// true;
                 }
@@ -593,7 +598,6 @@ namespace HyperCasual.Runner
                         m_SellButton.gameObject.SetActive(true);
                         m_Progress.gameObject.SetActive(false);
                         m_AmountText.text = "";
-                        m_AmountText.gameObject.SetActive(false);
 
                         return;// true;
                     }
@@ -695,7 +699,6 @@ namespace HyperCasual.Runner
             m_TokenIdText.text = "";
             m_CollectionText.text = "";
             m_AmountText.text = "";
-            m_AmountText.gameObject.SetActive(false);
 
             m_Asset = null;
             ClearAttributes();
