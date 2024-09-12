@@ -26,11 +26,11 @@ namespace HyperCasual.Runner
         [SerializeField] private AssetListObject m_AssetObj = null;
         [SerializeField] private Transform m_ListParent = null;
         [SerializeField] private InfiniteScrollView m_ScrollView;
-        private List<StackBundle> m_Assets = new List<StackBundle>();
+        private List<AssetModel> m_Assets = new List<AssetModel>();
 
         // Pagination
         private bool m_IsLoadingMore = false;
-        private Page m_Page;
+        private PageModel m_Page;
 
         /// <summary>
         /// Sets up the inventory list and fetches the player's assets.
@@ -62,7 +62,7 @@ namespace HyperCasual.Runner
             if (index < m_Assets.Count)
             {
                 // AssetModel asset = m_Assets[index];
-                StackBundle asset = m_Assets[index];
+                AssetModel asset = m_Assets[index];
 
                 // Initialise the view with asset
                 var itemComponent = item.GetComponent<AssetListObject>();
@@ -100,7 +100,7 @@ namespace HyperCasual.Runner
 
             m_IsLoadingMore = true;
 
-            List<StackBundle> assets = await GetStacks();
+            List<AssetModel> assets = await GetAssets();
             if (assets != null && assets.Count > 0)
             {
                 m_Assets.AddRange(assets);
@@ -111,15 +111,11 @@ namespace HyperCasual.Runner
         }
 
         // Uses mocked stacks endpoint
-        private async UniTask<List<StackBundle>> GetStacks()
+        private async UniTask<List<AssetModel>> GetAssets()
         {
-            Debug.Log("Fetching stacks assets...");
+            Debug.Log("Fetching assets...");
 
-            List<StackBundle> stacks = new List<StackBundle>();
-
-            Configuration config = new Configuration();
-            config.BasePath = Config.SEARCH_BASE_URL;
-            var apiInstance = new SearchApi(config);
+            List<AssetModel> stacks = new List<AssetModel>();
 
             try
             {
@@ -131,76 +127,46 @@ namespace HyperCasual.Runner
                     return stacks;
                 }
 
-                string? nextCursor = null;
-                if (!string.IsNullOrEmpty(m_Page?.NextCursor))
+                string url = $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/accounts/{address}/nfts?contract_address={Contract.SKIN}&page_size=6";
+
+                // Pagination
+                if (!string.IsNullOrEmpty(m_Page?.next_cursor))
                 {
-                    nextCursor = m_Page.NextCursor;
+                    url += $"&page_cursor={m_Page.next_cursor}";
                 }
-                else if (m_Page != null && (m_Page.NextCursor != null || m_Assets.Count < Config.PAGE_SIZE))
+                else if (m_Page != null && m_Page.next_cursor != null)
                 {
-                    Debug.Log("No more assets to load");
+                    Debug.Log("No more player assets to load");
                     return stacks;
                 }
 
-                SearchStacksResult result = await apiInstance.SearchStacksAsync(Config.CHAIN_NAME, new List<string> { Contract.SKIN }, accountAddress: address, pageCursor: nextCursor, pageSize: 6);
-                m_Page = result.Page;
-                return result.Result;
+                using var client = new HttpClient();
+                HttpResponseMessage response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    Debug.Log($"Assets response: {responseBody}");
+
+                    if (!string.IsNullOrEmpty(responseBody))
+                    {
+                        AssetsResponse assetsResponse = JsonUtility.FromJson<AssetsResponse>(responseBody);
+                        stacks = assetsResponse?.result ?? new List<AssetModel>();
+
+                        // Update pagination information
+                        m_Page = assetsResponse?.page;
+                    }
+                }
+                else
+                {
+                    // TODO use dialogs
+                    Debug.Log($"Failed to fetch assets");
+                }
             }
             catch (Exception ex)
             {
                 Debug.Log($"Failed to fetch assets: {ex.Message}");
             }
-
-            // try
-            // {
-            //     string address = SaveManager.Instance.WalletAddress;
-
-            //     if (string.IsNullOrEmpty(address))
-            //     {
-            //         Debug.LogError("Could not get player's wallet");
-            //         return stacks;
-            //     }
-
-            //     string url = $"http://localhost:6060/v1/chains/imtbl-zkevm-testnet/search/stacks?account_address={address}&contract_address={Contract.SKIN}&page_size=6";
-
-            //     // Pagination
-            //     if (!string.IsNullOrEmpty(m_Page?.next_cursor))
-            //     {
-            //         url += $"&page_cursor={m_Page.next_cursor}";
-            //     }
-            //     else if (m_Page != null && m_Page.next_cursor != null)
-            //     {
-            //         Debug.Log("No more player assets to load");
-            //         return stacks;
-            //     }
-
-            //     using var client = new HttpClient();
-            //     HttpResponseMessage response = await client.GetAsync(url);
-
-            //     if (response.IsSuccessStatusCode)
-            //     {
-            //         string responseBody = await response.Content.ReadAsStringAsync();
-            //         Debug.Log($"Assets response: {responseBody}");
-
-            //         if (!string.IsNullOrEmpty(responseBody))
-            //         {
-            //             StacksResponse stacksResponse = JsonUtility.FromJson<StacksResponse>(responseBody);
-            //             stacks = stacksResponse?.result ?? new List<StacksResult>();
-
-            //             // Update pagination information
-            //             m_Page = stacksResponse?.page;
-            //         }
-            //     }
-            //     else
-            //     {
-            //         // TODO use dialogs
-            //         Debug.Log($"Failed to fetch assets");
-            //     }
-            // }
-            // catch (Exception ex)
-            // {
-            //     Debug.Log($"Failed to fetch assets: {ex.Message}");
-            // }
 
             return stacks;
         }

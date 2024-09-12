@@ -25,10 +25,17 @@ namespace HyperCasual.Runner
         [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private ImageUrlObject m_Image;
         [SerializeField] private TextMeshProUGUI m_NameText;
+        [SerializeField] private TextMeshProUGUI m_AmountText;
+        [SerializeField] private TextMeshProUGUI m_TokenIdText;
         [SerializeField] private TextMeshProUGUI m_CollectionText;
         // Attributes
         [SerializeField] private Transform m_AttributesListParent;
         [SerializeField] private AttributeView m_AttributeObj;
+        // Actions
+        [SerializeField] private HyperCasualButton m_SellButton;
+        [SerializeField] private HyperCasualButton m_CancelButton;
+        [SerializeField] private GameObject m_Progress = null;
+
         // Not listed
         [SerializeField] private GameObject m_EmptyNotListed;
         [SerializeField] private Transform m_NotListedParent = null;
@@ -44,7 +51,8 @@ namespace HyperCasual.Runner
         [SerializeField] private CustomDialog m_CustomDialog;
 
         private List<AttributeView> m_Attributes = new List<AttributeView>();
-        private StackBundle m_Asset;
+        private AssetModel m_Asset;
+        private OldListing m_Listing;
 
         private void OnEnable()
         {
@@ -54,6 +62,10 @@ namespace HyperCasual.Runner
 
             m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
+            m_SellButton.RemoveListener(OnSellButtonClicked);
+            m_SellButton.AddListener(OnSellButtonClicked);
+            m_CancelButton.RemoveListener(OnCancelButtonClicked);
+            m_CancelButton.AddListener(OnCancelButtonClicked);
 
             // Gets the player's balance
             m_Balance.UpdateBalance();
@@ -63,19 +75,21 @@ namespace HyperCasual.Runner
         /// Initialises the UI based on the asset.
         /// </summary>
         /// <param name="asset">The asset to display.</param>
-        public async void Initialise(StackBundle asset)
+        public async void Initialise(AssetModel asset)
         {
             m_Asset = asset;
 
-            m_NameText.text = m_Asset.Stack.Name;
-            m_CollectionText.text = $"Collection: {m_Asset.Stack.ContractAddress}";
+            m_NameText.text = m_Asset.name;
+            m_TokenIdText.text = $"Token ID: {m_Asset.token_id}";
+            m_CollectionText.text = $"Collection: {m_Asset.contract_address}";
 
             // Clear existing attributes
             ClearAttributes();
 
             // Populate attributes
-            foreach (NFTMetadataAttribute attribute in m_Asset.Stack.Attributes)
+            foreach (AssetAttribute a in m_Asset.attributes)
             {
+                NFTMetadataAttribute attribute = new(traitType: a.trait_type, value: new NFTMetadataAttributeValue(a.value));
                 AttributeView newAttribute = Instantiate(m_AttributeObj, m_AttributesListParent);
                 newAttribute.gameObject.SetActive(true);
                 newAttribute.Initialise(attribute);
@@ -83,12 +97,52 @@ namespace HyperCasual.Runner
             }
 
             // Download and display the image
-            m_Image.LoadUrl(m_Asset.Stack.Image);
+            m_Image.LoadUrl(m_Asset.image);
 
-            UpdateLists();
+            // UpdateLists();
+            // Check if asset is listed
+            m_Listing = await GetActiveListingId();
+            m_SellButton.gameObject.SetActive(m_Listing == null);
+            m_CancelButton.gameObject.SetActive(m_Listing != null);
+
+            // Price if it's listed
+            m_AmountText.gameObject.SetActive(m_Listing != null);
+            string amount = m_Listing.buy[0].amount;
+            decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
+            m_AmountText.text = $"{quantity} IMR";
         }
 
-        private void UpdateLists()
+        // TODO not required one we have the NFT search endpoint
+        private async UniTask<OldListing?> GetActiveListingId()
+        {
+            try
+            {
+                using var client = new HttpClient();
+                string url = $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/orders/listings?sell_item_contract_address={Contract.SKIN}&sell_item_token_id={m_Asset.token_id}&status=ACTIVE";
+                Debug.Log($"GetActiveListingId URL: {url}");
+
+                HttpResponseMessage response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    ListingsResponse listingResponse = JsonUtility.FromJson<ListingsResponse>(responseBody);
+
+                    // Check if the listing exists
+                    if (listingResponse.result.Count > 0 && listingResponse.result[0].status.name == "ACTIVE")
+                    {
+                        return listingResponse.result[0];
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Failed to check sale status: {ex.Message}");
+            }
+
+            return null;
+        }
+
+        /*private void UpdateLists()
         {
             // Clear not listed list
             ClearNotListedList();
@@ -116,15 +170,18 @@ namespace HyperCasual.Runner
                 m_ListingViews.Add(item); // Add to the list of displayed attributes
             }
             m_EmptyListing.SetActive(m_Asset.Listings.Count == 0);
-        }
+        }*/
 
         /// <summary>
         /// Handles the click event for the sell button.
         /// </summary>
-        private async UniTask<bool> OnSellButtonClicked(Listing listing)
+        private async void OnSellButtonClicked()
         {
+            m_SellButton.gameObject.SetActive(false);
+            m_Progress.gameObject.SetActive(true);
+
             (bool result, string price) = await m_CustomDialog.ShowDialog(
-                $"List {m_Asset.Stack.Name} for sale",
+                $"List {m_Asset.name} for sale",
                 "Enter your price below (in IMR):",
                 "Confirm",
                 negativeButtonText: "Cancel",
@@ -134,28 +191,38 @@ namespace HyperCasual.Runner
             if (result)
             {
                 decimal amount = Math.Floor(decimal.Parse(price) * (decimal)BigInteger.Pow(10, 18));
-                string listingId = await PrepareListing(listing, $"{amount}");
+                string listingId = await PrepareListing($"{amount}");
+
+                m_SellButton.gameObject.SetActive(listingId == null);
+                m_CancelButton.gameObject.SetActive(listingId != null);
+                m_Progress.gameObject.SetActive(false);
 
                 if (listingId != null)
                 {
                     // TODO update to use get stack bundle by stack ID endpoint instead
                     // Locally remove token from not listed list
-                    var listingToRemove = m_Asset.NotListed?.FirstOrDefault(l => l.TokenId == listing.TokenId);
-                    if (listingToRemove != null)
-                    {
-                        m_Asset.NotListed?.Remove(listingToRemove);
-                    }
+                    // var listingToRemove = m_Asset.NotListed?.FirstOrDefault(l => l.TokenId == listing.TokenId);
+                    // if (listingToRemove != null)
+                    // {
+                    //     m_Asset.NotListed?.Remove(listingToRemove);
+                    // }
 
-                    // Locally add listing to listing
-                    m_Asset.Listings.Insert(0, await GetListing(listingId));
+                    // // Locally add listing to listing
+                    // m_Asset.Listings.Insert(0, await GetListing(listingId));
 
-                    UpdateLists();
+                    // UpdateLists();
 
-                    return true;
+                    m_AmountText.text = $"{price} IMR";
+                    m_AmountText.gameObject.SetActive(true);
+
+                    return;// true;
                 }
             }
 
-            return false;
+            m_SellButton.gameObject.SetActive(true);
+            m_Progress.gameObject.SetActive(false);
+
+            return;// false;
         }
 
         /// <summary>
@@ -208,10 +275,9 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Prepares the listing for the asset.
         /// </summary>
-        /// <param name="listing">The asset to prepare for listing.</param>
         /// <param name="price">The price of the asset in smallest unit.</param>
         /// <returns>The listing ID is asset was successfully listed</returns>
-        private async UniTask<string> PrepareListing(Listing asset, string price)
+        private async UniTask<string> PrepareListing(string price)
         {
             string address = SaveManager.Instance.WalletAddress;
 
@@ -221,7 +287,7 @@ namespace HyperCasual.Runner
                 sell = new PrepareListingERC721Item
                 {
                     contractAddress = Contract.SKIN,
-                    tokenId = asset.TokenId,
+                    tokenId = m_Asset.token_id,
                 },
                 buy = new PrepareListingERC20Item
                 {
@@ -456,15 +522,18 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Cancels the listing of the asset.
         /// </summary>
-        private async UniTask<bool> OnCancelButtonClicked(Listing listing)
+        private async void OnCancelButtonClicked()
         {
-            Debug.Log($"Cancel listing {listing.ListingId}");
+            Debug.Log($"Cancel listing {m_Listing.id}");
+
+            m_CancelButton.gameObject.SetActive(false);
+            m_Progress.gameObject.SetActive(true);
 
             string address = SaveManager.Instance.WalletAddress;
             var data = new CancelListingRequest
             {
                 accountAddress = address,
-                orderIds = new List<string> { listing.ListingId }
+                orderIds = new List<string> { m_Listing.id }
             };
 
             try
@@ -483,7 +552,7 @@ namespace HyperCasual.Runner
                 if (!res.IsSuccessStatusCode)
                 {
                     await m_CustomDialog.ShowDialog("Error", "Failed to cancel listing", "OK");
-                    return false;
+                    return;// false;
                 }
 
                 string responseBody = await res.Content.ReadAsStringAsync();
@@ -502,41 +571,52 @@ namespace HyperCasual.Runner
                     if (transactionResponse.status == "1")
                     {
                         // Validate that listing has been cancelled
-                        await ConfirmListingStatus(listing.ListingId, "CANCELLED");
+                        await ConfirmListingStatus(m_Listing.id, "CANCELLED");
 
                         // TODO update to use get stack bundle by stack ID endpoint instead
                         // Locally remove listing
-                        var listingToRemove = m_Asset.Listings.FirstOrDefault(l => l.ListingId == listing.ListingId);
-                        if (listingToRemove != null)
-                        {
-                            m_Asset.Listings.Remove(listingToRemove);
-                        }
+                        // var listingToRemove = m_Asset.Listings.FirstOrDefault(l => l.ListingId == listing.ListingId);
+                        // if (listingToRemove != null)
+                        // {
+                        //     m_Asset.Listings.Remove(listingToRemove);
+                        // }
 
-                        // Locally add asset to not listed list
-                        if (m_Asset.NotListed == null)
-                        {
-                            m_Asset.NotListed = new List<Listing>();
-                        }
-                        m_Asset.NotListed.Insert(0, listing); // TODO
+                        // // Locally add asset to not listed list
+                        // if (m_Asset.NotListed == null)
+                        // {
+                        //     m_Asset.NotListed = new List<Listing>();
+                        // }
+                        // m_Asset.NotListed.Insert(0, listing); // TODO
 
-                        UpdateLists();
+                        // UpdateLists();
 
-                        return true;
+                        m_SellButton.gameObject.SetActive(true);
+                        m_Progress.gameObject.SetActive(false);
+                        m_AmountText.text = "";
+                        m_AmountText.gameObject.SetActive(false);
+
+                        return;// true;
                     }
                     else
                     {
+                        m_Progress.gameObject.SetActive(false);
+                        m_CancelButton.gameObject.SetActive(true);
                         await m_CustomDialog.ShowDialog("Error", "Failed to cancel listing", "OK");
-                        return false;
+                        return;// false;
                     }
                 }
 
-                return false;
+                m_Progress.gameObject.SetActive(false);
+                m_CancelButton.gameObject.SetActive(true);
+                return;// false;
             }
             catch (Exception ex)
             {
                 Debug.LogException(ex);
+                m_Progress.gameObject.SetActive(false);
+                m_CancelButton.gameObject.SetActive(true);
                 await m_CustomDialog.ShowDialog("Error", "Failed to cancel listing", "OK");
-                return false;
+                return;// false;
             }
         }
 
@@ -585,7 +665,7 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Removes all the not for sale views
         /// </summary>
-        private void ClearNotListedList()
+        /*private void ClearNotListedList()
         {
             foreach (AssetNotListedObject listing in m_NotListedViews)
             {
@@ -604,7 +684,7 @@ namespace HyperCasual.Runner
                 Destroy(listing.gameObject);
             }
             m_ListingViews.Clear();
-        }
+        }*/
 
         /// <summary>
         /// Cleans up data
@@ -612,12 +692,15 @@ namespace HyperCasual.Runner
         private void OnDisable()
         {
             m_NameText.text = "";
-            m_CollectionText.text = ""; ;
+            m_TokenIdText.text = "";
+            m_CollectionText.text = "";
+            m_AmountText.text = "";
+            m_AmountText.gameObject.SetActive(false);
 
             m_Asset = null;
             ClearAttributes();
-            ClearNotListedList();
-            ClearListings();
+            //     ClearNotListedList();
+            //     ClearListings();
         }
     }
 }

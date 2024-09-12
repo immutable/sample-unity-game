@@ -23,12 +23,12 @@ namespace HyperCasual.Runner
         [SerializeField] private TextMeshProUGUI m_CollectionText = null;
         [SerializeField] private ImageUrlObject m_Image = null;
 
-        private StackBundle m_Asset;
+        private AssetModel m_Asset;
 
         /// <summary>
         /// Initialises the asset object with relevant data and updates the UI.
         /// </summary>
-        public void Initialise(StackBundle asset)
+        public void Initialise(AssetModel asset)
         {
             m_Asset = asset;
             UpdateData();
@@ -49,9 +49,9 @@ namespace HyperCasual.Runner
         {
             if (m_Asset != null)
             {
-                m_NameText.text = m_Asset.Stack.Name;
-                m_CollectionText.text = m_Asset.Stack.ContractAddress;
-                m_Image.LoadUrl(m_Asset.Stack.Image);
+                m_NameText.text = m_Asset.name;
+                m_CollectionText.text = m_Asset.contract_address;
+                m_Image.LoadUrl(m_Asset.image);
             }
         }
     }
