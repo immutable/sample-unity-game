@@ -134,7 +134,7 @@ namespace HyperCasual.Runner
                 {
                     url += $"&page_cursor={m_Page.next_cursor}";
                 }
-                else if (m_Page != null && m_Page.next_cursor != null)
+                else if (m_Page != null && m_Page.next_cursor == null)
                 {
                     Debug.Log("No more player assets to load");
                     return stacks;
