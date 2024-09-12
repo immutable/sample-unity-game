@@ -15,7 +15,7 @@ All URIs are relative to *https://api.immutable.com*
 
 <a id="v1heartbeatget"></a>
 # **V1HeartbeatGet**
-> void V1HeartbeatGet ()
+> V1HeartbeatGet200Response V1HeartbeatGet ()
 
 
 
@@ -39,7 +39,8 @@ namespace Example
 
             try
             {
-                apiInstance.V1HeartbeatGet();
+                V1HeartbeatGet200Response result = apiInstance.V1HeartbeatGet();
+                Debug.WriteLine(result);
             }
             catch (ApiException  e)
             {
@@ -58,7 +59,10 @@ This returns an ApiResponse object which contains the response data, status code
 ```csharp
 try
 {
-    apiInstance.V1HeartbeatGetWithHttpInfo();
+    ApiResponse<V1HeartbeatGet200Response> response = apiInstance.V1HeartbeatGetWithHttpInfo();
+    Debug.Write("Status Code: " + response.StatusCode);
+    Debug.Write("Response Headers: " + response.Headers);
+    Debug.Write("Response Body: " + response.Data);
 }
 catch (ApiException e)
 {
@@ -72,7 +76,7 @@ catch (ApiException e)
 This endpoint does not need any parameter.
 ### Return type
 
-void (empty response body)
+[**V1HeartbeatGet200Response**](V1HeartbeatGet200Response.md)
 
 ### Authorization
 
@@ -81,14 +85,19 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: Not defined
+ - **Accept**: application/json
 
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | heartbeat |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 <a id="v1heartbeathead"></a>
 # **V1HeartbeatHead**
-> void V1HeartbeatHead ()
+> V1HeartbeatGet200Response V1HeartbeatHead ()
 
 
 
@@ -112,7 +121,8 @@ namespace Example
 
             try
             {
-                apiInstance.V1HeartbeatHead();
+                V1HeartbeatGet200Response result = apiInstance.V1HeartbeatHead();
+                Debug.WriteLine(result);
             }
             catch (ApiException  e)
             {
@@ -131,7 +141,10 @@ This returns an ApiResponse object which contains the response data, status code
 ```csharp
 try
 {
-    apiInstance.V1HeartbeatHeadWithHttpInfo();
+    ApiResponse<V1HeartbeatGet200Response> response = apiInstance.V1HeartbeatHeadWithHttpInfo();
+    Debug.Write("Status Code: " + response.StatusCode);
+    Debug.Write("Response Headers: " + response.Headers);
+    Debug.Write("Response Body: " + response.Data);
 }
 catch (ApiException e)
 {
@@ -145,7 +158,7 @@ catch (ApiException e)
 This endpoint does not need any parameter.
 ### Return type
 
-void (empty response body)
+[**V1HeartbeatGet200Response**](V1HeartbeatGet200Response.md)
 
 ### Authorization
 
@@ -154,8 +167,13 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: Not defined
+ - **Accept**: application/json
 
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | heartbeat |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -242,7 +260,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** |  |  -  |
+| **200** | Response schema for the cancelOrder endpoint |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -329,7 +347,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** |  |  -  |
+| **200** | Response schema for the cancelOrder endpoint |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -416,7 +434,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** |  |  -  |
+| **200** | The response schema for the create listing endpoint |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -503,7 +521,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** |  |  -  |
+| **200** | Response schema for the fulfillOrder endpoint |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -590,7 +608,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** |  |  -  |
+| **200** | Response schema for the prepareListing endpoint |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -677,7 +695,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** |  |  -  |
+| **200** | Response schema for the prepareOrderCancellations endpoint |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

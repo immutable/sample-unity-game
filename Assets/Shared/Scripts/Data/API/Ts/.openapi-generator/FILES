@@ -76,6 +76,7 @@ docs/PrepareOrderCancellationsResBodySignableAction.md
 docs/PrepareOrderCancellationsResBodySignableActionMessage.md
 docs/PrepareOrderCancellationsResBodySignablePurpose.md
 docs/PrepareOrderCancellationsResBodyTypedDataDomain.md
+docs/V1HeartbeatGet200Response.md
 docs/V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response.md
 docs/V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest.md
 docs/V1TsSdkV1OrderbookCancelOrdersPost200Response.md
@@ -169,6 +170,7 @@ src/Immutable.Ts.Test/Model/PrepareOrderCancellationsResBodySignableActionMessag
 src/Immutable.Ts.Test/Model/PrepareOrderCancellationsResBodySignableActionTests.cs
 src/Immutable.Ts.Test/Model/PrepareOrderCancellationsResBodySignablePurposeTests.cs
 src/Immutable.Ts.Test/Model/PrepareOrderCancellationsResBodyTypedDataDomainTests.cs
+src/Immutable.Ts.Test/Model/V1HeartbeatGet200ResponseTests.cs
 src/Immutable.Ts.Test/Model/V1TsSdkV1OrderbookCancelOrdersOnChainPost200ResponseTests.cs
 src/Immutable.Ts.Test/Model/V1TsSdkV1OrderbookCancelOrdersOnChainPostRequestTests.cs
 src/Immutable.Ts.Test/Model/V1TsSdkV1OrderbookCancelOrdersPost200ResponseResultFailedCancellationsInnerTests.cs
@@ -279,6 +281,7 @@ src/Immutable.Ts/Model/PrepareOrderCancellationsResBodySignableAction.cs
 src/Immutable.Ts/Model/PrepareOrderCancellationsResBodySignableActionMessage.cs
 src/Immutable.Ts/Model/PrepareOrderCancellationsResBodySignablePurpose.cs
 src/Immutable.Ts/Model/PrepareOrderCancellationsResBodyTypedDataDomain.cs
+src/Immutable.Ts/Model/V1HeartbeatGet200Response.cs
 src/Immutable.Ts/Model/V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response.cs
 src/Immutable.Ts/Model/V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest.cs
 src/Immutable.Ts/Model/V1TsSdkV1OrderbookCancelOrdersPost200Response.cs

@@ -32,11 +32,32 @@ namespace Immutable.Ts.Model
     public partial class V1TsSdkV1OrderbookCancelOrdersPost200ResponseResultFailedCancellationsInner
     {
         /// <summary>
+        /// Reason code indicating why the order failed to be cancelled
+        /// </summary>
+        /// <value>Reason code indicating why the order failed to be cancelled</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum ReasonCodeEnum
+        {
+            /// <summary>
+            /// Enum FILLED for value: FILLED
+            /// </summary>
+            [EnumMember(Value = "FILLED")]
+            FILLED = 1
+        }
+
+
+        /// <summary>
+        /// Reason code indicating why the order failed to be cancelled
+        /// </summary>
+        /// <value>Reason code indicating why the order failed to be cancelled</value>
+        [DataMember(Name = "reason_code", EmitDefaultValue = false)]
+        public ReasonCodeEnum? ReasonCode { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="V1TsSdkV1OrderbookCancelOrdersPost200ResponseResultFailedCancellationsInner" /> class.
         /// </summary>
         /// <param name="order">ID of the order which failed to be cancelled.</param>
         /// <param name="reasonCode">Reason code indicating why the order failed to be cancelled.</param>
-        public V1TsSdkV1OrderbookCancelOrdersPost200ResponseResultFailedCancellationsInner(string order = default(string), string reasonCode = default(string))
+        public V1TsSdkV1OrderbookCancelOrdersPost200ResponseResultFailedCancellationsInner(string order = default(string), ReasonCodeEnum? reasonCode = default(ReasonCodeEnum?))
         {
             this.Order = order;
             this.ReasonCode = reasonCode;
@@ -48,13 +69,6 @@ namespace Immutable.Ts.Model
         /// <value>ID of the order which failed to be cancelled</value>
         [DataMember(Name = "order", EmitDefaultValue = false)]
         public string Order { get; set; }
-
-        /// <summary>
-        /// Reason code indicating why the order failed to be cancelled
-        /// </summary>
-        /// <value>Reason code indicating why the order failed to be cancelled</value>
-        [DataMember(Name = "reason_code", EmitDefaultValue = false)]
-        public string ReasonCode { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

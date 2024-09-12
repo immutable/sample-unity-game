@@ -1,4 +1,5 @@
 # Immutable.Ts.Model.V1TsSdkV1OrderbookPrepareListingPost200Response
+Response schema for the prepareListing endpoint
 
 ## Properties
 

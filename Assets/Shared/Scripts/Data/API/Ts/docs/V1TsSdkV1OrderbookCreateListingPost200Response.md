@@ -1,4 +1,5 @@
 # Immutable.Ts.Model.V1TsSdkV1OrderbookCreateListingPost200Response
+The response schema for the create listing endpoint
 
 ## Properties
 

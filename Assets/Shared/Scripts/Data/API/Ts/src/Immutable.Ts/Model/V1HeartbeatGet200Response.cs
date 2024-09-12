@@ -26,40 +26,32 @@ using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// CreateListingResBodyOrderStatusAnyOf
+    /// heartbeat
     /// </summary>
-    [DataContract(Name = "createListingResBodyOrderStatus_anyOf")]
-    public partial class CreateListingResBodyOrderStatusAnyOf
+    [DataContract(Name = "_v1_heartbeat_get_200_response")]
+    public partial class V1HeartbeatGet200Response
     {
         /// <summary>
-        /// The order status that indicates an order can be fulfilled.
+        /// Initializes a new instance of the <see cref="V1HeartbeatGet200Response" /> class.
         /// </summary>
-        /// <value>The order status that indicates an order can be fulfilled.</value>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum NameEnum
+        /// <param name="status">status.</param>
+        public V1HeartbeatGet200Response(string status = default(string))
         {
-            /// <summary>
-            /// Enum ACTIVE for value: ACTIVE
-            /// </summary>
-            [EnumMember(Value = "ACTIVE")]
-            ACTIVE = 1
+            this.Status = status;
+            this.AdditionalProperties = new Dictionary<string, object>();
         }
 
+        /// <summary>
+        /// Gets or Sets Status
+        /// </summary>
+        [DataMember(Name = "status", EmitDefaultValue = false)]
+        public string Status { get; set; }
 
         /// <summary>
-        /// The order status that indicates an order can be fulfilled.
+        /// Gets or Sets additional properties
         /// </summary>
-        /// <value>The order status that indicates an order can be fulfilled.</value>
-        [DataMember(Name = "name", EmitDefaultValue = false)]
-        public NameEnum? Name { get; set; }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CreateListingResBodyOrderStatusAnyOf" /> class.
-        /// </summary>
-        /// <param name="name">The order status that indicates an order can be fulfilled..</param>
-        public CreateListingResBodyOrderStatusAnyOf(NameEnum? name = default(NameEnum?))
-        {
-            this.Name = name;
-        }
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -68,8 +60,9 @@ namespace Immutable.Ts.Model
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("class CreateListingResBodyOrderStatusAnyOf {\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("class V1HeartbeatGet200Response {\n");
+            sb.Append("  Status: ").Append(Status).Append("\n");
+            sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

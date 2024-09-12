@@ -38,6 +38,25 @@ namespace Immutable.Ts.Model
         [DataMember(Name = "purpose", EmitDefaultValue = false)]
         public PrepareListingResBodyTransactionPurpose? Purpose { get; set; }
         /// <summary>
+        /// Defines Type
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum TypeEnum
+        {
+            /// <summary>
+            /// Enum TRANSACTION for value: TRANSACTION
+            /// </summary>
+            [EnumMember(Value = "TRANSACTION")]
+            TRANSACTION = 1
+        }
+
+
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
+        public TypeEnum Type { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="PrepareListingResBodyTransactionAction" /> class.
         /// </summary>
         [JsonConstructorAttribute]
@@ -48,13 +67,8 @@ namespace Immutable.Ts.Model
         /// <param name="populatedTransactions">populatedTransactions.</param>
         /// <param name="purpose">purpose.</param>
         /// <param name="type">type (required).</param>
-        public PrepareListingResBodyTransactionAction(PrepareListingResBodyTransactionActionPopulatedTransactions populatedTransactions = default(PrepareListingResBodyTransactionActionPopulatedTransactions), PrepareListingResBodyTransactionPurpose? purpose = default(PrepareListingResBodyTransactionPurpose?), string type = default(string))
+        public PrepareListingResBodyTransactionAction(PrepareListingResBodyTransactionActionPopulatedTransactions populatedTransactions = default(PrepareListingResBodyTransactionActionPopulatedTransactions), PrepareListingResBodyTransactionPurpose? purpose = default(PrepareListingResBodyTransactionPurpose?), TypeEnum type = default(TypeEnum))
         {
-            // to ensure "type" is required (not null)
-            if (type == null)
-            {
-                throw new ArgumentNullException("type is a required property for PrepareListingResBodyTransactionAction and cannot be null");
-            }
             this.Type = type;
             this.PopulatedTransactions = populatedTransactions;
             this.Purpose = purpose;
@@ -65,12 +79,6 @@ namespace Immutable.Ts.Model
         /// </summary>
         [DataMember(Name = "populatedTransactions", EmitDefaultValue = false)]
         public PrepareListingResBodyTransactionActionPopulatedTransactions PopulatedTransactions { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
-        public string Type { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

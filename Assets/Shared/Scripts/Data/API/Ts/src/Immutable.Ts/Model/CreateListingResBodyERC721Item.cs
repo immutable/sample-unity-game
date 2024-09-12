@@ -32,6 +32,25 @@ namespace Immutable.Ts.Model
     public partial class CreateListingResBodyERC721Item
     {
         /// <summary>
+        /// Defines Type
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum TypeEnum
+        {
+            /// <summary>
+            /// Enum ERC721 for value: ERC721
+            /// </summary>
+            [EnumMember(Value = "ERC721")]
+            ERC721 = 1
+        }
+
+
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
+        public TypeEnum Type { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="CreateListingResBodyERC721Item" /> class.
         /// </summary>
         [JsonConstructorAttribute]
@@ -42,7 +61,7 @@ namespace Immutable.Ts.Model
         /// <param name="contractAddress">contractAddress (required).</param>
         /// <param name="tokenId">tokenId (required).</param>
         /// <param name="type">type (required).</param>
-        public CreateListingResBodyERC721Item(string contractAddress = default(string), string tokenId = default(string), string type = default(string))
+        public CreateListingResBodyERC721Item(string contractAddress = default(string), string tokenId = default(string), TypeEnum type = default(TypeEnum))
         {
             // to ensure "contractAddress" is required (not null)
             if (contractAddress == null)
@@ -56,11 +75,6 @@ namespace Immutable.Ts.Model
                 throw new ArgumentNullException("tokenId is a required property for CreateListingResBodyERC721Item and cannot be null");
             }
             this.TokenId = tokenId;
-            // to ensure "type" is required (not null)
-            if (type == null)
-            {
-                throw new ArgumentNullException("type is a required property for CreateListingResBodyERC721Item and cannot be null");
-            }
             this.Type = type;
         }
 
@@ -75,12 +89,6 @@ namespace Immutable.Ts.Model
         /// </summary>
         [DataMember(Name = "tokenId", IsRequired = true, EmitDefaultValue = true)]
         public string TokenId { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
-        public string Type { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

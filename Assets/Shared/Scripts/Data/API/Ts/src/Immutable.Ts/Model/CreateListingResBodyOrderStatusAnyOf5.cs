@@ -32,12 +32,33 @@ namespace Immutable.Ts.Model
     public partial class CreateListingResBodyOrderStatusAnyOf5
     {
         /// <summary>
+        /// The order status that indicates the order is yet to be active due to various reasons.
+        /// </summary>
+        /// <value>The order status that indicates the order is yet to be active due to various reasons.</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum NameEnum
+        {
+            /// <summary>
+            /// Enum PENDING for value: PENDING
+            /// </summary>
+            [EnumMember(Value = "PENDING")]
+            PENDING = 1
+        }
+
+
+        /// <summary>
+        /// The order status that indicates the order is yet to be active due to various reasons.
+        /// </summary>
+        /// <value>The order status that indicates the order is yet to be active due to various reasons.</value>
+        [DataMember(Name = "name", EmitDefaultValue = false)]
+        public NameEnum? Name { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="CreateListingResBodyOrderStatusAnyOf5" /> class.
         /// </summary>
         /// <param name="evaluated">Whether the order has been evaluated after its creation.</param>
         /// <param name="name">The order status that indicates the order is yet to be active due to various reasons..</param>
         /// <param name="started">Whether the order has reached its specified start time.</param>
-        public CreateListingResBodyOrderStatusAnyOf5(bool evaluated = default(bool), string name = default(string), bool started = default(bool))
+        public CreateListingResBodyOrderStatusAnyOf5(bool evaluated = default(bool), NameEnum? name = default(NameEnum?), bool started = default(bool))
         {
             this.Evaluated = evaluated;
             this.Name = name;
@@ -50,13 +71,6 @@ namespace Immutable.Ts.Model
         /// <value>Whether the order has been evaluated after its creation</value>
         [DataMember(Name = "evaluated", EmitDefaultValue = true)]
         public bool Evaluated { get; set; }
-
-        /// <summary>
-        /// The order status that indicates the order is yet to be active due to various reasons.
-        /// </summary>
-        /// <value>The order status that indicates the order is yet to be active due to various reasons.</value>
-        [DataMember(Name = "name", EmitDefaultValue = false)]
-        public string Name { get; set; }
 
         /// <summary>
         /// Whether the order has reached its specified start time

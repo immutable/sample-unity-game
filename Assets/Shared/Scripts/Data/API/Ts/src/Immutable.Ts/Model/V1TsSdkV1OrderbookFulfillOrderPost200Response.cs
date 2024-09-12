@@ -26,7 +26,7 @@ using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// V1TsSdkV1OrderbookFulfillOrderPost200Response
+    /// Response schema for the fulfillOrder endpoint
     /// </summary>
     [DataContract(Name = "_v1_ts_sdk_v1_orderbook_fulfillOrder_post_200_response")]
     public partial class V1TsSdkV1OrderbookFulfillOrderPost200Response

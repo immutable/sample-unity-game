@@ -38,12 +38,31 @@ namespace Immutable.Ts.Model
         [DataMember(Name = "purpose", EmitDefaultValue = false)]
         public PrepareOrderCancellationsResBodySignablePurpose? Purpose { get; set; }
         /// <summary>
+        /// Defines Type
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum TypeEnum
+        {
+            /// <summary>
+            /// Enum SIGNABLE for value: SIGNABLE
+            /// </summary>
+            [EnumMember(Value = "SIGNABLE")]
+            SIGNABLE = 1
+        }
+
+
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", EmitDefaultValue = false)]
+        public TypeEnum? Type { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="PrepareOrderCancellationsResBodySignableAction" /> class.
         /// </summary>
         /// <param name="message">message.</param>
         /// <param name="purpose">purpose.</param>
         /// <param name="type">type.</param>
-        public PrepareOrderCancellationsResBodySignableAction(PrepareOrderCancellationsResBodySignableActionMessage message = default(PrepareOrderCancellationsResBodySignableActionMessage), PrepareOrderCancellationsResBodySignablePurpose? purpose = default(PrepareOrderCancellationsResBodySignablePurpose?), string type = default(string))
+        public PrepareOrderCancellationsResBodySignableAction(PrepareOrderCancellationsResBodySignableActionMessage message = default(PrepareOrderCancellationsResBodySignableActionMessage), PrepareOrderCancellationsResBodySignablePurpose? purpose = default(PrepareOrderCancellationsResBodySignablePurpose?), TypeEnum? type = default(TypeEnum?))
         {
             this.Message = message;
             this.Purpose = purpose;
@@ -55,12 +74,6 @@ namespace Immutable.Ts.Model
         /// </summary>
         [DataMember(Name = "message", EmitDefaultValue = false)]
         public PrepareOrderCancellationsResBodySignableActionMessage Message { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = false)]
-        public string Type { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

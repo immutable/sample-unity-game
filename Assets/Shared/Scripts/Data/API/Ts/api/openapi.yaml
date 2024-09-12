@@ -16,8 +16,22 @@ tags:
 - name: ts sdk api
 paths:
   /v1/heartbeat:
-    get: {}
-    head: {}
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_v1_heartbeat_get_200_response'
+          description: heartbeat
+    head:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_v1_heartbeat_get_200_response'
+          description: heartbeat
   /v1/ts-sdk/v1/orderbook/cancelOrders:
     post:
       requestBody:
@@ -31,6 +45,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_cancelOrders_post_200_response'
+          description: Response schema for the cancelOrder endpoint
   /v1/ts-sdk/v1/orderbook/cancelOrdersOnChain:
     post:
       requestBody:
@@ -44,6 +59,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_cancelOrdersOnChain_post_200_response'
+          description: Response schema for the cancelOrder endpoint
   /v1/ts-sdk/v1/orderbook/createListing:
     post:
       requestBody:
@@ -57,6 +73,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_createListing_post_200_response'
+          description: The response schema for the create listing endpoint
   /v1/ts-sdk/v1/orderbook/fulfillOrder:
     post:
       requestBody:
@@ -70,6 +87,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_fulfillOrder_post_200_response'
+          description: Response schema for the fulfillOrder endpoint
   /v1/ts-sdk/v1/orderbook/prepareListing:
     post:
       requestBody:
@@ -83,6 +101,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_prepareListing_post_200_response'
+          description: Response schema for the prepareListing endpoint
   /v1/ts-sdk/v1/orderbook/prepareOrderCancellations:
     post:
       requestBody:
@@ -96,6 +115,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_prepareOrderCancellations_post_200_response'
+          description: Response schema for the prepareOrderCancellations endpoint
 components:
   schemas:
     prepareListingReqBodyERC1155Item:
@@ -107,6 +127,8 @@ components:
         tokenId:
           type: string
         type:
+          enum:
+          - ERC1155
           type: string
       required:
       - amount
@@ -121,6 +143,8 @@ components:
         contractAddress:
           type: string
         type:
+          enum:
+          - ERC20
           type: string
       required:
       - amount
@@ -134,6 +158,8 @@ components:
         tokenId:
           type: string
         type:
+          enum:
+          - ERC721
           type: string
       required:
       - contractAddress
@@ -145,6 +171,8 @@ components:
         amount:
           type: string
         type:
+          enum:
+          - NATIVE
           type: string
       required:
       - amount
@@ -272,6 +300,8 @@ components:
         purpose:
           $ref: '#/components/schemas/prepareListingResBodySignablePurpose'
         type:
+          enum:
+          - SIGNABLE
           type: string
       required:
       - type
@@ -308,13 +338,15 @@ components:
           gasPrice: gasPrice
           ccipReadEnabled: true
         purpose: APPROVAL
-        type: type
+        type: TRANSACTION
       properties:
         populatedTransactions:
           $ref: '#/components/schemas/prepareListingResBodyTransactionAction_populatedTransactions'
         purpose:
           $ref: '#/components/schemas/prepareListingResBodyTransactionPurpose'
         type:
+          enum:
+          - TRANSACTION
           type: string
       required:
       - type
@@ -429,7 +461,7 @@ components:
         amount: amount
         tokenId: tokenId
         contractAddress: contractAddress
-        type: type
+        type: ERC1155
       properties:
         amount:
           type: string
@@ -438,19 +470,23 @@ components:
         tokenId:
           type: string
         type:
+          enum:
+          - ERC1155
           type: string
       type: object
     createListingResBodyERC20Item:
       example:
         amount: amount
         contractAddress: contractAddress
-        type: type
+        type: ERC20
       properties:
         amount:
           type: string
         contractAddress:
           type: string
         type:
+          enum:
+          - ERC20
           type: string
       type: object
     createListingResBodyERC721Item:
@@ -460,6 +496,8 @@ components:
         tokenId:
           type: string
         type:
+          enum:
+          - ERC721
           type: string
       required:
       - contractAddress
@@ -491,6 +529,8 @@ components:
         amount:
           type: string
         type:
+          enum:
+          - NATIVE
           type: string
       type: object
     createListingResBodyOrder:
@@ -511,21 +551,21 @@ components:
         buy:
         - amount: amount
           contractAddress: contractAddress
-          type: type
+          type: ERC20
         - amount: amount
           contractAddress: contractAddress
-          type: type
+          type: ERC20
         sell:
         - amount: amount
           tokenId: tokenId
           contractAddress: contractAddress
-          type: type
+          type: ERC1155
         - amount: amount
           tokenId: tokenId
           contractAddress: contractAddress
-          type: type
+          type: ERC1155
         endAt: endAt
-        type: type
+        type: LISTING
         createdAt: createdAt
         fillStatus:
           denominator: denominator
@@ -540,7 +580,7 @@ components:
         startAt: startAt
         orderHash: orderHash
         status:
-          name: name
+          name: ACTIVE
         updatedAt: updatedAt
       properties:
         accountAddress:
@@ -582,6 +622,8 @@ components:
         status:
           $ref: '#/components/schemas/createListingResBodyOrderStatus'
         type:
+          enum:
+          - LISTING
           type: string
         updatedAt:
           type: string
@@ -631,13 +673,15 @@ components:
           gasPrice: gasPrice
           ccipReadEnabled: true
         purpose: APPROVAL
-        type: type
+        type: TRANSACTION
       properties:
         populatedTransaction:
           $ref: '#/components/schemas/cancelOrderOnchainResBodyTransactionAction_populatedTransaction'
         purpose:
           $ref: '#/components/schemas/cancelOrderOnchainResBodyTransactionPurpose'
         type:
+          enum:
+          - TRANSACTION
           type: string
       type: object
     cancelOrderOnchainResBodyTransactionPurpose:
@@ -677,13 +721,15 @@ components:
             verifyingContract: verifyingContract
           value:
             key: ""
-        type: type
+        type: SIGNABLE
       properties:
         message:
           $ref: '#/components/schemas/prepareOrderCancellationsResBodySignableAction_message'
         purpose:
           $ref: '#/components/schemas/prepareOrderCancellationsResBodySignablePurpose'
         type:
+          enum:
+          - SIGNABLE
           type: string
       type: object
     prepareOrderCancellationsResBodySignablePurpose:
@@ -731,7 +777,7 @@ components:
         amount: amount
         tokenId: tokenId
         contractAddress: contractAddress
-        type: type
+        type: ERC1155
       properties:
         amount:
           type: string
@@ -740,19 +786,23 @@ components:
         tokenId:
           type: string
         type:
+          enum:
+          - ERC1155
           type: string
       type: object
     fulfillOrderResBodyERC20Item:
       example:
         amount: amount
         contractAddress: contractAddress
-        type: type
+        type: ERC20
       properties:
         amount:
           type: string
         contractAddress:
           type: string
         type:
+          enum:
+          - ERC20
           type: string
       type: object
     fulfillOrderResBodyERC721Item:
@@ -762,6 +812,8 @@ components:
         tokenId:
           type: string
         type:
+          enum:
+          - ERC721
           type: string
       type: object
     fulfillOrderResBodyFee:
@@ -789,6 +841,8 @@ components:
         amount:
           type: string
         type:
+          enum:
+          - NATIVE
           type: string
       type: object
     fulfillOrderResBodyOrder:
@@ -809,21 +863,21 @@ components:
         buy:
         - amount: amount
           contractAddress: contractAddress
-          type: type
+          type: ERC20
         - amount: amount
           contractAddress: contractAddress
-          type: type
+          type: ERC20
         sell:
         - amount: amount
           tokenId: tokenId
           contractAddress: contractAddress
-          type: type
+          type: ERC1155
         - amount: amount
           tokenId: tokenId
           contractAddress: contractAddress
-          type: type
+          type: ERC1155
         endAt: endAt
-        type: type
+        type: LISTING
         createdAt: createdAt
         fillStatus:
           denominator: denominator
@@ -838,7 +892,7 @@ components:
         startAt: startAt
         orderHash: orderHash
         status:
-          name: name
+          name: ACTIVE
         updatedAt: updatedAt
       properties:
         accountAddress:
@@ -880,6 +934,8 @@ components:
         status:
           $ref: '#/components/schemas/fulfillOrderResBodyOrderStatus'
         type:
+          enum:
+          - LISTING
           type: string
         updatedAt:
           type: string
@@ -909,6 +965,8 @@ components:
         purpose:
           $ref: '#/components/schemas/fulfillOrderResBodySignablePurpose'
         type:
+          enum:
+          - SIGNABLE
           type: string
       type: object
     fulfillOrderResBodySignablePurpose:
@@ -943,13 +1001,15 @@ components:
           gasPrice: gasPrice
           ccipReadEnabled: true
         purpose: APPROVAL
-        type: type
+        type: TRANSACTION
       properties:
         populatedTransactions:
           $ref: '#/components/schemas/fulfillOrderResBodyTransactionAction_populatedTransactions'
         purpose:
           $ref: '#/components/schemas/fulfillOrderResBodyTransactionPurpose'
         type:
+          enum:
+          - TRANSACTION
           type: string
       required:
       - type
@@ -973,6 +1033,15 @@ components:
         version:
           type: string
       type: object
+    _v1_heartbeat_get_200_response:
+      additionalProperties: true
+      description: heartbeat
+      example:
+        status: status
+      properties:
+        status:
+          type: string
+      type: object
     _v1_ts_sdk_v1_orderbook_cancelOrders_post_request:
       properties:
         orderIds:
@@ -990,7 +1059,7 @@ components:
       type: object
     _v1_ts_sdk_v1_orderbook_cancelOrders_post_200_response_result_failed_cancellations_inner:
       example:
-        reason_code: reason_code
+        reason_code: FILLED
         order: order
       properties:
         order:
@@ -998,14 +1067,16 @@ components:
           type: string
         reason_code:
           description: Reason code indicating why the order failed to be cancelled
+          enum:
+          - FILLED
           type: string
       type: object
     _v1_ts_sdk_v1_orderbook_cancelOrders_post_200_response_result:
       example:
         failed_cancellations:
-        - reason_code: reason_code
+        - reason_code: FILLED
           order: order
-        - reason_code: reason_code
+        - reason_code: FILLED
           order: order
         successful_cancellations:
         - successful_cancellations
@@ -1032,12 +1103,13 @@ components:
           type: array
       type: object
     _v1_ts_sdk_v1_orderbook_cancelOrders_post_200_response:
+      description: Response schema for the cancelOrder endpoint
       example:
         result:
           failed_cancellations:
-          - reason_code: reason_code
+          - reason_code: FILLED
             order: order
-          - reason_code: reason_code
+          - reason_code: FILLED
             order: order
           successful_cancellations:
           - successful_cancellations
@@ -1062,6 +1134,7 @@ components:
       - orderIds
       type: object
     _v1_ts_sdk_v1_orderbook_cancelOrdersOnChain_post_200_response:
+      description: Response schema for the cancelOrder endpoint
       example:
         cancellationAction:
           populatedTransaction:
@@ -1089,7 +1162,7 @@ components:
             gasPrice: gasPrice
             ccipReadEnabled: true
           purpose: APPROVAL
-          type: type
+          type: TRANSACTION
       properties:
         cancellationAction:
           $ref: '#/components/schemas/cancelOrderOnchainResBodyTransactionAction'
@@ -1113,6 +1186,7 @@ components:
       - orderSignature
       type: object
     _v1_ts_sdk_v1_orderbook_createListing_post_200_response:
+      description: The response schema for the create listing endpoint
       example:
         result:
           chain:
@@ -1131,21 +1205,21 @@ components:
           buy:
           - amount: amount
             contractAddress: contractAddress
-            type: type
+            type: ERC20
           - amount: amount
             contractAddress: contractAddress
-            type: type
+            type: ERC20
           sell:
           - amount: amount
             tokenId: tokenId
             contractAddress: contractAddress
-            type: type
+            type: ERC1155
           - amount: amount
             tokenId: tokenId
             contractAddress: contractAddress
-            type: type
+            type: ERC1155
           endAt: endAt
-          type: type
+          type: LISTING
           createdAt: createdAt
           fillStatus:
             denominator: denominator
@@ -1160,7 +1234,7 @@ components:
           startAt: startAt
           orderHash: orderHash
           status:
-            name: name
+            name: ACTIVE
           updatedAt: updatedAt
       properties:
         result:
@@ -1198,6 +1272,7 @@ components:
       - takerFees
       type: object
     _v1_ts_sdk_v1_orderbook_fulfillOrder_post_200_response:
+      description: Response schema for the fulfillOrder endpoint
       example:
         expiration: expiration
         actions:
@@ -1226,7 +1301,7 @@ components:
             gasPrice: gasPrice
             ccipReadEnabled: true
           purpose: APPROVAL
-          type: type
+          type: TRANSACTION
         - populatedTransactions:
             data: data
             accessList:
@@ -1252,7 +1327,7 @@ components:
             gasPrice: gasPrice
             ccipReadEnabled: true
           purpose: APPROVAL
-          type: type
+          type: TRANSACTION
         order:
           chain:
             name: name
@@ -1270,21 +1345,21 @@ components:
           buy:
           - amount: amount
             contractAddress: contractAddress
-            type: type
+            type: ERC20
           - amount: amount
             contractAddress: contractAddress
-            type: type
+            type: ERC20
           sell:
           - amount: amount
             tokenId: tokenId
             contractAddress: contractAddress
-            type: type
+            type: ERC1155
           - amount: amount
             tokenId: tokenId
             contractAddress: contractAddress
-            type: type
+            type: ERC1155
           endAt: endAt
-          type: type
+          type: LISTING
           createdAt: createdAt
           fillStatus:
             denominator: denominator
@@ -1299,7 +1374,7 @@ components:
           startAt: startAt
           orderHash: orderHash
           status:
-            name: name
+            name: ACTIVE
           updatedAt: updatedAt
       properties:
         actions:
@@ -1339,6 +1414,7 @@ components:
       - sell
       type: object
     _v1_ts_sdk_v1_orderbook_prepareListing_post_200_response:
+      description: Response schema for the prepareListing endpoint
       example:
         actions:
         - populatedTransactions:
@@ -1366,7 +1442,7 @@ components:
             gasPrice: gasPrice
             ccipReadEnabled: true
           purpose: APPROVAL
-          type: type
+          type: TRANSACTION
         - populatedTransactions:
             data: data
             accessList:
@@ -1392,7 +1468,7 @@ components:
             gasPrice: gasPrice
             ccipReadEnabled: true
           purpose: APPROVAL
-          type: type
+          type: TRANSACTION
         orderComponents:
           offer:
           - itemType: null
@@ -1454,6 +1530,7 @@ components:
       - orderIds
       type: object
     _v1_ts_sdk_v1_orderbook_prepareOrderCancellations_post_200_response:
+      description: Response schema for the prepareOrderCancellations endpoint
       example:
         signableAction:
           purpose: CREATE_LISTING
@@ -1472,7 +1549,7 @@ components:
               verifyingContract: verifyingContract
             value:
               key: ""
-          type: type
+          type: SIGNABLE
       properties:
         signableAction:
           $ref: '#/components/schemas/prepareOrderCancellationsResBodySignableAction'
@@ -1711,10 +1788,12 @@ components:
       - $ref: '#/components/schemas/createListingResBodyERC721Item'
     createListingResBodyOrderStatus_anyOf:
       example:
-        name: name
+        name: ACTIVE
       properties:
         name:
           description: The order status that indicates an order can be fulfilled.
+          enum:
+          - ACTIVE
           type: string
       type: object
     createListingResBodyOrderStatus_anyOf_1:
@@ -1724,6 +1803,8 @@ components:
         name:
           description: The order status indicating a order is has been cancelled or
             about to be cancelled.
+          enum:
+          - CANCELLED
           type: string
         pending:
           description: Whether the cancellation of the order is pending
@@ -1734,18 +1815,24 @@ components:
         name:
           description: A terminal order status indicating that an order cannot be
             fulfilled due to expiry.
+          enum:
+          - EXPIRED
           type: string
       type: object
     createListingResBodyOrderStatus_anyOf_3:
       properties:
         name:
           description: A terminal order status indicating that an order has been fulfilled.
+          enum:
+          - FILLED
           type: string
       type: object
     createListingResBodyOrderStatus_anyOf_4:
       properties:
         name:
           description: The order status that indicates an order cannot be fulfilled.
+          enum:
+          - INACTIVE
           type: string
         sufficient_approvals:
           description: Whether the order offerer has sufficient approvals
@@ -1763,6 +1850,8 @@ components:
         name:
           description: The order status that indicates the order is yet to be active
             due to various reasons.
+          enum:
+          - PENDING
           type: string
         started:
           description: Whether the order has reached its specified start time
@@ -1870,6 +1959,8 @@ components:
         name:
           description: The order status indicating a order is has been cancelled or
             about to be cancelled.
+          enum:
+          - CANCELLED
           type: string
         pending:
           description: Whether the cancellation of the order is pending

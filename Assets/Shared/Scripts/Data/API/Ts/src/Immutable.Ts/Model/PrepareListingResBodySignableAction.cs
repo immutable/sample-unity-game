@@ -38,6 +38,25 @@ namespace Immutable.Ts.Model
         [DataMember(Name = "purpose", EmitDefaultValue = false)]
         public PrepareListingResBodySignablePurpose? Purpose { get; set; }
         /// <summary>
+        /// Defines Type
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum TypeEnum
+        {
+            /// <summary>
+            /// Enum SIGNABLE for value: SIGNABLE
+            /// </summary>
+            [EnumMember(Value = "SIGNABLE")]
+            SIGNABLE = 1
+        }
+
+
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
+        public TypeEnum Type { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="PrepareListingResBodySignableAction" /> class.
         /// </summary>
         [JsonConstructorAttribute]
@@ -48,13 +67,8 @@ namespace Immutable.Ts.Model
         /// <param name="message">message.</param>
         /// <param name="purpose">purpose.</param>
         /// <param name="type">type (required).</param>
-        public PrepareListingResBodySignableAction(PrepareListingResBodySignableActionMessage message = default(PrepareListingResBodySignableActionMessage), PrepareListingResBodySignablePurpose? purpose = default(PrepareListingResBodySignablePurpose?), string type = default(string))
+        public PrepareListingResBodySignableAction(PrepareListingResBodySignableActionMessage message = default(PrepareListingResBodySignableActionMessage), PrepareListingResBodySignablePurpose? purpose = default(PrepareListingResBodySignablePurpose?), TypeEnum type = default(TypeEnum))
         {
-            // to ensure "type" is required (not null)
-            if (type == null)
-            {
-                throw new ArgumentNullException("type is a required property for PrepareListingResBodySignableAction and cannot be null");
-            }
             this.Type = type;
             this.Message = message;
             this.Purpose = purpose;
@@ -65,12 +79,6 @@ namespace Immutable.Ts.Model
         /// </summary>
         [DataMember(Name = "message", EmitDefaultValue = false)]
         public PrepareListingResBodySignableActionMessage Message { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
-        public string Type { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

@@ -32,24 +32,38 @@ namespace Immutable.Ts.Model
     public partial class CreateListingResBodyOrderStatusAnyOf4
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateListingResBodyOrderStatusAnyOf4" /> class.
+        /// The order status that indicates an order cannot be fulfilled.
         /// </summary>
-        /// <param name="name">The order status that indicates an order cannot be fulfilled..</param>
-        /// <param name="sufficientApprovals">Whether the order offerer has sufficient approvals.</param>
-        /// <param name="sufficientBalances">Whether the order offerer still has sufficient balance to complete the order.</param>
-        public CreateListingResBodyOrderStatusAnyOf4(string name = default(string), bool sufficientApprovals = default(bool), bool sufficientBalances = default(bool))
+        /// <value>The order status that indicates an order cannot be fulfilled.</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum NameEnum
         {
-            this.Name = name;
-            this.SufficientApprovals = sufficientApprovals;
-            this.SufficientBalances = sufficientBalances;
+            /// <summary>
+            /// Enum INACTIVE for value: INACTIVE
+            /// </summary>
+            [EnumMember(Value = "INACTIVE")]
+            INACTIVE = 1
         }
+
 
         /// <summary>
         /// The order status that indicates an order cannot be fulfilled.
         /// </summary>
         /// <value>The order status that indicates an order cannot be fulfilled.</value>
         [DataMember(Name = "name", EmitDefaultValue = false)]
-        public string Name { get; set; }
+        public NameEnum? Name { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateListingResBodyOrderStatusAnyOf4" /> class.
+        /// </summary>
+        /// <param name="name">The order status that indicates an order cannot be fulfilled..</param>
+        /// <param name="sufficientApprovals">Whether the order offerer has sufficient approvals.</param>
+        /// <param name="sufficientBalances">Whether the order offerer still has sufficient balance to complete the order.</param>
+        public CreateListingResBodyOrderStatusAnyOf4(NameEnum? name = default(NameEnum?), bool sufficientApprovals = default(bool), bool sufficientBalances = default(bool))
+        {
+            this.Name = name;
+            this.SufficientApprovals = sufficientApprovals;
+            this.SufficientBalances = sufficientBalances;
+        }
 
         /// <summary>
         /// Whether the order offerer has sufficient approvals

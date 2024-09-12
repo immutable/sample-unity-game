@@ -32,20 +32,34 @@ namespace Immutable.Ts.Model
     public partial class CreateListingResBodyOrderStatusAnyOf3
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateListingResBodyOrderStatusAnyOf3" /> class.
+        /// A terminal order status indicating that an order has been fulfilled.
         /// </summary>
-        /// <param name="name">A terminal order status indicating that an order has been fulfilled..</param>
-        public CreateListingResBodyOrderStatusAnyOf3(string name = default(string))
+        /// <value>A terminal order status indicating that an order has been fulfilled.</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum NameEnum
         {
-            this.Name = name;
+            /// <summary>
+            /// Enum FILLED for value: FILLED
+            /// </summary>
+            [EnumMember(Value = "FILLED")]
+            FILLED = 1
         }
+
 
         /// <summary>
         /// A terminal order status indicating that an order has been fulfilled.
         /// </summary>
         /// <value>A terminal order status indicating that an order has been fulfilled.</value>
         [DataMember(Name = "name", EmitDefaultValue = false)]
-        public string Name { get; set; }
+        public NameEnum? Name { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateListingResBodyOrderStatusAnyOf3" /> class.
+        /// </summary>
+        /// <param name="name">A terminal order status indicating that an order has been fulfilled..</param>
+        public CreateListingResBodyOrderStatusAnyOf3(NameEnum? name = default(NameEnum?))
+        {
+            this.Name = name;
+        }
 
         /// <summary>
         /// Returns the string presentation of the object

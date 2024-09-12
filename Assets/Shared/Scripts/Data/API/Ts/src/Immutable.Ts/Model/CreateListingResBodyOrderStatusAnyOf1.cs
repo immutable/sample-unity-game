@@ -38,24 +38,38 @@ namespace Immutable.Ts.Model
         [DataMember(Name = "cancellation_type", EmitDefaultValue = false)]
         public CreateListingResBodyCancellationType? CancellationType { get; set; }
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateListingResBodyOrderStatusAnyOf1" /> class.
+        /// The order status indicating a order is has been cancelled or about to be cancelled.
         /// </summary>
-        /// <param name="cancellationType">cancellationType.</param>
-        /// <param name="name">The order status indicating a order is has been cancelled or about to be cancelled..</param>
-        /// <param name="pending">Whether the cancellation of the order is pending.</param>
-        public CreateListingResBodyOrderStatusAnyOf1(CreateListingResBodyCancellationType? cancellationType = default(CreateListingResBodyCancellationType?), string name = default(string), bool pending = default(bool))
+        /// <value>The order status indicating a order is has been cancelled or about to be cancelled.</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum NameEnum
         {
-            this.CancellationType = cancellationType;
-            this.Name = name;
-            this.Pending = pending;
+            /// <summary>
+            /// Enum CANCELLED for value: CANCELLED
+            /// </summary>
+            [EnumMember(Value = "CANCELLED")]
+            CANCELLED = 1
         }
+
 
         /// <summary>
         /// The order status indicating a order is has been cancelled or about to be cancelled.
         /// </summary>
         /// <value>The order status indicating a order is has been cancelled or about to be cancelled.</value>
         [DataMember(Name = "name", EmitDefaultValue = false)]
-        public string Name { get; set; }
+        public NameEnum? Name { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateListingResBodyOrderStatusAnyOf1" /> class.
+        /// </summary>
+        /// <param name="cancellationType">cancellationType.</param>
+        /// <param name="name">The order status indicating a order is has been cancelled or about to be cancelled..</param>
+        /// <param name="pending">Whether the cancellation of the order is pending.</param>
+        public CreateListingResBodyOrderStatusAnyOf1(CreateListingResBodyCancellationType? cancellationType = default(CreateListingResBodyCancellationType?), NameEnum? name = default(NameEnum?), bool pending = default(bool))
+        {
+            this.CancellationType = cancellationType;
+            this.Name = name;
+            this.Pending = pending;
+        }
 
         /// <summary>
         /// Whether the cancellation of the order is pending

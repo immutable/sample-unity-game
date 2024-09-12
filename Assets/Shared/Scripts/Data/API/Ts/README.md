@@ -66,7 +66,8 @@ namespace Immutable.TsExample
 
             try
             {
-                await apiInstance.V1HeartbeatGetAsync();
+                V1HeartbeatGet200Response result = await apiInstance.V1HeartbeatGetAsync();
+                Debug.Log(result);
                 Debug.Log("Done!");
             }
             catch (ApiException e)
@@ -174,6 +175,7 @@ Class | Method | HTTP request | Description
  - [Model.PrepareOrderCancellationsResBodySignableActionMessage](PrepareOrderCancellationsResBodySignableActionMessage.md)
  - [Model.PrepareOrderCancellationsResBodySignablePurpose](PrepareOrderCancellationsResBodySignablePurpose.md)
  - [Model.PrepareOrderCancellationsResBodyTypedDataDomain](PrepareOrderCancellationsResBodyTypedDataDomain.md)
+ - [Model.V1HeartbeatGet200Response](V1HeartbeatGet200Response.md)
  - [Model.V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response](V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response.md)
  - [Model.V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest](V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest.md)
  - [Model.V1TsSdkV1OrderbookCancelOrdersPost200Response](V1TsSdkV1OrderbookCancelOrdersPost200Response.md)

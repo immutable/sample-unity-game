@@ -1,11 +1,11 @@
-# Immutable.Ts.Model.V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response
-Response schema for the cancelOrder endpoint
+# Immutable.Ts.Model.V1HeartbeatGet200Response
+heartbeat
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**CancellationAction** | [**CancelOrderOnchainResBodyTransactionAction**](CancelOrderOnchainResBodyTransactionAction.md) |  | [optional] 
+**Status** | **string** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

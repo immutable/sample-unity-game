@@ -32,11 +32,30 @@ namespace Immutable.Ts.Model
     public partial class CreateListingResBodyNativeItem
     {
         /// <summary>
+        /// Defines Type
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum TypeEnum
+        {
+            /// <summary>
+            /// Enum NATIVE for value: NATIVE
+            /// </summary>
+            [EnumMember(Value = "NATIVE")]
+            NATIVE = 1
+        }
+
+
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", EmitDefaultValue = false)]
+        public TypeEnum? Type { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="CreateListingResBodyNativeItem" /> class.
         /// </summary>
         /// <param name="amount">amount.</param>
         /// <param name="type">type.</param>
-        public CreateListingResBodyNativeItem(string amount = default(string), string type = default(string))
+        public CreateListingResBodyNativeItem(string amount = default(string), TypeEnum? type = default(TypeEnum?))
         {
             this.Amount = amount;
             this.Type = type;
@@ -47,12 +66,6 @@ namespace Immutable.Ts.Model
         /// </summary>
         [DataMember(Name = "amount", EmitDefaultValue = false)]
         public string Amount { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = false)]
-        public string Type { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

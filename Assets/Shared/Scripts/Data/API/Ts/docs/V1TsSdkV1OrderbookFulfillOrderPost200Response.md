@@ -1,4 +1,5 @@
 # Immutable.Ts.Model.V1TsSdkV1OrderbookFulfillOrderPost200Response
+Response schema for the fulfillOrder endpoint
 
 ## Properties
 

@@ -32,6 +32,25 @@ namespace Immutable.Ts.Model
     public partial class PrepareListingReqBodyERC20Item
     {
         /// <summary>
+        /// Defines Type
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum TypeEnum
+        {
+            /// <summary>
+            /// Enum ERC20 for value: ERC20
+            /// </summary>
+            [EnumMember(Value = "ERC20")]
+            ERC20 = 1
+        }
+
+
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
+        public TypeEnum Type { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="PrepareListingReqBodyERC20Item" /> class.
         /// </summary>
         [JsonConstructorAttribute]
@@ -42,7 +61,7 @@ namespace Immutable.Ts.Model
         /// <param name="amount">amount (required).</param>
         /// <param name="contractAddress">contractAddress (required).</param>
         /// <param name="type">type (required).</param>
-        public PrepareListingReqBodyERC20Item(string amount = default(string), string contractAddress = default(string), string type = default(string))
+        public PrepareListingReqBodyERC20Item(string amount = default(string), string contractAddress = default(string), TypeEnum type = default(TypeEnum))
         {
             // to ensure "amount" is required (not null)
             if (amount == null)
@@ -56,11 +75,6 @@ namespace Immutable.Ts.Model
                 throw new ArgumentNullException("contractAddress is a required property for PrepareListingReqBodyERC20Item and cannot be null");
             }
             this.ContractAddress = contractAddress;
-            // to ensure "type" is required (not null)
-            if (type == null)
-            {
-                throw new ArgumentNullException("type is a required property for PrepareListingReqBodyERC20Item and cannot be null");
-            }
             this.Type = type;
         }
 
@@ -75,12 +89,6 @@ namespace Immutable.Ts.Model
         /// </summary>
         [DataMember(Name = "contractAddress", IsRequired = true, EmitDefaultValue = true)]
         public string ContractAddress { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
-        public string Type { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

@@ -32,6 +32,25 @@ namespace Immutable.Ts.Model
     public partial class CreateListingResBodyOrder
     {
         /// <summary>
+        /// Defines Type
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum TypeEnum
+        {
+            /// <summary>
+            /// Enum LISTING for value: LISTING
+            /// </summary>
+            [EnumMember(Value = "LISTING")]
+            LISTING = 1
+        }
+
+
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
+        public TypeEnum Type { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="CreateListingResBodyOrder" /> class.
         /// </summary>
         [JsonConstructorAttribute]
@@ -56,7 +75,7 @@ namespace Immutable.Ts.Model
         /// <param name="status">status (required).</param>
         /// <param name="type">type (required).</param>
         /// <param name="updatedAt">updatedAt (required).</param>
-        public CreateListingResBodyOrder(string accountAddress = default(string), List<CreateListingResBodyOrderBuyInner> buy = default(List<CreateListingResBodyOrderBuyInner>), CreateListingResBodyOrderChain chain = default(CreateListingResBodyOrderChain), string createdAt = default(string), string endAt = default(string), List<CreateListingResBodyFee> fees = default(List<CreateListingResBodyFee>), CreateListingResBodyOrderFillStatus fillStatus = default(CreateListingResBodyOrderFillStatus), string id = default(string), string orderHash = default(string), CreateListingResBodyOrderProtocolData protocolData = default(CreateListingResBodyOrderProtocolData), string salt = default(string), List<CreateListingResBodyOrderSellInner> sell = default(List<CreateListingResBodyOrderSellInner>), string signature = default(string), string startAt = default(string), CreateListingResBodyOrderStatus status = default(CreateListingResBodyOrderStatus), string type = default(string), string updatedAt = default(string))
+        public CreateListingResBodyOrder(string accountAddress = default(string), List<CreateListingResBodyOrderBuyInner> buy = default(List<CreateListingResBodyOrderBuyInner>), CreateListingResBodyOrderChain chain = default(CreateListingResBodyOrderChain), string createdAt = default(string), string endAt = default(string), List<CreateListingResBodyFee> fees = default(List<CreateListingResBodyFee>), CreateListingResBodyOrderFillStatus fillStatus = default(CreateListingResBodyOrderFillStatus), string id = default(string), string orderHash = default(string), CreateListingResBodyOrderProtocolData protocolData = default(CreateListingResBodyOrderProtocolData), string salt = default(string), List<CreateListingResBodyOrderSellInner> sell = default(List<CreateListingResBodyOrderSellInner>), string signature = default(string), string startAt = default(string), CreateListingResBodyOrderStatus status = default(CreateListingResBodyOrderStatus), TypeEnum type = default(TypeEnum), string updatedAt = default(string))
         {
             // to ensure "id" is required (not null)
             if (id == null)
@@ -94,11 +113,6 @@ namespace Immutable.Ts.Model
                 throw new ArgumentNullException("status is a required property for CreateListingResBodyOrder and cannot be null");
             }
             this.Status = status;
-            // to ensure "type" is required (not null)
-            if (type == null)
-            {
-                throw new ArgumentNullException("type is a required property for CreateListingResBodyOrder and cannot be null");
-            }
             this.Type = type;
             // to ensure "updatedAt" is required (not null)
             if (updatedAt == null)
@@ -208,12 +222,6 @@ namespace Immutable.Ts.Model
         /// </summary>
         [DataMember(Name = "status", IsRequired = true, EmitDefaultValue = true)]
         public CreateListingResBodyOrderStatus Status { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
-        public string Type { get; set; }
 
         /// <summary>
         /// Gets or Sets UpdatedAt

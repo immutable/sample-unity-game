@@ -32,6 +32,25 @@ namespace Immutable.Ts.Model
     public partial class FulfillOrderResBodyOrder
     {
         /// <summary>
+        /// Defines Type
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum TypeEnum
+        {
+            /// <summary>
+            /// Enum LISTING for value: LISTING
+            /// </summary>
+            [EnumMember(Value = "LISTING")]
+            LISTING = 1
+        }
+
+
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", EmitDefaultValue = false)]
+        public TypeEnum? Type { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="FulfillOrderResBodyOrder" /> class.
         /// </summary>
         /// <param name="accountAddress">accountAddress.</param>
@@ -51,7 +70,7 @@ namespace Immutable.Ts.Model
         /// <param name="status">status.</param>
         /// <param name="type">type.</param>
         /// <param name="updatedAt">updatedAt.</param>
-        public FulfillOrderResBodyOrder(string accountAddress = default(string), List<FulfillOrderResBodyOrderBuyInner> buy = default(List<FulfillOrderResBodyOrderBuyInner>), CreateListingResBodyOrderChain chain = default(CreateListingResBodyOrderChain), string createdAt = default(string), string endAt = default(string), List<FulfillOrderResBodyFee> fees = default(List<FulfillOrderResBodyFee>), CreateListingResBodyOrderFillStatus fillStatus = default(CreateListingResBodyOrderFillStatus), string id = default(string), string orderHash = default(string), CreateListingResBodyOrderProtocolData protocolData = default(CreateListingResBodyOrderProtocolData), string salt = default(string), List<FulfillOrderResBodyOrderSellInner> sell = default(List<FulfillOrderResBodyOrderSellInner>), string signature = default(string), string startAt = default(string), FulfillOrderResBodyOrderStatus status = default(FulfillOrderResBodyOrderStatus), string type = default(string), string updatedAt = default(string))
+        public FulfillOrderResBodyOrder(string accountAddress = default(string), List<FulfillOrderResBodyOrderBuyInner> buy = default(List<FulfillOrderResBodyOrderBuyInner>), CreateListingResBodyOrderChain chain = default(CreateListingResBodyOrderChain), string createdAt = default(string), string endAt = default(string), List<FulfillOrderResBodyFee> fees = default(List<FulfillOrderResBodyFee>), CreateListingResBodyOrderFillStatus fillStatus = default(CreateListingResBodyOrderFillStatus), string id = default(string), string orderHash = default(string), CreateListingResBodyOrderProtocolData protocolData = default(CreateListingResBodyOrderProtocolData), string salt = default(string), List<FulfillOrderResBodyOrderSellInner> sell = default(List<FulfillOrderResBodyOrderSellInner>), string signature = default(string), string startAt = default(string), FulfillOrderResBodyOrderStatus status = default(FulfillOrderResBodyOrderStatus), TypeEnum? type = default(TypeEnum?), string updatedAt = default(string))
         {
             this.AccountAddress = accountAddress;
             this.Buy = buy;
@@ -163,12 +182,6 @@ namespace Immutable.Ts.Model
         /// </summary>
         [DataMember(Name = "status", EmitDefaultValue = false)]
         public FulfillOrderResBodyOrderStatus Status { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = false)]
-        public string Type { get; set; }
 
         /// <summary>
         /// Gets or Sets UpdatedAt

@@ -32,12 +32,31 @@ namespace Immutable.Ts.Model
     public partial class CreateListingResBodyERC20Item
     {
         /// <summary>
+        /// Defines Type
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum TypeEnum
+        {
+            /// <summary>
+            /// Enum ERC20 for value: ERC20
+            /// </summary>
+            [EnumMember(Value = "ERC20")]
+            ERC20 = 1
+        }
+
+
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", EmitDefaultValue = false)]
+        public TypeEnum? Type { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="CreateListingResBodyERC20Item" /> class.
         /// </summary>
         /// <param name="amount">amount.</param>
         /// <param name="contractAddress">contractAddress.</param>
         /// <param name="type">type.</param>
-        public CreateListingResBodyERC20Item(string amount = default(string), string contractAddress = default(string), string type = default(string))
+        public CreateListingResBodyERC20Item(string amount = default(string), string contractAddress = default(string), TypeEnum? type = default(TypeEnum?))
         {
             this.Amount = amount;
             this.ContractAddress = contractAddress;
@@ -55,12 +74,6 @@ namespace Immutable.Ts.Model
         /// </summary>
         [DataMember(Name = "contractAddress", EmitDefaultValue = false)]
         public string ContractAddress { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = false)]
-        public string Type { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

@@ -1,4 +1,5 @@
 # Immutable.Ts.Model.V1TsSdkV1OrderbookCancelOrdersPost200Response
+Response schema for the cancelOrder endpoint
 
 ## Properties
 

@@ -32,12 +32,31 @@ namespace Immutable.Ts.Model
     public partial class FulfillOrderResBodyERC721Item
     {
         /// <summary>
+        /// Defines Type
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum TypeEnum
+        {
+            /// <summary>
+            /// Enum ERC721 for value: ERC721
+            /// </summary>
+            [EnumMember(Value = "ERC721")]
+            ERC721 = 1
+        }
+
+
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", EmitDefaultValue = false)]
+        public TypeEnum? Type { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="FulfillOrderResBodyERC721Item" /> class.
         /// </summary>
         /// <param name="contractAddress">contractAddress.</param>
         /// <param name="tokenId">tokenId.</param>
         /// <param name="type">type.</param>
-        public FulfillOrderResBodyERC721Item(string contractAddress = default(string), string tokenId = default(string), string type = default(string))
+        public FulfillOrderResBodyERC721Item(string contractAddress = default(string), string tokenId = default(string), TypeEnum? type = default(TypeEnum?))
         {
             this.ContractAddress = contractAddress;
             this.TokenId = tokenId;
@@ -55,12 +74,6 @@ namespace Immutable.Ts.Model
         /// </summary>
         [DataMember(Name = "tokenId", EmitDefaultValue = false)]
         public string TokenId { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = false)]
-        public string Type { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

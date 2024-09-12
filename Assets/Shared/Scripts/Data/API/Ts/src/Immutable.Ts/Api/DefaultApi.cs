@@ -31,8 +31,8 @@ namespace Immutable.Ts.Api
         /// 
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns></returns>
-        void V1HeartbeatGet();
+        /// <returns>V1HeartbeatGet200Response</returns>
+        V1HeartbeatGet200Response V1HeartbeatGet();
 
         /// <summary>
         /// 
@@ -41,14 +41,14 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> V1HeartbeatGetWithHttpInfo();
+        /// <returns>ApiResponse of V1HeartbeatGet200Response</returns>
+        ApiResponse<V1HeartbeatGet200Response> V1HeartbeatGetWithHttpInfo();
         /// <summary>
         /// 
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns></returns>
-        void V1HeartbeatHead();
+        /// <returns>V1HeartbeatGet200Response</returns>
+        V1HeartbeatGet200Response V1HeartbeatHead();
 
         /// <summary>
         /// 
@@ -57,8 +57,8 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> V1HeartbeatHeadWithHttpInfo();
+        /// <returns>ApiResponse of V1HeartbeatGet200Response</returns>
+        ApiResponse<V1HeartbeatGet200Response> V1HeartbeatHeadWithHttpInfo();
         /// <summary>
         /// 
         /// </summary>
@@ -184,8 +184,8 @@ namespace Immutable.Ts.Api
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task V1HeartbeatGetAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of V1HeartbeatGet200Response</returns>
+        System.Threading.Tasks.Task<V1HeartbeatGet200Response> V1HeartbeatGetAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
 
         /// <summary>
         /// 
@@ -195,8 +195,8 @@ namespace Immutable.Ts.Api
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> V1HeartbeatGetWithHttpInfoAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of ApiResponse (V1HeartbeatGet200Response)</returns>
+        System.Threading.Tasks.Task<ApiResponse<V1HeartbeatGet200Response>> V1HeartbeatGetWithHttpInfoAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
         /// <summary>
         /// 
         /// </summary>
@@ -205,8 +205,8 @@ namespace Immutable.Ts.Api
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task V1HeartbeatHeadAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of V1HeartbeatGet200Response</returns>
+        System.Threading.Tasks.Task<V1HeartbeatGet200Response> V1HeartbeatHeadAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
 
         /// <summary>
         /// 
@@ -216,8 +216,8 @@ namespace Immutable.Ts.Api
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> V1HeartbeatHeadWithHttpInfoAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of ApiResponse (V1HeartbeatGet200Response)</returns>
+        System.Threading.Tasks.Task<ApiResponse<V1HeartbeatGet200Response>> V1HeartbeatHeadWithHttpInfoAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
         /// <summary>
         /// 
         /// </summary>
@@ -504,18 +504,19 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns></returns>
-        public void V1HeartbeatGet()
+        /// <returns>V1HeartbeatGet200Response</returns>
+        public V1HeartbeatGet200Response V1HeartbeatGet()
         {
-            V1HeartbeatGetWithHttpInfo();
+            Immutable.Ts.Client.ApiResponse<V1HeartbeatGet200Response> localVarResponse = V1HeartbeatGetWithHttpInfo();
+            return localVarResponse.Data;
         }
 
         /// <summary>
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of Object(void)</returns>
-        public Immutable.Ts.Client.ApiResponse<Object> V1HeartbeatGetWithHttpInfo()
+        /// <returns>ApiResponse of V1HeartbeatGet200Response</returns>
+        public Immutable.Ts.Client.ApiResponse<V1HeartbeatGet200Response> V1HeartbeatGetWithHttpInfo()
         {
             Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
 
@@ -524,6 +525,7 @@ namespace Immutable.Ts.Api
 
             // to determine the Accept header
             string[] _accepts = new string[] {
+                "application/json"
             };
 
             var localVarContentType = Immutable.Ts.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
@@ -535,7 +537,7 @@ namespace Immutable.Ts.Api
 
 
             // make the HTTP request
-            var localVarResponse = this.Client.Get<Object>("/v1/heartbeat", localVarRequestOptions, this.Configuration);
+            var localVarResponse = this.Client.Get<V1HeartbeatGet200Response>("/v1/heartbeat", localVarRequestOptions, this.Configuration);
 
             if (this.ExceptionFactory != null)
             {
@@ -551,15 +553,16 @@ namespace Immutable.Ts.Api
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task V1HeartbeatGetAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        /// <returns>Task of V1HeartbeatGet200Response</returns>
+        public async System.Threading.Tasks.Task<V1HeartbeatGet200Response> V1HeartbeatGetAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
             var task = V1HeartbeatGetWithHttpInfoAsync(cancellationToken);
 #if UNITY_EDITOR || !UNITY_WEBGL
-            await task.ConfigureAwait(false);
+            Immutable.Ts.Client.ApiResponse<V1HeartbeatGet200Response> localVarResponse = await task.ConfigureAwait(false);
 #else
-            await task;
+            Immutable.Ts.Client.ApiResponse<V1HeartbeatGet200Response> localVarResponse = await task;
 #endif
+            return localVarResponse.Data;
         }
 
         /// <summary>
@@ -567,8 +570,8 @@ namespace Immutable.Ts.Api
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<Object>> V1HeartbeatGetWithHttpInfoAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        /// <returns>Task of ApiResponse (V1HeartbeatGet200Response)</returns>
+        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<V1HeartbeatGet200Response>> V1HeartbeatGetWithHttpInfoAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
 
             Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
@@ -578,6 +581,7 @@ namespace Immutable.Ts.Api
 
             // to determine the Accept header
             string[] _accepts = new string[] {
+                "application/json"
             };
 
 
@@ -591,7 +595,7 @@ namespace Immutable.Ts.Api
 
             // make the HTTP request
 
-            var task = this.AsynchronousClient.GetAsync<Object>("/v1/heartbeat", localVarRequestOptions, this.Configuration, cancellationToken);
+            var task = this.AsynchronousClient.GetAsync<V1HeartbeatGet200Response>("/v1/heartbeat", localVarRequestOptions, this.Configuration, cancellationToken);
 
 #if UNITY_EDITOR || !UNITY_WEBGL
             var localVarResponse = await task.ConfigureAwait(false);
@@ -612,18 +616,19 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns></returns>
-        public void V1HeartbeatHead()
+        /// <returns>V1HeartbeatGet200Response</returns>
+        public V1HeartbeatGet200Response V1HeartbeatHead()
         {
-            V1HeartbeatHeadWithHttpInfo();
+            Immutable.Ts.Client.ApiResponse<V1HeartbeatGet200Response> localVarResponse = V1HeartbeatHeadWithHttpInfo();
+            return localVarResponse.Data;
         }
 
         /// <summary>
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of Object(void)</returns>
-        public Immutable.Ts.Client.ApiResponse<Object> V1HeartbeatHeadWithHttpInfo()
+        /// <returns>ApiResponse of V1HeartbeatGet200Response</returns>
+        public Immutable.Ts.Client.ApiResponse<V1HeartbeatGet200Response> V1HeartbeatHeadWithHttpInfo()
         {
             Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
 
@@ -632,6 +637,7 @@ namespace Immutable.Ts.Api
 
             // to determine the Accept header
             string[] _accepts = new string[] {
+                "application/json"
             };
 
             var localVarContentType = Immutable.Ts.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
@@ -643,7 +649,7 @@ namespace Immutable.Ts.Api
 
 
             // make the HTTP request
-            var localVarResponse = this.Client.Head<Object>("/v1/heartbeat", localVarRequestOptions, this.Configuration);
+            var localVarResponse = this.Client.Head<V1HeartbeatGet200Response>("/v1/heartbeat", localVarRequestOptions, this.Configuration);
 
             if (this.ExceptionFactory != null)
             {
@@ -659,15 +665,16 @@ namespace Immutable.Ts.Api
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task V1HeartbeatHeadAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        /// <returns>Task of V1HeartbeatGet200Response</returns>
+        public async System.Threading.Tasks.Task<V1HeartbeatGet200Response> V1HeartbeatHeadAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
             var task = V1HeartbeatHeadWithHttpInfoAsync(cancellationToken);
 #if UNITY_EDITOR || !UNITY_WEBGL
-            await task.ConfigureAwait(false);
+            Immutable.Ts.Client.ApiResponse<V1HeartbeatGet200Response> localVarResponse = await task.ConfigureAwait(false);
 #else
-            await task;
+            Immutable.Ts.Client.ApiResponse<V1HeartbeatGet200Response> localVarResponse = await task;
 #endif
+            return localVarResponse.Data;
         }
 
         /// <summary>
@@ -675,8 +682,8 @@ namespace Immutable.Ts.Api
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<Object>> V1HeartbeatHeadWithHttpInfoAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        /// <returns>Task of ApiResponse (V1HeartbeatGet200Response)</returns>
+        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<V1HeartbeatGet200Response>> V1HeartbeatHeadWithHttpInfoAsync(System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
 
             Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
@@ -686,6 +693,7 @@ namespace Immutable.Ts.Api
 
             // to determine the Accept header
             string[] _accepts = new string[] {
+                "application/json"
             };
 
 
@@ -699,7 +707,7 @@ namespace Immutable.Ts.Api
 
             // make the HTTP request
 
-            var task = this.AsynchronousClient.HeadAsync<Object>("/v1/heartbeat", localVarRequestOptions, this.Configuration, cancellationToken);
+            var task = this.AsynchronousClient.HeadAsync<V1HeartbeatGet200Response>("/v1/heartbeat", localVarRequestOptions, this.Configuration, cancellationToken);
 
 #if UNITY_EDITOR || !UNITY_WEBGL
             var localVarResponse = await task.ConfigureAwait(false);

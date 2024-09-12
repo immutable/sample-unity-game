@@ -38,12 +38,31 @@ namespace Immutable.Ts.Model
         [DataMember(Name = "purpose", EmitDefaultValue = false)]
         public CancelOrderOnchainResBodyTransactionPurpose? Purpose { get; set; }
         /// <summary>
+        /// Defines Type
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum TypeEnum
+        {
+            /// <summary>
+            /// Enum TRANSACTION for value: TRANSACTION
+            /// </summary>
+            [EnumMember(Value = "TRANSACTION")]
+            TRANSACTION = 1
+        }
+
+
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", EmitDefaultValue = false)]
+        public TypeEnum? Type { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="CancelOrderOnchainResBodyTransactionAction" /> class.
         /// </summary>
         /// <param name="populatedTransaction">populatedTransaction.</param>
         /// <param name="purpose">purpose.</param>
         /// <param name="type">type.</param>
-        public CancelOrderOnchainResBodyTransactionAction(CancelOrderOnchainResBodyTransactionActionPopulatedTransaction populatedTransaction = default(CancelOrderOnchainResBodyTransactionActionPopulatedTransaction), CancelOrderOnchainResBodyTransactionPurpose? purpose = default(CancelOrderOnchainResBodyTransactionPurpose?), string type = default(string))
+        public CancelOrderOnchainResBodyTransactionAction(CancelOrderOnchainResBodyTransactionActionPopulatedTransaction populatedTransaction = default(CancelOrderOnchainResBodyTransactionActionPopulatedTransaction), CancelOrderOnchainResBodyTransactionPurpose? purpose = default(CancelOrderOnchainResBodyTransactionPurpose?), TypeEnum? type = default(TypeEnum?))
         {
             this.PopulatedTransaction = populatedTransaction;
             this.Purpose = purpose;
@@ -55,12 +74,6 @@ namespace Immutable.Ts.Model
         /// </summary>
         [DataMember(Name = "populatedTransaction", EmitDefaultValue = false)]
         public CancelOrderOnchainResBodyTransactionActionPopulatedTransaction PopulatedTransaction { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = false)]
-        public string Type { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

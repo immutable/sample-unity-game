@@ -236,68 +236,71 @@ namespace HyperCasual.Runner
 
             try
             {
-                //     V1TsSdkV1OrderbookPrepareListingPost200Response response = await apiInstance.V1TsSdkV1OrderbookPrepareListingPostAsync(new V1TsSdkV1OrderbookPrepareListingPostRequest
-                //     (
-                //         makerAddress: address,
-                //         sell: new V1TsSdkV1OrderbookPrepareListingPostRequestSell(
-                //             new PrepareListingReqBodyERC721Item(contractAddress: Contract.SKIN, tokenId: asset.TokenId, type: "ERC721")),
-                //         buy: new V1TsSdkV1OrderbookPrepareListingPostRequestBuy(
-                //             new PrepareListingReqBodyERC20Item(amount: price, contractAddress: Contract.TOKEN, type: "ERC20"))
-                //     ));
+                // V1TsSdkV1OrderbookPrepareListingPost200Response response = await apiInstance.V1TsSdkV1OrderbookPrepareListingPostAsync(new V1TsSdkV1OrderbookPrepareListingPostRequest
+                // (
+                //     makerAddress: address,
+                //     sell: new V1TsSdkV1OrderbookPrepareListingPostRequestSell(
+                //         new PrepareListingReqBodyERC721Item(contractAddress: Contract.SKIN, tokenId: asset.TokenId, type: PrepareListingReqBodyERC721Item.TypeEnum.ERC721)),
+                //     buy: new V1TsSdkV1OrderbookPrepareListingPostRequestBuy(
+                //         new PrepareListingReqBodyERC20Item(amount: price, contractAddress: Contract.TOKEN, type: PrepareListingReqBodyERC20Item.TypeEnum.ERC20))
+                // ));
 
-                //     var transaction = response.Actions.FirstOrDefault(action => action.Type == "TRANSACTION");
-                //     if (transaction != null)
+                // var transactionAction = response.Actions.FirstOrDefault(action => action.GetPrepareListingResBodyTransactionAction() != null);
+                // if (transactionAction != null)
+                // {
+                //     PrepareListingResBodyTransactionAction tx = transactionAction.GetPrepareListingResBodyTransactionAction();
+                //     var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
                 //     {
-                //         var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
+                //         to = tx.PopulatedTransactions.To,
+                //         data = tx.PopulatedTransactions.Data,
+                //         value = "0"
+                //     });
+
+                //     if (transactionResponse.status != "1")
+                //     {
+                //         await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing.", "OK");
+                //         return null;
+                //     }
+                // }
+
+                // // Sign payload
+                // var signableAction = response.Actions.FirstOrDefault(action => action.GetPrepareListingResBodySignableAction() != null);
+                // if (signableAction != null)
+                // {
+                //     PrepareListingResBodySignableActionMessage message = signableAction.GetPrepareListingResBodySignableAction().Message;
+
+                //     var eip712TypedData = new TsEIP712TypedData
+                //     {
+                //         domain = message.Domain,
+                //         types = message.Types,
+                //         message = message.Value,
+                //         primaryType = "OrderComponents"
+                //     };
+
+                //     eip712TypedData.message.Add("EIP712Domain", new List<PrepareListingResBodyRecordStringTypedDataFieldValueInner>
                 //         {
-                //             to = transaction.populatedTransactions.to,
-                //             data = transaction.populatedTransactions.data,
-                //             value = "0"
+                //             new PrepareListingResBodyRecordStringTypedDataFieldValueInner(name: "name", type: "string"),
+                //             new PrepareListingResBodyRecordStringTypedDataFieldValueInner(name: "version", type: "string"),
+                //             new PrepareListingResBodyRecordStringTypedDataFieldValueInner(name: "chainId", type: "uint256"),
+                //             new PrepareListingResBodyRecordStringTypedDataFieldValueInner(name: "verifyingContract", type: "address")
                 //         });
 
-                //         if (transactionResponse.status != "1")
-                //         {
-                //             await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing.", "OK");
-                //             return null;
-                //         }
-                //     }
+                //     Debug.Log($"EIP712TypedData: {JsonUtility.ToJson(eip712TypedData)}");
+                //     string signature = await Passport.Instance.ZkEvmSignTypedDataV4(JsonUtility.ToJson(eip712TypedData));
+                //     Debug.Log($"Signature: {signature}");
 
-                //     // Sign payload
-                //     var signable = response.Actions.FirstOrDefault(action => action.Type == "SIGNABLE");
-                //     if (signable?.Message != null)
-                //     {
-                //         signable.message.types.EIP712Domain = new List<NameType>
-                //         {
-                //             new NameType { name = "name", type = "string" },
-                //             new NameType { name = "version", type = "string" },
-                //             new NameType { name = "chainId", type = "uint256" },
-                //             new NameType { name = "verifyingContract", type = "address" }
-                //         };
-
-                //         var eip712TypedData = new TsEIP712TypedData
-                //         {
-                //             domain = signable.Message.Domain,
-                //             types = signable.Message.Types,
-                //             message = signable.Message.Value,
-                //             primaryType = "OrderComponents"
-                //         };
-
-                //         Debug.Log($"EIP712TypedData: {JsonUtility.ToJson(eip712TypedData)}");
-                //         string signature = await Passport.Instance.ZkEvmSignTypedDataV4(JsonUtility.ToJson(eip712TypedData));
-                //         Debug.Log($"Signature: {signature}");
-
-                //         // (bool result, string signature) = await m_CustomDialog.ShowDialog(
-                //         //     "Confirm listing",
-                //         //     "Enter signed payload:",
-                //         //     "Confirm",
-                //         //     negativeButtonText: "Cancel",
-                //         //     showInputField: true
-                //         // );
-                //         // if (result)
-                //         // {
-                //         return await ListAsset(signature, response, address);
-                //         // }
-                //     }
+                //     // (bool result, string signature) = await m_CustomDialog.ShowDialog(
+                //     //     "Confirm listing",
+                //     //     "Enter signed payload:",
+                //     //     "Confirm",
+                //     //     negativeButtonText: "Cancel",
+                //     //     showInputField: true
+                //     // );
+                //     // if (result)
+                //     // {
+                //     return await ListAsset(signature, response, address);
+                //     // }
+                // }
 
                 var json = JsonUtility.ToJson(data);
                 Debug.Log($"json = {json}");
@@ -402,6 +405,18 @@ namespace HyperCasual.Runner
 
             try
             {
+
+                // V1TsSdkV1OrderbookCreateListingPost200Response response = await apiInstance.V1TsSdkV1OrderbookCreateListingPostAsync(new V1TsSdkV1OrderbookCreateListingPostRequest
+                // (
+                //     makerAddress: address,
+                //     orderComponents: new CreateListingReqBodyOrderComponents(
+                //         conduitKey: preparedListing.OrderComponents.ConduitKey,
+                //         conduitKey: preparedListing.OrderComponents.ConduitKey,
+                //     ),
+                //     orderHash: preparedListing.OrderHash,
+                //     orderSignature: signature
+                // ));
+
                 var json = JsonUtility.ToJson(data);
                 Debug.Log($"json = {json}");
 

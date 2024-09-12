@@ -32,20 +32,34 @@ namespace Immutable.Ts.Model
     public partial class CreateListingResBodyOrderStatusAnyOf2
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateListingResBodyOrderStatusAnyOf2" /> class.
+        /// A terminal order status indicating that an order cannot be fulfilled due to expiry.
         /// </summary>
-        /// <param name="name">A terminal order status indicating that an order cannot be fulfilled due to expiry..</param>
-        public CreateListingResBodyOrderStatusAnyOf2(string name = default(string))
+        /// <value>A terminal order status indicating that an order cannot be fulfilled due to expiry.</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum NameEnum
         {
-            this.Name = name;
+            /// <summary>
+            /// Enum EXPIRED for value: EXPIRED
+            /// </summary>
+            [EnumMember(Value = "EXPIRED")]
+            EXPIRED = 1
         }
+
 
         /// <summary>
         /// A terminal order status indicating that an order cannot be fulfilled due to expiry.
         /// </summary>
         /// <value>A terminal order status indicating that an order cannot be fulfilled due to expiry.</value>
         [DataMember(Name = "name", EmitDefaultValue = false)]
-        public string Name { get; set; }
+        public NameEnum? Name { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateListingResBodyOrderStatusAnyOf2" /> class.
+        /// </summary>
+        /// <param name="name">A terminal order status indicating that an order cannot be fulfilled due to expiry..</param>
+        public CreateListingResBodyOrderStatusAnyOf2(NameEnum? name = default(NameEnum?))
+        {
+            this.Name = name;
+        }
 
         /// <summary>
         /// Returns the string presentation of the object

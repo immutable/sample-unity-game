@@ -32,6 +32,25 @@ namespace Immutable.Ts.Model
     public partial class PrepareListingReqBodyNativeItem
     {
         /// <summary>
+        /// Defines Type
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum TypeEnum
+        {
+            /// <summary>
+            /// Enum NATIVE for value: NATIVE
+            /// </summary>
+            [EnumMember(Value = "NATIVE")]
+            NATIVE = 1
+        }
+
+
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
+        public TypeEnum Type { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="PrepareListingReqBodyNativeItem" /> class.
         /// </summary>
         [JsonConstructorAttribute]
@@ -41,7 +60,7 @@ namespace Immutable.Ts.Model
         /// </summary>
         /// <param name="amount">amount (required).</param>
         /// <param name="type">type (required).</param>
-        public PrepareListingReqBodyNativeItem(string amount = default(string), string type = default(string))
+        public PrepareListingReqBodyNativeItem(string amount = default(string), TypeEnum type = default(TypeEnum))
         {
             // to ensure "amount" is required (not null)
             if (amount == null)
@@ -49,11 +68,6 @@ namespace Immutable.Ts.Model
                 throw new ArgumentNullException("amount is a required property for PrepareListingReqBodyNativeItem and cannot be null");
             }
             this.Amount = amount;
-            // to ensure "type" is required (not null)
-            if (type == null)
-            {
-                throw new ArgumentNullException("type is a required property for PrepareListingReqBodyNativeItem and cannot be null");
-            }
             this.Type = type;
         }
 
@@ -62,12 +76,6 @@ namespace Immutable.Ts.Model
         /// </summary>
         [DataMember(Name = "amount", IsRequired = true, EmitDefaultValue = true)]
         public string Amount { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
-        public string Type { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
