@@ -35,6 +35,7 @@ namespace HyperCasual.Runner
         [SerializeField] private Transform m_ListingParent = null;
         private List<ListingObject> m_ListingViews = new List<ListingObject>();
         [SerializeField] private ListingObject m_ListingObj = null;
+        [SerializeField] private GameObject m_EmptyListingText = null;
 
         private StackBundle m_Order;
         private Listing m_Listing;
@@ -123,6 +124,7 @@ namespace HyperCasual.Runner
                 newListing.Initialise(stackListing, OnBuyButtonClick); // Initialise the view with data
                 m_ListingViews.Add(newListing); // Add to the list of displayed attributes
             }
+            m_EmptyListingText.SetActive(m_Order.Listings.Count == 0);
         }
 
         /// <summary>
