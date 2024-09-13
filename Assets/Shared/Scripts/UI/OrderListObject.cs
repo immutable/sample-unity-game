@@ -41,11 +41,9 @@ namespace HyperCasual.Runner
         /// </summary>
         private async void UpdateData()
         {
-            // TODO to change to market floor listing price
-            // if (m_Order.Market != null)
-            if (m_Order.Listings.Count > 0)
+            if (m_Order.Market?.FloorListing != null)
             {
-                string amount = m_Order.Listings[0].PriceDetails.Amount.Value; // m_Order.Market.FloorListing.PriceDetails.Amount.Value;
+                string amount = m_Order.Market.FloorListing.PriceDetails.Amount.Value;
 
                 decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
                 m_AmountText.text = $"Floor price: {quantity} IMR";

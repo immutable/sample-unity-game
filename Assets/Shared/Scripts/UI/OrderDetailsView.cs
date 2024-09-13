@@ -23,7 +23,8 @@ namespace HyperCasual.Runner
         [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private TextMeshProUGUI m_NameText = null;
         [SerializeField] private TextMeshProUGUI m_CollectionText = null;
-        [SerializeField] private TextMeshProUGUI m_AmountText = null;
+        [SerializeField] private TextMeshProUGUI m_FloorPriceText = null;
+        [SerializeField] private TextMeshProUGUI m_LastTradePriceText = null;
         [SerializeField] private Transform m_AttributesListParent = null;
         [SerializeField] private AttributeView m_AttributeObj = null;
         private List<AttributeView> m_AttributeViews = new List<AttributeView>();
@@ -69,6 +70,32 @@ namespace HyperCasual.Runner
         {
             m_NameText.text = m_Order.Stack.Name;
             m_CollectionText.text = $"Collection: {m_Order.Stack.ContractAddress}";
+
+            // Floor price
+            if (m_Order.Market?.FloorListing != null)
+            {
+                string amount = m_Order.Market.FloorListing.PriceDetails.Amount.Value;
+
+                decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
+                m_FloorPriceText.text = $"Floor price: {quantity} IMR";
+            }
+            else
+            {
+                m_FloorPriceText.text = $"Floor price: N/A";
+            }
+
+            // Last trade price
+            if (m_Order.Market?.LastTrade?.PriceDetails?.Count > 0)
+            {
+                string amount = m_Order.Market.LastTrade.PriceDetails[0].Amount.Value;
+
+                decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
+                m_LastTradePriceText.text = $"Last trade price: {quantity} IMR";
+            }
+            else
+            {
+                m_LastTradePriceText.text = $"Last trade price: N/A";
+            }
 
             // Clears all existing attributes
             ClearAttributes();
@@ -239,6 +266,8 @@ namespace HyperCasual.Runner
         {
             m_NameText.text = "";
             m_CollectionText.text = "";
+            m_FloorPriceText.text = "";
+            m_LastTradePriceText.text = "";
 
             m_Order = null;
             ClearAttributes();
