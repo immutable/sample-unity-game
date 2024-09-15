@@ -22,6 +22,7 @@ namespace HyperCasual.Runner
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private TextMeshProUGUI m_NameText = null;
+        [SerializeField] private TextMeshProUGUI m_Count = null;
         [SerializeField] private TextMeshProUGUI m_CollectionText = null;
         [SerializeField] private TextMeshProUGUI m_FloorPriceText = null;
         [SerializeField] private TextMeshProUGUI m_LastTradePriceText = null;
@@ -70,6 +71,7 @@ namespace HyperCasual.Runner
         private async void UpdateData()
         {
             m_NameText.text = m_Order.Stack.Name;
+            m_Count.text = $"{m_Order.StackCount} items";
             m_CollectionText.text = $"Collection: {m_Order.Stack.ContractAddress}";
 
             // Floor price
