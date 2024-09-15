@@ -20,6 +20,9 @@ namespace HyperCasual.Runner
     /// </summary>
     public class MarketplaceScreen : View
     {
+        private static readonly List<string> COLOURS = new List<string> { "All", "Tropical Indigo", "Cyclamen", "Robin Egg Blue", "Mint", "Mindaro", "Amaranth Pink" };
+        private static readonly List<string> SPEEDS = new List<string> { "All", "Slow", "Medium", "Fast" };
+
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
         [SerializeField] private BalanceObject m_Balance;
@@ -66,13 +69,11 @@ namespace HyperCasual.Runner
         private void SetupFilters()
         {
             m_ColoursDropdown.ClearOptions();
-            var colours = new List<string> { "All", "Tropical Indigo", "Cyclamen", "Robin Egg Blue", "Mint", "Mindaro", "Amaranth Pink" };
-            m_ColoursDropdown.AddOptions(colours);
+            m_ColoursDropdown.AddOptions(COLOURS);
             m_ColoursDropdown.value = 0; // Default to "All"
 
             m_SpeedDropdown.ClearOptions();
-            var speeds = new List<string> { "All", "Slow", "Medium", "Fast" };
-            m_SpeedDropdown.AddOptions(speeds);
+            m_SpeedDropdown.AddOptions(SPEEDS);
             m_SpeedDropdown.value = 0; // Default to "All"
         }
 
@@ -154,6 +155,25 @@ namespace HyperCasual.Runner
                     Debug.Log("No more assets to load");
                     return stacks;
                 }
+
+                // Filter by metadata
+                // List<AttributeQuery>? trait = null;
+                // if (m_ColoursDropdown.value != 0 || m_SpeedDropdown.value != 0)
+                // {
+                //     trait = new List<AttributeQuery>();
+
+                //     if (m_ColoursDropdown.value != 0)
+                //     {
+                //         trait.Add(new AttributeQuery("Colour", COLOURS[m_ColoursDropdown.value]));
+                //     }
+
+                //     if (m_SpeedDropdown.value != 0)
+                //     {
+                //         trait.Add(new AttributeQuery("Speed", SPEEDS[m_SpeedDropdown.value]));
+                //     }
+                // }
+                // List<AttributeQuery>? trait = new List<AttributeQuery>();
+                // trait.Add(new AttributeQuery("Colour", "Tropical Indigo"));
 
                 SearchStacksResult result = await apiInstance.SearchStacksAsync(Config.CHAIN_NAME, new List<string> { Contract.SKIN }, pageSize: Config.PAGE_SIZE);
                 m_Page = result.Page;
