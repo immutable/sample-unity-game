@@ -6,12 +6,12 @@ All URIs are relative to *https://api.immutable.com*
 |--------|--------------|-------------|
 | [**V1HeartbeatGet**](DefaultApi.md#v1heartbeatget) | **GET** /v1/heartbeat |  |
 | [**V1HeartbeatHead**](DefaultApi.md#v1heartbeathead) | **HEAD** /v1/heartbeat |  |
-| [**V1TsSdkV1OrderbookCancelOrdersOnChainPost**](DefaultApi.md#v1tssdkv1orderbookcancelordersonchainpost) | **POST** /v1/ts-sdk/v1/orderbook/cancelOrdersOnChain |  |
-| [**V1TsSdkV1OrderbookCancelOrdersPost**](DefaultApi.md#v1tssdkv1orderbookcancelorderspost) | **POST** /v1/ts-sdk/v1/orderbook/cancelOrders |  |
-| [**V1TsSdkV1OrderbookCreateListingPost**](DefaultApi.md#v1tssdkv1orderbookcreatelistingpost) | **POST** /v1/ts-sdk/v1/orderbook/createListing |  |
-| [**V1TsSdkV1OrderbookFulfillOrderPost**](DefaultApi.md#v1tssdkv1orderbookfulfillorderpost) | **POST** /v1/ts-sdk/v1/orderbook/fulfillOrder |  |
-| [**V1TsSdkV1OrderbookPrepareListingPost**](DefaultApi.md#v1tssdkv1orderbookpreparelistingpost) | **POST** /v1/ts-sdk/v1/orderbook/prepareListing |  |
-| [**V1TsSdkV1OrderbookPrepareOrderCancellationsPost**](DefaultApi.md#v1tssdkv1orderbookprepareordercancellationspost) | **POST** /v1/ts-sdk/v1/orderbook/prepareOrderCancellations |  |
+| [**V1TsSdkOrderbookCancelOrdersOnChainPost**](DefaultApi.md#v1tssdkorderbookcancelordersonchainpost) | **POST** /v1/ts-sdk/orderbook/cancelOrdersOnChain |  |
+| [**V1TsSdkOrderbookCancelOrdersPost**](DefaultApi.md#v1tssdkorderbookcancelorderspost) | **POST** /v1/ts-sdk/orderbook/cancelOrders |  |
+| [**V1TsSdkOrderbookCreateListingPost**](DefaultApi.md#v1tssdkorderbookcreatelistingpost) | **POST** /v1/ts-sdk/orderbook/createListing |  |
+| [**V1TsSdkOrderbookFulfillOrderPost**](DefaultApi.md#v1tssdkorderbookfulfillorderpost) | **POST** /v1/ts-sdk/orderbook/fulfillOrder |  |
+| [**V1TsSdkOrderbookPrepareListingPost**](DefaultApi.md#v1tssdkorderbookpreparelistingpost) | **POST** /v1/ts-sdk/orderbook/prepareListing |  |
+| [**V1TsSdkOrderbookPrepareOrderCancellationsPost**](DefaultApi.md#v1tssdkorderbookprepareordercancellationspost) | **POST** /v1/ts-sdk/orderbook/prepareOrderCancellations |  |
 
 <a id="v1heartbeatget"></a>
 # **V1HeartbeatGet**
@@ -177,9 +177,9 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-<a id="v1tssdkv1orderbookcancelordersonchainpost"></a>
-# **V1TsSdkV1OrderbookCancelOrdersOnChainPost**
-> V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response V1TsSdkV1OrderbookCancelOrdersOnChainPost (V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest? v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest = null)
+<a id="v1tssdkorderbookcancelordersonchainpost"></a>
+# **V1TsSdkOrderbookCancelOrdersOnChainPost**
+> V1TsSdkOrderbookCancelOrdersOnChainPost200Response V1TsSdkOrderbookCancelOrdersOnChainPost (V1TsSdkOrderbookCancelOrdersOnChainPostRequest? v1TsSdkOrderbookCancelOrdersOnChainPostRequest = null)
 
 
 
@@ -193,23 +193,23 @@ using Immutable.Ts.Model;
 
 namespace Example
 {
-    public class V1TsSdkV1OrderbookCancelOrdersOnChainPostExample
+    public class V1TsSdkOrderbookCancelOrdersOnChainPostExample
     {
         public static void Main()
         {
             Configuration config = new Configuration();
             config.BasePath = "https://api.immutable.com";
             var apiInstance = new DefaultApi(config);
-            var v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest = new V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest?(); // V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest? |  (optional) 
+            var v1TsSdkOrderbookCancelOrdersOnChainPostRequest = new V1TsSdkOrderbookCancelOrdersOnChainPostRequest?(); // V1TsSdkOrderbookCancelOrdersOnChainPostRequest? |  (optional) 
 
             try
             {
-                V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response result = apiInstance.V1TsSdkV1OrderbookCancelOrdersOnChainPost(v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest);
+                V1TsSdkOrderbookCancelOrdersOnChainPost200Response result = apiInstance.V1TsSdkOrderbookCancelOrdersOnChainPost(v1TsSdkOrderbookCancelOrdersOnChainPostRequest);
                 Debug.WriteLine(result);
             }
             catch (ApiException  e)
             {
-                Debug.Print("Exception when calling DefaultApi.V1TsSdkV1OrderbookCancelOrdersOnChainPost: " + e.Message);
+                Debug.Print("Exception when calling DefaultApi.V1TsSdkOrderbookCancelOrdersOnChainPost: " + e.Message);
                 Debug.Print("Status Code: " + e.ErrorCode);
                 Debug.Print(e.StackTrace);
             }
@@ -218,20 +218,20 @@ namespace Example
 }
 ```
 
-#### Using the V1TsSdkV1OrderbookCancelOrdersOnChainPostWithHttpInfo variant
+#### Using the V1TsSdkOrderbookCancelOrdersOnChainPostWithHttpInfo variant
 This returns an ApiResponse object which contains the response data, status code and headers.
 
 ```csharp
 try
 {
-    ApiResponse<V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response> response = apiInstance.V1TsSdkV1OrderbookCancelOrdersOnChainPostWithHttpInfo(v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest);
+    ApiResponse<V1TsSdkOrderbookCancelOrdersOnChainPost200Response> response = apiInstance.V1TsSdkOrderbookCancelOrdersOnChainPostWithHttpInfo(v1TsSdkOrderbookCancelOrdersOnChainPostRequest);
     Debug.Write("Status Code: " + response.StatusCode);
     Debug.Write("Response Headers: " + response.Headers);
     Debug.Write("Response Body: " + response.Data);
 }
 catch (ApiException e)
 {
-    Debug.Print("Exception when calling DefaultApi.V1TsSdkV1OrderbookCancelOrdersOnChainPostWithHttpInfo: " + e.Message);
+    Debug.Print("Exception when calling DefaultApi.V1TsSdkOrderbookCancelOrdersOnChainPostWithHttpInfo: " + e.Message);
     Debug.Print("Status Code: " + e.ErrorCode);
     Debug.Print(e.StackTrace);
 }
@@ -241,11 +241,11 @@ catch (ApiException e)
 
 | Name | Type | Description | Notes |
 |------|------|-------------|-------|
-| **v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest** | [**V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest?**](V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest?.md) |  | [optional]  |
+| **v1TsSdkOrderbookCancelOrdersOnChainPostRequest** | [**V1TsSdkOrderbookCancelOrdersOnChainPostRequest?**](V1TsSdkOrderbookCancelOrdersOnChainPostRequest?.md) |  | [optional]  |
 
 ### Return type
 
-[**V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response**](V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response.md)
+[**V1TsSdkOrderbookCancelOrdersOnChainPost200Response**](V1TsSdkOrderbookCancelOrdersOnChainPost200Response.md)
 
 ### Authorization
 
@@ -264,9 +264,9 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-<a id="v1tssdkv1orderbookcancelorderspost"></a>
-# **V1TsSdkV1OrderbookCancelOrdersPost**
-> V1TsSdkV1OrderbookCancelOrdersPost200Response V1TsSdkV1OrderbookCancelOrdersPost (V1TsSdkV1OrderbookCancelOrdersPostRequest? v1TsSdkV1OrderbookCancelOrdersPostRequest = null)
+<a id="v1tssdkorderbookcancelorderspost"></a>
+# **V1TsSdkOrderbookCancelOrdersPost**
+> V1TsSdkOrderbookCancelOrdersPost200Response V1TsSdkOrderbookCancelOrdersPost (V1TsSdkOrderbookCancelOrdersPostRequest? v1TsSdkOrderbookCancelOrdersPostRequest = null)
 
 
 
@@ -280,23 +280,23 @@ using Immutable.Ts.Model;
 
 namespace Example
 {
-    public class V1TsSdkV1OrderbookCancelOrdersPostExample
+    public class V1TsSdkOrderbookCancelOrdersPostExample
     {
         public static void Main()
         {
             Configuration config = new Configuration();
             config.BasePath = "https://api.immutable.com";
             var apiInstance = new DefaultApi(config);
-            var v1TsSdkV1OrderbookCancelOrdersPostRequest = new V1TsSdkV1OrderbookCancelOrdersPostRequest?(); // V1TsSdkV1OrderbookCancelOrdersPostRequest? |  (optional) 
+            var v1TsSdkOrderbookCancelOrdersPostRequest = new V1TsSdkOrderbookCancelOrdersPostRequest?(); // V1TsSdkOrderbookCancelOrdersPostRequest? |  (optional) 
 
             try
             {
-                V1TsSdkV1OrderbookCancelOrdersPost200Response result = apiInstance.V1TsSdkV1OrderbookCancelOrdersPost(v1TsSdkV1OrderbookCancelOrdersPostRequest);
+                V1TsSdkOrderbookCancelOrdersPost200Response result = apiInstance.V1TsSdkOrderbookCancelOrdersPost(v1TsSdkOrderbookCancelOrdersPostRequest);
                 Debug.WriteLine(result);
             }
             catch (ApiException  e)
             {
-                Debug.Print("Exception when calling DefaultApi.V1TsSdkV1OrderbookCancelOrdersPost: " + e.Message);
+                Debug.Print("Exception when calling DefaultApi.V1TsSdkOrderbookCancelOrdersPost: " + e.Message);
                 Debug.Print("Status Code: " + e.ErrorCode);
                 Debug.Print(e.StackTrace);
             }
@@ -305,20 +305,20 @@ namespace Example
 }
 ```
 
-#### Using the V1TsSdkV1OrderbookCancelOrdersPostWithHttpInfo variant
+#### Using the V1TsSdkOrderbookCancelOrdersPostWithHttpInfo variant
 This returns an ApiResponse object which contains the response data, status code and headers.
 
 ```csharp
 try
 {
-    ApiResponse<V1TsSdkV1OrderbookCancelOrdersPost200Response> response = apiInstance.V1TsSdkV1OrderbookCancelOrdersPostWithHttpInfo(v1TsSdkV1OrderbookCancelOrdersPostRequest);
+    ApiResponse<V1TsSdkOrderbookCancelOrdersPost200Response> response = apiInstance.V1TsSdkOrderbookCancelOrdersPostWithHttpInfo(v1TsSdkOrderbookCancelOrdersPostRequest);
     Debug.Write("Status Code: " + response.StatusCode);
     Debug.Write("Response Headers: " + response.Headers);
     Debug.Write("Response Body: " + response.Data);
 }
 catch (ApiException e)
 {
-    Debug.Print("Exception when calling DefaultApi.V1TsSdkV1OrderbookCancelOrdersPostWithHttpInfo: " + e.Message);
+    Debug.Print("Exception when calling DefaultApi.V1TsSdkOrderbookCancelOrdersPostWithHttpInfo: " + e.Message);
     Debug.Print("Status Code: " + e.ErrorCode);
     Debug.Print(e.StackTrace);
 }
@@ -328,11 +328,11 @@ catch (ApiException e)
 
 | Name | Type | Description | Notes |
 |------|------|-------------|-------|
-| **v1TsSdkV1OrderbookCancelOrdersPostRequest** | [**V1TsSdkV1OrderbookCancelOrdersPostRequest?**](V1TsSdkV1OrderbookCancelOrdersPostRequest?.md) |  | [optional]  |
+| **v1TsSdkOrderbookCancelOrdersPostRequest** | [**V1TsSdkOrderbookCancelOrdersPostRequest?**](V1TsSdkOrderbookCancelOrdersPostRequest?.md) |  | [optional]  |
 
 ### Return type
 
-[**V1TsSdkV1OrderbookCancelOrdersPost200Response**](V1TsSdkV1OrderbookCancelOrdersPost200Response.md)
+[**V1TsSdkOrderbookCancelOrdersPost200Response**](V1TsSdkOrderbookCancelOrdersPost200Response.md)
 
 ### Authorization
 
@@ -351,9 +351,9 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-<a id="v1tssdkv1orderbookcreatelistingpost"></a>
-# **V1TsSdkV1OrderbookCreateListingPost**
-> V1TsSdkV1OrderbookCreateListingPost200Response V1TsSdkV1OrderbookCreateListingPost (V1TsSdkV1OrderbookCreateListingPostRequest? v1TsSdkV1OrderbookCreateListingPostRequest = null)
+<a id="v1tssdkorderbookcreatelistingpost"></a>
+# **V1TsSdkOrderbookCreateListingPost**
+> V1TsSdkOrderbookCreateListingPost200Response V1TsSdkOrderbookCreateListingPost (V1TsSdkOrderbookCreateListingPostRequest? v1TsSdkOrderbookCreateListingPostRequest = null)
 
 
 
@@ -367,23 +367,23 @@ using Immutable.Ts.Model;
 
 namespace Example
 {
-    public class V1TsSdkV1OrderbookCreateListingPostExample
+    public class V1TsSdkOrderbookCreateListingPostExample
     {
         public static void Main()
         {
             Configuration config = new Configuration();
             config.BasePath = "https://api.immutable.com";
             var apiInstance = new DefaultApi(config);
-            var v1TsSdkV1OrderbookCreateListingPostRequest = new V1TsSdkV1OrderbookCreateListingPostRequest?(); // V1TsSdkV1OrderbookCreateListingPostRequest? |  (optional) 
+            var v1TsSdkOrderbookCreateListingPostRequest = new V1TsSdkOrderbookCreateListingPostRequest?(); // V1TsSdkOrderbookCreateListingPostRequest? |  (optional) 
 
             try
             {
-                V1TsSdkV1OrderbookCreateListingPost200Response result = apiInstance.V1TsSdkV1OrderbookCreateListingPost(v1TsSdkV1OrderbookCreateListingPostRequest);
+                V1TsSdkOrderbookCreateListingPost200Response result = apiInstance.V1TsSdkOrderbookCreateListingPost(v1TsSdkOrderbookCreateListingPostRequest);
                 Debug.WriteLine(result);
             }
             catch (ApiException  e)
             {
-                Debug.Print("Exception when calling DefaultApi.V1TsSdkV1OrderbookCreateListingPost: " + e.Message);
+                Debug.Print("Exception when calling DefaultApi.V1TsSdkOrderbookCreateListingPost: " + e.Message);
                 Debug.Print("Status Code: " + e.ErrorCode);
                 Debug.Print(e.StackTrace);
             }
@@ -392,20 +392,20 @@ namespace Example
 }
 ```
 
-#### Using the V1TsSdkV1OrderbookCreateListingPostWithHttpInfo variant
+#### Using the V1TsSdkOrderbookCreateListingPostWithHttpInfo variant
 This returns an ApiResponse object which contains the response data, status code and headers.
 
 ```csharp
 try
 {
-    ApiResponse<V1TsSdkV1OrderbookCreateListingPost200Response> response = apiInstance.V1TsSdkV1OrderbookCreateListingPostWithHttpInfo(v1TsSdkV1OrderbookCreateListingPostRequest);
+    ApiResponse<V1TsSdkOrderbookCreateListingPost200Response> response = apiInstance.V1TsSdkOrderbookCreateListingPostWithHttpInfo(v1TsSdkOrderbookCreateListingPostRequest);
     Debug.Write("Status Code: " + response.StatusCode);
     Debug.Write("Response Headers: " + response.Headers);
     Debug.Write("Response Body: " + response.Data);
 }
 catch (ApiException e)
 {
-    Debug.Print("Exception when calling DefaultApi.V1TsSdkV1OrderbookCreateListingPostWithHttpInfo: " + e.Message);
+    Debug.Print("Exception when calling DefaultApi.V1TsSdkOrderbookCreateListingPostWithHttpInfo: " + e.Message);
     Debug.Print("Status Code: " + e.ErrorCode);
     Debug.Print(e.StackTrace);
 }
@@ -415,11 +415,11 @@ catch (ApiException e)
 
 | Name | Type | Description | Notes |
 |------|------|-------------|-------|
-| **v1TsSdkV1OrderbookCreateListingPostRequest** | [**V1TsSdkV1OrderbookCreateListingPostRequest?**](V1TsSdkV1OrderbookCreateListingPostRequest?.md) |  | [optional]  |
+| **v1TsSdkOrderbookCreateListingPostRequest** | [**V1TsSdkOrderbookCreateListingPostRequest?**](V1TsSdkOrderbookCreateListingPostRequest?.md) |  | [optional]  |
 
 ### Return type
 
-[**V1TsSdkV1OrderbookCreateListingPost200Response**](V1TsSdkV1OrderbookCreateListingPost200Response.md)
+[**V1TsSdkOrderbookCreateListingPost200Response**](V1TsSdkOrderbookCreateListingPost200Response.md)
 
 ### Authorization
 
@@ -438,9 +438,9 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-<a id="v1tssdkv1orderbookfulfillorderpost"></a>
-# **V1TsSdkV1OrderbookFulfillOrderPost**
-> V1TsSdkV1OrderbookFulfillOrderPost200Response V1TsSdkV1OrderbookFulfillOrderPost (V1TsSdkV1OrderbookFulfillOrderPostRequest? v1TsSdkV1OrderbookFulfillOrderPostRequest = null)
+<a id="v1tssdkorderbookfulfillorderpost"></a>
+# **V1TsSdkOrderbookFulfillOrderPost**
+> V1TsSdkOrderbookFulfillOrderPost200Response V1TsSdkOrderbookFulfillOrderPost (V1TsSdkOrderbookFulfillOrderPostRequest? v1TsSdkOrderbookFulfillOrderPostRequest = null)
 
 
 
@@ -454,23 +454,23 @@ using Immutable.Ts.Model;
 
 namespace Example
 {
-    public class V1TsSdkV1OrderbookFulfillOrderPostExample
+    public class V1TsSdkOrderbookFulfillOrderPostExample
     {
         public static void Main()
         {
             Configuration config = new Configuration();
             config.BasePath = "https://api.immutable.com";
             var apiInstance = new DefaultApi(config);
-            var v1TsSdkV1OrderbookFulfillOrderPostRequest = new V1TsSdkV1OrderbookFulfillOrderPostRequest?(); // V1TsSdkV1OrderbookFulfillOrderPostRequest? |  (optional) 
+            var v1TsSdkOrderbookFulfillOrderPostRequest = new V1TsSdkOrderbookFulfillOrderPostRequest?(); // V1TsSdkOrderbookFulfillOrderPostRequest? |  (optional) 
 
             try
             {
-                V1TsSdkV1OrderbookFulfillOrderPost200Response result = apiInstance.V1TsSdkV1OrderbookFulfillOrderPost(v1TsSdkV1OrderbookFulfillOrderPostRequest);
+                V1TsSdkOrderbookFulfillOrderPost200Response result = apiInstance.V1TsSdkOrderbookFulfillOrderPost(v1TsSdkOrderbookFulfillOrderPostRequest);
                 Debug.WriteLine(result);
             }
             catch (ApiException  e)
             {
-                Debug.Print("Exception when calling DefaultApi.V1TsSdkV1OrderbookFulfillOrderPost: " + e.Message);
+                Debug.Print("Exception when calling DefaultApi.V1TsSdkOrderbookFulfillOrderPost: " + e.Message);
                 Debug.Print("Status Code: " + e.ErrorCode);
                 Debug.Print(e.StackTrace);
             }
@@ -479,20 +479,20 @@ namespace Example
 }
 ```
 
-#### Using the V1TsSdkV1OrderbookFulfillOrderPostWithHttpInfo variant
+#### Using the V1TsSdkOrderbookFulfillOrderPostWithHttpInfo variant
 This returns an ApiResponse object which contains the response data, status code and headers.
 
 ```csharp
 try
 {
-    ApiResponse<V1TsSdkV1OrderbookFulfillOrderPost200Response> response = apiInstance.V1TsSdkV1OrderbookFulfillOrderPostWithHttpInfo(v1TsSdkV1OrderbookFulfillOrderPostRequest);
+    ApiResponse<V1TsSdkOrderbookFulfillOrderPost200Response> response = apiInstance.V1TsSdkOrderbookFulfillOrderPostWithHttpInfo(v1TsSdkOrderbookFulfillOrderPostRequest);
     Debug.Write("Status Code: " + response.StatusCode);
     Debug.Write("Response Headers: " + response.Headers);
     Debug.Write("Response Body: " + response.Data);
 }
 catch (ApiException e)
 {
-    Debug.Print("Exception when calling DefaultApi.V1TsSdkV1OrderbookFulfillOrderPostWithHttpInfo: " + e.Message);
+    Debug.Print("Exception when calling DefaultApi.V1TsSdkOrderbookFulfillOrderPostWithHttpInfo: " + e.Message);
     Debug.Print("Status Code: " + e.ErrorCode);
     Debug.Print(e.StackTrace);
 }
@@ -502,11 +502,11 @@ catch (ApiException e)
 
 | Name | Type | Description | Notes |
 |------|------|-------------|-------|
-| **v1TsSdkV1OrderbookFulfillOrderPostRequest** | [**V1TsSdkV1OrderbookFulfillOrderPostRequest?**](V1TsSdkV1OrderbookFulfillOrderPostRequest?.md) |  | [optional]  |
+| **v1TsSdkOrderbookFulfillOrderPostRequest** | [**V1TsSdkOrderbookFulfillOrderPostRequest?**](V1TsSdkOrderbookFulfillOrderPostRequest?.md) |  | [optional]  |
 
 ### Return type
 
-[**V1TsSdkV1OrderbookFulfillOrderPost200Response**](V1TsSdkV1OrderbookFulfillOrderPost200Response.md)
+[**V1TsSdkOrderbookFulfillOrderPost200Response**](V1TsSdkOrderbookFulfillOrderPost200Response.md)
 
 ### Authorization
 
@@ -525,9 +525,9 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-<a id="v1tssdkv1orderbookpreparelistingpost"></a>
-# **V1TsSdkV1OrderbookPrepareListingPost**
-> V1TsSdkV1OrderbookPrepareListingPost200Response V1TsSdkV1OrderbookPrepareListingPost (V1TsSdkV1OrderbookPrepareListingPostRequest? v1TsSdkV1OrderbookPrepareListingPostRequest = null)
+<a id="v1tssdkorderbookpreparelistingpost"></a>
+# **V1TsSdkOrderbookPrepareListingPost**
+> V1TsSdkOrderbookPrepareListingPost200Response V1TsSdkOrderbookPrepareListingPost (V1TsSdkOrderbookPrepareListingPostRequest? v1TsSdkOrderbookPrepareListingPostRequest = null)
 
 
 
@@ -541,23 +541,23 @@ using Immutable.Ts.Model;
 
 namespace Example
 {
-    public class V1TsSdkV1OrderbookPrepareListingPostExample
+    public class V1TsSdkOrderbookPrepareListingPostExample
     {
         public static void Main()
         {
             Configuration config = new Configuration();
             config.BasePath = "https://api.immutable.com";
             var apiInstance = new DefaultApi(config);
-            var v1TsSdkV1OrderbookPrepareListingPostRequest = new V1TsSdkV1OrderbookPrepareListingPostRequest?(); // V1TsSdkV1OrderbookPrepareListingPostRequest? |  (optional) 
+            var v1TsSdkOrderbookPrepareListingPostRequest = new V1TsSdkOrderbookPrepareListingPostRequest?(); // V1TsSdkOrderbookPrepareListingPostRequest? |  (optional) 
 
             try
             {
-                V1TsSdkV1OrderbookPrepareListingPost200Response result = apiInstance.V1TsSdkV1OrderbookPrepareListingPost(v1TsSdkV1OrderbookPrepareListingPostRequest);
+                V1TsSdkOrderbookPrepareListingPost200Response result = apiInstance.V1TsSdkOrderbookPrepareListingPost(v1TsSdkOrderbookPrepareListingPostRequest);
                 Debug.WriteLine(result);
             }
             catch (ApiException  e)
             {
-                Debug.Print("Exception when calling DefaultApi.V1TsSdkV1OrderbookPrepareListingPost: " + e.Message);
+                Debug.Print("Exception when calling DefaultApi.V1TsSdkOrderbookPrepareListingPost: " + e.Message);
                 Debug.Print("Status Code: " + e.ErrorCode);
                 Debug.Print(e.StackTrace);
             }
@@ -566,20 +566,20 @@ namespace Example
 }
 ```
 
-#### Using the V1TsSdkV1OrderbookPrepareListingPostWithHttpInfo variant
+#### Using the V1TsSdkOrderbookPrepareListingPostWithHttpInfo variant
 This returns an ApiResponse object which contains the response data, status code and headers.
 
 ```csharp
 try
 {
-    ApiResponse<V1TsSdkV1OrderbookPrepareListingPost200Response> response = apiInstance.V1TsSdkV1OrderbookPrepareListingPostWithHttpInfo(v1TsSdkV1OrderbookPrepareListingPostRequest);
+    ApiResponse<V1TsSdkOrderbookPrepareListingPost200Response> response = apiInstance.V1TsSdkOrderbookPrepareListingPostWithHttpInfo(v1TsSdkOrderbookPrepareListingPostRequest);
     Debug.Write("Status Code: " + response.StatusCode);
     Debug.Write("Response Headers: " + response.Headers);
     Debug.Write("Response Body: " + response.Data);
 }
 catch (ApiException e)
 {
-    Debug.Print("Exception when calling DefaultApi.V1TsSdkV1OrderbookPrepareListingPostWithHttpInfo: " + e.Message);
+    Debug.Print("Exception when calling DefaultApi.V1TsSdkOrderbookPrepareListingPostWithHttpInfo: " + e.Message);
     Debug.Print("Status Code: " + e.ErrorCode);
     Debug.Print(e.StackTrace);
 }
@@ -589,11 +589,11 @@ catch (ApiException e)
 
 | Name | Type | Description | Notes |
 |------|------|-------------|-------|
-| **v1TsSdkV1OrderbookPrepareListingPostRequest** | [**V1TsSdkV1OrderbookPrepareListingPostRequest?**](V1TsSdkV1OrderbookPrepareListingPostRequest?.md) |  | [optional]  |
+| **v1TsSdkOrderbookPrepareListingPostRequest** | [**V1TsSdkOrderbookPrepareListingPostRequest?**](V1TsSdkOrderbookPrepareListingPostRequest?.md) |  | [optional]  |
 
 ### Return type
 
-[**V1TsSdkV1OrderbookPrepareListingPost200Response**](V1TsSdkV1OrderbookPrepareListingPost200Response.md)
+[**V1TsSdkOrderbookPrepareListingPost200Response**](V1TsSdkOrderbookPrepareListingPost200Response.md)
 
 ### Authorization
 
@@ -612,9 +612,9 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-<a id="v1tssdkv1orderbookprepareordercancellationspost"></a>
-# **V1TsSdkV1OrderbookPrepareOrderCancellationsPost**
-> V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response V1TsSdkV1OrderbookPrepareOrderCancellationsPost (V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest? v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest = null)
+<a id="v1tssdkorderbookprepareordercancellationspost"></a>
+# **V1TsSdkOrderbookPrepareOrderCancellationsPost**
+> V1TsSdkOrderbookPrepareOrderCancellationsPost200Response V1TsSdkOrderbookPrepareOrderCancellationsPost (V1TsSdkOrderbookPrepareOrderCancellationsPostRequest? v1TsSdkOrderbookPrepareOrderCancellationsPostRequest = null)
 
 
 
@@ -628,23 +628,23 @@ using Immutable.Ts.Model;
 
 namespace Example
 {
-    public class V1TsSdkV1OrderbookPrepareOrderCancellationsPostExample
+    public class V1TsSdkOrderbookPrepareOrderCancellationsPostExample
     {
         public static void Main()
         {
             Configuration config = new Configuration();
             config.BasePath = "https://api.immutable.com";
             var apiInstance = new DefaultApi(config);
-            var v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest = new V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest?(); // V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest? |  (optional) 
+            var v1TsSdkOrderbookPrepareOrderCancellationsPostRequest = new V1TsSdkOrderbookPrepareOrderCancellationsPostRequest?(); // V1TsSdkOrderbookPrepareOrderCancellationsPostRequest? |  (optional) 
 
             try
             {
-                V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response result = apiInstance.V1TsSdkV1OrderbookPrepareOrderCancellationsPost(v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest);
+                V1TsSdkOrderbookPrepareOrderCancellationsPost200Response result = apiInstance.V1TsSdkOrderbookPrepareOrderCancellationsPost(v1TsSdkOrderbookPrepareOrderCancellationsPostRequest);
                 Debug.WriteLine(result);
             }
             catch (ApiException  e)
             {
-                Debug.Print("Exception when calling DefaultApi.V1TsSdkV1OrderbookPrepareOrderCancellationsPost: " + e.Message);
+                Debug.Print("Exception when calling DefaultApi.V1TsSdkOrderbookPrepareOrderCancellationsPost: " + e.Message);
                 Debug.Print("Status Code: " + e.ErrorCode);
                 Debug.Print(e.StackTrace);
             }
@@ -653,20 +653,20 @@ namespace Example
 }
 ```
 
-#### Using the V1TsSdkV1OrderbookPrepareOrderCancellationsPostWithHttpInfo variant
+#### Using the V1TsSdkOrderbookPrepareOrderCancellationsPostWithHttpInfo variant
 This returns an ApiResponse object which contains the response data, status code and headers.
 
 ```csharp
 try
 {
-    ApiResponse<V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response> response = apiInstance.V1TsSdkV1OrderbookPrepareOrderCancellationsPostWithHttpInfo(v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest);
+    ApiResponse<V1TsSdkOrderbookPrepareOrderCancellationsPost200Response> response = apiInstance.V1TsSdkOrderbookPrepareOrderCancellationsPostWithHttpInfo(v1TsSdkOrderbookPrepareOrderCancellationsPostRequest);
     Debug.Write("Status Code: " + response.StatusCode);
     Debug.Write("Response Headers: " + response.Headers);
     Debug.Write("Response Body: " + response.Data);
 }
 catch (ApiException e)
 {
-    Debug.Print("Exception when calling DefaultApi.V1TsSdkV1OrderbookPrepareOrderCancellationsPostWithHttpInfo: " + e.Message);
+    Debug.Print("Exception when calling DefaultApi.V1TsSdkOrderbookPrepareOrderCancellationsPostWithHttpInfo: " + e.Message);
     Debug.Print("Status Code: " + e.ErrorCode);
     Debug.Print(e.StackTrace);
 }
@@ -676,11 +676,11 @@ catch (ApiException e)
 
 | Name | Type | Description | Notes |
 |------|------|-------------|-------|
-| **v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest** | [**V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest?**](V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest?.md) |  | [optional]  |
+| **v1TsSdkOrderbookPrepareOrderCancellationsPostRequest** | [**V1TsSdkOrderbookPrepareOrderCancellationsPostRequest?**](V1TsSdkOrderbookPrepareOrderCancellationsPostRequest?.md) |  | [optional]  |
 
 ### Return type
 
-[**V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response**](V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response.md)
+[**V1TsSdkOrderbookPrepareOrderCancellationsPost200Response**](V1TsSdkOrderbookPrepareOrderCancellationsPost200Response.md)
 
 ### Authorization
 

@@ -8,8 +8,8 @@ namespace HyperCasual.Runner
     [Serializable]
     public class TsEIP712TypedData
     {
-        public PrepareListingResBodyTypedDataDomain domain;
-        public Dictionary<string, List<PrepareListingResBodyRecordStringTypedDataFieldValueInner>> types;
+        public TypedDataDomain domain;
+        public Dictionary<string, List<RecordStringTypedDataFieldValueInner>> types;
         public Dictionary<string, Object> message;
         public string primaryType;
     }

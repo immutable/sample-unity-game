@@ -32,431 +32,93 @@ paths:
               schema:
                 $ref: '#/components/schemas/_v1_heartbeat_get_200_response'
           description: heartbeat
-  /v1/ts-sdk/v1/orderbook/cancelOrders:
+  /v1/ts-sdk/orderbook/cancelOrders:
     post:
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_cancelOrders_post_request'
+              $ref: '#/components/schemas/_v1_ts_sdk_orderbook_cancelOrders_post_request'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_cancelOrders_post_200_response'
+                $ref: '#/components/schemas/_v1_ts_sdk_orderbook_cancelOrders_post_200_response'
           description: Response schema for the cancelOrder endpoint
-  /v1/ts-sdk/v1/orderbook/cancelOrdersOnChain:
+  /v1/ts-sdk/orderbook/cancelOrdersOnChain:
     post:
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_cancelOrdersOnChain_post_request'
+              $ref: '#/components/schemas/_v1_ts_sdk_orderbook_cancelOrdersOnChain_post_request'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_cancelOrdersOnChain_post_200_response'
+                $ref: '#/components/schemas/_v1_ts_sdk_orderbook_cancelOrdersOnChain_post_200_response'
           description: Response schema for the cancelOrder endpoint
-  /v1/ts-sdk/v1/orderbook/createListing:
+  /v1/ts-sdk/orderbook/createListing:
     post:
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_createListing_post_request'
+              $ref: '#/components/schemas/_v1_ts_sdk_orderbook_createListing_post_request'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_createListing_post_200_response'
+                $ref: '#/components/schemas/_v1_ts_sdk_orderbook_createListing_post_200_response'
           description: The response schema for the create listing endpoint
-  /v1/ts-sdk/v1/orderbook/fulfillOrder:
+  /v1/ts-sdk/orderbook/fulfillOrder:
     post:
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_fulfillOrder_post_request'
+              $ref: '#/components/schemas/_v1_ts_sdk_orderbook_fulfillOrder_post_request'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_fulfillOrder_post_200_response'
+                $ref: '#/components/schemas/_v1_ts_sdk_orderbook_fulfillOrder_post_200_response'
           description: Response schema for the fulfillOrder endpoint
-  /v1/ts-sdk/v1/orderbook/prepareListing:
+  /v1/ts-sdk/orderbook/prepareListing:
     post:
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_prepareListing_post_request'
+              $ref: '#/components/schemas/_v1_ts_sdk_orderbook_prepareListing_post_request'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_prepareListing_post_200_response'
+                $ref: '#/components/schemas/_v1_ts_sdk_orderbook_prepareListing_post_200_response'
           description: Response schema for the prepareListing endpoint
-  /v1/ts-sdk/v1/orderbook/prepareOrderCancellations:
+  /v1/ts-sdk/orderbook/prepareOrderCancellations:
     post:
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_prepareOrderCancellations_post_request'
+              $ref: '#/components/schemas/_v1_ts_sdk_orderbook_prepareOrderCancellations_post_request'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_prepareOrderCancellations_post_200_response'
+                $ref: '#/components/schemas/_v1_ts_sdk_orderbook_prepareOrderCancellations_post_200_response'
           description: Response schema for the prepareOrderCancellations endpoint
 components:
   schemas:
-    prepareListingReqBodyERC1155Item:
-      properties:
-        amount:
-          type: string
-        contractAddress:
-          type: string
-        tokenId:
-          type: string
-        type:
-          enum:
-          - ERC1155
-          type: string
-      required:
-      - amount
-      - contractAddress
-      - tokenId
-      - type
-      type: object
-    prepareListingReqBodyERC20Item:
-      properties:
-        amount:
-          type: string
-        contractAddress:
-          type: string
-        type:
-          enum:
-          - ERC20
-          type: string
-      required:
-      - amount
-      - contractAddress
-      - type
-      type: object
-    prepareListingReqBodyERC721Item:
-      properties:
-        contractAddress:
-          type: string
-        tokenId:
-          type: string
-        type:
-          enum:
-          - ERC721
-          type: string
-      required:
-      - contractAddress
-      - tokenId
-      - type
-      type: object
-    prepareListingReqBodyNativeItem:
-      properties:
-        amount:
-          type: string
-        type:
-          enum:
-          - NATIVE
-          type: string
-      required:
-      - amount
-      - type
-      type: object
-    prepareListingResBodyAction:
-      anyOf:
-      - $ref: '#/components/schemas/prepareListingResBodyTransactionAction'
-      - $ref: '#/components/schemas/prepareListingResBodySignableAction'
-    prepareListingResBodyBigNumber:
-      type: string
-    prepareListingResBodyBytesLike:
-      type: string
-    prepareListingResBodyItemType:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      type: number
-    prepareListingResBodyOrderComponents:
-      allOf:
-      - properties:
-          conduitKey:
-            type: string
-          consideration:
-            items:
-              $ref: '#/components/schemas/prepareListingResBodyOrderComponents_allOf_consideration'
-            type: array
-          endTime:
-            type: string
-          offer:
-            items:
-              $ref: '#/components/schemas/prepareListingResBodyOrderComponents_allOf_offer'
-            type: array
-          offerer:
-            type: string
-          orderType:
-            $ref: '#/components/schemas/prepareListingResBodyOrderType'
-          salt:
-            type: string
-          startTime:
-            type: string
-          totalOriginalConsiderationItems:
-            type: string
-          zone:
-            type: string
-          zoneHash:
-            type: string
-        required:
-        - conduitKey
-        - consideration
-        - endTime
-        - offer
-        - offerer
-        - orderType
-        - salt
-        - startTime
-        - zone
-        - zoneHash
-        type: object
-      - properties:
-          counter:
-            type: string
-        required:
-        - counter
-        type: object
-      example:
-        offer:
-        - itemType: null
-          startAmount: startAmount
-          identifierOrCriteria: identifierOrCriteria
-          endAmount: endAmount
-          token: token
-        - itemType: null
-          startAmount: startAmount
-          identifierOrCriteria: identifierOrCriteria
-          endAmount: endAmount
-          token: token
-        orderType: 5.637376656633329
-        salt: salt
-        zoneHash: zoneHash
-        zone: zone
-        conduitKey: conduitKey
-        offerer: offerer
-        consideration:
-        - itemType: 5.962133916683182
-          startAmount: startAmount
-          identifierOrCriteria: identifierOrCriteria
-          recipient: recipient
-          endAmount: endAmount
-          token: token
-        - itemType: 5.962133916683182
-          startAmount: startAmount
-          identifierOrCriteria: identifierOrCriteria
-          recipient: recipient
-          endAmount: endAmount
-          token: token
-        startTime: startTime
-        endTime: endTime
-        totalOriginalConsiderationItems: totalOriginalConsiderationItems
-        counter: counter
-    prepareListingResBodyOrderType:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      type: number
-    prepareListingResBodyRecordStringTypedDataField:
-      additionalProperties:
-        items:
-          $ref: '#/components/schemas/prepareListingResBodyRecordStringTypedDataField_value_inner'
-        type: array
-      type: object
-    prepareListingResBodyRecordStringAny:
-      additionalProperties: true
-      type: object
-    prepareListingResBodySignableAction:
-      properties:
-        message:
-          $ref: '#/components/schemas/prepareListingResBodySignableAction_message'
-        purpose:
-          $ref: '#/components/schemas/prepareListingResBodySignablePurpose'
-        type:
-          enum:
-          - SIGNABLE
-          type: string
-      required:
-      - type
-      type: object
-    prepareListingResBodySignablePurpose:
-      enum:
-      - CREATE_LISTING
-      - OFF_CHAIN_CANCELLATION
-      type: string
-    prepareListingResBodyTransactionAction:
-      example:
-        populatedTransactions:
-          data: data
-          accessList:
-          - address: address
-            storageKeys:
-            - storageKeys
-            - storageKeys
-          - address: address
-            storageKeys:
-            - storageKeys
-            - storageKeys
-          customData:
-            key: ""
-          type: 1.4658129805029452
-          nonce: 0.8008281904610115
-          gasLimit: gasLimit
-          chainId: 6.027456183070403
-          maxPriorityFeePerGas: maxPriorityFeePerGas
-          from: from
-          to: to
-          maxFeePerGas: maxFeePerGas
-          value: value
-          gasPrice: gasPrice
-          ccipReadEnabled: true
-        purpose: APPROVAL
-        type: TRANSACTION
-      properties:
-        populatedTransactions:
-          $ref: '#/components/schemas/prepareListingResBodyTransactionAction_populatedTransactions'
-        purpose:
-          $ref: '#/components/schemas/prepareListingResBodyTransactionPurpose'
-        type:
-          enum:
-          - TRANSACTION
-          type: string
-      required:
-      - type
-      type: object
-    prepareListingResBodyTransactionPurpose:
-      enum:
-      - APPROVAL
-      - FULFILL_ORDER
-      - CANCEL
-      type: string
-    prepareListingResBodyTypedDataDomain:
-      properties:
-        chainId:
-          type: string
-        name:
-          type: string
-        salt:
-          type: string
-        verifyingContract:
-          type: string
-        version:
-          type: string
-      type: object
-    createListingReqBodyBigNumberish:
-      anyOf:
-      - type: string
-      - type: number
-      description: Any type that can be used where a big number is needed.
-    createListingReqBodyFeeValue:
-      properties:
-        amount:
-          type: string
-        recipientAddress:
-          type: string
-      required:
-      - amount
-      - recipientAddress
-      type: object
-    createListingReqBodyItemType:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      type: number
-    createListingReqBodyOrderComponents:
-      allOf:
-      - properties:
-          conduitKey:
-            type: string
-          consideration:
-            items:
-              $ref: '#/components/schemas/createListingReqBodyOrderComponents_allOf_consideration'
-            type: array
-          endTime:
-            $ref: '#/components/schemas/createListingReqBodyBigNumberish'
-          offer:
-            items:
-              $ref: '#/components/schemas/createListingReqBodyOrderComponents_allOf_offer'
-            type: array
-          offerer:
-            type: string
-          orderType:
-            $ref: '#/components/schemas/createListingReqBodyOrderType'
-          salt:
-            type: string
-          startTime:
-            $ref: '#/components/schemas/createListingReqBodyBigNumberish'
-          totalOriginalConsiderationItems:
-            $ref: '#/components/schemas/createListingReqBodyBigNumberish'
-          zone:
-            type: string
-          zoneHash:
-            type: string
-        required:
-        - conduitKey
-        - consideration
-        - counter
-        - endTime
-        - offer
-        - offerer
-        - orderType
-        - salt
-        - startTime
-        - totalOriginalConsiderationItems
-        - zone
-        - zoneHash
-        type: object
-      - properties:
-          counter:
-            $ref: '#/components/schemas/createListingReqBodyBigNumberish'
-        type: object
-    createListingReqBodyOrderType:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      type: number
-    createListingResBodyCancellationType:
-      description: Whether the cancellation was done on-chain or off-chain or as a
-        result of an underfunded account
-      enum:
-      - ON_CHAIN
-      - OFF_CHAIN
-      - UNDERFUNDED
-      type: string
-    createListingResBodyERC1155Item:
+    ERC1155Item:
       example:
         amount: amount
         tokenId: tokenId
@@ -473,8 +135,13 @@ components:
           enum:
           - ERC1155
           type: string
+      required:
+      - amount
+      - contractAddress
+      - tokenId
+      - type
       type: object
-    createListingResBodyERC20Item:
+    ERC20Item:
       example:
         amount: amount
         contractAddress: contractAddress
@@ -488,8 +155,12 @@ components:
           enum:
           - ERC20
           type: string
+      required:
+      - amount
+      - contractAddress
+      - type
       type: object
-    createListingResBodyERC721Item:
+    ERC721Item:
       properties:
         contractAddress:
           type: string
@@ -504,27 +175,7 @@ components:
       - tokenId
       - type
       type: object
-    createListingResBodyFee:
-      example:
-        amount: amount
-        recipientAddress: recipientAddress
-        type: MAKER_ECOSYSTEM
-      properties:
-        amount:
-          type: string
-        recipientAddress:
-          type: string
-        type:
-          $ref: '#/components/schemas/createListingResBodyFeeType'
-      type: object
-    createListingResBodyFeeType:
-      enum:
-      - MAKER_ECOSYSTEM
-      - TAKER_ECOSYSTEM
-      - PROTOCOL
-      - ROYALTY
-      type: string
-    createListingResBodyNativeItem:
+    NativeItem:
       properties:
         amount:
           type: string
@@ -532,123 +183,162 @@ components:
           enum:
           - NATIVE
           type: string
+      required:
+      - amount
+      - type
       type: object
-    createListingResBodyOrder:
+    Action:
+      oneOf:
+      - $ref: '#/components/schemas/TransactionAction'
+      - $ref: '#/components/schemas/SignableAction'
+    BigNumber:
+      type: string
+    BytesLike:
+      type: string
+    ItemType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      type: number
+    OrderComponents:
       example:
-        chain:
-          name: name
-          id: id
-        fees:
-        - amount: amount
-          recipientAddress: recipientAddress
-          type: MAKER_ECOSYSTEM
-        - amount: amount
-          recipientAddress: recipientAddress
-          type: MAKER_ECOSYSTEM
+        offer:
+        - itemType: null
+          startAmount: startAmount
+          identifierOrCriteria: identifierOrCriteria
+          endAmount: endAmount
+          token: token
+        - itemType: null
+          startAmount: startAmount
+          identifierOrCriteria: identifierOrCriteria
+          endAmount: endAmount
+          token: token
+        orderType: 6.027456183070403
         salt: salt
-        accountAddress: accountAddress
-        signature: signature
-        buy:
-        - amount: amount
-          contractAddress: contractAddress
-          type: ERC20
-        - amount: amount
-          contractAddress: contractAddress
-          type: ERC20
-        sell:
-        - amount: amount
-          tokenId: tokenId
-          contractAddress: contractAddress
-          type: ERC1155
-        - amount: amount
-          tokenId: tokenId
-          contractAddress: contractAddress
-          type: ERC1155
-        endAt: endAt
-        type: LISTING
-        createdAt: createdAt
-        fillStatus:
-          denominator: denominator
-          numerator: numerator
-        protocolData:
-          seaportVersion: seaportVersion
-          orderType: FULL_RESTRICTED
-          counter: counter
-          zoneAddress: zoneAddress
-          seaportAddress: seaportAddress
-        id: id
-        startAt: startAt
-        orderHash: orderHash
-        status:
-          name: ACTIVE
-        updatedAt: updatedAt
+        zoneHash: zoneHash
+        zone: zone
+        conduitKey: conduitKey
+        offerer: offerer
+        consideration:
+        - itemType: 0.8008281904610115
+          startAmount: startAmount
+          identifierOrCriteria: identifierOrCriteria
+          recipient: recipient
+          endAmount: endAmount
+          token: token
+        - itemType: 0.8008281904610115
+          startAmount: startAmount
+          identifierOrCriteria: identifierOrCriteria
+          recipient: recipient
+          endAmount: endAmount
+          token: token
+        startTime: startTime
+        endTime: endTime
+        totalOriginalConsiderationItems: totalOriginalConsiderationItems
+        counter: counter
       properties:
-        accountAddress:
+        conduitKey:
           type: string
-        buy:
+        consideration:
           items:
-            $ref: '#/components/schemas/createListingResBodyOrder_buy_inner'
+            $ref: '#/components/schemas/OrderComponents_consideration_inner'
           type: array
-        chain:
-          $ref: '#/components/schemas/createListingResBodyOrder_chain'
-        createdAt:
+        endTime:
           type: string
-        endAt:
-          description: Time after which the Order is expired
-          type: string
-        fees:
+        offer:
           items:
-            $ref: '#/components/schemas/createListingResBodyFee'
+            $ref: '#/components/schemas/OrderComponents_offer_inner'
           type: array
-        fillStatus:
-          $ref: '#/components/schemas/createListingResBodyOrder_fillStatus'
-        id:
+        offerer:
           type: string
-        orderHash:
-          type: string
-        protocolData:
-          $ref: '#/components/schemas/createListingResBodyOrder_protocolData'
+        orderType:
+          $ref: '#/components/schemas/OrderType'
         salt:
           type: string
-        sell:
-          items:
-            $ref: '#/components/schemas/createListingResBodyOrder_sell_inner'
-          type: array
-        signature:
+        startTime:
           type: string
-        startAt:
-          description: Time after which the Order is considered active
+        totalOriginalConsiderationItems:
           type: string
-        status:
-          $ref: '#/components/schemas/createListingResBodyOrderStatus'
-        type:
-          enum:
-          - LISTING
+        zone:
           type: string
-        updatedAt:
+        zoneHash:
+          type: string
+        counter:
           type: string
       required:
-      - id
-      - orderHash
-      - sell
-      - signature
-      - startAt
-      - status
-      - type
-      - updatedAt
+      - conduitKey
+      - consideration
+      - counter
+      - endTime
+      - offer
+      - offerer
+      - orderType
+      - salt
+      - startTime
+      - totalOriginalConsiderationItems
+      - zone
+      - zoneHash
       type: object
-    createListingResBodyOrderStatus:
-      anyOf:
-      - $ref: '#/components/schemas/createListingResBodyOrderStatus_anyOf'
-      - $ref: '#/components/schemas/createListingResBodyOrderStatus_anyOf_1'
-      - $ref: '#/components/schemas/createListingResBodyOrderStatus_anyOf_2'
-      - $ref: '#/components/schemas/createListingResBodyOrderStatus_anyOf_3'
-      - $ref: '#/components/schemas/createListingResBodyOrderStatus_anyOf_4'
-      - $ref: '#/components/schemas/createListingResBodyOrderStatus_anyOf_5'
-      description: The Order status
-    cancelOrderOnchainResBodyTransactionAction:
+    OrderType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      type: number
+    RecordStringTypedDataField:
+      additionalProperties:
+        items:
+          $ref: '#/components/schemas/RecordStringTypedDataField_value_inner'
+        type: array
+      type: object
+    RecordStringAny:
+      additionalProperties: true
+      type: object
+    SignableAction:
       example:
-        populatedTransaction:
+        purpose: CREATE_LISTING
+        message:
+          types:
+            key:
+            - name: name
+              type: type
+            - name: name
+              type: type
+          primaryType: primaryType
+          domain:
+            salt: salt
+            chainId: chainId
+            name: name
+            version: version
+            verifyingContract: verifyingContract
+          message:
+            key: ""
+        type: SIGNABLE
+      properties:
+        message:
+          $ref: '#/components/schemas/SignableAction_message'
+        purpose:
+          $ref: '#/components/schemas/SignablePurpose'
+        type:
+          enum:
+          - SIGNABLE
+          type: string
+      required:
+      - type
+      type: object
+    SignablePurpose:
+      enum:
+      - CREATE_LISTING
+      - OFF_CHAIN_CANCELLATION
+      type: string
+    TransactionAction:
+      example:
+        populatedTransactions:
           data: data
           accessList:
           - address: address
@@ -675,69 +365,24 @@ components:
         purpose: APPROVAL
         type: TRANSACTION
       properties:
-        populatedTransaction:
-          $ref: '#/components/schemas/cancelOrderOnchainResBodyTransactionAction_populatedTransaction'
+        populatedTransactions:
+          $ref: '#/components/schemas/TransactionAction_populatedTransactions'
         purpose:
-          $ref: '#/components/schemas/cancelOrderOnchainResBodyTransactionPurpose'
+          $ref: '#/components/schemas/TransactionPurpose'
         type:
           enum:
           - TRANSACTION
           type: string
+      required:
+      - type
       type: object
-    cancelOrderOnchainResBodyTransactionPurpose:
+    TransactionPurpose:
       enum:
       - APPROVAL
       - FULFILL_ORDER
       - CANCEL
       type: string
-    prepareOrderCancellationsResBodyBigNumber:
-      type: string
-    prepareOrderCancellationsResBodyBytesLike:
-      type: string
-    prepareOrderCancellationsResBodyRecordStringTypedDataFieldArray:
-      additionalProperties:
-        items:
-          $ref: '#/components/schemas/prepareListingResBodyRecordStringTypedDataField_value_inner'
-        type: array
-      type: object
-    prepareOrderCancellationsResBodyRecordStringAny:
-      additionalProperties: true
-      type: object
-    prepareOrderCancellationsResBodySignableAction:
-      example:
-        purpose: CREATE_LISTING
-        message:
-          types:
-            key:
-            - name: name
-              type: type
-            - name: name
-              type: type
-          domain:
-            salt: salt
-            chainId: chainId
-            name: name
-            version: version
-            verifyingContract: verifyingContract
-          value:
-            key: ""
-        type: SIGNABLE
-      properties:
-        message:
-          $ref: '#/components/schemas/prepareOrderCancellationsResBodySignableAction_message'
-        purpose:
-          $ref: '#/components/schemas/prepareOrderCancellationsResBodySignablePurpose'
-        type:
-          enum:
-          - SIGNABLE
-          type: string
-      type: object
-    prepareOrderCancellationsResBodySignablePurpose:
-      enum:
-      - CREATE_LISTING
-      - OFF_CHAIN_CANCELLATION
-      type: string
-    prepareOrderCancellationsResBodyTypedDataDomain:
+    TypedDataDomain:
       example:
         salt: salt
         chainId: chainId
@@ -756,15 +401,22 @@ components:
         version:
           type: string
       type: object
-    fulfillOrderResBodyAction:
-      anyOf:
-      - $ref: '#/components/schemas/fulfillOrderResBodyTransactionAction'
-      - $ref: '#/components/schemas/fulfillOrderResBodySignableAction'
-    fulfillOrderResBodyBigNumber:
-      type: string
-    fulfillOrderResBodyBytesLike:
-      type: string
-    fulfillOrderResBodyCancelledOrderStatusCancellationType:
+    BigNumberish:
+      description: Any type that can be used where a big number is needed.
+      oneOf:
+      - type: string
+      - type: number
+    FeeValue:
+      properties:
+        amount:
+          type: string
+        recipientAddress:
+          type: string
+      required:
+      - amount
+      - recipientAddress
+      type: object
+    CancellationType:
       description: Whether the cancellation was done on-chain or off-chain or as a
         result of an underfunded account
       enum:
@@ -772,51 +424,7 @@ components:
       - OFF_CHAIN
       - UNDERFUNDED
       type: string
-    fulfillOrderResBodyERC1155Item:
-      example:
-        amount: amount
-        tokenId: tokenId
-        contractAddress: contractAddress
-        type: ERC1155
-      properties:
-        amount:
-          type: string
-        contractAddress:
-          type: string
-        tokenId:
-          type: string
-        type:
-          enum:
-          - ERC1155
-          type: string
-      type: object
-    fulfillOrderResBodyERC20Item:
-      example:
-        amount: amount
-        contractAddress: contractAddress
-        type: ERC20
-      properties:
-        amount:
-          type: string
-        contractAddress:
-          type: string
-        type:
-          enum:
-          - ERC20
-          type: string
-      type: object
-    fulfillOrderResBodyERC721Item:
-      properties:
-        contractAddress:
-          type: string
-        tokenId:
-          type: string
-        type:
-          enum:
-          - ERC721
-          type: string
-      type: object
-    fulfillOrderResBodyFee:
+    Fee:
       example:
         amount: amount
         recipientAddress: recipientAddress
@@ -827,25 +435,16 @@ components:
         recipientAddress:
           type: string
         type:
-          $ref: '#/components/schemas/fulfillOrderResBodyFeeType'
+          $ref: '#/components/schemas/FeeType'
       type: object
-    fulfillOrderResBodyFeeType:
+    FeeType:
       enum:
       - MAKER_ECOSYSTEM
       - TAKER_ECOSYSTEM
       - PROTOCOL
       - ROYALTY
       type: string
-    fulfillOrderResBodyNativeItem:
-      properties:
-        amount:
-          type: string
-        type:
-          enum:
-          - NATIVE
-          type: string
-      type: object
-    fulfillOrderResBodyOrder:
+    Order:
       example:
         chain:
           name: name
@@ -899,10 +498,10 @@ components:
           type: string
         buy:
           items:
-            $ref: '#/components/schemas/fulfillOrderResBodyOrder_buy_inner'
+            $ref: '#/components/schemas/_v1_ts_sdk_orderbook_prepareListing_post_request_buy'
           type: array
         chain:
-          $ref: '#/components/schemas/createListingResBodyOrder_chain'
+          $ref: '#/components/schemas/Order_chain'
         createdAt:
           type: string
         endAt:
@@ -910,21 +509,21 @@ components:
           type: string
         fees:
           items:
-            $ref: '#/components/schemas/fulfillOrderResBodyFee'
+            $ref: '#/components/schemas/Fee'
           type: array
         fillStatus:
-          $ref: '#/components/schemas/createListingResBodyOrder_fillStatus'
+          $ref: '#/components/schemas/Order_fillStatus'
         id:
           type: string
         orderHash:
           type: string
         protocolData:
-          $ref: '#/components/schemas/createListingResBodyOrder_protocolData'
+          $ref: '#/components/schemas/Order_protocolData'
         salt:
           type: string
         sell:
           items:
-            $ref: '#/components/schemas/fulfillOrderResBodyOrder_sell_inner'
+            $ref: '#/components/schemas/_v1_ts_sdk_orderbook_prepareListing_post_request_sell'
           type: array
         signature:
           type: string
@@ -932,107 +531,40 @@ components:
           description: Time after which the Order is considered active
           type: string
         status:
-          $ref: '#/components/schemas/fulfillOrderResBodyOrderStatus'
+          $ref: '#/components/schemas/OrderStatus'
         type:
           enum:
           - LISTING
           type: string
         updatedAt:
           type: string
-      type: object
-    fulfillOrderResBodyOrderStatus:
-      anyOf:
-      - $ref: '#/components/schemas/createListingResBodyOrderStatus_anyOf'
-      - $ref: '#/components/schemas/fulfillOrderResBodyOrderStatus_anyOf'
-      - $ref: '#/components/schemas/createListingResBodyOrderStatus_anyOf_2'
-      - $ref: '#/components/schemas/createListingResBodyOrderStatus_anyOf_3'
-      - $ref: '#/components/schemas/createListingResBodyOrderStatus_anyOf_4'
-      - $ref: '#/components/schemas/createListingResBodyOrderStatus_anyOf_5'
-      description: The Order status
-    fulfillOrderResBodyRecordStringTypedDataFieldArray:
-      additionalProperties:
-        items:
-          $ref: '#/components/schemas/prepareListingResBodyRecordStringTypedDataField_value_inner'
-        type: array
-      type: object
-    fulfillOrderResBodyRecordStringAny:
-      additionalProperties: true
-      type: object
-    fulfillOrderResBodySignableAction:
-      properties:
-        message:
-          $ref: '#/components/schemas/fulfillOrderResBodySignableAction_message'
-        purpose:
-          $ref: '#/components/schemas/fulfillOrderResBodySignablePurpose'
-        type:
-          enum:
-          - SIGNABLE
-          type: string
-      type: object
-    fulfillOrderResBodySignablePurpose:
-      enum:
-      - CREATE_LISTING
-      - OFF_CHAIN_CANCELLATION
-      type: string
-    fulfillOrderResBodyTransactionAction:
-      example:
-        populatedTransactions:
-          data: data
-          accessList:
-          - address: address
-            storageKeys:
-            - storageKeys
-            - storageKeys
-          - address: address
-            storageKeys:
-            - storageKeys
-            - storageKeys
-          customData:
-            key: ""
-          type: 1.4658129805029452
-          nonce: 0.8008281904610115
-          gasLimit: gasLimit
-          chainId: 6.027456183070403
-          maxPriorityFeePerGas: maxPriorityFeePerGas
-          from: from
-          to: to
-          maxFeePerGas: maxFeePerGas
-          value: value
-          gasPrice: gasPrice
-          ccipReadEnabled: true
-        purpose: APPROVAL
-        type: TRANSACTION
-      properties:
-        populatedTransactions:
-          $ref: '#/components/schemas/fulfillOrderResBodyTransactionAction_populatedTransactions'
-        purpose:
-          $ref: '#/components/schemas/fulfillOrderResBodyTransactionPurpose'
-        type:
-          enum:
-          - TRANSACTION
-          type: string
       required:
+      - id
+      - orderHash
+      - sell
+      - signature
+      - startAt
+      - status
       - type
+      - updatedAt
       type: object
-    fulfillOrderResBodyTransactionPurpose:
+    OrderStatus:
+      description: The Order status
+      oneOf:
+      - $ref: '#/components/schemas/OrderStatus_oneOf'
+      - $ref: '#/components/schemas/OrderStatus_oneOf_1'
+      - $ref: '#/components/schemas/OrderStatus_oneOf_2'
+      - $ref: '#/components/schemas/OrderStatus_oneOf_3'
+      - $ref: '#/components/schemas/OrderStatus_oneOf_4'
+      - $ref: '#/components/schemas/OrderStatus_oneOf_5'
+    CancelledOrderStatusCancellationType:
+      description: Whether the cancellation was done on-chain or off-chain or as a
+        result of an underfunded account
       enum:
-      - APPROVAL
-      - FULFILL_ORDER
-      - CANCEL
+      - ON_CHAIN
+      - OFF_CHAIN
+      - UNDERFUNDED
       type: string
-    fulfillOrderResBodyTypedDataDomain:
-      properties:
-        chainId:
-          type: string
-        name:
-          type: string
-        salt:
-          type: string
-        verifyingContract:
-          type: string
-        version:
-          type: string
-      type: object
     _v1_heartbeat_get_200_response:
       additionalProperties: true
       description: heartbeat
@@ -1042,7 +574,7 @@ components:
         status:
           type: string
       type: object
-    _v1_ts_sdk_v1_orderbook_cancelOrders_post_request:
+    _v1_ts_sdk_orderbook_cancelOrders_post_request:
       properties:
         orderIds:
           items:
@@ -1057,7 +589,7 @@ components:
       - orderIds
       - signature
       type: object
-    _v1_ts_sdk_v1_orderbook_cancelOrders_post_200_response_result_failed_cancellations_inner:
+    _v1_ts_sdk_orderbook_cancelOrders_post_200_response_result_failed_cancellations_inner:
       example:
         reason_code: FILLED
         order: order
@@ -1071,7 +603,7 @@ components:
           - FILLED
           type: string
       type: object
-    _v1_ts_sdk_v1_orderbook_cancelOrders_post_200_response_result:
+    _v1_ts_sdk_orderbook_cancelOrders_post_200_response_result:
       example:
         failed_cancellations:
         - reason_code: FILLED
@@ -1088,7 +620,7 @@ components:
         failed_cancellations:
           description: Orders which failed to be cancelled
           items:
-            $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_cancelOrders_post_200_response_result_failed_cancellations_inner'
+            $ref: '#/components/schemas/_v1_ts_sdk_orderbook_cancelOrders_post_200_response_result_failed_cancellations_inner'
           type: array
         pending_cancellations:
           description: Orders which are marked for cancellation but the cancellation
@@ -1102,7 +634,7 @@ components:
             type: string
           type: array
       type: object
-    _v1_ts_sdk_v1_orderbook_cancelOrders_post_200_response:
+    _v1_ts_sdk_orderbook_cancelOrders_post_200_response:
       description: Response schema for the cancelOrder endpoint
       example:
         result:
@@ -1119,9 +651,9 @@ components:
           - pending_cancellations
       properties:
         result:
-          $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_cancelOrders_post_200_response_result'
+          $ref: '#/components/schemas/_v1_ts_sdk_orderbook_cancelOrders_post_200_response_result'
       type: object
-    _v1_ts_sdk_v1_orderbook_cancelOrdersOnChain_post_request:
+    _v1_ts_sdk_orderbook_cancelOrdersOnChain_post_request:
       properties:
         orderIds:
           items:
@@ -1133,11 +665,11 @@ components:
       - accountAddress
       - orderIds
       type: object
-    _v1_ts_sdk_v1_orderbook_cancelOrdersOnChain_post_200_response:
+    _v1_ts_sdk_orderbook_cancelOrdersOnChain_post_200_response:
       description: Response schema for the cancelOrder endpoint
       example:
         cancellationAction:
-          populatedTransaction:
+          populatedTransactions:
             data: data
             accessList:
             - address: address
@@ -1165,16 +697,16 @@ components:
           type: TRANSACTION
       properties:
         cancellationAction:
-          $ref: '#/components/schemas/cancelOrderOnchainResBodyTransactionAction'
+          $ref: '#/components/schemas/TransactionAction'
       type: object
-    _v1_ts_sdk_v1_orderbook_createListing_post_request:
+    _v1_ts_sdk_orderbook_createListing_post_request:
       properties:
         makerFees:
           items:
-            $ref: '#/components/schemas/createListingReqBodyFeeValue'
+            $ref: '#/components/schemas/FeeValue'
           type: array
         orderComponents:
-          $ref: '#/components/schemas/createListingReqBodyOrderComponents'
+          $ref: '#/components/schemas/OrderComponents'
         orderHash:
           type: string
         orderSignature:
@@ -1185,7 +717,7 @@ components:
       - orderHash
       - orderSignature
       type: object
-    _v1_ts_sdk_v1_orderbook_createListing_post_200_response:
+    _v1_ts_sdk_orderbook_createListing_post_200_response:
       description: The response schema for the create listing endpoint
       example:
         result:
@@ -1238,9 +770,9 @@ components:
           updatedAt: updatedAt
       properties:
         result:
-          $ref: '#/components/schemas/createListingResBodyOrder'
+          $ref: '#/components/schemas/Order'
       type: object
-    _v1_ts_sdk_v1_orderbook_fulfillOrder_post_request_takerFees_inner:
+    _v1_ts_sdk_orderbook_fulfillOrder_post_request_takerFees_inner:
       properties:
         amount:
           type: string
@@ -1250,7 +782,7 @@ components:
       - amount
       - recipientAddress
       type: object
-    _v1_ts_sdk_v1_orderbook_fulfillOrder_post_request:
+    _v1_ts_sdk_orderbook_fulfillOrder_post_request:
       properties:
         listingId:
           description: listingId
@@ -1261,7 +793,7 @@ components:
         takerFees:
           description: takerFees
           items:
-            $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_fulfillOrder_post_request_takerFees_inner'
+            $ref: '#/components/schemas/_v1_ts_sdk_orderbook_fulfillOrder_post_request_takerFees_inner'
           type: array
         amountToFill:
           description: amountToFill
@@ -1271,7 +803,7 @@ components:
       - takerAddress
       - takerFees
       type: object
-    _v1_ts_sdk_v1_orderbook_fulfillOrder_post_200_response:
+    _v1_ts_sdk_orderbook_fulfillOrder_post_200_response:
       description: Response schema for the fulfillOrder endpoint
       example:
         expiration: expiration
@@ -1379,7 +911,7 @@ components:
       properties:
         actions:
           items:
-            $ref: '#/components/schemas/fulfillOrderResBodyAction'
+            $ref: '#/components/schemas/TransactionAction'
           type: array
         expiration:
           description: |-
@@ -1387,33 +919,33 @@ components:
             Submitting after the expiration will result in a on chain revert
           type: string
         order:
-          $ref: '#/components/schemas/fulfillOrderResBodyOrder'
+          $ref: '#/components/schemas/Order'
       type: object
-    _v1_ts_sdk_v1_orderbook_prepareListing_post_request_buy:
-      anyOf:
-      - $ref: '#/components/schemas/prepareListingReqBodyERC20Item'
-      - $ref: '#/components/schemas/prepareListingReqBodyNativeItem'
-    _v1_ts_sdk_v1_orderbook_prepareListing_post_request_sell:
-      anyOf:
-      - $ref: '#/components/schemas/prepareListingReqBodyERC1155Item'
-      - $ref: '#/components/schemas/prepareListingReqBodyERC721Item'
-    _v1_ts_sdk_v1_orderbook_prepareListing_post_request:
+    _v1_ts_sdk_orderbook_prepareListing_post_request_buy:
+      oneOf:
+      - $ref: '#/components/schemas/ERC20Item'
+      - $ref: '#/components/schemas/NativeItem'
+    _v1_ts_sdk_orderbook_prepareListing_post_request_sell:
+      oneOf:
+      - $ref: '#/components/schemas/ERC1155Item'
+      - $ref: '#/components/schemas/ERC721Item'
+    _v1_ts_sdk_orderbook_prepareListing_post_request:
       properties:
         buy:
-          $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_prepareListing_post_request_buy'
+          $ref: '#/components/schemas/_v1_ts_sdk_orderbook_prepareListing_post_request_buy'
         makerAddress:
           type: string
         orderExpiry:
           format: date-time
           type: string
         sell:
-          $ref: '#/components/schemas/_v1_ts_sdk_v1_orderbook_prepareListing_post_request_sell'
+          $ref: '#/components/schemas/_v1_ts_sdk_orderbook_prepareListing_post_request_sell'
       required:
       - buy
       - makerAddress
       - sell
       type: object
-    _v1_ts_sdk_v1_orderbook_prepareListing_post_200_response:
+    _v1_ts_sdk_orderbook_prepareListing_post_200_response:
       description: Response schema for the prepareListing endpoint
       example:
         actions:
@@ -1481,20 +1013,20 @@ components:
             identifierOrCriteria: identifierOrCriteria
             endAmount: endAmount
             token: token
-          orderType: 5.637376656633329
+          orderType: 6.027456183070403
           salt: salt
           zoneHash: zoneHash
           zone: zone
           conduitKey: conduitKey
           offerer: offerer
           consideration:
-          - itemType: 5.962133916683182
+          - itemType: 0.8008281904610115
             startAmount: startAmount
             identifierOrCriteria: identifierOrCriteria
             recipient: recipient
             endAmount: endAmount
             token: token
-          - itemType: 5.962133916683182
+          - itemType: 0.8008281904610115
             startAmount: startAmount
             identifierOrCriteria: identifierOrCriteria
             recipient: recipient
@@ -1508,10 +1040,10 @@ components:
       properties:
         actions:
           items:
-            $ref: '#/components/schemas/prepareListingResBodyAction'
+            $ref: '#/components/schemas/Action'
           type: array
         orderComponents:
-          $ref: '#/components/schemas/prepareListingResBodyOrderComponents'
+          $ref: '#/components/schemas/OrderComponents'
         orderHash:
           type: string
       required:
@@ -1519,7 +1051,7 @@ components:
       - orderComponents
       - orderHash
       type: object
-    _v1_ts_sdk_v1_orderbook_prepareOrderCancellations_post_request:
+    _v1_ts_sdk_orderbook_prepareOrderCancellations_post_request:
       properties:
         orderIds:
           items:
@@ -1529,7 +1061,7 @@ components:
       required:
       - orderIds
       type: object
-    _v1_ts_sdk_v1_orderbook_prepareOrderCancellations_post_200_response:
+    _v1_ts_sdk_orderbook_prepareOrderCancellations_post_200_response:
       description: Response schema for the prepareOrderCancellations endpoint
       example:
         signableAction:
@@ -1541,22 +1073,23 @@ components:
                 type: type
               - name: name
                 type: type
+            primaryType: primaryType
             domain:
               salt: salt
               chainId: chainId
               name: name
               version: version
               verifyingContract: verifyingContract
-            value:
+            message:
               key: ""
           type: SIGNABLE
       properties:
         signableAction:
-          $ref: '#/components/schemas/prepareOrderCancellationsResBodySignableAction'
+          $ref: '#/components/schemas/SignableAction'
       type: object
-    prepareListingResBodyOrderComponents_allOf_consideration:
+    OrderComponents_consideration_inner:
       example:
-        itemType: 5.962133916683182
+        itemType: 0.8008281904610115
         startAmount: startAmount
         identifierOrCriteria: identifierOrCriteria
         recipient: recipient
@@ -1568,15 +1101,22 @@ components:
         identifierOrCriteria:
           type: string
         itemType:
-          $ref: '#/components/schemas/prepareListingResBodyItemType'
+          $ref: '#/components/schemas/ItemType'
         recipient:
           type: string
         startAmount:
           type: string
         token:
           type: string
+      required:
+      - endAmount
+      - identifierOrCriteria
+      - itemType
+      - recipient
+      - startAmount
+      - token
       type: object
-    prepareListingResBodyOrderComponents_allOf_offer:
+    OrderComponents_offer_inner:
       example:
         itemType: null
         startAmount: startAmount
@@ -1589,13 +1129,19 @@ components:
         identifierOrCriteria:
           type: string
         itemType:
-          $ref: '#/components/schemas/prepareListingResBodyItemType'
+          $ref: '#/components/schemas/ItemType'
         startAmount:
           type: string
         token:
           type: string
+      required:
+      - endAmount
+      - identifierOrCriteria
+      - itemType
+      - startAmount
+      - token
       type: object
-    prepareListingResBodyRecordStringTypedDataField_value_inner:
+    RecordStringTypedDataField_value_inner:
       additionalProperties: false
       example:
         name: name
@@ -1609,21 +1155,39 @@ components:
       - name
       - type
       type: object
-    prepareListingResBodySignableAction_message:
+    SignableAction_message:
+      example:
+        types:
+          key:
+          - name: name
+            type: type
+          - name: name
+            type: type
+        primaryType: primaryType
+        domain:
+          salt: salt
+          chainId: chainId
+          name: name
+          version: version
+          verifyingContract: verifyingContract
+        message:
+          key: ""
       properties:
         domain:
-          $ref: '#/components/schemas/prepareListingResBodyTypedDataDomain'
+          $ref: '#/components/schemas/TypedDataDomain'
         types:
           additionalProperties:
             items:
-              $ref: '#/components/schemas/prepareListingResBodyRecordStringTypedDataField_value_inner'
+              $ref: '#/components/schemas/RecordStringTypedDataField_value_inner'
             type: array
           type: object
-        value:
+        message:
           additionalProperties: true
           type: object
+        primaryType:
+          type: string
       type: object
-    prepareListingResBodyTransactionAction_populatedTransactions_accessList_inner:
+    TransactionAction_populatedTransactions_accessList_inner:
       example:
         address: address
         storageKeys:
@@ -1637,7 +1201,7 @@ components:
             type: string
           type: array
       type: object
-    prepareListingResBodyTransactionAction_populatedTransactions:
+    TransactionAction_populatedTransactions:
       example:
         data: data
         accessList:
@@ -1683,7 +1247,7 @@ components:
           type: number
         accessList:
           items:
-            $ref: '#/components/schemas/prepareListingResBodyTransactionAction_populatedTransactions_accessList_inner'
+            $ref: '#/components/schemas/TransactionAction_populatedTransactions_accessList_inner'
           type: array
         maxFeePerGas:
           type: string
@@ -1695,52 +1259,7 @@ components:
         ccipReadEnabled:
           type: boolean
       type: object
-    createListingReqBodyOrderComponents_allOf_consideration:
-      properties:
-        endAmount:
-          type: string
-        identifierOrCriteria:
-          type: string
-        itemType:
-          $ref: '#/components/schemas/createListingReqBodyItemType'
-        recipient:
-          type: string
-        startAmount:
-          type: string
-        token:
-          type: string
-      required:
-      - endAmount
-      - identifierOrCriteria
-      - itemType
-      - recipient
-      - startAmount
-      - token
-      type: object
-    createListingReqBodyOrderComponents_allOf_offer:
-      properties:
-        endAmount:
-          type: string
-        identifierOrCriteria:
-          type: string
-        itemType:
-          $ref: '#/components/schemas/createListingReqBodyItemType'
-        startAmount:
-          type: string
-        token:
-          type: string
-      required:
-      - endAmount
-      - identifierOrCriteria
-      - itemType
-      - startAmount
-      - token
-      type: object
-    createListingResBodyOrder_buy_inner:
-      anyOf:
-      - $ref: '#/components/schemas/createListingResBodyERC20Item'
-      - $ref: '#/components/schemas/createListingResBodyNativeItem'
-    createListingResBodyOrder_chain:
+    Order_chain:
       example:
         name: name
         id: id
@@ -1750,7 +1269,7 @@ components:
         name:
           type: string
       type: object
-    createListingResBodyOrder_fillStatus:
+    Order_fillStatus:
       example:
         denominator: denominator
         numerator: numerator
@@ -1760,7 +1279,7 @@ components:
         numerator:
           type: string
       type: object
-    createListingResBodyOrder_protocolData:
+    Order_protocolData:
       example:
         seaportVersion: seaportVersion
         orderType: FULL_RESTRICTED
@@ -1782,11 +1301,7 @@ components:
         zoneAddress:
           type: string
       type: object
-    createListingResBodyOrder_sell_inner:
-      anyOf:
-      - $ref: '#/components/schemas/createListingResBodyERC1155Item'
-      - $ref: '#/components/schemas/createListingResBodyERC721Item'
-    createListingResBodyOrderStatus_anyOf:
+    OrderStatus_oneOf:
       example:
         name: ACTIVE
       properties:
@@ -1796,10 +1311,10 @@ components:
           - ACTIVE
           type: string
       type: object
-    createListingResBodyOrderStatus_anyOf_1:
+    OrderStatus_oneOf_1:
       properties:
         cancellation_type:
-          $ref: '#/components/schemas/createListingResBodyCancellationType'
+          $ref: '#/components/schemas/CancellationType'
         name:
           description: The order status indicating a order is has been cancelled or
             about to be cancelled.
@@ -1810,7 +1325,7 @@ components:
           description: Whether the cancellation of the order is pending
           type: boolean
       type: object
-    createListingResBodyOrderStatus_anyOf_2:
+    OrderStatus_oneOf_2:
       properties:
         name:
           description: A terminal order status indicating that an order cannot be
@@ -1819,7 +1334,7 @@ components:
           - EXPIRED
           type: string
       type: object
-    createListingResBodyOrderStatus_anyOf_3:
+    OrderStatus_oneOf_3:
       properties:
         name:
           description: A terminal order status indicating that an order has been fulfilled.
@@ -1827,7 +1342,7 @@ components:
           - FILLED
           type: string
       type: object
-    createListingResBodyOrderStatus_anyOf_4:
+    OrderStatus_oneOf_4:
       properties:
         name:
           description: The order status that indicates an order cannot be fulfilled.
@@ -1842,7 +1357,7 @@ components:
             the order
           type: boolean
       type: object
-    createListingResBodyOrderStatus_anyOf_5:
+    OrderStatus_oneOf_5:
       properties:
         evaluated:
           description: Whether the order has been evaluated after its creation
@@ -1855,187 +1370,6 @@ components:
           type: string
         started:
           description: Whether the order has reached its specified start time
-          type: boolean
-      type: object
-    cancelOrderOnchainResBodyTransactionAction_populatedTransaction:
-      example:
-        data: data
-        accessList:
-        - address: address
-          storageKeys:
-          - storageKeys
-          - storageKeys
-        - address: address
-          storageKeys:
-          - storageKeys
-          - storageKeys
-        customData:
-          key: ""
-        type: 1.4658129805029452
-        nonce: 0.8008281904610115
-        gasLimit: gasLimit
-        chainId: 6.027456183070403
-        maxPriorityFeePerGas: maxPriorityFeePerGas
-        from: from
-        to: to
-        maxFeePerGas: maxFeePerGas
-        value: value
-        gasPrice: gasPrice
-        ccipReadEnabled: true
-      properties:
-        to:
-          type: string
-        from:
-          type: string
-        nonce:
-          type: number
-        gasLimit:
-          type: string
-        gasPrice:
-          type: string
-        data:
-          type: string
-        value:
-          type: string
-        chainId:
-          type: number
-        type:
-          type: number
-        accessList:
-          items:
-            $ref: '#/components/schemas/prepareListingResBodyTransactionAction_populatedTransactions_accessList_inner'
-          type: array
-        maxFeePerGas:
-          type: string
-        maxPriorityFeePerGas:
-          type: string
-        customData:
-          additionalProperties: true
-          type: object
-        ccipReadEnabled:
-          type: boolean
-      type: object
-    prepareOrderCancellationsResBodySignableAction_message:
-      example:
-        types:
-          key:
-          - name: name
-            type: type
-          - name: name
-            type: type
-        domain:
-          salt: salt
-          chainId: chainId
-          name: name
-          version: version
-          verifyingContract: verifyingContract
-        value:
-          key: ""
-      properties:
-        domain:
-          $ref: '#/components/schemas/prepareOrderCancellationsResBodyTypedDataDomain'
-        types:
-          additionalProperties:
-            items:
-              $ref: '#/components/schemas/prepareListingResBodyRecordStringTypedDataField_value_inner'
-            type: array
-          type: object
-        value:
-          additionalProperties: true
-          type: object
-      type: object
-    fulfillOrderResBodyOrder_buy_inner:
-      anyOf:
-      - $ref: '#/components/schemas/fulfillOrderResBodyERC20Item'
-      - $ref: '#/components/schemas/fulfillOrderResBodyNativeItem'
-    fulfillOrderResBodyOrder_sell_inner:
-      anyOf:
-      - $ref: '#/components/schemas/fulfillOrderResBodyERC1155Item'
-      - $ref: '#/components/schemas/fulfillOrderResBodyERC721Item'
-    fulfillOrderResBodyOrderStatus_anyOf:
-      properties:
-        cancellation_type:
-          $ref: '#/components/schemas/fulfillOrderResBodyCancelledOrderStatusCancellationType'
-        name:
-          description: The order status indicating a order is has been cancelled or
-            about to be cancelled.
-          enum:
-          - CANCELLED
-          type: string
-        pending:
-          description: Whether the cancellation of the order is pending
-          type: boolean
-      type: object
-    fulfillOrderResBodySignableAction_message:
-      properties:
-        domain:
-          $ref: '#/components/schemas/fulfillOrderResBodyTypedDataDomain'
-        types:
-          additionalProperties:
-            items:
-              $ref: '#/components/schemas/prepareListingResBodyRecordStringTypedDataField_value_inner'
-            type: array
-          type: object
-        value:
-          additionalProperties: true
-          type: object
-      type: object
-    fulfillOrderResBodyTransactionAction_populatedTransactions:
-      example:
-        data: data
-        accessList:
-        - address: address
-          storageKeys:
-          - storageKeys
-          - storageKeys
-        - address: address
-          storageKeys:
-          - storageKeys
-          - storageKeys
-        customData:
-          key: ""
-        type: 1.4658129805029452
-        nonce: 0.8008281904610115
-        gasLimit: gasLimit
-        chainId: 6.027456183070403
-        maxPriorityFeePerGas: maxPriorityFeePerGas
-        from: from
-        to: to
-        maxFeePerGas: maxFeePerGas
-        value: value
-        gasPrice: gasPrice
-        ccipReadEnabled: true
-      properties:
-        to:
-          type: string
-        from:
-          type: string
-        nonce:
-          type: number
-        gasLimit:
-          type: string
-        gasPrice:
-          type: string
-        data:
-          type: string
-        value:
-          type: string
-        chainId:
-          type: number
-        type:
-          type: number
-        accessList:
-          items:
-            $ref: '#/components/schemas/prepareListingResBodyTransactionAction_populatedTransactions_accessList_inner'
-          type: array
-        maxFeePerGas:
-          type: string
-        maxPriorityFeePerGas:
-          type: string
-        customData:
-          additionalProperties: true
-          type: object
-        ccipReadEnabled:
           type: boolean
       type: object
 

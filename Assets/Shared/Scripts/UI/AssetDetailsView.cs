@@ -13,12 +13,14 @@ using Cysharp.Threading.Tasks;
 using Immutable.Passport;
 using Immutable.Passport.Model;
 using Immutable.Search.Model;
-// using Immutable.Ts.Client;
-// using Immutable.Ts.Api;
-// using Immutable.Ts.Model;
+using Immutable.Ts.Client;
+using Immutable.Ts.Api;
+using Immutable.Ts.Model;
 using Immutable.Search.Api;
 using Immutable.Search.Client;
 using Immutable.Search.Model;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace HyperCasual.Runner
 {
@@ -132,7 +134,7 @@ namespace HyperCasual.Runner
 
         private async void GetMarketData()
         {
-            Configuration config = new Configuration();
+            Immutable.Search.Client.Configuration config = new Immutable.Search.Client.Configuration();
             config.BasePath = Config.SEARCH_BASE_URL;
             var apiInstance = new SearchApi(config);
 
@@ -165,7 +167,7 @@ namespace HyperCasual.Runner
                     }
                 }
             }
-            catch (ApiException e)
+            catch (Immutable.Search.Client.ApiException e)
             {
                 Debug.LogError("Exception when calling: " + e.Message);
                 Debug.LogError("Status Code: " + e.ErrorCode);
@@ -318,105 +320,29 @@ namespace HyperCasual.Runner
                 }
             };
 
-            // Configuration config = new Configuration();
-            // config.BasePath = Config.TS_BASE_URL;
-            // var apiInstance = new DefaultApi(config);
+            Immutable.Ts.Client.Configuration config = new Immutable.Ts.Client.Configuration();
+            config.BasePath = Config.TS_BASE_URL;
+            var apiInstance = new DefaultApi(config);
 
             try
             {
-                // V1TsSdkV1OrderbookPrepareListingPost200Response response = await apiInstance.V1TsSdkV1OrderbookPrepareListingPostAsync(new V1TsSdkV1OrderbookPrepareListingPostRequest
-                // (
-                //     makerAddress: address,
-                //     sell: new V1TsSdkV1OrderbookPrepareListingPostRequestSell(
-                //         new PrepareListingReqBodyERC721Item(contractAddress: Contract.SKIN, tokenId: asset.TokenId, type: PrepareListingReqBodyERC721Item.TypeEnum.ERC721)),
-                //     buy: new V1TsSdkV1OrderbookPrepareListingPostRequestBuy(
-                //         new PrepareListingReqBodyERC20Item(amount: price, contractAddress: Contract.TOKEN, type: PrepareListingReqBodyERC20Item.TypeEnum.ERC20))
-                // ));
+                V1TsSdkOrderbookPrepareListingPost200Response prepareListingResponse = await apiInstance.V1TsSdkOrderbookPrepareListingPostAsync(new V1TsSdkOrderbookPrepareListingPostRequest
+                (
+                    makerAddress: address,
+                    sell: new V1TsSdkOrderbookPrepareListingPostRequestSell(
+                        new ERC721Item(contractAddress: Contract.SKIN, tokenId: m_Asset.token_id, type: ERC721Item.TypeEnum.ERC721)),
+                    buy: new V1TsSdkOrderbookPrepareListingPostRequestBuy(
+                        new ERC20Item(amount: price, contractAddress: Contract.TOKEN, type: ERC20Item.TypeEnum.ERC20))
+                ));
 
-                // var transactionAction = response.Actions.FirstOrDefault(action => action.GetPrepareListingResBodyTransactionAction() != null);
-                // if (transactionAction != null)
-                // {
-                //     PrepareListingResBodyTransactionAction tx = transactionAction.GetPrepareListingResBodyTransactionAction();
-                //     var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
-                //     {
-                //         to = tx.PopulatedTransactions.To,
-                //         data = tx.PopulatedTransactions.Data,
-                //         value = "0"
-                //     });
-
-                //     if (transactionResponse.status != "1")
-                //     {
-                //         await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing.", "OK");
-                //         return null;
-                //     }
-                // }
-
-                // // Sign payload
-                // var signableAction = response.Actions.FirstOrDefault(action => action.GetPrepareListingResBodySignableAction() != null);
-                // if (signableAction != null)
-                // {
-                //     PrepareListingResBodySignableActionMessage message = signableAction.GetPrepareListingResBodySignableAction().Message;
-
-                //     var eip712TypedData = new TsEIP712TypedData
-                //     {
-                //         domain = message.Domain,
-                //         types = message.Types,
-                //         message = message.Value,
-                //         primaryType = "OrderComponents"
-                //     };
-
-                //     eip712TypedData.message.Add("EIP712Domain", new List<PrepareListingResBodyRecordStringTypedDataFieldValueInner>
-                //         {
-                //             new PrepareListingResBodyRecordStringTypedDataFieldValueInner(name: "name", type: "string"),
-                //             new PrepareListingResBodyRecordStringTypedDataFieldValueInner(name: "version", type: "string"),
-                //             new PrepareListingResBodyRecordStringTypedDataFieldValueInner(name: "chainId", type: "uint256"),
-                //             new PrepareListingResBodyRecordStringTypedDataFieldValueInner(name: "verifyingContract", type: "address")
-                //         });
-
-                //     Debug.Log($"EIP712TypedData: {JsonUtility.ToJson(eip712TypedData)}");
-                //     string signature = await Passport.Instance.ZkEvmSignTypedDataV4(JsonUtility.ToJson(eip712TypedData));
-                //     Debug.Log($"Signature: {signature}");
-
-                //     // (bool result, string signature) = await m_CustomDialog.ShowDialog(
-                //     //     "Confirm listing",
-                //     //     "Enter signed payload:",
-                //     //     "Confirm",
-                //     //     negativeButtonText: "Cancel",
-                //     //     showInputField: true
-                //     // );
-                //     // if (result)
-                //     // {
-                //     return await ListAsset(signature, response, address);
-                //     // }
-                // }
-
-                var json = JsonUtility.ToJson(data);
-                Debug.Log($"json = {json}");
-
-                using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/v1/ts-sdk/v1/orderbook/prepareListing")
+                var transactionAction = prepareListingResponse.Actions.FirstOrDefault(action => action.ActualInstance == typeof(TransactionAction));
+                if (transactionAction != null)
                 {
-                    Content = new StringContent(json, Encoding.UTF8, "application/json")
-                };
-                using var res = await client.SendAsync(req);
-
-                if (!res.IsSuccessStatusCode)
-                {
-                    await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing.", "OK");
-                    return null;
-                }
-
-                string responseBody = await res.Content.ReadAsStringAsync();
-                PrepareListingResponse response = JsonUtility.FromJson<PrepareListingResponse>(responseBody);
-
-                // Send transaction if required
-                var transaction = response.actions.FirstOrDefault(action => action.type == "TRANSACTION");
-                if (transaction != null)
-                {
+                    TransactionAction tx = transactionAction.GetTransactionAction();
                     var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
                     {
-                        to = transaction.populatedTransactions.to,
-                        data = transaction.populatedTransactions.data,
+                        to = tx.PopulatedTransactions.To,
+                        data = tx.PopulatedTransactions.Data,
                         value = "0"
                     });
 
@@ -428,29 +354,13 @@ namespace HyperCasual.Runner
                 }
 
                 // Sign payload
-                var signable = response.actions.FirstOrDefault(action => action.type == "SIGNABLE");
-                if (signable != null)
+                var signableAction = prepareListingResponse.Actions.FirstOrDefault(action => action.GetSignableAction() != null);
+
+                if (signableAction != null)
                 {
-                    Debug.Log($"Sign: {JsonUtility.ToJson(signable.message)}");
+                    SignableActionMessage message = signableAction.GetSignableAction().Message;
+                    string signature = await Passport.Instance.ZkEvmSignTypedDataV4(JsonConvert.SerializeObject(message, Formatting.Indented));
 
-                    signable.message.types.EIP712Domain = new List<NameType>
-                    {
-                        new NameType { name = "name", type = "string" },
-                        new NameType { name = "version", type = "string" },
-                        new NameType { name = "chainId", type = "uint256" },
-                        new NameType { name = "verifyingContract", type = "address" }
-                    };
-
-                    var eip712TypedData = new EIP712TypedData
-                    {
-                        domain = signable.message.domain,
-                        types = signable.message.types,
-                        message = signable.message.value,
-                        primaryType = "OrderComponents"
-                    };
-
-                    Debug.Log($"EIP712TypedData: {JsonUtility.ToJson(eip712TypedData)}");
-                    string signature = await Passport.Instance.ZkEvmSignTypedDataV4(JsonUtility.ToJson(eip712TypedData));
                     Debug.Log($"Signature: {signature}");
 
                     // (bool result, string signature) = await m_CustomDialog.ShowDialog(
@@ -462,13 +372,20 @@ namespace HyperCasual.Runner
                     // );
                     // if (result)
                     // {
-                    return await ListAsset(signature, response, address);
+                    return await ListAsset(signature, prepareListingResponse, address);
                     // }
+                }
+                else
+                {
+                    Debug.Log("Failed to sell as there is nothing to sign");
+                    await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing", "OK");
+                    return null;
                 }
             }
             catch (Exception ex)
             {
                 Debug.Log($"Failed to sell: {ex.Message}");
+                Debug.LogError(ex.StackTrace);
                 await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing", "OK");
             }
 
@@ -481,57 +398,26 @@ namespace HyperCasual.Runner
         /// <param name="signature">The signature for the listing.</param>
         /// <param name="preparedListing">The prepared listing data.</param>
         /// <param name="address">The wallet address of the user.</param>
-        private async UniTask<string?> ListAsset(string signature, PrepareListingResponse preparedListing, string address)
+        private async UniTask<string?> ListAsset(string signature, V1TsSdkOrderbookPrepareListingPost200Response preparedListing, string address)
         {
-            var data = new CreateListingRequest
-            {
-                makerFees = new List<CreateListingFeeValue>(),
-                orderComponents = preparedListing.orderComponents,
-                orderHash = preparedListing.orderHash,
-                orderSignature = signature
-            };
-
             try
             {
+                Immutable.Ts.Client.Configuration config = new Immutable.Ts.Client.Configuration();
+                config.BasePath = Config.TS_BASE_URL;
+                var apiInstance = new DefaultApi(config);
 
-                // V1TsSdkV1OrderbookCreateListingPost200Response response = await apiInstance.V1TsSdkV1OrderbookCreateListingPostAsync(new V1TsSdkV1OrderbookCreateListingPostRequest
-                // (
-                //     makerAddress: address,
-                //     orderComponents: new CreateListingReqBodyOrderComponents(
-                //         conduitKey: preparedListing.OrderComponents.ConduitKey,
-                //         conduitKey: preparedListing.OrderComponents.ConduitKey,
-                //     ),
-                //     orderHash: preparedListing.OrderHash,
-                //     orderSignature: signature
-                // ));
+                V1TsSdkOrderbookCreateListingPost200Response createListingResponse = await apiInstance.V1TsSdkOrderbookCreateListingPostAsync(new V1TsSdkOrderbookCreateListingPostRequest
+                (
+                    makerFees: new List<FeeValue>(),
+                    orderComponents: preparedListing.OrderComponents,
+                    orderHash: preparedListing.OrderHash,
+                    orderSignature: signature
+                ));
 
-                var json = JsonUtility.ToJson(data);
-                Debug.Log($"json = {json}");
+                Debug.Log($"Listing ID: {createListingResponse.Result.Id}");
+                await ConfirmListingStatus(createListingResponse.Result.Id, "ACTIVE");
 
-                using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/v1/ts-sdk/v1/orderbook/createListing")
-                {
-                    Content = new StringContent(json, Encoding.UTF8, "application/json")
-                };
-                using var res = await client.SendAsync(req);
-
-                if (!res.IsSuccessStatusCode)
-                {
-                    string errorBody = await res.Content.ReadAsStringAsync();
-                    Debug.Log($"Error: {errorBody}");
-                    await m_CustomDialog.ShowDialog("Error", "Failed to list", "OK");
-                    return null;
-                }
-                else
-                {
-                    string responseBody = await res.Content.ReadAsStringAsync();
-                    CreateListingResponse response = JsonUtility.FromJson<CreateListingResponse>(responseBody);
-                    Debug.Log($"Listing ID: {response.result.id}");
-
-                    // Validate that listing is active
-                    await ConfirmListingStatus(response.result.id, "ACTIVE");
-                    return response.result.id;
-                }
+                return createListingResponse.Result.Id;
             }
             catch (Exception ex)
             {

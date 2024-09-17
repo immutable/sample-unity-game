@@ -63,9 +63,9 @@ namespace Immutable.Ts.Api
         /// 
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
-        /// <returns>V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response</returns>
-        V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response V1TsSdkV1OrderbookCancelOrdersOnChainPost(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest? v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest?));
+        /// <param name="v1TsSdkOrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
+        /// <returns>V1TsSdkOrderbookCancelOrdersOnChainPost200Response</returns>
+        V1TsSdkOrderbookCancelOrdersOnChainPost200Response V1TsSdkOrderbookCancelOrdersOnChainPost(V1TsSdkOrderbookCancelOrdersOnChainPostRequest? v1TsSdkOrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkOrderbookCancelOrdersOnChainPostRequest?));
 
         /// <summary>
         /// 
@@ -74,16 +74,16 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
-        /// <returns>ApiResponse of V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response</returns>
-        ApiResponse<V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response> V1TsSdkV1OrderbookCancelOrdersOnChainPostWithHttpInfo(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest? v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest?));
+        /// <param name="v1TsSdkOrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
+        /// <returns>ApiResponse of V1TsSdkOrderbookCancelOrdersOnChainPost200Response</returns>
+        ApiResponse<V1TsSdkOrderbookCancelOrdersOnChainPost200Response> V1TsSdkOrderbookCancelOrdersOnChainPostWithHttpInfo(V1TsSdkOrderbookCancelOrdersOnChainPostRequest? v1TsSdkOrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkOrderbookCancelOrdersOnChainPostRequest?));
         /// <summary>
         /// 
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersPostRequest"> (optional)</param>
-        /// <returns>V1TsSdkV1OrderbookCancelOrdersPost200Response</returns>
-        V1TsSdkV1OrderbookCancelOrdersPost200Response V1TsSdkV1OrderbookCancelOrdersPost(V1TsSdkV1OrderbookCancelOrdersPostRequest? v1TsSdkV1OrderbookCancelOrdersPostRequest = default(V1TsSdkV1OrderbookCancelOrdersPostRequest?));
+        /// <param name="v1TsSdkOrderbookCancelOrdersPostRequest"> (optional)</param>
+        /// <returns>V1TsSdkOrderbookCancelOrdersPost200Response</returns>
+        V1TsSdkOrderbookCancelOrdersPost200Response V1TsSdkOrderbookCancelOrdersPost(V1TsSdkOrderbookCancelOrdersPostRequest? v1TsSdkOrderbookCancelOrdersPostRequest = default(V1TsSdkOrderbookCancelOrdersPostRequest?));
 
         /// <summary>
         /// 
@@ -92,16 +92,16 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersPostRequest"> (optional)</param>
-        /// <returns>ApiResponse of V1TsSdkV1OrderbookCancelOrdersPost200Response</returns>
-        ApiResponse<V1TsSdkV1OrderbookCancelOrdersPost200Response> V1TsSdkV1OrderbookCancelOrdersPostWithHttpInfo(V1TsSdkV1OrderbookCancelOrdersPostRequest? v1TsSdkV1OrderbookCancelOrdersPostRequest = default(V1TsSdkV1OrderbookCancelOrdersPostRequest?));
+        /// <param name="v1TsSdkOrderbookCancelOrdersPostRequest"> (optional)</param>
+        /// <returns>ApiResponse of V1TsSdkOrderbookCancelOrdersPost200Response</returns>
+        ApiResponse<V1TsSdkOrderbookCancelOrdersPost200Response> V1TsSdkOrderbookCancelOrdersPostWithHttpInfo(V1TsSdkOrderbookCancelOrdersPostRequest? v1TsSdkOrderbookCancelOrdersPostRequest = default(V1TsSdkOrderbookCancelOrdersPostRequest?));
         /// <summary>
         /// 
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCreateListingPostRequest"> (optional)</param>
-        /// <returns>V1TsSdkV1OrderbookCreateListingPost200Response</returns>
-        V1TsSdkV1OrderbookCreateListingPost200Response V1TsSdkV1OrderbookCreateListingPost(V1TsSdkV1OrderbookCreateListingPostRequest? v1TsSdkV1OrderbookCreateListingPostRequest = default(V1TsSdkV1OrderbookCreateListingPostRequest?));
+        /// <param name="v1TsSdkOrderbookCreateListingPostRequest"> (optional)</param>
+        /// <returns>V1TsSdkOrderbookCreateListingPost200Response</returns>
+        V1TsSdkOrderbookCreateListingPost200Response V1TsSdkOrderbookCreateListingPost(V1TsSdkOrderbookCreateListingPostRequest? v1TsSdkOrderbookCreateListingPostRequest = default(V1TsSdkOrderbookCreateListingPostRequest?));
 
         /// <summary>
         /// 
@@ -110,16 +110,16 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCreateListingPostRequest"> (optional)</param>
-        /// <returns>ApiResponse of V1TsSdkV1OrderbookCreateListingPost200Response</returns>
-        ApiResponse<V1TsSdkV1OrderbookCreateListingPost200Response> V1TsSdkV1OrderbookCreateListingPostWithHttpInfo(V1TsSdkV1OrderbookCreateListingPostRequest? v1TsSdkV1OrderbookCreateListingPostRequest = default(V1TsSdkV1OrderbookCreateListingPostRequest?));
+        /// <param name="v1TsSdkOrderbookCreateListingPostRequest"> (optional)</param>
+        /// <returns>ApiResponse of V1TsSdkOrderbookCreateListingPost200Response</returns>
+        ApiResponse<V1TsSdkOrderbookCreateListingPost200Response> V1TsSdkOrderbookCreateListingPostWithHttpInfo(V1TsSdkOrderbookCreateListingPostRequest? v1TsSdkOrderbookCreateListingPostRequest = default(V1TsSdkOrderbookCreateListingPostRequest?));
         /// <summary>
         /// 
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookFulfillOrderPostRequest"> (optional)</param>
-        /// <returns>V1TsSdkV1OrderbookFulfillOrderPost200Response</returns>
-        V1TsSdkV1OrderbookFulfillOrderPost200Response V1TsSdkV1OrderbookFulfillOrderPost(V1TsSdkV1OrderbookFulfillOrderPostRequest? v1TsSdkV1OrderbookFulfillOrderPostRequest = default(V1TsSdkV1OrderbookFulfillOrderPostRequest?));
+        /// <param name="v1TsSdkOrderbookFulfillOrderPostRequest"> (optional)</param>
+        /// <returns>V1TsSdkOrderbookFulfillOrderPost200Response</returns>
+        V1TsSdkOrderbookFulfillOrderPost200Response V1TsSdkOrderbookFulfillOrderPost(V1TsSdkOrderbookFulfillOrderPostRequest? v1TsSdkOrderbookFulfillOrderPostRequest = default(V1TsSdkOrderbookFulfillOrderPostRequest?));
 
         /// <summary>
         /// 
@@ -128,16 +128,16 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookFulfillOrderPostRequest"> (optional)</param>
-        /// <returns>ApiResponse of V1TsSdkV1OrderbookFulfillOrderPost200Response</returns>
-        ApiResponse<V1TsSdkV1OrderbookFulfillOrderPost200Response> V1TsSdkV1OrderbookFulfillOrderPostWithHttpInfo(V1TsSdkV1OrderbookFulfillOrderPostRequest? v1TsSdkV1OrderbookFulfillOrderPostRequest = default(V1TsSdkV1OrderbookFulfillOrderPostRequest?));
+        /// <param name="v1TsSdkOrderbookFulfillOrderPostRequest"> (optional)</param>
+        /// <returns>ApiResponse of V1TsSdkOrderbookFulfillOrderPost200Response</returns>
+        ApiResponse<V1TsSdkOrderbookFulfillOrderPost200Response> V1TsSdkOrderbookFulfillOrderPostWithHttpInfo(V1TsSdkOrderbookFulfillOrderPostRequest? v1TsSdkOrderbookFulfillOrderPostRequest = default(V1TsSdkOrderbookFulfillOrderPostRequest?));
         /// <summary>
         /// 
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareListingPostRequest"> (optional)</param>
-        /// <returns>V1TsSdkV1OrderbookPrepareListingPost200Response</returns>
-        V1TsSdkV1OrderbookPrepareListingPost200Response V1TsSdkV1OrderbookPrepareListingPost(V1TsSdkV1OrderbookPrepareListingPostRequest? v1TsSdkV1OrderbookPrepareListingPostRequest = default(V1TsSdkV1OrderbookPrepareListingPostRequest?));
+        /// <param name="v1TsSdkOrderbookPrepareListingPostRequest"> (optional)</param>
+        /// <returns>V1TsSdkOrderbookPrepareListingPost200Response</returns>
+        V1TsSdkOrderbookPrepareListingPost200Response V1TsSdkOrderbookPrepareListingPost(V1TsSdkOrderbookPrepareListingPostRequest? v1TsSdkOrderbookPrepareListingPostRequest = default(V1TsSdkOrderbookPrepareListingPostRequest?));
 
         /// <summary>
         /// 
@@ -146,16 +146,16 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareListingPostRequest"> (optional)</param>
-        /// <returns>ApiResponse of V1TsSdkV1OrderbookPrepareListingPost200Response</returns>
-        ApiResponse<V1TsSdkV1OrderbookPrepareListingPost200Response> V1TsSdkV1OrderbookPrepareListingPostWithHttpInfo(V1TsSdkV1OrderbookPrepareListingPostRequest? v1TsSdkV1OrderbookPrepareListingPostRequest = default(V1TsSdkV1OrderbookPrepareListingPostRequest?));
+        /// <param name="v1TsSdkOrderbookPrepareListingPostRequest"> (optional)</param>
+        /// <returns>ApiResponse of V1TsSdkOrderbookPrepareListingPost200Response</returns>
+        ApiResponse<V1TsSdkOrderbookPrepareListingPost200Response> V1TsSdkOrderbookPrepareListingPostWithHttpInfo(V1TsSdkOrderbookPrepareListingPostRequest? v1TsSdkOrderbookPrepareListingPostRequest = default(V1TsSdkOrderbookPrepareListingPostRequest?));
         /// <summary>
         /// 
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
-        /// <returns>V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response</returns>
-        V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response V1TsSdkV1OrderbookPrepareOrderCancellationsPost(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest? v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest?));
+        /// <param name="v1TsSdkOrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
+        /// <returns>V1TsSdkOrderbookPrepareOrderCancellationsPost200Response</returns>
+        V1TsSdkOrderbookPrepareOrderCancellationsPost200Response V1TsSdkOrderbookPrepareOrderCancellationsPost(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest? v1TsSdkOrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest?));
 
         /// <summary>
         /// 
@@ -164,9 +164,9 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
-        /// <returns>ApiResponse of V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response</returns>
-        ApiResponse<V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response> V1TsSdkV1OrderbookPrepareOrderCancellationsPostWithHttpInfo(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest? v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest?));
+        /// <param name="v1TsSdkOrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
+        /// <returns>ApiResponse of V1TsSdkOrderbookPrepareOrderCancellationsPost200Response</returns>
+        ApiResponse<V1TsSdkOrderbookPrepareOrderCancellationsPost200Response> V1TsSdkOrderbookPrepareOrderCancellationsPostWithHttpInfo(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest? v1TsSdkOrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest?));
         #endregion Synchronous Operations
     }
 
@@ -225,10 +225,10 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response</returns>
-        System.Threading.Tasks.Task<V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response> V1TsSdkV1OrderbookCancelOrdersOnChainPostAsync(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest? v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of V1TsSdkOrderbookCancelOrdersOnChainPost200Response</returns>
+        System.Threading.Tasks.Task<V1TsSdkOrderbookCancelOrdersOnChainPost200Response> V1TsSdkOrderbookCancelOrdersOnChainPostAsync(V1TsSdkOrderbookCancelOrdersOnChainPostRequest? v1TsSdkOrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkOrderbookCancelOrdersOnChainPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
 
         /// <summary>
         /// 
@@ -237,10 +237,10 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response>> V1TsSdkV1OrderbookCancelOrdersOnChainPostWithHttpInfoAsync(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest? v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of ApiResponse (V1TsSdkOrderbookCancelOrdersOnChainPost200Response)</returns>
+        System.Threading.Tasks.Task<ApiResponse<V1TsSdkOrderbookCancelOrdersOnChainPost200Response>> V1TsSdkOrderbookCancelOrdersOnChainPostWithHttpInfoAsync(V1TsSdkOrderbookCancelOrdersOnChainPostRequest? v1TsSdkOrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkOrderbookCancelOrdersOnChainPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
         /// <summary>
         /// 
         /// </summary>
@@ -248,10 +248,10 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookCancelOrdersPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of V1TsSdkV1OrderbookCancelOrdersPost200Response</returns>
-        System.Threading.Tasks.Task<V1TsSdkV1OrderbookCancelOrdersPost200Response> V1TsSdkV1OrderbookCancelOrdersPostAsync(V1TsSdkV1OrderbookCancelOrdersPostRequest? v1TsSdkV1OrderbookCancelOrdersPostRequest = default(V1TsSdkV1OrderbookCancelOrdersPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of V1TsSdkOrderbookCancelOrdersPost200Response</returns>
+        System.Threading.Tasks.Task<V1TsSdkOrderbookCancelOrdersPost200Response> V1TsSdkOrderbookCancelOrdersPostAsync(V1TsSdkOrderbookCancelOrdersPostRequest? v1TsSdkOrderbookCancelOrdersPostRequest = default(V1TsSdkOrderbookCancelOrdersPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
 
         /// <summary>
         /// 
@@ -260,10 +260,10 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookCancelOrdersPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (V1TsSdkV1OrderbookCancelOrdersPost200Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<V1TsSdkV1OrderbookCancelOrdersPost200Response>> V1TsSdkV1OrderbookCancelOrdersPostWithHttpInfoAsync(V1TsSdkV1OrderbookCancelOrdersPostRequest? v1TsSdkV1OrderbookCancelOrdersPostRequest = default(V1TsSdkV1OrderbookCancelOrdersPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of ApiResponse (V1TsSdkOrderbookCancelOrdersPost200Response)</returns>
+        System.Threading.Tasks.Task<ApiResponse<V1TsSdkOrderbookCancelOrdersPost200Response>> V1TsSdkOrderbookCancelOrdersPostWithHttpInfoAsync(V1TsSdkOrderbookCancelOrdersPostRequest? v1TsSdkOrderbookCancelOrdersPostRequest = default(V1TsSdkOrderbookCancelOrdersPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
         /// <summary>
         /// 
         /// </summary>
@@ -271,10 +271,10 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCreateListingPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookCreateListingPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of V1TsSdkV1OrderbookCreateListingPost200Response</returns>
-        System.Threading.Tasks.Task<V1TsSdkV1OrderbookCreateListingPost200Response> V1TsSdkV1OrderbookCreateListingPostAsync(V1TsSdkV1OrderbookCreateListingPostRequest? v1TsSdkV1OrderbookCreateListingPostRequest = default(V1TsSdkV1OrderbookCreateListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of V1TsSdkOrderbookCreateListingPost200Response</returns>
+        System.Threading.Tasks.Task<V1TsSdkOrderbookCreateListingPost200Response> V1TsSdkOrderbookCreateListingPostAsync(V1TsSdkOrderbookCreateListingPostRequest? v1TsSdkOrderbookCreateListingPostRequest = default(V1TsSdkOrderbookCreateListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
 
         /// <summary>
         /// 
@@ -283,10 +283,10 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCreateListingPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookCreateListingPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (V1TsSdkV1OrderbookCreateListingPost200Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<V1TsSdkV1OrderbookCreateListingPost200Response>> V1TsSdkV1OrderbookCreateListingPostWithHttpInfoAsync(V1TsSdkV1OrderbookCreateListingPostRequest? v1TsSdkV1OrderbookCreateListingPostRequest = default(V1TsSdkV1OrderbookCreateListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of ApiResponse (V1TsSdkOrderbookCreateListingPost200Response)</returns>
+        System.Threading.Tasks.Task<ApiResponse<V1TsSdkOrderbookCreateListingPost200Response>> V1TsSdkOrderbookCreateListingPostWithHttpInfoAsync(V1TsSdkOrderbookCreateListingPostRequest? v1TsSdkOrderbookCreateListingPostRequest = default(V1TsSdkOrderbookCreateListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
         /// <summary>
         /// 
         /// </summary>
@@ -294,10 +294,10 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookFulfillOrderPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookFulfillOrderPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of V1TsSdkV1OrderbookFulfillOrderPost200Response</returns>
-        System.Threading.Tasks.Task<V1TsSdkV1OrderbookFulfillOrderPost200Response> V1TsSdkV1OrderbookFulfillOrderPostAsync(V1TsSdkV1OrderbookFulfillOrderPostRequest? v1TsSdkV1OrderbookFulfillOrderPostRequest = default(V1TsSdkV1OrderbookFulfillOrderPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of V1TsSdkOrderbookFulfillOrderPost200Response</returns>
+        System.Threading.Tasks.Task<V1TsSdkOrderbookFulfillOrderPost200Response> V1TsSdkOrderbookFulfillOrderPostAsync(V1TsSdkOrderbookFulfillOrderPostRequest? v1TsSdkOrderbookFulfillOrderPostRequest = default(V1TsSdkOrderbookFulfillOrderPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
 
         /// <summary>
         /// 
@@ -306,10 +306,10 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookFulfillOrderPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookFulfillOrderPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (V1TsSdkV1OrderbookFulfillOrderPost200Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<V1TsSdkV1OrderbookFulfillOrderPost200Response>> V1TsSdkV1OrderbookFulfillOrderPostWithHttpInfoAsync(V1TsSdkV1OrderbookFulfillOrderPostRequest? v1TsSdkV1OrderbookFulfillOrderPostRequest = default(V1TsSdkV1OrderbookFulfillOrderPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of ApiResponse (V1TsSdkOrderbookFulfillOrderPost200Response)</returns>
+        System.Threading.Tasks.Task<ApiResponse<V1TsSdkOrderbookFulfillOrderPost200Response>> V1TsSdkOrderbookFulfillOrderPostWithHttpInfoAsync(V1TsSdkOrderbookFulfillOrderPostRequest? v1TsSdkOrderbookFulfillOrderPostRequest = default(V1TsSdkOrderbookFulfillOrderPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
         /// <summary>
         /// 
         /// </summary>
@@ -317,10 +317,10 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareListingPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookPrepareListingPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of V1TsSdkV1OrderbookPrepareListingPost200Response</returns>
-        System.Threading.Tasks.Task<V1TsSdkV1OrderbookPrepareListingPost200Response> V1TsSdkV1OrderbookPrepareListingPostAsync(V1TsSdkV1OrderbookPrepareListingPostRequest? v1TsSdkV1OrderbookPrepareListingPostRequest = default(V1TsSdkV1OrderbookPrepareListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of V1TsSdkOrderbookPrepareListingPost200Response</returns>
+        System.Threading.Tasks.Task<V1TsSdkOrderbookPrepareListingPost200Response> V1TsSdkOrderbookPrepareListingPostAsync(V1TsSdkOrderbookPrepareListingPostRequest? v1TsSdkOrderbookPrepareListingPostRequest = default(V1TsSdkOrderbookPrepareListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
 
         /// <summary>
         /// 
@@ -329,10 +329,10 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareListingPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookPrepareListingPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (V1TsSdkV1OrderbookPrepareListingPost200Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<V1TsSdkV1OrderbookPrepareListingPost200Response>> V1TsSdkV1OrderbookPrepareListingPostWithHttpInfoAsync(V1TsSdkV1OrderbookPrepareListingPostRequest? v1TsSdkV1OrderbookPrepareListingPostRequest = default(V1TsSdkV1OrderbookPrepareListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of ApiResponse (V1TsSdkOrderbookPrepareListingPost200Response)</returns>
+        System.Threading.Tasks.Task<ApiResponse<V1TsSdkOrderbookPrepareListingPost200Response>> V1TsSdkOrderbookPrepareListingPostWithHttpInfoAsync(V1TsSdkOrderbookPrepareListingPostRequest? v1TsSdkOrderbookPrepareListingPostRequest = default(V1TsSdkOrderbookPrepareListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
         /// <summary>
         /// 
         /// </summary>
@@ -340,10 +340,10 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response</returns>
-        System.Threading.Tasks.Task<V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response> V1TsSdkV1OrderbookPrepareOrderCancellationsPostAsync(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest? v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of V1TsSdkOrderbookPrepareOrderCancellationsPost200Response</returns>
+        System.Threading.Tasks.Task<V1TsSdkOrderbookPrepareOrderCancellationsPost200Response> V1TsSdkOrderbookPrepareOrderCancellationsPostAsync(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest? v1TsSdkOrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
 
         /// <summary>
         /// 
@@ -352,10 +352,10 @@ namespace Immutable.Ts.Api
         /// 
         /// </remarks>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response>> V1TsSdkV1OrderbookPrepareOrderCancellationsPostWithHttpInfoAsync(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest? v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        /// <returns>Task of ApiResponse (V1TsSdkOrderbookPrepareOrderCancellationsPost200Response)</returns>
+        System.Threading.Tasks.Task<ApiResponse<V1TsSdkOrderbookPrepareOrderCancellationsPost200Response>> V1TsSdkOrderbookPrepareOrderCancellationsPostWithHttpInfoAsync(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest? v1TsSdkOrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
         #endregion Asynchronous Operations
     }
 
@@ -728,11 +728,11 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
-        /// <returns>V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response</returns>
-        public V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response V1TsSdkV1OrderbookCancelOrdersOnChainPost(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest? v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest?))
+        /// <param name="v1TsSdkOrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
+        /// <returns>V1TsSdkOrderbookCancelOrdersOnChainPost200Response</returns>
+        public V1TsSdkOrderbookCancelOrdersOnChainPost200Response V1TsSdkOrderbookCancelOrdersOnChainPost(V1TsSdkOrderbookCancelOrdersOnChainPostRequest? v1TsSdkOrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkOrderbookCancelOrdersOnChainPostRequest?))
         {
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response> localVarResponse = V1TsSdkV1OrderbookCancelOrdersOnChainPostWithHttpInfo(v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest);
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCancelOrdersOnChainPost200Response> localVarResponse = V1TsSdkOrderbookCancelOrdersOnChainPostWithHttpInfo(v1TsSdkOrderbookCancelOrdersOnChainPostRequest);
             return localVarResponse.Data;
         }
 
@@ -740,9 +740,9 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
-        /// <returns>ApiResponse of V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response</returns>
-        public Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response> V1TsSdkV1OrderbookCancelOrdersOnChainPostWithHttpInfo(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest? v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest?))
+        /// <param name="v1TsSdkOrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
+        /// <returns>ApiResponse of V1TsSdkOrderbookCancelOrdersOnChainPost200Response</returns>
+        public Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCancelOrdersOnChainPost200Response> V1TsSdkOrderbookCancelOrdersOnChainPostWithHttpInfo(V1TsSdkOrderbookCancelOrdersOnChainPostRequest? v1TsSdkOrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkOrderbookCancelOrdersOnChainPostRequest?))
         {
             Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
 
@@ -761,15 +761,15 @@ namespace Immutable.Ts.Api
             var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.Data = v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest;
+            localVarRequestOptions.Data = v1TsSdkOrderbookCancelOrdersOnChainPostRequest;
 
 
             // make the HTTP request
-            var localVarResponse = this.Client.Post<V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response>("/v1/ts-sdk/v1/orderbook/cancelOrdersOnChain", localVarRequestOptions, this.Configuration);
+            var localVarResponse = this.Client.Post<V1TsSdkOrderbookCancelOrdersOnChainPost200Response>("/v1/ts-sdk/orderbook/cancelOrdersOnChain", localVarRequestOptions, this.Configuration);
 
             if (this.ExceptionFactory != null)
             {
-                Exception _exception = this.ExceptionFactory("V1TsSdkV1OrderbookCancelOrdersOnChainPost", localVarResponse);
+                Exception _exception = this.ExceptionFactory("V1TsSdkOrderbookCancelOrdersOnChainPost", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
@@ -780,16 +780,16 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response</returns>
-        public async System.Threading.Tasks.Task<V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response> V1TsSdkV1OrderbookCancelOrdersOnChainPostAsync(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest? v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        /// <returns>Task of V1TsSdkOrderbookCancelOrdersOnChainPost200Response</returns>
+        public async System.Threading.Tasks.Task<V1TsSdkOrderbookCancelOrdersOnChainPost200Response> V1TsSdkOrderbookCancelOrdersOnChainPostAsync(V1TsSdkOrderbookCancelOrdersOnChainPostRequest? v1TsSdkOrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkOrderbookCancelOrdersOnChainPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
-            var task = V1TsSdkV1OrderbookCancelOrdersOnChainPostWithHttpInfoAsync(v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest, cancellationToken);
+            var task = V1TsSdkOrderbookCancelOrdersOnChainPostWithHttpInfoAsync(v1TsSdkOrderbookCancelOrdersOnChainPostRequest, cancellationToken);
 #if UNITY_EDITOR || !UNITY_WEBGL
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response> localVarResponse = await task.ConfigureAwait(false);
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCancelOrdersOnChainPost200Response> localVarResponse = await task.ConfigureAwait(false);
 #else
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response> localVarResponse = await task;
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCancelOrdersOnChainPost200Response> localVarResponse = await task;
 #endif
             return localVarResponse.Data;
         }
@@ -798,10 +798,10 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookCancelOrdersOnChainPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response)</returns>
-        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response>> V1TsSdkV1OrderbookCancelOrdersOnChainPostWithHttpInfoAsync(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest? v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkV1OrderbookCancelOrdersOnChainPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        /// <returns>Task of ApiResponse (V1TsSdkOrderbookCancelOrdersOnChainPost200Response)</returns>
+        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCancelOrdersOnChainPost200Response>> V1TsSdkOrderbookCancelOrdersOnChainPostWithHttpInfoAsync(V1TsSdkOrderbookCancelOrdersOnChainPostRequest? v1TsSdkOrderbookCancelOrdersOnChainPostRequest = default(V1TsSdkOrderbookCancelOrdersOnChainPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
 
             Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
@@ -822,12 +822,12 @@ namespace Immutable.Ts.Api
             var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.Data = v1TsSdkV1OrderbookCancelOrdersOnChainPostRequest;
+            localVarRequestOptions.Data = v1TsSdkOrderbookCancelOrdersOnChainPostRequest;
 
 
             // make the HTTP request
 
-            var task = this.AsynchronousClient.PostAsync<V1TsSdkV1OrderbookCancelOrdersOnChainPost200Response>("/v1/ts-sdk/v1/orderbook/cancelOrdersOnChain", localVarRequestOptions, this.Configuration, cancellationToken);
+            var task = this.AsynchronousClient.PostAsync<V1TsSdkOrderbookCancelOrdersOnChainPost200Response>("/v1/ts-sdk/orderbook/cancelOrdersOnChain", localVarRequestOptions, this.Configuration, cancellationToken);
 
 #if UNITY_EDITOR || !UNITY_WEBGL
             var localVarResponse = await task.ConfigureAwait(false);
@@ -837,7 +837,7 @@ namespace Immutable.Ts.Api
 
             if (this.ExceptionFactory != null)
             {
-                Exception _exception = this.ExceptionFactory("V1TsSdkV1OrderbookCancelOrdersOnChainPost", localVarResponse);
+                Exception _exception = this.ExceptionFactory("V1TsSdkOrderbookCancelOrdersOnChainPost", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
@@ -848,11 +848,11 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersPostRequest"> (optional)</param>
-        /// <returns>V1TsSdkV1OrderbookCancelOrdersPost200Response</returns>
-        public V1TsSdkV1OrderbookCancelOrdersPost200Response V1TsSdkV1OrderbookCancelOrdersPost(V1TsSdkV1OrderbookCancelOrdersPostRequest? v1TsSdkV1OrderbookCancelOrdersPostRequest = default(V1TsSdkV1OrderbookCancelOrdersPostRequest?))
+        /// <param name="v1TsSdkOrderbookCancelOrdersPostRequest"> (optional)</param>
+        /// <returns>V1TsSdkOrderbookCancelOrdersPost200Response</returns>
+        public V1TsSdkOrderbookCancelOrdersPost200Response V1TsSdkOrderbookCancelOrdersPost(V1TsSdkOrderbookCancelOrdersPostRequest? v1TsSdkOrderbookCancelOrdersPostRequest = default(V1TsSdkOrderbookCancelOrdersPostRequest?))
         {
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCancelOrdersPost200Response> localVarResponse = V1TsSdkV1OrderbookCancelOrdersPostWithHttpInfo(v1TsSdkV1OrderbookCancelOrdersPostRequest);
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCancelOrdersPost200Response> localVarResponse = V1TsSdkOrderbookCancelOrdersPostWithHttpInfo(v1TsSdkOrderbookCancelOrdersPostRequest);
             return localVarResponse.Data;
         }
 
@@ -860,9 +860,9 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersPostRequest"> (optional)</param>
-        /// <returns>ApiResponse of V1TsSdkV1OrderbookCancelOrdersPost200Response</returns>
-        public Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCancelOrdersPost200Response> V1TsSdkV1OrderbookCancelOrdersPostWithHttpInfo(V1TsSdkV1OrderbookCancelOrdersPostRequest? v1TsSdkV1OrderbookCancelOrdersPostRequest = default(V1TsSdkV1OrderbookCancelOrdersPostRequest?))
+        /// <param name="v1TsSdkOrderbookCancelOrdersPostRequest"> (optional)</param>
+        /// <returns>ApiResponse of V1TsSdkOrderbookCancelOrdersPost200Response</returns>
+        public Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCancelOrdersPost200Response> V1TsSdkOrderbookCancelOrdersPostWithHttpInfo(V1TsSdkOrderbookCancelOrdersPostRequest? v1TsSdkOrderbookCancelOrdersPostRequest = default(V1TsSdkOrderbookCancelOrdersPostRequest?))
         {
             Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
 
@@ -881,15 +881,15 @@ namespace Immutable.Ts.Api
             var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.Data = v1TsSdkV1OrderbookCancelOrdersPostRequest;
+            localVarRequestOptions.Data = v1TsSdkOrderbookCancelOrdersPostRequest;
 
 
             // make the HTTP request
-            var localVarResponse = this.Client.Post<V1TsSdkV1OrderbookCancelOrdersPost200Response>("/v1/ts-sdk/v1/orderbook/cancelOrders", localVarRequestOptions, this.Configuration);
+            var localVarResponse = this.Client.Post<V1TsSdkOrderbookCancelOrdersPost200Response>("/v1/ts-sdk/orderbook/cancelOrders", localVarRequestOptions, this.Configuration);
 
             if (this.ExceptionFactory != null)
             {
-                Exception _exception = this.ExceptionFactory("V1TsSdkV1OrderbookCancelOrdersPost", localVarResponse);
+                Exception _exception = this.ExceptionFactory("V1TsSdkOrderbookCancelOrdersPost", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
@@ -900,16 +900,16 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookCancelOrdersPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of V1TsSdkV1OrderbookCancelOrdersPost200Response</returns>
-        public async System.Threading.Tasks.Task<V1TsSdkV1OrderbookCancelOrdersPost200Response> V1TsSdkV1OrderbookCancelOrdersPostAsync(V1TsSdkV1OrderbookCancelOrdersPostRequest? v1TsSdkV1OrderbookCancelOrdersPostRequest = default(V1TsSdkV1OrderbookCancelOrdersPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        /// <returns>Task of V1TsSdkOrderbookCancelOrdersPost200Response</returns>
+        public async System.Threading.Tasks.Task<V1TsSdkOrderbookCancelOrdersPost200Response> V1TsSdkOrderbookCancelOrdersPostAsync(V1TsSdkOrderbookCancelOrdersPostRequest? v1TsSdkOrderbookCancelOrdersPostRequest = default(V1TsSdkOrderbookCancelOrdersPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
-            var task = V1TsSdkV1OrderbookCancelOrdersPostWithHttpInfoAsync(v1TsSdkV1OrderbookCancelOrdersPostRequest, cancellationToken);
+            var task = V1TsSdkOrderbookCancelOrdersPostWithHttpInfoAsync(v1TsSdkOrderbookCancelOrdersPostRequest, cancellationToken);
 #if UNITY_EDITOR || !UNITY_WEBGL
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCancelOrdersPost200Response> localVarResponse = await task.ConfigureAwait(false);
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCancelOrdersPost200Response> localVarResponse = await task.ConfigureAwait(false);
 #else
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCancelOrdersPost200Response> localVarResponse = await task;
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCancelOrdersPost200Response> localVarResponse = await task;
 #endif
             return localVarResponse.Data;
         }
@@ -918,10 +918,10 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCancelOrdersPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookCancelOrdersPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (V1TsSdkV1OrderbookCancelOrdersPost200Response)</returns>
-        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCancelOrdersPost200Response>> V1TsSdkV1OrderbookCancelOrdersPostWithHttpInfoAsync(V1TsSdkV1OrderbookCancelOrdersPostRequest? v1TsSdkV1OrderbookCancelOrdersPostRequest = default(V1TsSdkV1OrderbookCancelOrdersPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        /// <returns>Task of ApiResponse (V1TsSdkOrderbookCancelOrdersPost200Response)</returns>
+        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCancelOrdersPost200Response>> V1TsSdkOrderbookCancelOrdersPostWithHttpInfoAsync(V1TsSdkOrderbookCancelOrdersPostRequest? v1TsSdkOrderbookCancelOrdersPostRequest = default(V1TsSdkOrderbookCancelOrdersPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
 
             Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
@@ -942,132 +942,12 @@ namespace Immutable.Ts.Api
             var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.Data = v1TsSdkV1OrderbookCancelOrdersPostRequest;
+            localVarRequestOptions.Data = v1TsSdkOrderbookCancelOrdersPostRequest;
 
 
             // make the HTTP request
 
-            var task = this.AsynchronousClient.PostAsync<V1TsSdkV1OrderbookCancelOrdersPost200Response>("/v1/ts-sdk/v1/orderbook/cancelOrders", localVarRequestOptions, this.Configuration, cancellationToken);
-
-#if UNITY_EDITOR || !UNITY_WEBGL
-            var localVarResponse = await task.ConfigureAwait(false);
-#else
-            var localVarResponse = await task;
-#endif
-
-            if (this.ExceptionFactory != null)
-            {
-                Exception _exception = this.ExceptionFactory("V1TsSdkV1OrderbookCancelOrdersPost", localVarResponse);
-                if (_exception != null) throw _exception;
-            }
-
-            return localVarResponse;
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCreateListingPostRequest"> (optional)</param>
-        /// <returns>V1TsSdkV1OrderbookCreateListingPost200Response</returns>
-        public V1TsSdkV1OrderbookCreateListingPost200Response V1TsSdkV1OrderbookCreateListingPost(V1TsSdkV1OrderbookCreateListingPostRequest? v1TsSdkV1OrderbookCreateListingPostRequest = default(V1TsSdkV1OrderbookCreateListingPostRequest?))
-        {
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCreateListingPost200Response> localVarResponse = V1TsSdkV1OrderbookCreateListingPostWithHttpInfo(v1TsSdkV1OrderbookCreateListingPostRequest);
-            return localVarResponse.Data;
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCreateListingPostRequest"> (optional)</param>
-        /// <returns>ApiResponse of V1TsSdkV1OrderbookCreateListingPost200Response</returns>
-        public Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCreateListingPost200Response> V1TsSdkV1OrderbookCreateListingPostWithHttpInfo(V1TsSdkV1OrderbookCreateListingPostRequest? v1TsSdkV1OrderbookCreateListingPostRequest = default(V1TsSdkV1OrderbookCreateListingPostRequest?))
-        {
-            Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
-
-            string[] _contentTypes = new string[] {
-                "application/json"
-            };
-
-            // to determine the Accept header
-            string[] _accepts = new string[] {
-                "application/json"
-            };
-
-            var localVarContentType = Immutable.Ts.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
-            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
-
-            var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
-            if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
-
-            localVarRequestOptions.Data = v1TsSdkV1OrderbookCreateListingPostRequest;
-
-
-            // make the HTTP request
-            var localVarResponse = this.Client.Post<V1TsSdkV1OrderbookCreateListingPost200Response>("/v1/ts-sdk/v1/orderbook/createListing", localVarRequestOptions, this.Configuration);
-
-            if (this.ExceptionFactory != null)
-            {
-                Exception _exception = this.ExceptionFactory("V1TsSdkV1OrderbookCreateListingPost", localVarResponse);
-                if (_exception != null) throw _exception;
-            }
-
-            return localVarResponse;
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCreateListingPostRequest"> (optional)</param>
-        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of V1TsSdkV1OrderbookCreateListingPost200Response</returns>
-        public async System.Threading.Tasks.Task<V1TsSdkV1OrderbookCreateListingPost200Response> V1TsSdkV1OrderbookCreateListingPostAsync(V1TsSdkV1OrderbookCreateListingPostRequest? v1TsSdkV1OrderbookCreateListingPostRequest = default(V1TsSdkV1OrderbookCreateListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
-        {
-            var task = V1TsSdkV1OrderbookCreateListingPostWithHttpInfoAsync(v1TsSdkV1OrderbookCreateListingPostRequest, cancellationToken);
-#if UNITY_EDITOR || !UNITY_WEBGL
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCreateListingPost200Response> localVarResponse = await task.ConfigureAwait(false);
-#else
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCreateListingPost200Response> localVarResponse = await task;
-#endif
-            return localVarResponse.Data;
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookCreateListingPostRequest"> (optional)</param>
-        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (V1TsSdkV1OrderbookCreateListingPost200Response)</returns>
-        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookCreateListingPost200Response>> V1TsSdkV1OrderbookCreateListingPostWithHttpInfoAsync(V1TsSdkV1OrderbookCreateListingPostRequest? v1TsSdkV1OrderbookCreateListingPostRequest = default(V1TsSdkV1OrderbookCreateListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
-        {
-
-            Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
-
-            string[] _contentTypes = new string[] {
-                "application/json"
-            };
-
-            // to determine the Accept header
-            string[] _accepts = new string[] {
-                "application/json"
-            };
-
-
-            var localVarContentType = Immutable.Ts.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
-            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
-
-            var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
-            if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
-
-            localVarRequestOptions.Data = v1TsSdkV1OrderbookCreateListingPostRequest;
-
-
-            // make the HTTP request
-
-            var task = this.AsynchronousClient.PostAsync<V1TsSdkV1OrderbookCreateListingPost200Response>("/v1/ts-sdk/v1/orderbook/createListing", localVarRequestOptions, this.Configuration, cancellationToken);
+            var task = this.AsynchronousClient.PostAsync<V1TsSdkOrderbookCancelOrdersPost200Response>("/v1/ts-sdk/orderbook/cancelOrders", localVarRequestOptions, this.Configuration, cancellationToken);
 
 #if UNITY_EDITOR || !UNITY_WEBGL
             var localVarResponse = await task.ConfigureAwait(false);
@@ -1077,7 +957,7 @@ namespace Immutable.Ts.Api
 
             if (this.ExceptionFactory != null)
             {
-                Exception _exception = this.ExceptionFactory("V1TsSdkV1OrderbookCreateListingPost", localVarResponse);
+                Exception _exception = this.ExceptionFactory("V1TsSdkOrderbookCancelOrdersPost", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
@@ -1088,11 +968,11 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookFulfillOrderPostRequest"> (optional)</param>
-        /// <returns>V1TsSdkV1OrderbookFulfillOrderPost200Response</returns>
-        public V1TsSdkV1OrderbookFulfillOrderPost200Response V1TsSdkV1OrderbookFulfillOrderPost(V1TsSdkV1OrderbookFulfillOrderPostRequest? v1TsSdkV1OrderbookFulfillOrderPostRequest = default(V1TsSdkV1OrderbookFulfillOrderPostRequest?))
+        /// <param name="v1TsSdkOrderbookCreateListingPostRequest"> (optional)</param>
+        /// <returns>V1TsSdkOrderbookCreateListingPost200Response</returns>
+        public V1TsSdkOrderbookCreateListingPost200Response V1TsSdkOrderbookCreateListingPost(V1TsSdkOrderbookCreateListingPostRequest? v1TsSdkOrderbookCreateListingPostRequest = default(V1TsSdkOrderbookCreateListingPostRequest?))
         {
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookFulfillOrderPost200Response> localVarResponse = V1TsSdkV1OrderbookFulfillOrderPostWithHttpInfo(v1TsSdkV1OrderbookFulfillOrderPostRequest);
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCreateListingPost200Response> localVarResponse = V1TsSdkOrderbookCreateListingPostWithHttpInfo(v1TsSdkOrderbookCreateListingPostRequest);
             return localVarResponse.Data;
         }
 
@@ -1100,9 +980,9 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookFulfillOrderPostRequest"> (optional)</param>
-        /// <returns>ApiResponse of V1TsSdkV1OrderbookFulfillOrderPost200Response</returns>
-        public Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookFulfillOrderPost200Response> V1TsSdkV1OrderbookFulfillOrderPostWithHttpInfo(V1TsSdkV1OrderbookFulfillOrderPostRequest? v1TsSdkV1OrderbookFulfillOrderPostRequest = default(V1TsSdkV1OrderbookFulfillOrderPostRequest?))
+        /// <param name="v1TsSdkOrderbookCreateListingPostRequest"> (optional)</param>
+        /// <returns>ApiResponse of V1TsSdkOrderbookCreateListingPost200Response</returns>
+        public Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCreateListingPost200Response> V1TsSdkOrderbookCreateListingPostWithHttpInfo(V1TsSdkOrderbookCreateListingPostRequest? v1TsSdkOrderbookCreateListingPostRequest = default(V1TsSdkOrderbookCreateListingPostRequest?))
         {
             Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
 
@@ -1121,15 +1001,15 @@ namespace Immutable.Ts.Api
             var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.Data = v1TsSdkV1OrderbookFulfillOrderPostRequest;
+            localVarRequestOptions.Data = v1TsSdkOrderbookCreateListingPostRequest;
 
 
             // make the HTTP request
-            var localVarResponse = this.Client.Post<V1TsSdkV1OrderbookFulfillOrderPost200Response>("/v1/ts-sdk/v1/orderbook/fulfillOrder", localVarRequestOptions, this.Configuration);
+            var localVarResponse = this.Client.Post<V1TsSdkOrderbookCreateListingPost200Response>("/v1/ts-sdk/orderbook/createListing", localVarRequestOptions, this.Configuration);
 
             if (this.ExceptionFactory != null)
             {
-                Exception _exception = this.ExceptionFactory("V1TsSdkV1OrderbookFulfillOrderPost", localVarResponse);
+                Exception _exception = this.ExceptionFactory("V1TsSdkOrderbookCreateListingPost", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
@@ -1140,16 +1020,16 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookFulfillOrderPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookCreateListingPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of V1TsSdkV1OrderbookFulfillOrderPost200Response</returns>
-        public async System.Threading.Tasks.Task<V1TsSdkV1OrderbookFulfillOrderPost200Response> V1TsSdkV1OrderbookFulfillOrderPostAsync(V1TsSdkV1OrderbookFulfillOrderPostRequest? v1TsSdkV1OrderbookFulfillOrderPostRequest = default(V1TsSdkV1OrderbookFulfillOrderPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        /// <returns>Task of V1TsSdkOrderbookCreateListingPost200Response</returns>
+        public async System.Threading.Tasks.Task<V1TsSdkOrderbookCreateListingPost200Response> V1TsSdkOrderbookCreateListingPostAsync(V1TsSdkOrderbookCreateListingPostRequest? v1TsSdkOrderbookCreateListingPostRequest = default(V1TsSdkOrderbookCreateListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
-            var task = V1TsSdkV1OrderbookFulfillOrderPostWithHttpInfoAsync(v1TsSdkV1OrderbookFulfillOrderPostRequest, cancellationToken);
+            var task = V1TsSdkOrderbookCreateListingPostWithHttpInfoAsync(v1TsSdkOrderbookCreateListingPostRequest, cancellationToken);
 #if UNITY_EDITOR || !UNITY_WEBGL
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookFulfillOrderPost200Response> localVarResponse = await task.ConfigureAwait(false);
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCreateListingPost200Response> localVarResponse = await task.ConfigureAwait(false);
 #else
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookFulfillOrderPost200Response> localVarResponse = await task;
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCreateListingPost200Response> localVarResponse = await task;
 #endif
             return localVarResponse.Data;
         }
@@ -1158,10 +1038,10 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookFulfillOrderPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookCreateListingPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (V1TsSdkV1OrderbookFulfillOrderPost200Response)</returns>
-        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookFulfillOrderPost200Response>> V1TsSdkV1OrderbookFulfillOrderPostWithHttpInfoAsync(V1TsSdkV1OrderbookFulfillOrderPostRequest? v1TsSdkV1OrderbookFulfillOrderPostRequest = default(V1TsSdkV1OrderbookFulfillOrderPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        /// <returns>Task of ApiResponse (V1TsSdkOrderbookCreateListingPost200Response)</returns>
+        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookCreateListingPost200Response>> V1TsSdkOrderbookCreateListingPostWithHttpInfoAsync(V1TsSdkOrderbookCreateListingPostRequest? v1TsSdkOrderbookCreateListingPostRequest = default(V1TsSdkOrderbookCreateListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
 
             Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
@@ -1182,132 +1062,12 @@ namespace Immutable.Ts.Api
             var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.Data = v1TsSdkV1OrderbookFulfillOrderPostRequest;
+            localVarRequestOptions.Data = v1TsSdkOrderbookCreateListingPostRequest;
 
 
             // make the HTTP request
 
-            var task = this.AsynchronousClient.PostAsync<V1TsSdkV1OrderbookFulfillOrderPost200Response>("/v1/ts-sdk/v1/orderbook/fulfillOrder", localVarRequestOptions, this.Configuration, cancellationToken);
-
-#if UNITY_EDITOR || !UNITY_WEBGL
-            var localVarResponse = await task.ConfigureAwait(false);
-#else
-            var localVarResponse = await task;
-#endif
-
-            if (this.ExceptionFactory != null)
-            {
-                Exception _exception = this.ExceptionFactory("V1TsSdkV1OrderbookFulfillOrderPost", localVarResponse);
-                if (_exception != null) throw _exception;
-            }
-
-            return localVarResponse;
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareListingPostRequest"> (optional)</param>
-        /// <returns>V1TsSdkV1OrderbookPrepareListingPost200Response</returns>
-        public V1TsSdkV1OrderbookPrepareListingPost200Response V1TsSdkV1OrderbookPrepareListingPost(V1TsSdkV1OrderbookPrepareListingPostRequest? v1TsSdkV1OrderbookPrepareListingPostRequest = default(V1TsSdkV1OrderbookPrepareListingPostRequest?))
-        {
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookPrepareListingPost200Response> localVarResponse = V1TsSdkV1OrderbookPrepareListingPostWithHttpInfo(v1TsSdkV1OrderbookPrepareListingPostRequest);
-            return localVarResponse.Data;
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareListingPostRequest"> (optional)</param>
-        /// <returns>ApiResponse of V1TsSdkV1OrderbookPrepareListingPost200Response</returns>
-        public Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookPrepareListingPost200Response> V1TsSdkV1OrderbookPrepareListingPostWithHttpInfo(V1TsSdkV1OrderbookPrepareListingPostRequest? v1TsSdkV1OrderbookPrepareListingPostRequest = default(V1TsSdkV1OrderbookPrepareListingPostRequest?))
-        {
-            Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
-
-            string[] _contentTypes = new string[] {
-                "application/json"
-            };
-
-            // to determine the Accept header
-            string[] _accepts = new string[] {
-                "application/json"
-            };
-
-            var localVarContentType = Immutable.Ts.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
-            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
-
-            var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
-            if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
-
-            localVarRequestOptions.Data = v1TsSdkV1OrderbookPrepareListingPostRequest;
-
-
-            // make the HTTP request
-            var localVarResponse = this.Client.Post<V1TsSdkV1OrderbookPrepareListingPost200Response>("/v1/ts-sdk/v1/orderbook/prepareListing", localVarRequestOptions, this.Configuration);
-
-            if (this.ExceptionFactory != null)
-            {
-                Exception _exception = this.ExceptionFactory("V1TsSdkV1OrderbookPrepareListingPost", localVarResponse);
-                if (_exception != null) throw _exception;
-            }
-
-            return localVarResponse;
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareListingPostRequest"> (optional)</param>
-        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of V1TsSdkV1OrderbookPrepareListingPost200Response</returns>
-        public async System.Threading.Tasks.Task<V1TsSdkV1OrderbookPrepareListingPost200Response> V1TsSdkV1OrderbookPrepareListingPostAsync(V1TsSdkV1OrderbookPrepareListingPostRequest? v1TsSdkV1OrderbookPrepareListingPostRequest = default(V1TsSdkV1OrderbookPrepareListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
-        {
-            var task = V1TsSdkV1OrderbookPrepareListingPostWithHttpInfoAsync(v1TsSdkV1OrderbookPrepareListingPostRequest, cancellationToken);
-#if UNITY_EDITOR || !UNITY_WEBGL
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookPrepareListingPost200Response> localVarResponse = await task.ConfigureAwait(false);
-#else
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookPrepareListingPost200Response> localVarResponse = await task;
-#endif
-            return localVarResponse.Data;
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareListingPostRequest"> (optional)</param>
-        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (V1TsSdkV1OrderbookPrepareListingPost200Response)</returns>
-        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookPrepareListingPost200Response>> V1TsSdkV1OrderbookPrepareListingPostWithHttpInfoAsync(V1TsSdkV1OrderbookPrepareListingPostRequest? v1TsSdkV1OrderbookPrepareListingPostRequest = default(V1TsSdkV1OrderbookPrepareListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
-        {
-
-            Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
-
-            string[] _contentTypes = new string[] {
-                "application/json"
-            };
-
-            // to determine the Accept header
-            string[] _accepts = new string[] {
-                "application/json"
-            };
-
-
-            var localVarContentType = Immutable.Ts.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
-            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
-
-            var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
-            if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
-
-            localVarRequestOptions.Data = v1TsSdkV1OrderbookPrepareListingPostRequest;
-
-
-            // make the HTTP request
-
-            var task = this.AsynchronousClient.PostAsync<V1TsSdkV1OrderbookPrepareListingPost200Response>("/v1/ts-sdk/v1/orderbook/prepareListing", localVarRequestOptions, this.Configuration, cancellationToken);
+            var task = this.AsynchronousClient.PostAsync<V1TsSdkOrderbookCreateListingPost200Response>("/v1/ts-sdk/orderbook/createListing", localVarRequestOptions, this.Configuration, cancellationToken);
 
 #if UNITY_EDITOR || !UNITY_WEBGL
             var localVarResponse = await task.ConfigureAwait(false);
@@ -1317,7 +1077,7 @@ namespace Immutable.Ts.Api
 
             if (this.ExceptionFactory != null)
             {
-                Exception _exception = this.ExceptionFactory("V1TsSdkV1OrderbookPrepareListingPost", localVarResponse);
+                Exception _exception = this.ExceptionFactory("V1TsSdkOrderbookCreateListingPost", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
@@ -1328,11 +1088,11 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
-        /// <returns>V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response</returns>
-        public V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response V1TsSdkV1OrderbookPrepareOrderCancellationsPost(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest? v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest?))
+        /// <param name="v1TsSdkOrderbookFulfillOrderPostRequest"> (optional)</param>
+        /// <returns>V1TsSdkOrderbookFulfillOrderPost200Response</returns>
+        public V1TsSdkOrderbookFulfillOrderPost200Response V1TsSdkOrderbookFulfillOrderPost(V1TsSdkOrderbookFulfillOrderPostRequest? v1TsSdkOrderbookFulfillOrderPostRequest = default(V1TsSdkOrderbookFulfillOrderPostRequest?))
         {
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response> localVarResponse = V1TsSdkV1OrderbookPrepareOrderCancellationsPostWithHttpInfo(v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest);
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookFulfillOrderPost200Response> localVarResponse = V1TsSdkOrderbookFulfillOrderPostWithHttpInfo(v1TsSdkOrderbookFulfillOrderPostRequest);
             return localVarResponse.Data;
         }
 
@@ -1340,9 +1100,9 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
-        /// <returns>ApiResponse of V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response</returns>
-        public Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response> V1TsSdkV1OrderbookPrepareOrderCancellationsPostWithHttpInfo(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest? v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest?))
+        /// <param name="v1TsSdkOrderbookFulfillOrderPostRequest"> (optional)</param>
+        /// <returns>ApiResponse of V1TsSdkOrderbookFulfillOrderPost200Response</returns>
+        public Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookFulfillOrderPost200Response> V1TsSdkOrderbookFulfillOrderPostWithHttpInfo(V1TsSdkOrderbookFulfillOrderPostRequest? v1TsSdkOrderbookFulfillOrderPostRequest = default(V1TsSdkOrderbookFulfillOrderPostRequest?))
         {
             Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
 
@@ -1361,15 +1121,15 @@ namespace Immutable.Ts.Api
             var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.Data = v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest;
+            localVarRequestOptions.Data = v1TsSdkOrderbookFulfillOrderPostRequest;
 
 
             // make the HTTP request
-            var localVarResponse = this.Client.Post<V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response>("/v1/ts-sdk/v1/orderbook/prepareOrderCancellations", localVarRequestOptions, this.Configuration);
+            var localVarResponse = this.Client.Post<V1TsSdkOrderbookFulfillOrderPost200Response>("/v1/ts-sdk/orderbook/fulfillOrder", localVarRequestOptions, this.Configuration);
 
             if (this.ExceptionFactory != null)
             {
-                Exception _exception = this.ExceptionFactory("V1TsSdkV1OrderbookPrepareOrderCancellationsPost", localVarResponse);
+                Exception _exception = this.ExceptionFactory("V1TsSdkOrderbookFulfillOrderPost", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
@@ -1380,16 +1140,16 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookFulfillOrderPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response</returns>
-        public async System.Threading.Tasks.Task<V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response> V1TsSdkV1OrderbookPrepareOrderCancellationsPostAsync(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest? v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        /// <returns>Task of V1TsSdkOrderbookFulfillOrderPost200Response</returns>
+        public async System.Threading.Tasks.Task<V1TsSdkOrderbookFulfillOrderPost200Response> V1TsSdkOrderbookFulfillOrderPostAsync(V1TsSdkOrderbookFulfillOrderPostRequest? v1TsSdkOrderbookFulfillOrderPostRequest = default(V1TsSdkOrderbookFulfillOrderPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
-            var task = V1TsSdkV1OrderbookPrepareOrderCancellationsPostWithHttpInfoAsync(v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest, cancellationToken);
+            var task = V1TsSdkOrderbookFulfillOrderPostWithHttpInfoAsync(v1TsSdkOrderbookFulfillOrderPostRequest, cancellationToken);
 #if UNITY_EDITOR || !UNITY_WEBGL
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response> localVarResponse = await task.ConfigureAwait(false);
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookFulfillOrderPost200Response> localVarResponse = await task.ConfigureAwait(false);
 #else
-            Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response> localVarResponse = await task;
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookFulfillOrderPost200Response> localVarResponse = await task;
 #endif
             return localVarResponse.Data;
         }
@@ -1398,10 +1158,10 @@ namespace Immutable.Ts.Api
         ///  
         /// </summary>
         /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
+        /// <param name="v1TsSdkOrderbookFulfillOrderPostRequest"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response)</returns>
-        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response>> V1TsSdkV1OrderbookPrepareOrderCancellationsPostWithHttpInfoAsync(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest? v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        /// <returns>Task of ApiResponse (V1TsSdkOrderbookFulfillOrderPost200Response)</returns>
+        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookFulfillOrderPost200Response>> V1TsSdkOrderbookFulfillOrderPostWithHttpInfoAsync(V1TsSdkOrderbookFulfillOrderPostRequest? v1TsSdkOrderbookFulfillOrderPostRequest = default(V1TsSdkOrderbookFulfillOrderPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
 
             Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
@@ -1422,12 +1182,12 @@ namespace Immutable.Ts.Api
             var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.Data = v1TsSdkV1OrderbookPrepareOrderCancellationsPostRequest;
+            localVarRequestOptions.Data = v1TsSdkOrderbookFulfillOrderPostRequest;
 
 
             // make the HTTP request
 
-            var task = this.AsynchronousClient.PostAsync<V1TsSdkV1OrderbookPrepareOrderCancellationsPost200Response>("/v1/ts-sdk/v1/orderbook/prepareOrderCancellations", localVarRequestOptions, this.Configuration, cancellationToken);
+            var task = this.AsynchronousClient.PostAsync<V1TsSdkOrderbookFulfillOrderPost200Response>("/v1/ts-sdk/orderbook/fulfillOrder", localVarRequestOptions, this.Configuration, cancellationToken);
 
 #if UNITY_EDITOR || !UNITY_WEBGL
             var localVarResponse = await task.ConfigureAwait(false);
@@ -1437,7 +1197,247 @@ namespace Immutable.Ts.Api
 
             if (this.ExceptionFactory != null)
             {
-                Exception _exception = this.ExceptionFactory("V1TsSdkV1OrderbookPrepareOrderCancellationsPost", localVarResponse);
+                Exception _exception = this.ExceptionFactory("V1TsSdkOrderbookFulfillOrderPost", localVarResponse);
+                if (_exception != null) throw _exception;
+            }
+
+            return localVarResponse;
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="v1TsSdkOrderbookPrepareListingPostRequest"> (optional)</param>
+        /// <returns>V1TsSdkOrderbookPrepareListingPost200Response</returns>
+        public V1TsSdkOrderbookPrepareListingPost200Response V1TsSdkOrderbookPrepareListingPost(V1TsSdkOrderbookPrepareListingPostRequest? v1TsSdkOrderbookPrepareListingPostRequest = default(V1TsSdkOrderbookPrepareListingPostRequest?))
+        {
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookPrepareListingPost200Response> localVarResponse = V1TsSdkOrderbookPrepareListingPostWithHttpInfo(v1TsSdkOrderbookPrepareListingPostRequest);
+            return localVarResponse.Data;
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="v1TsSdkOrderbookPrepareListingPostRequest"> (optional)</param>
+        /// <returns>ApiResponse of V1TsSdkOrderbookPrepareListingPost200Response</returns>
+        public Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookPrepareListingPost200Response> V1TsSdkOrderbookPrepareListingPostWithHttpInfo(V1TsSdkOrderbookPrepareListingPostRequest? v1TsSdkOrderbookPrepareListingPostRequest = default(V1TsSdkOrderbookPrepareListingPostRequest?))
+        {
+            Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
+
+            string[] _contentTypes = new string[] {
+                "application/json"
+            };
+
+            // to determine the Accept header
+            string[] _accepts = new string[] {
+                "application/json"
+            };
+
+            var localVarContentType = Immutable.Ts.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
+            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
+
+            var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
+            if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
+
+            localVarRequestOptions.Data = v1TsSdkOrderbookPrepareListingPostRequest;
+
+
+            // make the HTTP request
+            var localVarResponse = this.Client.Post<V1TsSdkOrderbookPrepareListingPost200Response>("/v1/ts-sdk/orderbook/prepareListing", localVarRequestOptions, this.Configuration);
+
+            if (this.ExceptionFactory != null)
+            {
+                Exception _exception = this.ExceptionFactory("V1TsSdkOrderbookPrepareListingPost", localVarResponse);
+                if (_exception != null) throw _exception;
+            }
+
+            return localVarResponse;
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="v1TsSdkOrderbookPrepareListingPostRequest"> (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns>Task of V1TsSdkOrderbookPrepareListingPost200Response</returns>
+        public async System.Threading.Tasks.Task<V1TsSdkOrderbookPrepareListingPost200Response> V1TsSdkOrderbookPrepareListingPostAsync(V1TsSdkOrderbookPrepareListingPostRequest? v1TsSdkOrderbookPrepareListingPostRequest = default(V1TsSdkOrderbookPrepareListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        {
+            var task = V1TsSdkOrderbookPrepareListingPostWithHttpInfoAsync(v1TsSdkOrderbookPrepareListingPostRequest, cancellationToken);
+#if UNITY_EDITOR || !UNITY_WEBGL
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookPrepareListingPost200Response> localVarResponse = await task.ConfigureAwait(false);
+#else
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookPrepareListingPost200Response> localVarResponse = await task;
+#endif
+            return localVarResponse.Data;
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="v1TsSdkOrderbookPrepareListingPostRequest"> (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns>Task of ApiResponse (V1TsSdkOrderbookPrepareListingPost200Response)</returns>
+        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookPrepareListingPost200Response>> V1TsSdkOrderbookPrepareListingPostWithHttpInfoAsync(V1TsSdkOrderbookPrepareListingPostRequest? v1TsSdkOrderbookPrepareListingPostRequest = default(V1TsSdkOrderbookPrepareListingPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        {
+
+            Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
+
+            string[] _contentTypes = new string[] {
+                "application/json"
+            };
+
+            // to determine the Accept header
+            string[] _accepts = new string[] {
+                "application/json"
+            };
+
+
+            var localVarContentType = Immutable.Ts.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
+            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
+
+            var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
+            if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
+
+            localVarRequestOptions.Data = v1TsSdkOrderbookPrepareListingPostRequest;
+
+
+            // make the HTTP request
+
+            var task = this.AsynchronousClient.PostAsync<V1TsSdkOrderbookPrepareListingPost200Response>("/v1/ts-sdk/orderbook/prepareListing", localVarRequestOptions, this.Configuration, cancellationToken);
+
+#if UNITY_EDITOR || !UNITY_WEBGL
+            var localVarResponse = await task.ConfigureAwait(false);
+#else
+            var localVarResponse = await task;
+#endif
+
+            if (this.ExceptionFactory != null)
+            {
+                Exception _exception = this.ExceptionFactory("V1TsSdkOrderbookPrepareListingPost", localVarResponse);
+                if (_exception != null) throw _exception;
+            }
+
+            return localVarResponse;
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="v1TsSdkOrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
+        /// <returns>V1TsSdkOrderbookPrepareOrderCancellationsPost200Response</returns>
+        public V1TsSdkOrderbookPrepareOrderCancellationsPost200Response V1TsSdkOrderbookPrepareOrderCancellationsPost(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest? v1TsSdkOrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest?))
+        {
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookPrepareOrderCancellationsPost200Response> localVarResponse = V1TsSdkOrderbookPrepareOrderCancellationsPostWithHttpInfo(v1TsSdkOrderbookPrepareOrderCancellationsPostRequest);
+            return localVarResponse.Data;
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="v1TsSdkOrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
+        /// <returns>ApiResponse of V1TsSdkOrderbookPrepareOrderCancellationsPost200Response</returns>
+        public Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookPrepareOrderCancellationsPost200Response> V1TsSdkOrderbookPrepareOrderCancellationsPostWithHttpInfo(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest? v1TsSdkOrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest?))
+        {
+            Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
+
+            string[] _contentTypes = new string[] {
+                "application/json"
+            };
+
+            // to determine the Accept header
+            string[] _accepts = new string[] {
+                "application/json"
+            };
+
+            var localVarContentType = Immutable.Ts.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
+            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
+
+            var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
+            if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
+
+            localVarRequestOptions.Data = v1TsSdkOrderbookPrepareOrderCancellationsPostRequest;
+
+
+            // make the HTTP request
+            var localVarResponse = this.Client.Post<V1TsSdkOrderbookPrepareOrderCancellationsPost200Response>("/v1/ts-sdk/orderbook/prepareOrderCancellations", localVarRequestOptions, this.Configuration);
+
+            if (this.ExceptionFactory != null)
+            {
+                Exception _exception = this.ExceptionFactory("V1TsSdkOrderbookPrepareOrderCancellationsPost", localVarResponse);
+                if (_exception != null) throw _exception;
+            }
+
+            return localVarResponse;
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="v1TsSdkOrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns>Task of V1TsSdkOrderbookPrepareOrderCancellationsPost200Response</returns>
+        public async System.Threading.Tasks.Task<V1TsSdkOrderbookPrepareOrderCancellationsPost200Response> V1TsSdkOrderbookPrepareOrderCancellationsPostAsync(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest? v1TsSdkOrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        {
+            var task = V1TsSdkOrderbookPrepareOrderCancellationsPostWithHttpInfoAsync(v1TsSdkOrderbookPrepareOrderCancellationsPostRequest, cancellationToken);
+#if UNITY_EDITOR || !UNITY_WEBGL
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookPrepareOrderCancellationsPost200Response> localVarResponse = await task.ConfigureAwait(false);
+#else
+            Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookPrepareOrderCancellationsPost200Response> localVarResponse = await task;
+#endif
+            return localVarResponse.Data;
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="Immutable.Ts.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="v1TsSdkOrderbookPrepareOrderCancellationsPostRequest"> (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns>Task of ApiResponse (V1TsSdkOrderbookPrepareOrderCancellationsPost200Response)</returns>
+        public async System.Threading.Tasks.Task<Immutable.Ts.Client.ApiResponse<V1TsSdkOrderbookPrepareOrderCancellationsPost200Response>> V1TsSdkOrderbookPrepareOrderCancellationsPostWithHttpInfoAsync(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest? v1TsSdkOrderbookPrepareOrderCancellationsPostRequest = default(V1TsSdkOrderbookPrepareOrderCancellationsPostRequest?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        {
+
+            Immutable.Ts.Client.RequestOptions localVarRequestOptions = new Immutable.Ts.Client.RequestOptions();
+
+            string[] _contentTypes = new string[] {
+                "application/json"
+            };
+
+            // to determine the Accept header
+            string[] _accepts = new string[] {
+                "application/json"
+            };
+
+
+            var localVarContentType = Immutable.Ts.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
+            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
+
+            var localVarAccept = Immutable.Ts.Client.ClientUtils.SelectHeaderAccept(_accepts);
+            if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
+
+            localVarRequestOptions.Data = v1TsSdkOrderbookPrepareOrderCancellationsPostRequest;
+
+
+            // make the HTTP request
+
+            var task = this.AsynchronousClient.PostAsync<V1TsSdkOrderbookPrepareOrderCancellationsPost200Response>("/v1/ts-sdk/orderbook/prepareOrderCancellations", localVarRequestOptions, this.Configuration, cancellationToken);
+
+#if UNITY_EDITOR || !UNITY_WEBGL
+            var localVarResponse = await task.ConfigureAwait(false);
+#else
+            var localVarResponse = await task;
+#endif
+
+            if (this.ExceptionFactory != null)
+            {
+                Exception _exception = this.ExceptionFactory("V1TsSdkOrderbookPrepareOrderCancellationsPost", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 

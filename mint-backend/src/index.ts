@@ -25,7 +25,7 @@ const router: Router = express.Router();
 
 const apiEnv = 'dev';
 const chainName = 'imtbl-zkevm-devnet';
-const zkEvmProvider = new providers.JsonRpcProvider(`https://rpc.dev.immutable.com`);
+const zkEvmProvider = new providers.JsonRpcProvider(`https://rpc.testnet.immutable.com`);
 
 // Contract addresses
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
