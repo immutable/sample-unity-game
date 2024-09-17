@@ -10,34 +10,29 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    /// Stack
+    ///     Stack
     /// </summary>
     [DataContract(Name = "Stack")]
-    public partial class Stack
+    public class Stack
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Stack" /> class.
+        ///     Initializes a new instance of the <see cref="Stack" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected Stack() { }
+        protected Stack()
+        {
+        }
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="Stack" /> class.
+        ///     Initializes a new instance of the <see cref="Stack" /> class.
         /// </summary>
         /// <param name="stackId">Stack ID (required).</param>
         /// <param name="chain">chain (required).</param>
@@ -52,90 +47,76 @@ namespace Immutable.Search.Model
         /// <param name="youtubeUrl">The youtube URL of NFT (required).</param>
         /// <param name="attributes">List of Metadata attributes (required).</param>
         /// <param name="totalCount">Total count of NFTs in the stack matching the filter params (required).</param>
-        public Stack(Guid stackId = default(Guid), Chain chain = default(Chain), string contractAddress = default(string), DateTime createdAt = default(DateTime), DateTime updatedAt = default(DateTime), string name = default(string), string description = default(string), string image = default(string), string externalUrl = default(string), string animationUrl = default(string), string youtubeUrl = default(string), List<NFTMetadataAttribute> attributes = default(List<NFTMetadataAttribute>), int totalCount = default(int))
+        public Stack(Guid stackId = default, Chain chain = default, string contractAddress = default,
+            DateTime createdAt = default, DateTime updatedAt = default, string name = default,
+            string description = default, string image = default, string externalUrl = default,
+            string animationUrl = default, string youtubeUrl = default, List<NFTMetadataAttribute> attributes = default,
+            int totalCount = default)
         {
-            this.StackId = stackId;
+            StackId = stackId;
             // to ensure "chain" is required (not null)
             if (chain == null)
-            {
                 throw new ArgumentNullException("chain is a required property for Stack and cannot be null");
-            }
-            this.Chain = chain;
+            Chain = chain;
             // to ensure "contractAddress" is required (not null)
             if (contractAddress == null)
-            {
                 throw new ArgumentNullException("contractAddress is a required property for Stack and cannot be null");
-            }
-            this.ContractAddress = contractAddress;
-            this.CreatedAt = createdAt;
-            this.UpdatedAt = updatedAt;
+            ContractAddress = contractAddress;
+            CreatedAt = createdAt;
+            UpdatedAt = updatedAt;
             // to ensure "name" is required (not null)
             if (name == null)
-            {
                 throw new ArgumentNullException("name is a required property for Stack and cannot be null");
-            }
-            this.Name = name;
+            Name = name;
             // to ensure "description" is required (not null)
             if (description == null)
-            {
                 throw new ArgumentNullException("description is a required property for Stack and cannot be null");
-            }
-            this.Description = description;
+            Description = description;
             // to ensure "image" is required (not null)
             if (image == null)
-            {
                 throw new ArgumentNullException("image is a required property for Stack and cannot be null");
-            }
-            this.Image = image;
+            Image = image;
             // to ensure "externalUrl" is required (not null)
             if (externalUrl == null)
-            {
                 throw new ArgumentNullException("externalUrl is a required property for Stack and cannot be null");
-            }
-            this.ExternalUrl = externalUrl;
+            ExternalUrl = externalUrl;
             // to ensure "animationUrl" is required (not null)
             if (animationUrl == null)
-            {
                 throw new ArgumentNullException("animationUrl is a required property for Stack and cannot be null");
-            }
-            this.AnimationUrl = animationUrl;
+            AnimationUrl = animationUrl;
             // to ensure "youtubeUrl" is required (not null)
             if (youtubeUrl == null)
-            {
                 throw new ArgumentNullException("youtubeUrl is a required property for Stack and cannot be null");
-            }
-            this.YoutubeUrl = youtubeUrl;
+            YoutubeUrl = youtubeUrl;
             // to ensure "attributes" is required (not null)
             if (attributes == null)
-            {
                 throw new ArgumentNullException("attributes is a required property for Stack and cannot be null");
-            }
-            this.Attributes = attributes;
-            this.TotalCount = totalCount;
+            Attributes = attributes;
+            TotalCount = totalCount;
         }
 
         /// <summary>
-        /// Stack ID
+        ///     Stack ID
         /// </summary>
         /// <value>Stack ID</value>
         [DataMember(Name = "stack_id", IsRequired = true, EmitDefaultValue = true)]
         public Guid StackId { get; set; }
 
         /// <summary>
-        /// Gets or Sets Chain
+        ///     Gets or Sets Chain
         /// </summary>
         [DataMember(Name = "chain", IsRequired = true, EmitDefaultValue = true)]
         public Chain Chain { get; set; }
 
         /// <summary>
-        /// Contract address
+        ///     Contract address
         /// </summary>
         /// <value>Contract address</value>
         [DataMember(Name = "contract_address", IsRequired = true, EmitDefaultValue = true)]
         public string ContractAddress { get; set; }
 
         /// <summary>
-        /// When the metadata was created
+        ///     When the metadata was created
         /// </summary>
         /// <value>When the metadata was created</value>
         /// <example>2022-08-16T17:43:26.991388Z</example>
@@ -143,7 +124,7 @@ namespace Immutable.Search.Model
         public DateTime CreatedAt { get; set; }
 
         /// <summary>
-        /// When the metadata was last updated
+        ///     When the metadata was last updated
         /// </summary>
         /// <value>When the metadata was last updated</value>
         /// <example>2022-08-16T17:43:26.991388Z</example>
@@ -151,7 +132,7 @@ namespace Immutable.Search.Model
         public DateTime UpdatedAt { get; set; }
 
         /// <summary>
-        /// The name of the NFT
+        ///     The name of the NFT
         /// </summary>
         /// <value>The name of the NFT</value>
         /// <example>Sword</example>
@@ -159,7 +140,7 @@ namespace Immutable.Search.Model
         public string Name { get; set; }
 
         /// <summary>
-        /// The description of the NFT
+        ///     The description of the NFT
         /// </summary>
         /// <value>The description of the NFT</value>
         /// <example>2022-08-16T17:43:26.991388Z</example>
@@ -167,7 +148,7 @@ namespace Immutable.Search.Model
         public string Description { get; set; }
 
         /// <summary>
-        /// The image url of the NFT
+        ///     The image url of the NFT
         /// </summary>
         /// <value>The image url of the NFT</value>
         /// <example>https://some-url</example>
@@ -175,7 +156,7 @@ namespace Immutable.Search.Model
         public string Image { get; set; }
 
         /// <summary>
-        /// The external website link of NFT
+        ///     The external website link of NFT
         /// </summary>
         /// <value>The external website link of NFT</value>
         /// <example>https://some-url</example>
@@ -183,7 +164,7 @@ namespace Immutable.Search.Model
         public string ExternalUrl { get; set; }
 
         /// <summary>
-        /// The animation url of the NFT
+        ///     The animation url of the NFT
         /// </summary>
         /// <value>The animation url of the NFT</value>
         /// <example>https://some-url</example>
@@ -191,7 +172,7 @@ namespace Immutable.Search.Model
         public string AnimationUrl { get; set; }
 
         /// <summary>
-        /// The youtube URL of NFT
+        ///     The youtube URL of NFT
         /// </summary>
         /// <value>The youtube URL of NFT</value>
         /// <example>https://some-url</example>
@@ -199,14 +180,14 @@ namespace Immutable.Search.Model
         public string YoutubeUrl { get; set; }
 
         /// <summary>
-        /// List of Metadata attributes
+        ///     List of Metadata attributes
         /// </summary>
         /// <value>List of Metadata attributes</value>
         [DataMember(Name = "attributes", IsRequired = true, EmitDefaultValue = true)]
         public List<NFTMetadataAttribute> Attributes { get; set; }
 
         /// <summary>
-        /// Total count of NFTs in the stack matching the filter params
+        ///     Total count of NFTs in the stack matching the filter params
         /// </summary>
         /// <value>Total count of NFTs in the stack matching the filter params</value>
         /// <example>1</example>
@@ -214,12 +195,12 @@ namespace Immutable.Search.Model
         public int TotalCount { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class Stack {\n");
             sb.Append("  StackId: ").Append(StackId).Append("\n");
             sb.Append("  Chain: ").Append(Chain).Append("\n");
@@ -239,14 +220,12 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

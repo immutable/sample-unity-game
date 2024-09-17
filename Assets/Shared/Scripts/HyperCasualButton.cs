@@ -1,25 +1,21 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using HyperCasual.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// A base class for the buttons of the hyper-casual game template that
-    /// contains basic functionalities like button sound effect
+    ///     A base class for the buttons of the hyper-casual game template that
+    ///     contains basic functionalities like button sound effect
     /// </summary>
     [RequireComponent(typeof(Button))]
     public class HyperCasualButton : MonoBehaviour
     {
-        [SerializeField]
-        protected Button m_Button;
-        [SerializeField]
-        SoundID m_ButtonSound = SoundID.ButtonSound;
+        [SerializeField] protected Button m_Button;
 
-        Action m_Action;
+        [SerializeField] private SoundID m_ButtonSound = SoundID.ButtonSound;
+
+        private Action m_Action;
 
         protected virtual void OnEnable()
         {
@@ -32,7 +28,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Adds a listener the button event.
+        ///     Adds a listener the button event.
         /// </summary>
         /// <param name="handler">callback function</param>
         public void AddListener(Action handler)
@@ -41,7 +37,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Removes a listener from the button event.
+        ///     Removes a listener from the button event.
         /// </summary>
         /// <param name="handler">callback function</param>
         public void RemoveListener(Action handler)

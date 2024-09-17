@@ -10,85 +10,78 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// V1TsSdkOrderbookCancelOrdersPostRequest
+    ///     V1TsSdkOrderbookCancelOrdersPostRequest
     /// </summary>
     [DataContract(Name = "_v1_ts_sdk_orderbook_cancelOrders_post_request")]
-    public partial class V1TsSdkOrderbookCancelOrdersPostRequest
+    public class V1TsSdkOrderbookCancelOrdersPostRequest
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="V1TsSdkOrderbookCancelOrdersPostRequest" /> class.
+        ///     Initializes a new instance of the <see cref="V1TsSdkOrderbookCancelOrdersPostRequest" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected V1TsSdkOrderbookCancelOrdersPostRequest() { }
+        protected V1TsSdkOrderbookCancelOrdersPostRequest()
+        {
+        }
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="V1TsSdkOrderbookCancelOrdersPostRequest" /> class.
+        ///     Initializes a new instance of the <see cref="V1TsSdkOrderbookCancelOrdersPostRequest" /> class.
         /// </summary>
         /// <param name="orderIds">orderIds (required).</param>
         /// <param name="accountAddress">accountAddress (required).</param>
         /// <param name="signature">signature (required).</param>
-        public V1TsSdkOrderbookCancelOrdersPostRequest(List<string> orderIds = default(List<string>), string accountAddress = default(string), string signature = default(string))
+        public V1TsSdkOrderbookCancelOrdersPostRequest(List<string> orderIds = default, string accountAddress = default,
+            string signature = default)
         {
             // to ensure "orderIds" is required (not null)
             if (orderIds == null)
-            {
-                throw new ArgumentNullException("orderIds is a required property for V1TsSdkOrderbookCancelOrdersPostRequest and cannot be null");
-            }
-            this.OrderIds = orderIds;
+                throw new ArgumentNullException(
+                    "orderIds is a required property for V1TsSdkOrderbookCancelOrdersPostRequest and cannot be null");
+            OrderIds = orderIds;
             // to ensure "accountAddress" is required (not null)
             if (accountAddress == null)
-            {
-                throw new ArgumentNullException("accountAddress is a required property for V1TsSdkOrderbookCancelOrdersPostRequest and cannot be null");
-            }
-            this.AccountAddress = accountAddress;
+                throw new ArgumentNullException(
+                    "accountAddress is a required property for V1TsSdkOrderbookCancelOrdersPostRequest and cannot be null");
+            AccountAddress = accountAddress;
             // to ensure "signature" is required (not null)
             if (signature == null)
-            {
-                throw new ArgumentNullException("signature is a required property for V1TsSdkOrderbookCancelOrdersPostRequest and cannot be null");
-            }
-            this.Signature = signature;
+                throw new ArgumentNullException(
+                    "signature is a required property for V1TsSdkOrderbookCancelOrdersPostRequest and cannot be null");
+            Signature = signature;
         }
 
         /// <summary>
-        /// Gets or Sets OrderIds
+        ///     Gets or Sets OrderIds
         /// </summary>
         [DataMember(Name = "orderIds", IsRequired = true, EmitDefaultValue = true)]
         public List<string> OrderIds { get; set; }
 
         /// <summary>
-        /// Gets or Sets AccountAddress
+        ///     Gets or Sets AccountAddress
         /// </summary>
         [DataMember(Name = "accountAddress", IsRequired = true, EmitDefaultValue = true)]
         public string AccountAddress { get; set; }
 
         /// <summary>
-        /// Gets or Sets Signature
+        ///     Gets or Sets Signature
         /// </summary>
         [DataMember(Name = "signature", IsRequired = true, EmitDefaultValue = true)]
         public string Signature { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class V1TsSdkOrderbookCancelOrdersPostRequest {\n");
             sb.Append("  OrderIds: ").Append(OrderIds).Append("\n");
             sb.Append("  AccountAddress: ").Append(AccountAddress).Append("\n");
@@ -98,14 +91,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

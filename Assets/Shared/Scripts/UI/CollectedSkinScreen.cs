@@ -1,24 +1,18 @@
-using System.ComponentModel;
 using HyperCasual.Core;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using System;
-using System.Collections.Generic;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// This View contains celebration screen functionalities
+    ///     This View contains celebration screen functionalities
     /// </summary>
     public class CollectedSkinScreen : View
     {
-        [SerializeField]
-        HyperCasualButton m_UseButton;
-        [SerializeField]
-        HyperCasualButton m_NextButton;
-        [SerializeField]
-        AbstractGameEvent m_NextLevelEvent;
+        [SerializeField] private HyperCasualButton m_UseButton;
+
+        [SerializeField] private HyperCasualButton m_NextButton;
+
+        [SerializeField] private AbstractGameEvent m_NextLevelEvent;
 
         public void OnEnable()
         {

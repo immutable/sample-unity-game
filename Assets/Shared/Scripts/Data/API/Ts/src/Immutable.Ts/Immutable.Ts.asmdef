@@ -1,7 +1,7 @@
 {
-    "name": "Immutable.Ts",
-    "overrideReferences": true,
-    "precompiledReferences": [
-        "Newtonsoft.Json.dll"
-    ]
+  "name": "Immutable.Ts",
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "Newtonsoft.Json.dll"
+  ]
 }

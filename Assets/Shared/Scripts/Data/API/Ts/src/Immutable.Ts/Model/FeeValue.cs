@@ -10,72 +10,63 @@
 
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// FeeValue
+    ///     FeeValue
     /// </summary>
     [DataContract(Name = "FeeValue")]
-    public partial class FeeValue
+    public class FeeValue
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FeeValue" /> class.
+        ///     Initializes a new instance of the <see cref="FeeValue" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected FeeValue() { }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FeeValue" /> class.
-        /// </summary>
-        /// <param name="amount">amount (required).</param>
-        /// <param name="recipientAddress">recipientAddress (required).</param>
-        public FeeValue(string amount = default(string), string recipientAddress = default(string))
+        protected FeeValue()
         {
-            // to ensure "amount" is required (not null)
-            if (amount == null)
-            {
-                throw new ArgumentNullException("amount is a required property for FeeValue and cannot be null");
-            }
-            this.Amount = amount;
-            // to ensure "recipientAddress" is required (not null)
-            if (recipientAddress == null)
-            {
-                throw new ArgumentNullException("recipientAddress is a required property for FeeValue and cannot be null");
-            }
-            this.RecipientAddress = recipientAddress;
         }
 
         /// <summary>
-        /// Gets or Sets Amount
+        ///     Initializes a new instance of the <see cref="FeeValue" /> class.
+        /// </summary>
+        /// <param name="amount">amount (required).</param>
+        /// <param name="recipientAddress">recipientAddress (required).</param>
+        public FeeValue(string amount = default, string recipientAddress = default)
+        {
+            // to ensure "amount" is required (not null)
+            if (amount == null)
+                throw new ArgumentNullException("amount is a required property for FeeValue and cannot be null");
+            Amount = amount;
+            // to ensure "recipientAddress" is required (not null)
+            if (recipientAddress == null)
+                throw new ArgumentNullException(
+                    "recipientAddress is a required property for FeeValue and cannot be null");
+            RecipientAddress = recipientAddress;
+        }
+
+        /// <summary>
+        ///     Gets or Sets Amount
         /// </summary>
         [DataMember(Name = "amount", IsRequired = true, EmitDefaultValue = true)]
         public string Amount { get; set; }
 
         /// <summary>
-        /// Gets or Sets RecipientAddress
+        ///     Gets or Sets RecipientAddress
         /// </summary>
         [DataMember(Name = "recipientAddress", IsRequired = true, EmitDefaultValue = true)]
         public string RecipientAddress { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class FeeValue {\n");
             sb.Append("  Amount: ").Append(Amount).Append("\n");
             sb.Append("  RecipientAddress: ").Append(RecipientAddress).Append("\n");
@@ -84,14 +75,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using HyperCasual.Gameplay;
 using UnityEngine;
 
@@ -13,30 +11,15 @@ namespace HyperCasual.Runner
     /// </summary>
     public class Collectable : Spawnable
     {
-        [SerializeField]
-        SoundID m_Sound = SoundID.None;
+        private const string k_PlayerTag = "Player";
 
-        const string k_PlayerTag = "Player";
+        [SerializeField] private SoundID m_Sound = SoundID.None;
 
         public ItemPickedEvent m_Event;
         public int m_Count;
 
-        bool m_Collected;
-        Renderer[] m_Renderers;
-
-        /// <summary>
-        /// Reset the gate to its initial state. Called when a level
-        /// is restarted by the GameManager.
-        /// </summary>
-        public override void ResetSpawnable()
-        {
-            m_Collected = false;
-
-            for (int i = 0; i < m_Renderers.Length; i++)
-            {
-                m_Renderers[i].enabled = true;
-            }
-        }
+        private bool m_Collected;
+        private Renderer[] m_Renderers;
 
         protected override void Awake()
         {
@@ -45,15 +28,23 @@ namespace HyperCasual.Runner
             m_Renderers = gameObject.GetComponentsInChildren<Renderer>();
         }
 
-        void OnTriggerEnter(Collider col)
+        private void OnTriggerEnter(Collider col)
         {
-            if (col.CompareTag(k_PlayerTag) && !m_Collected)
-            {
-                Collect();
-            }
+            if (col.CompareTag(k_PlayerTag) && !m_Collected) Collect();
         }
 
-        void Collect()
+        /// <summary>
+        ///     Reset the gate to its initial state. Called when a level
+        ///     is restarted by the GameManager.
+        /// </summary>
+        public override void ResetSpawnable()
+        {
+            m_Collected = false;
+
+            for (var i = 0; i < m_Renderers.Length; i++) m_Renderers[i].enabled = true;
+        }
+
+        private void Collect()
         {
             if (m_Event != null)
             {
@@ -61,10 +52,7 @@ namespace HyperCasual.Runner
                 m_Event.Raise();
             }
 
-            for (int i = 0; i < m_Renderers.Length; i++)
-            {
-                m_Renderers[i].enabled = false;
-            }
+            for (var i = 0; i < m_Renderers.Length; i++) m_Renderers[i].enabled = false;
 
             m_Collected = true;
             AudioManager.Instance.PlayEffect(m_Sound);

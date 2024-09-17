@@ -10,40 +10,29 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// OrderComponents
+    ///     OrderComponents
     /// </summary>
     [DataContract(Name = "OrderComponents")]
-    public partial class OrderComponents
+    public class OrderComponents
     {
-
         /// <summary>
-        /// Gets or Sets OrderType
-        /// </summary>
-        [DataMember(Name = "orderType", IsRequired = true, EmitDefaultValue = true)]
-        public OrderType OrderType { get; set; }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OrderComponents" /> class.
+        ///     Initializes a new instance of the <see cref="OrderComponents" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected OrderComponents() { }
+        protected OrderComponents()
+        {
+        }
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrderComponents" /> class.
+        ///     Initializes a new instance of the <see cref="OrderComponents" /> class.
         /// </summary>
         /// <param name="conduitKey">conduitKey (required).</param>
         /// <param name="consideration">consideration (required).</param>
@@ -57,150 +46,146 @@ namespace Immutable.Ts.Model
         /// <param name="zone">zone (required).</param>
         /// <param name="zoneHash">zoneHash (required).</param>
         /// <param name="counter">counter (required).</param>
-        public OrderComponents(string conduitKey = default(string), List<OrderComponentsConsiderationInner> consideration = default(List<OrderComponentsConsiderationInner>), string endTime = default(string), List<OrderComponentsOfferInner> offer = default(List<OrderComponentsOfferInner>), string offerer = default(string), OrderType orderType = default(OrderType), string salt = default(string), string startTime = default(string), string totalOriginalConsiderationItems = default(string), string zone = default(string), string zoneHash = default(string), string counter = default(string))
+        public OrderComponents(string conduitKey = default,
+            List<OrderComponentsConsiderationInner> consideration = default, string endTime = default,
+            List<OrderComponentsOfferInner> offer = default, string offerer = default, OrderType orderType = default,
+            string salt = default, string startTime = default, string totalOriginalConsiderationItems = default,
+            string zone = default, string zoneHash = default, string counter = default)
         {
             // to ensure "conduitKey" is required (not null)
             if (conduitKey == null)
-            {
-                throw new ArgumentNullException("conduitKey is a required property for OrderComponents and cannot be null");
-            }
-            this.ConduitKey = conduitKey;
+                throw new ArgumentNullException(
+                    "conduitKey is a required property for OrderComponents and cannot be null");
+            ConduitKey = conduitKey;
             // to ensure "consideration" is required (not null)
             if (consideration == null)
-            {
-                throw new ArgumentNullException("consideration is a required property for OrderComponents and cannot be null");
-            }
-            this.Consideration = consideration;
+                throw new ArgumentNullException(
+                    "consideration is a required property for OrderComponents and cannot be null");
+            Consideration = consideration;
             // to ensure "endTime" is required (not null)
             if (endTime == null)
-            {
-                throw new ArgumentNullException("endTime is a required property for OrderComponents and cannot be null");
-            }
-            this.EndTime = endTime;
+                throw new ArgumentNullException(
+                    "endTime is a required property for OrderComponents and cannot be null");
+            EndTime = endTime;
             // to ensure "offer" is required (not null)
             if (offer == null)
-            {
                 throw new ArgumentNullException("offer is a required property for OrderComponents and cannot be null");
-            }
-            this.Offer = offer;
+            Offer = offer;
             // to ensure "offerer" is required (not null)
             if (offerer == null)
-            {
-                throw new ArgumentNullException("offerer is a required property for OrderComponents and cannot be null");
-            }
-            this.Offerer = offerer;
-            this.OrderType = orderType;
+                throw new ArgumentNullException(
+                    "offerer is a required property for OrderComponents and cannot be null");
+            Offerer = offerer;
+            OrderType = orderType;
             // to ensure "salt" is required (not null)
             if (salt == null)
-            {
                 throw new ArgumentNullException("salt is a required property for OrderComponents and cannot be null");
-            }
-            this.Salt = salt;
+            Salt = salt;
             // to ensure "startTime" is required (not null)
             if (startTime == null)
-            {
-                throw new ArgumentNullException("startTime is a required property for OrderComponents and cannot be null");
-            }
-            this.StartTime = startTime;
+                throw new ArgumentNullException(
+                    "startTime is a required property for OrderComponents and cannot be null");
+            StartTime = startTime;
             // to ensure "totalOriginalConsiderationItems" is required (not null)
             if (totalOriginalConsiderationItems == null)
-            {
-                throw new ArgumentNullException("totalOriginalConsiderationItems is a required property for OrderComponents and cannot be null");
-            }
-            this.TotalOriginalConsiderationItems = totalOriginalConsiderationItems;
+                throw new ArgumentNullException(
+                    "totalOriginalConsiderationItems is a required property for OrderComponents and cannot be null");
+            TotalOriginalConsiderationItems = totalOriginalConsiderationItems;
             // to ensure "zone" is required (not null)
             if (zone == null)
-            {
                 throw new ArgumentNullException("zone is a required property for OrderComponents and cannot be null");
-            }
-            this.Zone = zone;
+            Zone = zone;
             // to ensure "zoneHash" is required (not null)
             if (zoneHash == null)
-            {
-                throw new ArgumentNullException("zoneHash is a required property for OrderComponents and cannot be null");
-            }
-            this.ZoneHash = zoneHash;
+                throw new ArgumentNullException(
+                    "zoneHash is a required property for OrderComponents and cannot be null");
+            ZoneHash = zoneHash;
             // to ensure "counter" is required (not null)
             if (counter == null)
-            {
-                throw new ArgumentNullException("counter is a required property for OrderComponents and cannot be null");
-            }
-            this.Counter = counter;
+                throw new ArgumentNullException(
+                    "counter is a required property for OrderComponents and cannot be null");
+            Counter = counter;
         }
 
         /// <summary>
-        /// Gets or Sets ConduitKey
+        ///     Gets or Sets OrderType
+        /// </summary>
+        [DataMember(Name = "orderType", IsRequired = true, EmitDefaultValue = true)]
+        public OrderType OrderType { get; set; }
+
+        /// <summary>
+        ///     Gets or Sets ConduitKey
         /// </summary>
         [DataMember(Name = "conduitKey", IsRequired = true, EmitDefaultValue = true)]
         public string ConduitKey { get; set; }
 
         /// <summary>
-        /// Gets or Sets Consideration
+        ///     Gets or Sets Consideration
         /// </summary>
         [DataMember(Name = "consideration", IsRequired = true, EmitDefaultValue = true)]
         public List<OrderComponentsConsiderationInner> Consideration { get; set; }
 
         /// <summary>
-        /// Gets or Sets EndTime
+        ///     Gets or Sets EndTime
         /// </summary>
         [DataMember(Name = "endTime", IsRequired = true, EmitDefaultValue = true)]
         public string EndTime { get; set; }
 
         /// <summary>
-        /// Gets or Sets Offer
+        ///     Gets or Sets Offer
         /// </summary>
         [DataMember(Name = "offer", IsRequired = true, EmitDefaultValue = true)]
         public List<OrderComponentsOfferInner> Offer { get; set; }
 
         /// <summary>
-        /// Gets or Sets Offerer
+        ///     Gets or Sets Offerer
         /// </summary>
         [DataMember(Name = "offerer", IsRequired = true, EmitDefaultValue = true)]
         public string Offerer { get; set; }
 
         /// <summary>
-        /// Gets or Sets Salt
+        ///     Gets or Sets Salt
         /// </summary>
         [DataMember(Name = "salt", IsRequired = true, EmitDefaultValue = true)]
         public string Salt { get; set; }
 
         /// <summary>
-        /// Gets or Sets StartTime
+        ///     Gets or Sets StartTime
         /// </summary>
         [DataMember(Name = "startTime", IsRequired = true, EmitDefaultValue = true)]
         public string StartTime { get; set; }
 
         /// <summary>
-        /// Gets or Sets TotalOriginalConsiderationItems
+        ///     Gets or Sets TotalOriginalConsiderationItems
         /// </summary>
         [DataMember(Name = "totalOriginalConsiderationItems", IsRequired = true, EmitDefaultValue = true)]
         public string TotalOriginalConsiderationItems { get; set; }
 
         /// <summary>
-        /// Gets or Sets Zone
+        ///     Gets or Sets Zone
         /// </summary>
         [DataMember(Name = "zone", IsRequired = true, EmitDefaultValue = true)]
         public string Zone { get; set; }
 
         /// <summary>
-        /// Gets or Sets ZoneHash
+        ///     Gets or Sets ZoneHash
         /// </summary>
         [DataMember(Name = "zoneHash", IsRequired = true, EmitDefaultValue = true)]
         public string ZoneHash { get; set; }
 
         /// <summary>
-        /// Gets or Sets Counter
+        ///     Gets or Sets Counter
         /// </summary>
         [DataMember(Name = "counter", IsRequired = true, EmitDefaultValue = true)]
         public string Counter { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class OrderComponents {\n");
             sb.Append("  ConduitKey: ").Append(ConduitKey).Append("\n");
             sb.Append("  Consideration: ").Append(Consideration).Append("\n");
@@ -219,14 +204,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

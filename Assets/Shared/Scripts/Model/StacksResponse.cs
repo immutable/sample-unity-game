@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace HyperCasual.Runner
@@ -26,8 +25,6 @@ namespace HyperCasual.Runner
         public string stack_id;
         public string chain;
         public string contract_address;
-        public DateTime created_at;
-        public DateTime updated_at;
         public string name;
         public string description;
         public string image;
@@ -36,6 +33,8 @@ namespace HyperCasual.Runner
         public string youtube_url;
         public List<AssetAttribute> attributes;
         public int total_count;
+        public DateTime created_at;
+        public DateTime updated_at;
     }
 
     [Serializable]

@@ -9,65 +9,56 @@
  */
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// OrderStatusOneOf2
+    ///     OrderStatusOneOf2
     /// </summary>
     [DataContract(Name = "OrderStatus_oneOf_2")]
-    public partial class OrderStatusOneOf2
+    public class OrderStatusOneOf2
     {
         /// <summary>
-        /// A terminal order status indicating that an order cannot be fulfilled due to expiry.
+        ///     A terminal order status indicating that an order cannot be fulfilled due to expiry.
         /// </summary>
         /// <value>A terminal order status indicating that an order cannot be fulfilled due to expiry.</value>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum NameEnum
         {
             /// <summary>
-            /// Enum EXPIRED for value: EXPIRED
+            ///     Enum EXPIRED for value: EXPIRED
             /// </summary>
-            [EnumMember(Value = "EXPIRED")]
-            EXPIRED
+            [EnumMember(Value = "EXPIRED")] EXPIRED
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="OrderStatusOneOf2" /> class.
+        /// </summary>
+        /// <param name="name">A terminal order status indicating that an order cannot be fulfilled due to expiry..</param>
+        public OrderStatusOneOf2(NameEnum? name = default)
+        {
+            Name = name;
         }
 
 
         /// <summary>
-        /// A terminal order status indicating that an order cannot be fulfilled due to expiry.
+        ///     A terminal order status indicating that an order cannot be fulfilled due to expiry.
         /// </summary>
         /// <value>A terminal order status indicating that an order cannot be fulfilled due to expiry.</value>
         [DataMember(Name = "name", EmitDefaultValue = false)]
         public NameEnum? Name { get; set; }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OrderStatusOneOf2" /> class.
-        /// </summary>
-        /// <param name="name">A terminal order status indicating that an order cannot be fulfilled due to expiry..</param>
-        public OrderStatusOneOf2(NameEnum? name = default(NameEnum?))
-        {
-            this.Name = name;
-        }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class OrderStatusOneOf2 {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("}\n");
@@ -75,14 +66,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

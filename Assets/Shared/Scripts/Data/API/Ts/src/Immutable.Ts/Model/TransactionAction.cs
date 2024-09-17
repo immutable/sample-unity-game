@@ -9,84 +9,79 @@
  */
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// TransactionAction
+    ///     TransactionAction
     /// </summary>
     [DataContract(Name = "TransactionAction")]
-    public partial class TransactionAction
+    public class TransactionAction
     {
-
         /// <summary>
-        /// Gets or Sets Purpose
-        /// </summary>
-        [DataMember(Name = "purpose", EmitDefaultValue = false)]
-        public TransactionPurpose? Purpose { get; set; }
-        /// <summary>
-        /// Defines Type
+        ///     Defines Type
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum TypeEnum
         {
             /// <summary>
-            /// Enum TRANSACTION for value: TRANSACTION
+            ///     Enum TRANSACTION for value: TRANSACTION
             /// </summary>
-            [EnumMember(Value = "TRANSACTION")]
-            TRANSACTION
+            [EnumMember(Value = "TRANSACTION")] TRANSACTION
         }
 
-
         /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
-        public TypeEnum Type { get; set; }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TransactionAction" /> class.
+        ///     Initializes a new instance of the <see cref="TransactionAction" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected TransactionAction() { }
+        protected TransactionAction()
+        {
+        }
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="TransactionAction" /> class.
+        ///     Initializes a new instance of the <see cref="TransactionAction" /> class.
         /// </summary>
         /// <param name="populatedTransactions">populatedTransactions.</param>
         /// <param name="purpose">purpose.</param>
         /// <param name="type">type (required).</param>
-        public TransactionAction(TransactionActionPopulatedTransactions populatedTransactions = default(TransactionActionPopulatedTransactions), TransactionPurpose? purpose = default(TransactionPurpose?), TypeEnum type = default(TypeEnum))
+        public TransactionAction(TransactionActionPopulatedTransactions populatedTransactions = default,
+            TransactionPurpose? purpose = default, TypeEnum type = default)
         {
-            this.Type = type;
-            this.PopulatedTransactions = populatedTransactions;
-            this.Purpose = purpose;
+            Type = type;
+            PopulatedTransactions = populatedTransactions;
+            Purpose = purpose;
         }
 
         /// <summary>
-        /// Gets or Sets PopulatedTransactions
+        ///     Gets or Sets Purpose
+        /// </summary>
+        [DataMember(Name = "purpose", EmitDefaultValue = false)]
+        public TransactionPurpose? Purpose { get; set; }
+
+
+        /// <summary>
+        ///     Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
+        public TypeEnum Type { get; set; }
+
+        /// <summary>
+        ///     Gets or Sets PopulatedTransactions
         /// </summary>
         [DataMember(Name = "populatedTransactions", EmitDefaultValue = false)]
         public TransactionActionPopulatedTransactions PopulatedTransactions { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class TransactionAction {\n");
             sb.Append("  PopulatedTransactions: ").Append(PopulatedTransactions).Append("\n");
             sb.Append("  Purpose: ").Append(Purpose).Append("\n");
@@ -96,14 +91,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

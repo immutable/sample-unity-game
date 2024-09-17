@@ -9,101 +9,94 @@
  */
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// OrderProtocolData
+    ///     OrderProtocolData
     /// </summary>
     [DataContract(Name = "Order_protocolData")]
-    public partial class OrderProtocolData
+    public class OrderProtocolData
     {
         /// <summary>
-        /// Defines OrderType
+        ///     Defines OrderType
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum OrderTypeEnum
         {
             /// <summary>
-            /// Enum FULLRESTRICTED for value: FULL_RESTRICTED
+            ///     Enum FULLRESTRICTED for value: FULL_RESTRICTED
             /// </summary>
             [EnumMember(Value = "FULL_RESTRICTED")]
             FULLRESTRICTED,
 
             /// <summary>
-            /// Enum PARTIALRESTRICTED for value: PARTIAL_RESTRICTED
+            ///     Enum PARTIALRESTRICTED for value: PARTIAL_RESTRICTED
             /// </summary>
             [EnumMember(Value = "PARTIAL_RESTRICTED")]
             PARTIALRESTRICTED
         }
 
-
         /// <summary>
-        /// Gets or Sets OrderType
-        /// </summary>
-        [DataMember(Name = "orderType", EmitDefaultValue = false)]
-        public OrderTypeEnum? OrderType { get; set; }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OrderProtocolData" /> class.
+        ///     Initializes a new instance of the <see cref="OrderProtocolData" /> class.
         /// </summary>
         /// <param name="counter">counter.</param>
         /// <param name="orderType">orderType.</param>
         /// <param name="seaportAddress">seaportAddress.</param>
         /// <param name="seaportVersion">seaportVersion.</param>
         /// <param name="zoneAddress">zoneAddress.</param>
-        public OrderProtocolData(string counter = default(string), OrderTypeEnum? orderType = default(OrderTypeEnum?), string seaportAddress = default(string), string seaportVersion = default(string), string zoneAddress = default(string))
+        public OrderProtocolData(string counter = default, OrderTypeEnum? orderType = default,
+            string seaportAddress = default, string seaportVersion = default, string zoneAddress = default)
         {
-            this.Counter = counter;
-            this.OrderType = orderType;
-            this.SeaportAddress = seaportAddress;
-            this.SeaportVersion = seaportVersion;
-            this.ZoneAddress = zoneAddress;
+            Counter = counter;
+            OrderType = orderType;
+            SeaportAddress = seaportAddress;
+            SeaportVersion = seaportVersion;
+            ZoneAddress = zoneAddress;
         }
 
+
         /// <summary>
-        /// Gets or Sets Counter
+        ///     Gets or Sets OrderType
+        /// </summary>
+        [DataMember(Name = "orderType", EmitDefaultValue = false)]
+        public OrderTypeEnum? OrderType { get; set; }
+
+        /// <summary>
+        ///     Gets or Sets Counter
         /// </summary>
         [DataMember(Name = "counter", EmitDefaultValue = false)]
         public string Counter { get; set; }
 
         /// <summary>
-        /// Gets or Sets SeaportAddress
+        ///     Gets or Sets SeaportAddress
         /// </summary>
         [DataMember(Name = "seaportAddress", EmitDefaultValue = false)]
         public string SeaportAddress { get; set; }
 
         /// <summary>
-        /// Gets or Sets SeaportVersion
+        ///     Gets or Sets SeaportVersion
         /// </summary>
         [DataMember(Name = "seaportVersion", EmitDefaultValue = false)]
         public string SeaportVersion { get; set; }
 
         /// <summary>
-        /// Gets or Sets ZoneAddress
+        ///     Gets or Sets ZoneAddress
         /// </summary>
         [DataMember(Name = "zoneAddress", EmitDefaultValue = false)]
         public string ZoneAddress { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class OrderProtocolData {\n");
             sb.Append("  Counter: ").Append(Counter).Append("\n");
             sb.Append("  OrderType: ").Append(OrderType).Append("\n");
@@ -115,14 +108,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

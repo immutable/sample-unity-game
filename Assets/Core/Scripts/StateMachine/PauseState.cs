@@ -1,24 +1,23 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HyperCasual.Core
 {
     /// <summary>
-    /// This game loop is paused while this state is active.
+    ///     This game loop is paused while this state is active.
     /// </summary>
     public class PauseState : AbstractState
     {
-        readonly Action m_OnPause;
-
-        public override string Name => $"{nameof(PauseState)}";
+        private readonly Action m_OnPause;
 
         /// <param name="onPause">The action that is invoked when the game loop paused</param>
         public PauseState(Action onPause)
         {
             m_OnPause = onPause;
         }
+
+        public override string Name => $"{nameof(PauseState)}";
 
         public override void Enter()
         {

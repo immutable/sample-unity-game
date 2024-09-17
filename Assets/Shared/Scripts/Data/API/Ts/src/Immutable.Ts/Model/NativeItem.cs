@@ -10,80 +10,73 @@
 
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// NativeItem
+    ///     NativeItem
     /// </summary>
     [DataContract(Name = "NativeItem")]
-    public partial class NativeItem
+    public class NativeItem
     {
         /// <summary>
-        /// Defines Type
+        ///     Defines Type
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum TypeEnum
         {
             /// <summary>
-            /// Enum NATIVE for value: NATIVE
+            ///     Enum NATIVE for value: NATIVE
             /// </summary>
-            [EnumMember(Value = "NATIVE")]
-            NATIVE
+            [EnumMember(Value = "NATIVE")] NATIVE
         }
 
-
         /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
-        public TypeEnum Type { get; set; }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NativeItem" /> class.
+        ///     Initializes a new instance of the <see cref="NativeItem" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected NativeItem() { }
+        protected NativeItem()
+        {
+        }
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="NativeItem" /> class.
+        ///     Initializes a new instance of the <see cref="NativeItem" /> class.
         /// </summary>
         /// <param name="amount">amount (required).</param>
         /// <param name="type">type (required).</param>
-        public NativeItem(string amount = default(string), TypeEnum type = default(TypeEnum))
+        public NativeItem(string amount = default, TypeEnum type = default)
         {
             // to ensure "amount" is required (not null)
             if (amount == null)
-            {
                 throw new ArgumentNullException("amount is a required property for NativeItem and cannot be null");
-            }
-            this.Amount = amount;
-            this.Type = type;
+            Amount = amount;
+            Type = type;
         }
 
+
         /// <summary>
-        /// Gets or Sets Amount
+        ///     Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
+        public TypeEnum Type { get; set; }
+
+        /// <summary>
+        ///     Gets or Sets Amount
         /// </summary>
         [DataMember(Name = "amount", IsRequired = true, EmitDefaultValue = true)]
         public string Amount { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class NativeItem {\n");
             sb.Append("  Amount: ").Append(Amount).Append("\n");
             sb.Append("  Type: ").Append(Type).Append("\n");
@@ -92,14 +85,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

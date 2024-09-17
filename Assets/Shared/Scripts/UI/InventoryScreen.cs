@@ -1,39 +1,32 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using HyperCasual.Core;
-using HyperCasual.Gameplay;
-using UnityEngine;
-using UnityEngine.UI;
-using Immutable.Passport;
-using Cysharp.Threading.Tasks;
 using System.Net.Http;
-using TMPro;
-using Immutable.Search.Client;
-using Immutable.Search.Model;
-using Immutable.Search.Api;
+using Cysharp.Threading.Tasks;
+using HyperCasual.Core;
+using Immutable.Passport;
+using UnityEngine;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// The inventory view which displays the player's assets (e.g. skins).
+    ///     The inventory view which displays the player's assets (e.g. skins).
     /// </summary>
     public class InventoryScreen : View
     {
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
         [SerializeField] private BalanceObject m_Balance;
-        [SerializeField] private AssetListObject m_AssetObj = null;
-        [SerializeField] private Transform m_ListParent = null;
+        [SerializeField] private AssetListObject m_AssetObj;
+        [SerializeField] private Transform m_ListParent;
         [SerializeField] private InfiniteScrollView m_ScrollView;
-        private List<AssetModel> m_Assets = new List<AssetModel>();
+        private readonly List<AssetModel> m_Assets = new();
 
         // Pagination
-        private bool m_IsLoadingMore = false;
+        private bool m_IsLoadingMore;
         private PageModel m_Page;
 
         /// <summary>
-        /// Sets up the inventory list and fetches the player's assets.
+        ///     Sets up the inventory list and fetches the player's assets.
         /// </summary>
         private async void OnEnable()
         {
@@ -55,14 +48,14 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Configures the asset list item view
+        ///     Configures the asset list item view
         /// </summary>
         private void OnCreateItemView(int index, GameObject item)
         {
             if (index < m_Assets.Count)
             {
                 // AssetModel asset = m_Assets[index];
-                AssetModel asset = m_Assets[index];
+                var asset = m_Assets[index];
 
                 // Initialise the view with asset
                 var itemComponent = item.GetComponent<AssetListObject>();
@@ -74,33 +67,27 @@ namespace HyperCasual.Runner
                     clickable.ClearAllSubscribers();
                     clickable.OnClick += () =>
                     {
-                        AssetDetailsView view = UIManager.Instance.GetView<AssetDetailsView>();
-                        UIManager.Instance.Show(view, true);
+                        var view = UIManager.Instance.GetView<AssetDetailsView>();
+                        UIManager.Instance.Show(view);
                         view.Initialise(asset);
                     };
                 }
             }
 
             // Load more assets if nearing the end of the list
-            if (index >= m_Assets.Count - 5 && !m_IsLoadingMore)
-            {
-                LoadAssets();
-            }
+            if (index >= m_Assets.Count - 5 && !m_IsLoadingMore) LoadAssets();
         }
 
         /// <summary>
-        /// Loads assets and adds them to the scroll view.
+        ///     Loads assets and adds them to the scroll view.
         /// </summary>
         private async void LoadAssets()
         {
-            if (m_IsLoadingMore)
-            {
-                return;
-            }
+            if (m_IsLoadingMore) return;
 
             m_IsLoadingMore = true;
 
-            List<AssetModel> assets = await GetAssets();
+            var assets = await GetAssets();
             if (assets != null && assets.Count > 0)
             {
                 m_Assets.AddRange(assets);
@@ -115,11 +102,11 @@ namespace HyperCasual.Runner
         {
             Debug.Log("Fetching assets...");
 
-            List<AssetModel> stacks = new List<AssetModel>();
+            var stacks = new List<AssetModel>();
 
             try
             {
-                string address = SaveManager.Instance.WalletAddress;
+                var address = SaveManager.Instance.WalletAddress;
 
                 if (string.IsNullOrEmpty(address))
                 {
@@ -127,7 +114,8 @@ namespace HyperCasual.Runner
                     return stacks;
                 }
 
-                string url = $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/accounts/{address}/nfts?contract_address={Contract.SKIN}&page_size=6";
+                var url =
+                    $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/accounts/{address}/nfts?contract_address={Contract.SKIN}&page_size=6";
 
                 // Pagination
                 if (!string.IsNullOrEmpty(m_Page?.next_cursor))
@@ -141,16 +129,16 @@ namespace HyperCasual.Runner
                 }
 
                 using var client = new HttpClient();
-                HttpResponseMessage response = await client.GetAsync(url);
+                var response = await client.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    string responseBody = await response.Content.ReadAsStringAsync();
+                    var responseBody = await response.Content.ReadAsStringAsync();
                     Debug.Log($"Assets response: {responseBody}");
 
                     if (!string.IsNullOrEmpty(responseBody))
                     {
-                        AssetsResponse assetsResponse = JsonUtility.FromJson<AssetsResponse>(responseBody);
+                        var assetsResponse = JsonUtility.FromJson<AssetsResponse>(responseBody);
                         stacks = assetsResponse?.result ?? new List<AssetModel>();
 
                         // Update pagination information
@@ -160,7 +148,7 @@ namespace HyperCasual.Runner
                 else
                 {
                     // TODO use dialogs
-                    Debug.Log($"Failed to fetch assets");
+                    Debug.Log("Failed to fetch assets");
                 }
             }
             catch (Exception ex)
@@ -172,7 +160,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Cleans up views and handles the back button click
+        ///     Cleans up views and handles the back button click
         /// </summary>
         private void OnBackButtonClick()
         {

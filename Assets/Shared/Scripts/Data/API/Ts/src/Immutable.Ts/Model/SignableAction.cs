@@ -9,84 +9,79 @@
  */
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// SignableAction
+    ///     SignableAction
     /// </summary>
     [DataContract(Name = "SignableAction")]
-    public partial class SignableAction
+    public class SignableAction
     {
-
         /// <summary>
-        /// Gets or Sets Purpose
-        /// </summary>
-        [DataMember(Name = "purpose", EmitDefaultValue = false)]
-        public SignablePurpose? Purpose { get; set; }
-        /// <summary>
-        /// Defines Type
+        ///     Defines Type
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum TypeEnum
         {
             /// <summary>
-            /// Enum SIGNABLE for value: SIGNABLE
+            ///     Enum SIGNABLE for value: SIGNABLE
             /// </summary>
-            [EnumMember(Value = "SIGNABLE")]
-            SIGNABLE
+            [EnumMember(Value = "SIGNABLE")] SIGNABLE
         }
 
-
         /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
-        public TypeEnum Type { get; set; }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SignableAction" /> class.
+        ///     Initializes a new instance of the <see cref="SignableAction" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected SignableAction() { }
+        protected SignableAction()
+        {
+        }
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="SignableAction" /> class.
+        ///     Initializes a new instance of the <see cref="SignableAction" /> class.
         /// </summary>
         /// <param name="message">message.</param>
         /// <param name="purpose">purpose.</param>
         /// <param name="type">type (required).</param>
-        public SignableAction(SignableActionMessage message = default(SignableActionMessage), SignablePurpose? purpose = default(SignablePurpose?), TypeEnum type = default(TypeEnum))
+        public SignableAction(SignableActionMessage message = default, SignablePurpose? purpose = default,
+            TypeEnum type = default)
         {
-            this.Type = type;
-            this.Message = message;
-            this.Purpose = purpose;
+            Type = type;
+            Message = message;
+            Purpose = purpose;
         }
 
         /// <summary>
-        /// Gets or Sets Message
+        ///     Gets or Sets Purpose
+        /// </summary>
+        [DataMember(Name = "purpose", EmitDefaultValue = false)]
+        public SignablePurpose? Purpose { get; set; }
+
+
+        /// <summary>
+        ///     Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
+        public TypeEnum Type { get; set; }
+
+        /// <summary>
+        ///     Gets or Sets Message
         /// </summary>
         [DataMember(Name = "message", EmitDefaultValue = false)]
         public SignableActionMessage Message { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class SignableAction {\n");
             sb.Append("  Message: ").Append(Message).Append("\n");
             sb.Append("  Purpose: ").Append(Purpose).Append("\n");
@@ -96,14 +91,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

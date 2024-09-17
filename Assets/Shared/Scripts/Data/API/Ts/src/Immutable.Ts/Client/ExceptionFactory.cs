@@ -14,7 +14,7 @@ using System;
 namespace Immutable.Ts.Client
 {
     /// <summary>
-    /// A delegate to ExceptionFactory method
+    ///     A delegate to ExceptionFactory method
     /// </summary>
     /// <param name="methodName">Method name</param>
     /// <param name="response">Response</param>

@@ -10,98 +10,88 @@
 
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    /// Stack quote result
+    ///     Stack quote result
     /// </summary>
     [DataContract(Name = "StackQuoteResult")]
-    public partial class StackQuoteResult
+    public class StackQuoteResult
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="StackQuoteResult" /> class.
+        ///     Initializes a new instance of the <see cref="StackQuoteResult" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected StackQuoteResult() { }
+        protected StackQuoteResult()
+        {
+        }
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="StackQuoteResult" /> class.
+        ///     Initializes a new instance of the <see cref="StackQuoteResult" /> class.
         /// </summary>
         /// <param name="chain">chain (required).</param>
         /// <param name="stackId">stackId (required).</param>
         /// <param name="marketStack">marketStack (required).</param>
         /// <param name="marketCollection">marketCollection (required).</param>
-        public StackQuoteResult(Chain chain = default(Chain), string stackId = default(string), Market marketStack = default(Market), Market marketCollection = default(Market))
+        public StackQuoteResult(Chain chain = default, string stackId = default, Market marketStack = default,
+            Market marketCollection = default)
         {
             // to ensure "chain" is required (not null)
             if (chain == null)
-            {
                 throw new ArgumentNullException("chain is a required property for StackQuoteResult and cannot be null");
-            }
-            this.Chain = chain;
+            Chain = chain;
             // to ensure "stackId" is required (not null)
             if (stackId == null)
-            {
-                throw new ArgumentNullException("stackId is a required property for StackQuoteResult and cannot be null");
-            }
-            this.StackId = stackId;
+                throw new ArgumentNullException(
+                    "stackId is a required property for StackQuoteResult and cannot be null");
+            StackId = stackId;
             // to ensure "marketStack" is required (not null)
             if (marketStack == null)
-            {
-                throw new ArgumentNullException("marketStack is a required property for StackQuoteResult and cannot be null");
-            }
-            this.MarketStack = marketStack;
+                throw new ArgumentNullException(
+                    "marketStack is a required property for StackQuoteResult and cannot be null");
+            MarketStack = marketStack;
             // to ensure "marketCollection" is required (not null)
             if (marketCollection == null)
-            {
-                throw new ArgumentNullException("marketCollection is a required property for StackQuoteResult and cannot be null");
-            }
-            this.MarketCollection = marketCollection;
+                throw new ArgumentNullException(
+                    "marketCollection is a required property for StackQuoteResult and cannot be null");
+            MarketCollection = marketCollection;
         }
 
         /// <summary>
-        /// Gets or Sets Chain
+        ///     Gets or Sets Chain
         /// </summary>
         [DataMember(Name = "chain", IsRequired = true, EmitDefaultValue = true)]
         public Chain Chain { get; set; }
 
         /// <summary>
-        /// Gets or Sets StackId
+        ///     Gets or Sets StackId
         /// </summary>
         [DataMember(Name = "stack_id", IsRequired = true, EmitDefaultValue = true)]
         public string StackId { get; set; }
 
         /// <summary>
-        /// Gets or Sets MarketStack
+        ///     Gets or Sets MarketStack
         /// </summary>
         [DataMember(Name = "market_stack", IsRequired = true, EmitDefaultValue = true)]
         public Market MarketStack { get; set; }
 
         /// <summary>
-        /// Gets or Sets MarketCollection
+        ///     Gets or Sets MarketCollection
         /// </summary>
         [DataMember(Name = "market_collection", IsRequired = true, EmitDefaultValue = true)]
         public Market MarketCollection { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class StackQuoteResult {\n");
             sb.Append("  Chain: ").Append(Chain).Append("\n");
             sb.Append("  StackId: ").Append(StackId).Append("\n");
@@ -112,14 +102,12 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

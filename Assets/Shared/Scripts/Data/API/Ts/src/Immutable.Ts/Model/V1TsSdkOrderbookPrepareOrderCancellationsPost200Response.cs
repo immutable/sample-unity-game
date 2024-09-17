@@ -9,50 +9,40 @@
  */
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// Response schema for the prepareOrderCancellations endpoint
+    ///     Response schema for the prepareOrderCancellations endpoint
     /// </summary>
     [DataContract(Name = "_v1_ts_sdk_orderbook_prepareOrderCancellations_post_200_response")]
-    public partial class V1TsSdkOrderbookPrepareOrderCancellationsPost200Response
+    public class V1TsSdkOrderbookPrepareOrderCancellationsPost200Response
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="V1TsSdkOrderbookPrepareOrderCancellationsPost200Response" /> class.
+        ///     Initializes a new instance of the <see cref="V1TsSdkOrderbookPrepareOrderCancellationsPost200Response" /> class.
         /// </summary>
         /// <param name="signableAction">signableAction.</param>
-        public V1TsSdkOrderbookPrepareOrderCancellationsPost200Response(SignableAction signableAction = default(SignableAction))
+        public V1TsSdkOrderbookPrepareOrderCancellationsPost200Response(SignableAction signableAction = default)
         {
-            this.SignableAction = signableAction;
+            SignableAction = signableAction;
         }
 
         /// <summary>
-        /// Gets or Sets SignableAction
+        ///     Gets or Sets SignableAction
         /// </summary>
         [DataMember(Name = "signableAction", EmitDefaultValue = false)]
         public SignableAction SignableAction { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class V1TsSdkOrderbookPrepareOrderCancellationsPost200Response {\n");
             sb.Append("  SignableAction: ").Append(SignableAction).Append("\n");
             sb.Append("}\n");
@@ -60,14 +50,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

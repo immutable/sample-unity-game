@@ -10,126 +10,111 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
-using System.Reflection;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// V1TsSdkOrderbookPrepareListingPostRequestSell
+    ///     V1TsSdkOrderbookPrepareListingPostRequestSell
     /// </summary>
     [JsonConverter(typeof(V1TsSdkOrderbookPrepareListingPostRequestSellJsonConverter))]
     [DataContract(Name = "_v1_ts_sdk_orderbook_prepareListing_post_request_sell")]
-    public partial class V1TsSdkOrderbookPrepareListingPostRequestSell : AbstractOpenAPISchema
+    public class V1TsSdkOrderbookPrepareListingPostRequestSell : AbstractOpenAPISchema
     {
+        private object _actualInstance;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="V1TsSdkOrderbookPrepareListingPostRequestSell" /> class
-        /// with the <see cref="ERC1155Item" /> class
+        ///     Initializes a new instance of the <see cref="V1TsSdkOrderbookPrepareListingPostRequestSell" /> class
+        ///     with the <see cref="ERC1155Item" /> class
         /// </summary>
         /// <param name="actualInstance">An instance of ERC1155Item.</param>
         public V1TsSdkOrderbookPrepareListingPostRequestSell(ERC1155Item actualInstance)
         {
-            this.IsNullable = false;
-            this.SchemaType= "oneOf";
-            this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
+            IsNullable = false;
+            SchemaType = "oneOf";
+            ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="V1TsSdkOrderbookPrepareListingPostRequestSell" /> class
-        /// with the <see cref="ERC721Item" /> class
+        ///     Initializes a new instance of the <see cref="V1TsSdkOrderbookPrepareListingPostRequestSell" /> class
+        ///     with the <see cref="ERC721Item" /> class
         /// </summary>
         /// <param name="actualInstance">An instance of ERC721Item.</param>
         public V1TsSdkOrderbookPrepareListingPostRequestSell(ERC721Item actualInstance)
         {
-            this.IsNullable = false;
-            this.SchemaType= "oneOf";
-            this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
+            IsNullable = false;
+            SchemaType = "oneOf";
+            ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
-
-        private Object _actualInstance;
-
         /// <summary>
-        /// Gets or Sets ActualInstance
+        ///     Gets or Sets ActualInstance
         /// </summary>
-        public override Object ActualInstance
+        public override object ActualInstance
         {
-            get
-            {
-                return _actualInstance;
-            }
+            get => _actualInstance;
             set
             {
                 if (value.GetType() == typeof(ERC1155Item) || value is ERC1155Item)
-                {
-                    this._actualInstance = value;
-                }
+                    _actualInstance = value;
                 else if (value.GetType() == typeof(ERC721Item) || value is ERC721Item)
-                {
-                    this._actualInstance = value;
-                }
+                    _actualInstance = value;
                 else
-                {
-                    throw new ArgumentException("Invalid instance found. Must be the following types: ERC1155Item, ERC721Item");
-                }
+                    throw new ArgumentException(
+                        "Invalid instance found. Must be the following types: ERC1155Item, ERC721Item");
             }
         }
 
         /// <summary>
-        /// Get the actual instance of `ERC1155Item`. If the actual instance is not `ERC1155Item`,
-        /// the InvalidClassException will be thrown
+        ///     Get the actual instance of `ERC1155Item`. If the actual instance is not `ERC1155Item`,
+        ///     the InvalidClassException will be thrown
         /// </summary>
         /// <returns>An instance of ERC1155Item</returns>
         public ERC1155Item GetERC1155Item()
         {
-            return (ERC1155Item)this.ActualInstance;
+            return (ERC1155Item)ActualInstance;
         }
 
         /// <summary>
-        /// Get the actual instance of `ERC721Item`. If the actual instance is not `ERC721Item`,
-        /// the InvalidClassException will be thrown
+        ///     Get the actual instance of `ERC721Item`. If the actual instance is not `ERC721Item`,
+        ///     the InvalidClassException will be thrown
         /// </summary>
         /// <returns>An instance of ERC721Item</returns>
         public ERC721Item GetERC721Item()
         {
-            return (ERC721Item)this.ActualInstance;
+            return (ERC721Item)ActualInstance;
         }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
             var sb = new StringBuilder();
             sb.Append("class V1TsSdkOrderbookPrepareListingPostRequestSell {\n");
-            sb.Append("  ActualInstance: ").Append(this.ActualInstance).Append("\n");
+            sb.Append("  ActualInstance: ").Append(ActualInstance).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public override string ToJson()
         {
-            return JsonConvert.SerializeObject(this.ActualInstance, V1TsSdkOrderbookPrepareListingPostRequestSell.SerializerSettings);
+            return JsonConvert.SerializeObject(ActualInstance, SerializerSettings);
         }
 
         /// <summary>
-        /// Converts the JSON string into an instance of V1TsSdkOrderbookPrepareListingPostRequestSell
+        ///     Converts the JSON string into an instance of V1TsSdkOrderbookPrepareListingPostRequestSell
         /// </summary>
         /// <param name="jsonString">JSON string</param>
         /// <returns>An instance of V1TsSdkOrderbookPrepareListingPostRequestSell</returns>
@@ -137,107 +122,108 @@ namespace Immutable.Ts.Model
         {
             V1TsSdkOrderbookPrepareListingPostRequestSell newV1TsSdkOrderbookPrepareListingPostRequestSell = null;
 
-            if (string.IsNullOrEmpty(jsonString))
-            {
-                return newV1TsSdkOrderbookPrepareListingPostRequestSell;
-            }
-            int match = 0;
-            List<string> matchedTypes = new List<string>();
+            if (string.IsNullOrEmpty(jsonString)) return newV1TsSdkOrderbookPrepareListingPostRequestSell;
+            var match = 0;
+            var matchedTypes = new List<string>();
 
             try
             {
                 // if it does not contains "AdditionalProperties", use SerializerSettings to deserialize
                 if (typeof(ERC1155Item).GetProperty("AdditionalProperties") == null)
-                {
-                    newV1TsSdkOrderbookPrepareListingPostRequestSell = new V1TsSdkOrderbookPrepareListingPostRequestSell(JsonConvert.DeserializeObject<ERC1155Item>(jsonString, V1TsSdkOrderbookPrepareListingPostRequestSell.SerializerSettings));
-                }
+                    newV1TsSdkOrderbookPrepareListingPostRequestSell =
+                        new V1TsSdkOrderbookPrepareListingPostRequestSell(
+                            JsonConvert.DeserializeObject<ERC1155Item>(jsonString, SerializerSettings));
                 else
-                {
-                    newV1TsSdkOrderbookPrepareListingPostRequestSell = new V1TsSdkOrderbookPrepareListingPostRequestSell(JsonConvert.DeserializeObject<ERC1155Item>(jsonString, V1TsSdkOrderbookPrepareListingPostRequestSell.AdditionalPropertiesSerializerSettings));
-                }
+                    newV1TsSdkOrderbookPrepareListingPostRequestSell =
+                        new V1TsSdkOrderbookPrepareListingPostRequestSell(
+                            JsonConvert.DeserializeObject<ERC1155Item>(jsonString,
+                                AdditionalPropertiesSerializerSettings));
                 matchedTypes.Add("ERC1155Item");
                 match++;
             }
             catch (Exception exception)
             {
                 // deserialization failed, try the next one
-                System.Diagnostics.Debug.WriteLine(string.Format("Failed to deserialize `{0}` into ERC1155Item: {1}", jsonString, exception.ToString()));
+                Debug.WriteLine("Failed to deserialize `{0}` into ERC1155Item: {1}", jsonString, exception);
             }
 
             try
             {
                 // if it does not contains "AdditionalProperties", use SerializerSettings to deserialize
                 if (typeof(ERC721Item).GetProperty("AdditionalProperties") == null)
-                {
-                    newV1TsSdkOrderbookPrepareListingPostRequestSell = new V1TsSdkOrderbookPrepareListingPostRequestSell(JsonConvert.DeserializeObject<ERC721Item>(jsonString, V1TsSdkOrderbookPrepareListingPostRequestSell.SerializerSettings));
-                }
+                    newV1TsSdkOrderbookPrepareListingPostRequestSell =
+                        new V1TsSdkOrderbookPrepareListingPostRequestSell(
+                            JsonConvert.DeserializeObject<ERC721Item>(jsonString, SerializerSettings));
                 else
-                {
-                    newV1TsSdkOrderbookPrepareListingPostRequestSell = new V1TsSdkOrderbookPrepareListingPostRequestSell(JsonConvert.DeserializeObject<ERC721Item>(jsonString, V1TsSdkOrderbookPrepareListingPostRequestSell.AdditionalPropertiesSerializerSettings));
-                }
+                    newV1TsSdkOrderbookPrepareListingPostRequestSell =
+                        new V1TsSdkOrderbookPrepareListingPostRequestSell(
+                            JsonConvert.DeserializeObject<ERC721Item>(jsonString,
+                                AdditionalPropertiesSerializerSettings));
                 matchedTypes.Add("ERC721Item");
                 match++;
             }
             catch (Exception exception)
             {
                 // deserialization failed, try the next one
-                System.Diagnostics.Debug.WriteLine(string.Format("Failed to deserialize `{0}` into ERC721Item: {1}", jsonString, exception.ToString()));
+                Debug.WriteLine("Failed to deserialize `{0}` into ERC721Item: {1}", jsonString, exception);
             }
 
             if (match == 0)
-            {
-                throw new InvalidDataException("The JSON string `" + jsonString + "` cannot be deserialized into any schema defined.");
-            }
-            else if (match > 1)
-            {
-                throw new InvalidDataException("The JSON string `" + jsonString + "` incorrectly matches more than one schema (should be exactly one match): " + String.Join(",", matchedTypes));
-            }
+                throw new InvalidDataException("The JSON string `" + jsonString +
+                                               "` cannot be deserialized into any schema defined.");
+            if (match > 1)
+                throw new InvalidDataException("The JSON string `" + jsonString +
+                                               "` incorrectly matches more than one schema (should be exactly one match): " +
+                                               string.Join(",", matchedTypes));
 
             // deserialization is considered successful at this point if no exception has been thrown.
             return newV1TsSdkOrderbookPrepareListingPostRequestSell;
         }
-
     }
 
     /// <summary>
-    /// Custom JSON converter for V1TsSdkOrderbookPrepareListingPostRequestSell
+    ///     Custom JSON converter for V1TsSdkOrderbookPrepareListingPostRequestSell
     /// </summary>
     public class V1TsSdkOrderbookPrepareListingPostRequestSellJsonConverter : JsonConverter
     {
         /// <summary>
-        /// To write the JSON string
+        ///     To write the JSON string
         /// </summary>
         /// <param name="writer">JSON writer</param>
         /// <param name="value">Object to be converted into a JSON string</param>
         /// <param name="serializer">JSON Serializer</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteRawValue((string)(typeof(V1TsSdkOrderbookPrepareListingPostRequestSell).GetMethod("ToJson").Invoke(value, null)));
+            writer.WriteRawValue((string)typeof(V1TsSdkOrderbookPrepareListingPostRequestSell).GetMethod("ToJson")
+                .Invoke(value, null));
         }
 
         /// <summary>
-        /// To convert a JSON string into an object
+        ///     To convert a JSON string into an object
         /// </summary>
         /// <param name="reader">JSON reader</param>
         /// <param name="objectType">Object type</param>
         /// <param name="existingValue">Existing value</param>
         /// <param name="serializer">JSON Serializer</param>
         /// <returns>The object converted from the JSON string</returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
         {
-            switch(reader.TokenType) 
+            switch (reader.TokenType)
             {
                 case JsonToken.StartObject:
-                    return V1TsSdkOrderbookPrepareListingPostRequestSell.FromJson(JObject.Load(reader).ToString(Formatting.None));
+                    return V1TsSdkOrderbookPrepareListingPostRequestSell.FromJson(JObject.Load(reader)
+                        .ToString(Formatting.None));
                 case JsonToken.StartArray:
-                    return V1TsSdkOrderbookPrepareListingPostRequestSell.FromJson(JArray.Load(reader).ToString(Formatting.None));
+                    return V1TsSdkOrderbookPrepareListingPostRequestSell.FromJson(JArray.Load(reader)
+                        .ToString(Formatting.None));
                 default:
                     return null;
             }
         }
 
         /// <summary>
-        /// Check if the object can be converted
+        ///     Check if the object can be converted
         /// </summary>
         /// <param name="objectType">Object type</param>
         /// <returns>True if the object can be converted</returns>
@@ -246,5 +232,4 @@ namespace Immutable.Ts.Model
             return false;
         }
     }
-
 }

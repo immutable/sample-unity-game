@@ -1,19 +1,24 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HyperCasual.Core
 {
     /// <summary>
-    /// A Generic state machine
+    ///     A Generic state machine
     /// </summary>
     public class StateMachine
     {
+        private Coroutine m_CurrentPlayCoroutine;
+
+        private Coroutine m_LoopCoroutine;
+        private bool m_PlayLock;
         public IState CurrentState { get; private set; }
 
+        public bool IsRunning => m_LoopCoroutine != null;
+
         /// <summary>
-        /// Finalizes the previous state and then runs the new state
+        ///     Finalizes the previous state and then runs the new state
         /// </summary>
         /// <param name="state"></param>
         /// <exception cref="ArgumentNullException"></exception>
@@ -23,22 +28,18 @@ namespace HyperCasual.Core
                 throw new ArgumentNullException(nameof(state));
 
             if (CurrentState != null && m_CurrentPlayCoroutine != null)
-            {
                 //interrupt currently executing state
                 Skip();
-            }
 
             CurrentState = state;
             Coroutines.StartCoroutine(Play());
         }
 
-        Coroutine m_CurrentPlayCoroutine;
-        bool m_PlayLock;
         /// <summary>
-        /// Runs the life cycle methods of the current state.
+        ///     Runs the life cycle methods of the current state.
         /// </summary>
         /// <returns></returns>
-        IEnumerator Play()
+        private IEnumerator Play()
         {
             if (!m_PlayLock)
             {
@@ -56,10 +57,10 @@ namespace HyperCasual.Core
         }
 
         /// <summary>
-        /// Interrupts the execution of the current state and finalizes it.
+        ///     Interrupts the execution of the current state and finalizes it.
         /// </summary>
         /// <exception cref="Exception"></exception>
-        void Skip()
+        private void Skip()
         {
             if (CurrentState == null)
                 throw new Exception($"{nameof(CurrentState)} is null!");
@@ -80,11 +81,10 @@ namespace HyperCasual.Core
             Run();
         }
 
-        Coroutine m_LoopCoroutine;
         /// <summary>
-        /// Turns on the main loop of the StateMachine.
-        /// This method does not resume previous state if called after Stop()
-        /// and the client needs to set the state manually.
+        ///     Turns on the main loop of the StateMachine.
+        ///     This method does not resume previous state if called after Stop()
+        ///     and the client needs to set the state manually.
         /// </summary>
         public virtual void Run()
         {
@@ -95,7 +95,7 @@ namespace HyperCasual.Core
         }
 
         /// <summary>
-        /// Turns off the main loop of the StateMachine
+        ///     Turns off the main loop of the StateMachine
         /// </summary>
         public void Stop()
         {
@@ -103,18 +103,16 @@ namespace HyperCasual.Core
                 return;
 
             if (CurrentState != null && m_CurrentPlayCoroutine != null)
-            {
                 //interrupt currently executing state
                 Skip();
-            }
 
             Coroutines.StopCoroutine(ref m_LoopCoroutine);
             CurrentState = null;
         }
 
         /// <summary>
-        /// The main update loop of the StateMachine.
-        /// It checks the status of the current state and its link to provide state sequencing
+        ///     The main update loop of the StateMachine.
+        ///     It checks the status of the current state and its link to provide state sequencing
         /// </summary>
         /// <returns></returns>
         protected virtual IEnumerator Loop()
@@ -122,7 +120,6 @@ namespace HyperCasual.Core
             while (true)
             {
                 if (CurrentState != null && m_CurrentPlayCoroutine == null) //current state is done playing
-                {
                     if (CurrentState.ValidateLinks(out var nextState))
                     {
                         if (m_PlayLock)
@@ -131,16 +128,14 @@ namespace HyperCasual.Core
                             CurrentState.Exit();
                             m_PlayLock = false;
                         }
+
                         CurrentState.DisableLinks();
                         SetCurrentState(nextState);
                         CurrentState.EnableLinks();
                     }
-                }
 
                 yield return null;
             }
         }
-
-        public bool IsRunning => m_LoopCoroutine != null;
     }
 }

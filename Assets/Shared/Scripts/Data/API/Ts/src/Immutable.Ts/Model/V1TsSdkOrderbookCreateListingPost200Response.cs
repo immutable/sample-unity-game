@@ -9,50 +9,40 @@
  */
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// The response schema for the create listing endpoint
+    ///     The response schema for the create listing endpoint
     /// </summary>
     [DataContract(Name = "_v1_ts_sdk_orderbook_createListing_post_200_response")]
-    public partial class V1TsSdkOrderbookCreateListingPost200Response
+    public class V1TsSdkOrderbookCreateListingPost200Response
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="V1TsSdkOrderbookCreateListingPost200Response" /> class.
+        ///     Initializes a new instance of the <see cref="V1TsSdkOrderbookCreateListingPost200Response" /> class.
         /// </summary>
         /// <param name="result">result.</param>
-        public V1TsSdkOrderbookCreateListingPost200Response(Order result = default(Order))
+        public V1TsSdkOrderbookCreateListingPost200Response(Order result = default)
         {
-            this.Result = result;
+            Result = result;
         }
 
         /// <summary>
-        /// Gets or Sets Result
+        ///     Gets or Sets Result
         /// </summary>
         [DataMember(Name = "result", EmitDefaultValue = false)]
         public Order Result { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class V1TsSdkOrderbookCreateListingPost200Response {\n");
             sb.Append("  Result: ").Append(Result).Append("\n");
             sb.Append("}\n");
@@ -60,14 +50,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

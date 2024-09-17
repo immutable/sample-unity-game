@@ -1,26 +1,19 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Net.Http;
-using HyperCasual.Core;
-using UnityEngine;
-using UnityEngine.UI;
-using Immutable.Passport;
 using TMPro;
-using UnityEngine.Networking;
-using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// Represents an asset in the player's inventory
+    ///     Represents an asset in the player's inventory
     /// </summary>
     public class BalanceObject : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI m_ValueText;
 
         /// <summary>
-        /// Gets the player's balance
+        ///     Gets the player's balance
         /// </summary>
         public async void UpdateBalance()
         {
@@ -31,7 +24,7 @@ namespace HyperCasual.Runner
 
             try
             {
-                string address = SaveManager.Instance.WalletAddress;
+                var address = SaveManager.Instance.WalletAddress;
 
                 if (string.IsNullOrEmpty(address))
                 {
@@ -40,21 +33,18 @@ namespace HyperCasual.Runner
                 }
 
                 using var client = new HttpClient();
-                HttpResponseMessage response = await client.GetAsync($"http://localhost:6060/balance?address={address}");
+                var response = await client.GetAsync($"http://localhost:6060/balance?address={address}");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    string responseBody = await response.Content.ReadAsStringAsync();
+                    var responseBody = await response.Content.ReadAsStringAsync();
                     Debug.Log($"Balance response: {responseBody}");
-                    BalanceResponse balanceResponse = JsonUtility.FromJson<BalanceResponse>(responseBody);
-                    if (balanceResponse?.quantity != null)
-                    {
-                        m_ValueText.text = $"{balanceResponse.quantity} IMR";
-                    }
+                    var balanceResponse = JsonUtility.FromJson<BalanceResponse>(responseBody);
+                    if (balanceResponse?.quantity != null) m_ValueText.text = $"{balanceResponse.quantity} IMR";
                 }
                 else
                 {
-                    Debug.Log($"Failed to get balance");
+                    Debug.Log("Failed to get balance");
                 }
             }
             catch (Exception ex)

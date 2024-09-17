@@ -9,51 +9,36 @@
  */
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// Defines OrderType
+    ///     Defines OrderType
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
     public enum OrderType
     {
         /// <summary>
-        /// Enum _0 for value: 0
+        ///     Enum _0 for value: 0
         /// </summary>
-        [EnumMember(Value = "0")]
-        _0,
+        [EnumMember(Value = "0")] _0,
 
         /// <summary>
-        /// Enum _1 for value: 1
+        ///     Enum _1 for value: 1
         /// </summary>
-        [EnumMember(Value = "1")]
-        _1,
+        [EnumMember(Value = "1")] _1,
 
         /// <summary>
-        /// Enum _2 for value: 2
+        ///     Enum _2 for value: 2
         /// </summary>
-        [EnumMember(Value = "2")]
-        _2,
+        [EnumMember(Value = "2")] _2,
 
         /// <summary>
-        /// Enum _3 for value: 3
+        ///     Enum _3 for value: 3
         /// </summary>
-        [EnumMember(Value = "3")]
-        _3
+        [EnumMember(Value = "3")] _3
     }
-
 }

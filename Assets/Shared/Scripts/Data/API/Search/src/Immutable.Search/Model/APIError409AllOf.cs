@@ -10,84 +10,79 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    /// APIError409AllOf
+    ///     APIError409AllOf
     /// </summary>
     [DataContract(Name = "APIError409_allOf")]
-    public partial class APIError409AllOf
+    public class APIError409AllOf
     {
         /// <summary>
-        /// Error Code
+        ///     Error Code
         /// </summary>
         /// <value>Error Code</value>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum CodeEnum
         {
             /// <summary>
-            /// Enum CONFLICTERROR for value: CONFLICT_ERROR
+            ///     Enum CONFLICTERROR for value: CONFLICT_ERROR
             /// </summary>
-            [EnumMember(Value = "CONFLICT_ERROR")]
-            CONFLICTERROR = 1
+            [EnumMember(Value = "CONFLICT_ERROR")] CONFLICTERROR = 1
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="APIError409AllOf" /> class.
+        /// </summary>
+        [JsonConstructorAttribute]
+        protected APIError409AllOf()
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="APIError409AllOf" /> class.
+        /// </summary>
+        /// <param name="code">Error Code (required).</param>
+        /// <param name="details">Additional details to help resolve the error (required).</param>
+        public APIError409AllOf(CodeEnum code = default, Dictionary<string, object> details = default)
+        {
+            Code = code;
+            // to ensure "details" is required (not null)
+            if (details == null)
+                throw new ArgumentNullException(
+                    "details is a required property for APIError409AllOf and cannot be null");
+            Details = details;
         }
 
 
         /// <summary>
-        /// Error Code
+        ///     Error Code
         /// </summary>
         /// <value>Error Code</value>
         /// <example>CONFLICT_ERROR</example>
         [DataMember(Name = "code", IsRequired = true, EmitDefaultValue = true)]
         public CodeEnum Code { get; set; }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="APIError409AllOf" /> class.
-        /// </summary>
-        [JsonConstructorAttribute]
-        protected APIError409AllOf() { }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="APIError409AllOf" /> class.
-        /// </summary>
-        /// <param name="code">Error Code (required).</param>
-        /// <param name="details">Additional details to help resolve the error (required).</param>
-        public APIError409AllOf(CodeEnum code = default(CodeEnum), Dictionary<string, Object> details = default(Dictionary<string, Object>))
-        {
-            this.Code = code;
-            // to ensure "details" is required (not null)
-            if (details == null)
-            {
-                throw new ArgumentNullException("details is a required property for APIError409AllOf and cannot be null");
-            }
-            this.Details = details;
-        }
 
         /// <summary>
-        /// Additional details to help resolve the error
+        ///     Additional details to help resolve the error
         /// </summary>
         /// <value>Additional details to help resolve the error</value>
         [DataMember(Name = "details", IsRequired = true, EmitDefaultValue = true)]
-        public Dictionary<string, Object> Details { get; set; }
+        public Dictionary<string, object> Details { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class APIError409AllOf {\n");
             sb.Append("  Code: ").Append(Code).Append("\n");
             sb.Append("  Details: ").Append(Details).Append("\n");
@@ -96,14 +91,12 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

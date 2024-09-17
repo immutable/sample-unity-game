@@ -10,230 +10,207 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
-using System.Reflection;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// The Order status
+    ///     The Order status
     /// </summary>
     [JsonConverter(typeof(OrderStatusJsonConverter))]
     [DataContract(Name = "OrderStatus")]
-    public partial class OrderStatus : AbstractOpenAPISchema
+    public class OrderStatus : AbstractOpenAPISchema
     {
+        private object _actualInstance;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrderStatus" /> class
-        /// with the <see cref="OrderStatusOneOf" /> class
+        ///     Initializes a new instance of the <see cref="OrderStatus" /> class
+        ///     with the <see cref="OrderStatusOneOf" /> class
         /// </summary>
         /// <param name="actualInstance">An instance of OrderStatusOneOf.</param>
         public OrderStatus(OrderStatusOneOf actualInstance)
         {
-            this.IsNullable = false;
-            this.SchemaType= "oneOf";
-            this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
+            IsNullable = false;
+            SchemaType = "oneOf";
+            ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrderStatus" /> class
-        /// with the <see cref="OrderStatusOneOf1" /> class
+        ///     Initializes a new instance of the <see cref="OrderStatus" /> class
+        ///     with the <see cref="OrderStatusOneOf1" /> class
         /// </summary>
         /// <param name="actualInstance">An instance of OrderStatusOneOf1.</param>
         public OrderStatus(OrderStatusOneOf1 actualInstance)
         {
-            this.IsNullable = false;
-            this.SchemaType= "oneOf";
-            this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
+            IsNullable = false;
+            SchemaType = "oneOf";
+            ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrderStatus" /> class
-        /// with the <see cref="OrderStatusOneOf2" /> class
+        ///     Initializes a new instance of the <see cref="OrderStatus" /> class
+        ///     with the <see cref="OrderStatusOneOf2" /> class
         /// </summary>
         /// <param name="actualInstance">An instance of OrderStatusOneOf2.</param>
         public OrderStatus(OrderStatusOneOf2 actualInstance)
         {
-            this.IsNullable = false;
-            this.SchemaType= "oneOf";
-            this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
+            IsNullable = false;
+            SchemaType = "oneOf";
+            ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrderStatus" /> class
-        /// with the <see cref="OrderStatusOneOf3" /> class
+        ///     Initializes a new instance of the <see cref="OrderStatus" /> class
+        ///     with the <see cref="OrderStatusOneOf3" /> class
         /// </summary>
         /// <param name="actualInstance">An instance of OrderStatusOneOf3.</param>
         public OrderStatus(OrderStatusOneOf3 actualInstance)
         {
-            this.IsNullable = false;
-            this.SchemaType= "oneOf";
-            this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
+            IsNullable = false;
+            SchemaType = "oneOf";
+            ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrderStatus" /> class
-        /// with the <see cref="OrderStatusOneOf4" /> class
+        ///     Initializes a new instance of the <see cref="OrderStatus" /> class
+        ///     with the <see cref="OrderStatusOneOf4" /> class
         /// </summary>
         /// <param name="actualInstance">An instance of OrderStatusOneOf4.</param>
         public OrderStatus(OrderStatusOneOf4 actualInstance)
         {
-            this.IsNullable = false;
-            this.SchemaType= "oneOf";
-            this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
+            IsNullable = false;
+            SchemaType = "oneOf";
+            ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrderStatus" /> class
-        /// with the <see cref="OrderStatusOneOf5" /> class
+        ///     Initializes a new instance of the <see cref="OrderStatus" /> class
+        ///     with the <see cref="OrderStatusOneOf5" /> class
         /// </summary>
         /// <param name="actualInstance">An instance of OrderStatusOneOf5.</param>
         public OrderStatus(OrderStatusOneOf5 actualInstance)
         {
-            this.IsNullable = false;
-            this.SchemaType= "oneOf";
-            this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
+            IsNullable = false;
+            SchemaType = "oneOf";
+            ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
-
-        private Object _actualInstance;
-
         /// <summary>
-        /// Gets or Sets ActualInstance
+        ///     Gets or Sets ActualInstance
         /// </summary>
-        public override Object ActualInstance
+        public override object ActualInstance
         {
-            get
-            {
-                return _actualInstance;
-            }
+            get => _actualInstance;
             set
             {
                 if (value.GetType() == typeof(OrderStatusOneOf) || value is OrderStatusOneOf)
-                {
-                    this._actualInstance = value;
-                }
+                    _actualInstance = value;
                 else if (value.GetType() == typeof(OrderStatusOneOf1) || value is OrderStatusOneOf1)
-                {
-                    this._actualInstance = value;
-                }
+                    _actualInstance = value;
                 else if (value.GetType() == typeof(OrderStatusOneOf2) || value is OrderStatusOneOf2)
-                {
-                    this._actualInstance = value;
-                }
+                    _actualInstance = value;
                 else if (value.GetType() == typeof(OrderStatusOneOf3) || value is OrderStatusOneOf3)
-                {
-                    this._actualInstance = value;
-                }
+                    _actualInstance = value;
                 else if (value.GetType() == typeof(OrderStatusOneOf4) || value is OrderStatusOneOf4)
-                {
-                    this._actualInstance = value;
-                }
+                    _actualInstance = value;
                 else if (value.GetType() == typeof(OrderStatusOneOf5) || value is OrderStatusOneOf5)
-                {
-                    this._actualInstance = value;
-                }
+                    _actualInstance = value;
                 else
-                {
-                    throw new ArgumentException("Invalid instance found. Must be the following types: OrderStatusOneOf, OrderStatusOneOf1, OrderStatusOneOf2, OrderStatusOneOf3, OrderStatusOneOf4, OrderStatusOneOf5");
-                }
+                    throw new ArgumentException(
+                        "Invalid instance found. Must be the following types: OrderStatusOneOf, OrderStatusOneOf1, OrderStatusOneOf2, OrderStatusOneOf3, OrderStatusOneOf4, OrderStatusOneOf5");
             }
         }
 
         /// <summary>
-        /// Get the actual instance of `OrderStatusOneOf`. If the actual instance is not `OrderStatusOneOf`,
-        /// the InvalidClassException will be thrown
+        ///     Get the actual instance of `OrderStatusOneOf`. If the actual instance is not `OrderStatusOneOf`,
+        ///     the InvalidClassException will be thrown
         /// </summary>
         /// <returns>An instance of OrderStatusOneOf</returns>
         public OrderStatusOneOf GetOrderStatusOneOf()
         {
-            return (OrderStatusOneOf)this.ActualInstance;
+            return (OrderStatusOneOf)ActualInstance;
         }
 
         /// <summary>
-        /// Get the actual instance of `OrderStatusOneOf1`. If the actual instance is not `OrderStatusOneOf1`,
-        /// the InvalidClassException will be thrown
+        ///     Get the actual instance of `OrderStatusOneOf1`. If the actual instance is not `OrderStatusOneOf1`,
+        ///     the InvalidClassException will be thrown
         /// </summary>
         /// <returns>An instance of OrderStatusOneOf1</returns>
         public OrderStatusOneOf1 GetOrderStatusOneOf1()
         {
-            return (OrderStatusOneOf1)this.ActualInstance;
+            return (OrderStatusOneOf1)ActualInstance;
         }
 
         /// <summary>
-        /// Get the actual instance of `OrderStatusOneOf2`. If the actual instance is not `OrderStatusOneOf2`,
-        /// the InvalidClassException will be thrown
+        ///     Get the actual instance of `OrderStatusOneOf2`. If the actual instance is not `OrderStatusOneOf2`,
+        ///     the InvalidClassException will be thrown
         /// </summary>
         /// <returns>An instance of OrderStatusOneOf2</returns>
         public OrderStatusOneOf2 GetOrderStatusOneOf2()
         {
-            return (OrderStatusOneOf2)this.ActualInstance;
+            return (OrderStatusOneOf2)ActualInstance;
         }
 
         /// <summary>
-        /// Get the actual instance of `OrderStatusOneOf3`. If the actual instance is not `OrderStatusOneOf3`,
-        /// the InvalidClassException will be thrown
+        ///     Get the actual instance of `OrderStatusOneOf3`. If the actual instance is not `OrderStatusOneOf3`,
+        ///     the InvalidClassException will be thrown
         /// </summary>
         /// <returns>An instance of OrderStatusOneOf3</returns>
         public OrderStatusOneOf3 GetOrderStatusOneOf3()
         {
-            return (OrderStatusOneOf3)this.ActualInstance;
+            return (OrderStatusOneOf3)ActualInstance;
         }
 
         /// <summary>
-        /// Get the actual instance of `OrderStatusOneOf4`. If the actual instance is not `OrderStatusOneOf4`,
-        /// the InvalidClassException will be thrown
+        ///     Get the actual instance of `OrderStatusOneOf4`. If the actual instance is not `OrderStatusOneOf4`,
+        ///     the InvalidClassException will be thrown
         /// </summary>
         /// <returns>An instance of OrderStatusOneOf4</returns>
         public OrderStatusOneOf4 GetOrderStatusOneOf4()
         {
-            return (OrderStatusOneOf4)this.ActualInstance;
+            return (OrderStatusOneOf4)ActualInstance;
         }
 
         /// <summary>
-        /// Get the actual instance of `OrderStatusOneOf5`. If the actual instance is not `OrderStatusOneOf5`,
-        /// the InvalidClassException will be thrown
+        ///     Get the actual instance of `OrderStatusOneOf5`. If the actual instance is not `OrderStatusOneOf5`,
+        ///     the InvalidClassException will be thrown
         /// </summary>
         /// <returns>An instance of OrderStatusOneOf5</returns>
         public OrderStatusOneOf5 GetOrderStatusOneOf5()
         {
-            return (OrderStatusOneOf5)this.ActualInstance;
+            return (OrderStatusOneOf5)ActualInstance;
         }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
             var sb = new StringBuilder();
             sb.Append("class OrderStatus {\n");
-            sb.Append("  ActualInstance: ").Append(this.ActualInstance).Append("\n");
+            sb.Append("  ActualInstance: ").Append(ActualInstance).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public override string ToJson()
         {
-            return JsonConvert.SerializeObject(this.ActualInstance, OrderStatus.SerializerSettings);
+            return JsonConvert.SerializeObject(ActualInstance, SerializerSettings);
         }
 
         /// <summary>
-        /// Converts the JSON string into an instance of OrderStatus
+        ///     Converts the JSON string into an instance of OrderStatus
         /// </summary>
         /// <param name="jsonString">JSON string</param>
         /// <returns>An instance of OrderStatus</returns>
@@ -241,175 +218,171 @@ namespace Immutable.Ts.Model
         {
             OrderStatus newOrderStatus = null;
 
-            if (string.IsNullOrEmpty(jsonString))
-            {
-                return newOrderStatus;
-            }
-            int match = 0;
-            List<string> matchedTypes = new List<string>();
+            if (string.IsNullOrEmpty(jsonString)) return newOrderStatus;
+            var match = 0;
+            var matchedTypes = new List<string>();
 
             try
             {
                 // if it does not contains "AdditionalProperties", use SerializerSettings to deserialize
                 if (typeof(OrderStatusOneOf).GetProperty("AdditionalProperties") == null)
-                {
-                    newOrderStatus = new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf>(jsonString, OrderStatus.SerializerSettings));
-                }
+                    newOrderStatus =
+                        new OrderStatus(
+                            JsonConvert.DeserializeObject<OrderStatusOneOf>(jsonString, SerializerSettings));
                 else
-                {
-                    newOrderStatus = new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf>(jsonString, OrderStatus.AdditionalPropertiesSerializerSettings));
-                }
+                    newOrderStatus =
+                        new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf>(jsonString,
+                            AdditionalPropertiesSerializerSettings));
                 matchedTypes.Add("OrderStatusOneOf");
                 match++;
             }
             catch (Exception exception)
             {
                 // deserialization failed, try the next one
-                System.Diagnostics.Debug.WriteLine(string.Format("Failed to deserialize `{0}` into OrderStatusOneOf: {1}", jsonString, exception.ToString()));
+                Debug.WriteLine("Failed to deserialize `{0}` into OrderStatusOneOf: {1}", jsonString, exception);
             }
 
             try
             {
                 // if it does not contains "AdditionalProperties", use SerializerSettings to deserialize
                 if (typeof(OrderStatusOneOf1).GetProperty("AdditionalProperties") == null)
-                {
-                    newOrderStatus = new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf1>(jsonString, OrderStatus.SerializerSettings));
-                }
+                    newOrderStatus =
+                        new OrderStatus(
+                            JsonConvert.DeserializeObject<OrderStatusOneOf1>(jsonString, SerializerSettings));
                 else
-                {
-                    newOrderStatus = new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf1>(jsonString, OrderStatus.AdditionalPropertiesSerializerSettings));
-                }
+                    newOrderStatus =
+                        new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf1>(jsonString,
+                            AdditionalPropertiesSerializerSettings));
                 matchedTypes.Add("OrderStatusOneOf1");
                 match++;
             }
             catch (Exception exception)
             {
                 // deserialization failed, try the next one
-                System.Diagnostics.Debug.WriteLine(string.Format("Failed to deserialize `{0}` into OrderStatusOneOf1: {1}", jsonString, exception.ToString()));
+                Debug.WriteLine("Failed to deserialize `{0}` into OrderStatusOneOf1: {1}", jsonString, exception);
             }
 
             try
             {
                 // if it does not contains "AdditionalProperties", use SerializerSettings to deserialize
                 if (typeof(OrderStatusOneOf2).GetProperty("AdditionalProperties") == null)
-                {
-                    newOrderStatus = new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf2>(jsonString, OrderStatus.SerializerSettings));
-                }
+                    newOrderStatus =
+                        new OrderStatus(
+                            JsonConvert.DeserializeObject<OrderStatusOneOf2>(jsonString, SerializerSettings));
                 else
-                {
-                    newOrderStatus = new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf2>(jsonString, OrderStatus.AdditionalPropertiesSerializerSettings));
-                }
+                    newOrderStatus =
+                        new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf2>(jsonString,
+                            AdditionalPropertiesSerializerSettings));
                 matchedTypes.Add("OrderStatusOneOf2");
                 match++;
             }
             catch (Exception exception)
             {
                 // deserialization failed, try the next one
-                System.Diagnostics.Debug.WriteLine(string.Format("Failed to deserialize `{0}` into OrderStatusOneOf2: {1}", jsonString, exception.ToString()));
+                Debug.WriteLine("Failed to deserialize `{0}` into OrderStatusOneOf2: {1}", jsonString, exception);
             }
 
             try
             {
                 // if it does not contains "AdditionalProperties", use SerializerSettings to deserialize
                 if (typeof(OrderStatusOneOf3).GetProperty("AdditionalProperties") == null)
-                {
-                    newOrderStatus = new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf3>(jsonString, OrderStatus.SerializerSettings));
-                }
+                    newOrderStatus =
+                        new OrderStatus(
+                            JsonConvert.DeserializeObject<OrderStatusOneOf3>(jsonString, SerializerSettings));
                 else
-                {
-                    newOrderStatus = new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf3>(jsonString, OrderStatus.AdditionalPropertiesSerializerSettings));
-                }
+                    newOrderStatus =
+                        new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf3>(jsonString,
+                            AdditionalPropertiesSerializerSettings));
                 matchedTypes.Add("OrderStatusOneOf3");
                 match++;
             }
             catch (Exception exception)
             {
                 // deserialization failed, try the next one
-                System.Diagnostics.Debug.WriteLine(string.Format("Failed to deserialize `{0}` into OrderStatusOneOf3: {1}", jsonString, exception.ToString()));
+                Debug.WriteLine("Failed to deserialize `{0}` into OrderStatusOneOf3: {1}", jsonString, exception);
             }
 
             try
             {
                 // if it does not contains "AdditionalProperties", use SerializerSettings to deserialize
                 if (typeof(OrderStatusOneOf4).GetProperty("AdditionalProperties") == null)
-                {
-                    newOrderStatus = new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf4>(jsonString, OrderStatus.SerializerSettings));
-                }
+                    newOrderStatus =
+                        new OrderStatus(
+                            JsonConvert.DeserializeObject<OrderStatusOneOf4>(jsonString, SerializerSettings));
                 else
-                {
-                    newOrderStatus = new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf4>(jsonString, OrderStatus.AdditionalPropertiesSerializerSettings));
-                }
+                    newOrderStatus =
+                        new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf4>(jsonString,
+                            AdditionalPropertiesSerializerSettings));
                 matchedTypes.Add("OrderStatusOneOf4");
                 match++;
             }
             catch (Exception exception)
             {
                 // deserialization failed, try the next one
-                System.Diagnostics.Debug.WriteLine(string.Format("Failed to deserialize `{0}` into OrderStatusOneOf4: {1}", jsonString, exception.ToString()));
+                Debug.WriteLine("Failed to deserialize `{0}` into OrderStatusOneOf4: {1}", jsonString, exception);
             }
 
             try
             {
                 // if it does not contains "AdditionalProperties", use SerializerSettings to deserialize
                 if (typeof(OrderStatusOneOf5).GetProperty("AdditionalProperties") == null)
-                {
-                    newOrderStatus = new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf5>(jsonString, OrderStatus.SerializerSettings));
-                }
+                    newOrderStatus =
+                        new OrderStatus(
+                            JsonConvert.DeserializeObject<OrderStatusOneOf5>(jsonString, SerializerSettings));
                 else
-                {
-                    newOrderStatus = new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf5>(jsonString, OrderStatus.AdditionalPropertiesSerializerSettings));
-                }
+                    newOrderStatus =
+                        new OrderStatus(JsonConvert.DeserializeObject<OrderStatusOneOf5>(jsonString,
+                            AdditionalPropertiesSerializerSettings));
                 matchedTypes.Add("OrderStatusOneOf5");
                 match++;
             }
             catch (Exception exception)
             {
                 // deserialization failed, try the next one
-                System.Diagnostics.Debug.WriteLine(string.Format("Failed to deserialize `{0}` into OrderStatusOneOf5: {1}", jsonString, exception.ToString()));
+                Debug.WriteLine("Failed to deserialize `{0}` into OrderStatusOneOf5: {1}", jsonString, exception);
             }
 
             if (match == 0)
-            {
-                throw new InvalidDataException("The JSON string `" + jsonString + "` cannot be deserialized into any schema defined.");
-            }
-            else if (match > 1)
-            {
-                throw new InvalidDataException("The JSON string `" + jsonString + "` incorrectly matches more than one schema (should be exactly one match): " + String.Join(",", matchedTypes));
-            }
+                throw new InvalidDataException("The JSON string `" + jsonString +
+                                               "` cannot be deserialized into any schema defined.");
+            if (match > 1)
+                throw new InvalidDataException("The JSON string `" + jsonString +
+                                               "` incorrectly matches more than one schema (should be exactly one match): " +
+                                               string.Join(",", matchedTypes));
 
             // deserialization is considered successful at this point if no exception has been thrown.
             return newOrderStatus;
         }
-
     }
 
     /// <summary>
-    /// Custom JSON converter for OrderStatus
+    ///     Custom JSON converter for OrderStatus
     /// </summary>
     public class OrderStatusJsonConverter : JsonConverter
     {
         /// <summary>
-        /// To write the JSON string
+        ///     To write the JSON string
         /// </summary>
         /// <param name="writer">JSON writer</param>
         /// <param name="value">Object to be converted into a JSON string</param>
         /// <param name="serializer">JSON Serializer</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteRawValue((string)(typeof(OrderStatus).GetMethod("ToJson").Invoke(value, null)));
+            writer.WriteRawValue((string)typeof(OrderStatus).GetMethod("ToJson").Invoke(value, null));
         }
 
         /// <summary>
-        /// To convert a JSON string into an object
+        ///     To convert a JSON string into an object
         /// </summary>
         /// <param name="reader">JSON reader</param>
         /// <param name="objectType">Object type</param>
         /// <param name="existingValue">Existing value</param>
         /// <param name="serializer">JSON Serializer</param>
         /// <returns>The object converted from the JSON string</returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
         {
-            switch(reader.TokenType) 
+            switch (reader.TokenType)
             {
                 case JsonToken.StartObject:
                     return OrderStatus.FromJson(JObject.Load(reader).ToString(Formatting.None));
@@ -421,7 +394,7 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Check if the object can be converted
+        ///     Check if the object can be converted
         /// </summary>
         /// <param name="objectType">Object type</param>
         /// <returns>True if the object can be converted</returns>
@@ -430,5 +403,4 @@ namespace Immutable.Ts.Model
             return false;
         }
     }
-
 }

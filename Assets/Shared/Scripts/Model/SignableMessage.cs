@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Immutable.Ts.Model;
 
@@ -8,10 +7,10 @@ namespace HyperCasual.Runner
     [Serializable]
     public class TsEIP712TypedData
     {
-        public TypedDataDomain domain;
-        public Dictionary<string, List<RecordStringTypedDataFieldValueInner>> types;
-        public Dictionary<string, Object> message;
         public string primaryType;
+        public TypedDataDomain domain;
+        public Dictionary<string, object> message;
+        public Dictionary<string, List<RecordStringTypedDataFieldValueInner>> types;
     }
 
     [Serializable]

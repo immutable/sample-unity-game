@@ -9,57 +9,48 @@
  */
 
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// heartbeat
+    ///     heartbeat
     /// </summary>
     [DataContract(Name = "_v1_heartbeat_get_200_response")]
-    public partial class V1HeartbeatGet200Response
+    public class V1HeartbeatGet200Response
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="V1HeartbeatGet200Response" /> class.
+        ///     Initializes a new instance of the <see cref="V1HeartbeatGet200Response" /> class.
         /// </summary>
         /// <param name="status">status.</param>
-        public V1HeartbeatGet200Response(string status = default(string))
+        public V1HeartbeatGet200Response(string status = default)
         {
-            this.Status = status;
-            this.AdditionalProperties = new Dictionary<string, object>();
+            Status = status;
+            AdditionalProperties = new Dictionary<string, object>();
         }
 
         /// <summary>
-        /// Gets or Sets Status
+        ///     Gets or Sets Status
         /// </summary>
         [DataMember(Name = "status", EmitDefaultValue = false)]
         public string Status { get; set; }
 
         /// <summary>
-        /// Gets or Sets additional properties
+        ///     Gets or Sets additional properties
         /// </summary>
         [JsonExtensionData]
         public IDictionary<string, object> AdditionalProperties { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class V1HeartbeatGet200Response {\n");
             sb.Append("  Status: ").Append(Status).Append("\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
@@ -68,14 +59,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

@@ -10,93 +10,85 @@
 
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// ERC20Item
+    ///     ERC20Item
     /// </summary>
     [DataContract(Name = "ERC20Item")]
-    public partial class ERC20Item
+    public class ERC20Item
     {
         /// <summary>
-        /// Defines Type
+        ///     Defines Type
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum TypeEnum
         {
             /// <summary>
-            /// Enum ERC20 for value: ERC20
+            ///     Enum ERC20 for value: ERC20
             /// </summary>
-            [EnumMember(Value = "ERC20")]
-            ERC20
+            [EnumMember(Value = "ERC20")] ERC20
         }
 
-
         /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
-        public TypeEnum Type { get; set; }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ERC20Item" /> class.
+        ///     Initializes a new instance of the <see cref="ERC20Item" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected ERC20Item() { }
+        protected ERC20Item()
+        {
+        }
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="ERC20Item" /> class.
+        ///     Initializes a new instance of the <see cref="ERC20Item" /> class.
         /// </summary>
         /// <param name="amount">amount (required).</param>
         /// <param name="contractAddress">contractAddress (required).</param>
         /// <param name="type">type (required).</param>
-        public ERC20Item(string amount = default(string), string contractAddress = default(string), TypeEnum type = default(TypeEnum))
+        public ERC20Item(string amount = default, string contractAddress = default, TypeEnum type = default)
         {
             // to ensure "amount" is required (not null)
             if (amount == null)
-            {
                 throw new ArgumentNullException("amount is a required property for ERC20Item and cannot be null");
-            }
-            this.Amount = amount;
+            Amount = amount;
             // to ensure "contractAddress" is required (not null)
             if (contractAddress == null)
-            {
-                throw new ArgumentNullException("contractAddress is a required property for ERC20Item and cannot be null");
-            }
-            this.ContractAddress = contractAddress;
-            this.Type = type;
+                throw new ArgumentNullException(
+                    "contractAddress is a required property for ERC20Item and cannot be null");
+            ContractAddress = contractAddress;
+            Type = type;
         }
 
+
         /// <summary>
-        /// Gets or Sets Amount
+        ///     Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = true)]
+        public TypeEnum Type { get; set; }
+
+        /// <summary>
+        ///     Gets or Sets Amount
         /// </summary>
         [DataMember(Name = "amount", IsRequired = true, EmitDefaultValue = true)]
         public string Amount { get; set; }
 
         /// <summary>
-        /// Gets or Sets ContractAddress
+        ///     Gets or Sets ContractAddress
         /// </summary>
         [DataMember(Name = "contractAddress", IsRequired = true, EmitDefaultValue = true)]
         public string ContractAddress { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class ERC20Item {\n");
             sb.Append("  Amount: ").Append(Amount).Append("\n");
             sb.Append("  ContractAddress: ").Append(ContractAddress).Append("\n");
@@ -106,14 +98,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

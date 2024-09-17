@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using HyperCasual.Core;
 using HyperCasual.Runner;
@@ -8,43 +7,37 @@ using UnityEngine;
 namespace HyperCasual.Gameplay
 {
     /// <summary>
-    /// This View contains level selection screen functionalities
+    ///     This View contains level selection screen functionalities
     /// </summary>
     public class LevelSelectionScreen : View
     {
-        [SerializeField]
-        HyperCasualButton m_QuickPlayButton;
-        [SerializeField]
-        HyperCasualButton m_BackButton;
-        [Space]
-        [SerializeField]
-        LevelSelectButton m_LevelButtonPrefab;
-        [SerializeField]
-        RectTransform m_LevelButtonsRoot;
-        [SerializeField]
-        AbstractGameEvent m_NextLevelEvent;
-        [SerializeField]
-        AbstractGameEvent m_BackEvent;
+        [SerializeField] private HyperCasualButton m_QuickPlayButton;
+
+        [SerializeField] private HyperCasualButton m_BackButton;
+
+        [Space][SerializeField] private LevelSelectButton m_LevelButtonPrefab;
+
+        [SerializeField] private RectTransform m_LevelButtonsRoot;
+
+        [SerializeField] private AbstractGameEvent m_NextLevelEvent;
+
+        [SerializeField] private AbstractGameEvent m_BackEvent;
 #if UNITY_EDITOR
-        [SerializeField]
-        bool m_UnlockAllLevels;
+        [SerializeField] private bool m_UnlockAllLevels;
 #endif
 
-        readonly List<LevelSelectButton> m_Buttons = new();
+        private readonly List<LevelSelectButton> m_Buttons = new();
 
-        void Start()
+        private void Start()
         {
             var levels = SequenceManager.Instance.Levels;
             var levelProgress = SaveManager.Instance.LevelProgress;
-            for (int i = 0; i < levels.Length; i++)
-            {
-                m_Buttons.Add(Instantiate(m_LevelButtonPrefab, m_LevelButtonsRoot));
-            }
+            for (var i = 0; i < levels.Length; i++) m_Buttons.Add(Instantiate(m_LevelButtonPrefab, m_LevelButtonsRoot));
 
             ResetButtonData();
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             ResetButtonData();
 
@@ -52,16 +45,16 @@ namespace HyperCasual.Gameplay
             m_BackButton.AddListener(OnBackButtonClicked);
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             m_QuickPlayButton.RemoveListener(OnQuickPlayButtonClicked);
             m_BackButton.RemoveListener(OnBackButtonClicked);
         }
 
-        void ResetButtonData()
+        private void ResetButtonData()
         {
             var levelProgress = SaveManager.Instance.LevelProgress;
-            for (int i = 0; i < m_Buttons.Count; i++)
+            for (var i = 0; i < m_Buttons.Count; i++)
             {
                 var button = m_Buttons[i];
                 var unlocked = i <= levelProgress;
@@ -72,7 +65,7 @@ namespace HyperCasual.Gameplay
             }
         }
 
-        void OnClick(int startingIndex)
+        private void OnClick(int startingIndex)
         {
             if (startingIndex < 0)
                 throw new Exception("Button is not initialized");
@@ -81,12 +74,12 @@ namespace HyperCasual.Gameplay
             m_NextLevelEvent.Raise();
         }
 
-        void OnQuickPlayButtonClicked()
+        private void OnQuickPlayButtonClicked()
         {
             OnClick(SaveManager.Instance.LevelProgress);
         }
 
-        void OnBackButtonClicked()
+        private void OnBackButtonClicked()
         {
             m_BackEvent.Raise();
         }

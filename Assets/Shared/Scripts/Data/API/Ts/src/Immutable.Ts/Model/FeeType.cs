@@ -9,51 +9,38 @@
  */
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// Defines FeeType
+    ///     Defines FeeType
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
     public enum FeeType
     {
         /// <summary>
-        /// Enum MAKERECOSYSTEM for value: MAKER_ECOSYSTEM
+        ///     Enum MAKERECOSYSTEM for value: MAKER_ECOSYSTEM
         /// </summary>
         [EnumMember(Value = "MAKER_ECOSYSTEM")]
         MAKERECOSYSTEM,
 
         /// <summary>
-        /// Enum TAKERECOSYSTEM for value: TAKER_ECOSYSTEM
+        ///     Enum TAKERECOSYSTEM for value: TAKER_ECOSYSTEM
         /// </summary>
         [EnumMember(Value = "TAKER_ECOSYSTEM")]
         TAKERECOSYSTEM,
 
         /// <summary>
-        /// Enum PROTOCOL for value: PROTOCOL
+        ///     Enum PROTOCOL for value: PROTOCOL
         /// </summary>
-        [EnumMember(Value = "PROTOCOL")]
-        PROTOCOL,
+        [EnumMember(Value = "PROTOCOL")] PROTOCOL,
 
         /// <summary>
-        /// Enum ROYALTY for value: ROYALTY
+        ///     Enum ROYALTY for value: ROYALTY
         /// </summary>
-        [EnumMember(Value = "ROYALTY")]
-        ROYALTY
+        [EnumMember(Value = "ROYALTY")] ROYALTY
     }
-
 }

@@ -9,74 +9,67 @@
  */
 
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// SignableActionMessage
+    ///     SignableActionMessage
     /// </summary>
     [DataContract(Name = "SignableAction_message")]
-    public partial class SignableActionMessage
+    public class SignableActionMessage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SignableActionMessage" /> class.
+        ///     Initializes a new instance of the <see cref="SignableActionMessage" /> class.
         /// </summary>
         /// <param name="domain">domain.</param>
         /// <param name="types">types.</param>
         /// <param name="message">message.</param>
         /// <param name="primaryType">primaryType.</param>
-        public SignableActionMessage(TypedDataDomain domain = default(TypedDataDomain), Dictionary<string, List<RecordStringTypedDataFieldValueInner>> types = default(Dictionary<string, List<RecordStringTypedDataFieldValueInner>>), Dictionary<string, Object> message = default(Dictionary<string, Object>), string primaryType = default(string))
+        public SignableActionMessage(TypedDataDomain domain = default,
+            Dictionary<string, List<RecordStringTypedDataFieldValueInner>> types = default,
+            Dictionary<string, object> message = default, string primaryType = default)
         {
-            this.Domain = domain;
-            this.Types = types;
-            this.Message = message;
-            this.PrimaryType = primaryType;
+            Domain = domain;
+            Types = types;
+            Message = message;
+            PrimaryType = primaryType;
         }
 
         /// <summary>
-        /// Gets or Sets Domain
+        ///     Gets or Sets Domain
         /// </summary>
         [DataMember(Name = "domain", EmitDefaultValue = false)]
         public TypedDataDomain Domain { get; set; }
 
         /// <summary>
-        /// Gets or Sets Types
+        ///     Gets or Sets Types
         /// </summary>
         [DataMember(Name = "types", EmitDefaultValue = false)]
         public Dictionary<string, List<RecordStringTypedDataFieldValueInner>> Types { get; set; }
 
         /// <summary>
-        /// Gets or Sets Message
+        ///     Gets or Sets Message
         /// </summary>
         [DataMember(Name = "message", EmitDefaultValue = false)]
-        public Dictionary<string, Object> Message { get; set; }
+        public Dictionary<string, object> Message { get; set; }
 
         /// <summary>
-        /// Gets or Sets PrimaryType
+        ///     Gets or Sets PrimaryType
         /// </summary>
         [DataMember(Name = "primaryType", EmitDefaultValue = false)]
         public string PrimaryType { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class SignableActionMessage {\n");
             sb.Append("  Domain: ").Append(Domain).Append("\n");
             sb.Append("  Types: ").Append(Types).Append("\n");
@@ -87,14 +80,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

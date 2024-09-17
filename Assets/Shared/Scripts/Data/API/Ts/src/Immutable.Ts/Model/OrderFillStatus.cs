@@ -9,58 +9,48 @@
  */
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// OrderFillStatus
+    ///     OrderFillStatus
     /// </summary>
     [DataContract(Name = "Order_fillStatus")]
-    public partial class OrderFillStatus
+    public class OrderFillStatus
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrderFillStatus" /> class.
+        ///     Initializes a new instance of the <see cref="OrderFillStatus" /> class.
         /// </summary>
         /// <param name="denominator">denominator.</param>
         /// <param name="numerator">numerator.</param>
-        public OrderFillStatus(string denominator = default(string), string numerator = default(string))
+        public OrderFillStatus(string denominator = default, string numerator = default)
         {
-            this.Denominator = denominator;
-            this.Numerator = numerator;
+            Denominator = denominator;
+            Numerator = numerator;
         }
 
         /// <summary>
-        /// Gets or Sets Denominator
+        ///     Gets or Sets Denominator
         /// </summary>
         [DataMember(Name = "denominator", EmitDefaultValue = false)]
         public string Denominator { get; set; }
 
         /// <summary>
-        /// Gets or Sets Numerator
+        ///     Gets or Sets Numerator
         /// </summary>
         [DataMember(Name = "numerator", EmitDefaultValue = false)]
         public string Numerator { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class OrderFillStatus {\n");
             sb.Append("  Denominator: ").Append(Denominator).Append("\n");
             sb.Append("  Numerator: ").Append(Numerator).Append("\n");
@@ -69,14 +59,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

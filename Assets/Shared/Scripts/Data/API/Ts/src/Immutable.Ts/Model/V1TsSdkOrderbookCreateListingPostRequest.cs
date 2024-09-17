@@ -10,98 +10,90 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// V1TsSdkOrderbookCreateListingPostRequest
+    ///     V1TsSdkOrderbookCreateListingPostRequest
     /// </summary>
     [DataContract(Name = "_v1_ts_sdk_orderbook_createListing_post_request")]
-    public partial class V1TsSdkOrderbookCreateListingPostRequest
+    public class V1TsSdkOrderbookCreateListingPostRequest
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="V1TsSdkOrderbookCreateListingPostRequest" /> class.
+        ///     Initializes a new instance of the <see cref="V1TsSdkOrderbookCreateListingPostRequest" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected V1TsSdkOrderbookCreateListingPostRequest() { }
+        protected V1TsSdkOrderbookCreateListingPostRequest()
+        {
+        }
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="V1TsSdkOrderbookCreateListingPostRequest" /> class.
+        ///     Initializes a new instance of the <see cref="V1TsSdkOrderbookCreateListingPostRequest" /> class.
         /// </summary>
         /// <param name="makerFees">makerFees (required).</param>
         /// <param name="orderComponents">orderComponents (required).</param>
         /// <param name="orderHash">orderHash (required).</param>
         /// <param name="orderSignature">orderSignature (required).</param>
-        public V1TsSdkOrderbookCreateListingPostRequest(List<FeeValue> makerFees = default(List<FeeValue>), OrderComponents orderComponents = default(OrderComponents), string orderHash = default(string), string orderSignature = default(string))
+        public V1TsSdkOrderbookCreateListingPostRequest(List<FeeValue> makerFees = default,
+            OrderComponents orderComponents = default, string orderHash = default, string orderSignature = default)
         {
             // to ensure "makerFees" is required (not null)
             if (makerFees == null)
-            {
-                throw new ArgumentNullException("makerFees is a required property for V1TsSdkOrderbookCreateListingPostRequest and cannot be null");
-            }
-            this.MakerFees = makerFees;
+                throw new ArgumentNullException(
+                    "makerFees is a required property for V1TsSdkOrderbookCreateListingPostRequest and cannot be null");
+            MakerFees = makerFees;
             // to ensure "orderComponents" is required (not null)
             if (orderComponents == null)
-            {
-                throw new ArgumentNullException("orderComponents is a required property for V1TsSdkOrderbookCreateListingPostRequest and cannot be null");
-            }
-            this.OrderComponents = orderComponents;
+                throw new ArgumentNullException(
+                    "orderComponents is a required property for V1TsSdkOrderbookCreateListingPostRequest and cannot be null");
+            OrderComponents = orderComponents;
             // to ensure "orderHash" is required (not null)
             if (orderHash == null)
-            {
-                throw new ArgumentNullException("orderHash is a required property for V1TsSdkOrderbookCreateListingPostRequest and cannot be null");
-            }
-            this.OrderHash = orderHash;
+                throw new ArgumentNullException(
+                    "orderHash is a required property for V1TsSdkOrderbookCreateListingPostRequest and cannot be null");
+            OrderHash = orderHash;
             // to ensure "orderSignature" is required (not null)
             if (orderSignature == null)
-            {
-                throw new ArgumentNullException("orderSignature is a required property for V1TsSdkOrderbookCreateListingPostRequest and cannot be null");
-            }
-            this.OrderSignature = orderSignature;
+                throw new ArgumentNullException(
+                    "orderSignature is a required property for V1TsSdkOrderbookCreateListingPostRequest and cannot be null");
+            OrderSignature = orderSignature;
         }
 
         /// <summary>
-        /// Gets or Sets MakerFees
+        ///     Gets or Sets MakerFees
         /// </summary>
         [DataMember(Name = "makerFees", IsRequired = true, EmitDefaultValue = true)]
         public List<FeeValue> MakerFees { get; set; }
 
         /// <summary>
-        /// Gets or Sets OrderComponents
+        ///     Gets or Sets OrderComponents
         /// </summary>
         [DataMember(Name = "orderComponents", IsRequired = true, EmitDefaultValue = true)]
         public OrderComponents OrderComponents { get; set; }
 
         /// <summary>
-        /// Gets or Sets OrderHash
+        ///     Gets or Sets OrderHash
         /// </summary>
         [DataMember(Name = "orderHash", IsRequired = true, EmitDefaultValue = true)]
         public string OrderHash { get; set; }
 
         /// <summary>
-        /// Gets or Sets OrderSignature
+        ///     Gets or Sets OrderSignature
         /// </summary>
         [DataMember(Name = "orderSignature", IsRequired = true, EmitDefaultValue = true)]
         public string OrderSignature { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class V1TsSdkOrderbookCreateListingPostRequest {\n");
             sb.Append("  MakerFees: ").Append(MakerFees).Append("\n");
             sb.Append("  OrderComponents: ").Append(OrderComponents).Append("\n");
@@ -112,14 +104,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

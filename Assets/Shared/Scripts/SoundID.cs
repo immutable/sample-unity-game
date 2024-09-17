@@ -1,7 +1,7 @@
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// An ID that the audio system knows audio clips by
+    ///     An ID that the audio system knows audio clips by
     /// </summary>
     public enum SoundID
     {

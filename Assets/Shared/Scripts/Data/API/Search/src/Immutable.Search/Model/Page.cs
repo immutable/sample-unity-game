@@ -10,76 +10,72 @@
 
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    /// Pagination properties
+    ///     Pagination properties
     /// </summary>
     [DataContract(Name = "Page")]
-    public partial class Page
+    public class Page
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Page" /> class.
+        ///     Initializes a new instance of the <see cref="Page" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected Page() { }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Page" /> class.
-        /// </summary>
-        /// <param name="previousCursor">First item as an encoded string (required).</param>
-        /// <param name="nextCursor">Last item as an encoded string (required).</param>
-        public Page(string previousCursor = default(string), string nextCursor = default(string))
+        protected Page()
         {
-            // to ensure "previousCursor" is required (not null)
-            if (previousCursor == null)
-            {
-                throw new ArgumentNullException("previousCursor is a required property for Page and cannot be null");
-            }
-            this.PreviousCursor = previousCursor;
-            // to ensure "nextCursor" is required (not null)
-            if (nextCursor == null)
-            {
-                throw new ArgumentNullException("nextCursor is a required property for Page and cannot be null");
-            }
-            this.NextCursor = nextCursor;
         }
 
         /// <summary>
-        /// First item as an encoded string
+        ///     Initializes a new instance of the <see cref="Page" /> class.
+        /// </summary>
+        /// <param name="previousCursor">First item as an encoded string (required).</param>
+        /// <param name="nextCursor">Last item as an encoded string (required).</param>
+        public Page(string previousCursor = default, string nextCursor = default)
+        {
+            // to ensure "previousCursor" is required (not null)
+            if (previousCursor == null)
+                throw new ArgumentNullException("previousCursor is a required property for Page and cannot be null");
+            PreviousCursor = previousCursor;
+            // to ensure "nextCursor" is required (not null)
+            if (nextCursor == null)
+                throw new ArgumentNullException("nextCursor is a required property for Page and cannot be null");
+            NextCursor = nextCursor;
+        }
+
+        /// <summary>
+        ///     First item as an encoded string
         /// </summary>
         /// <value>First item as an encoded string</value>
-        /// <example>ewogICJ0eXBlIjogInByZXYiLAogICJpdGVtIjogewogICAgImlkIjogNjI3NTEzMCwKICAgICJjcmVhdGVkX2F0IjogIjIwMjItMDktMTNUMTc6MDQ6MTIuMDI0MTI2WiIKICB9Cn0&#x3D;</example>
+        /// <example>
+        ///     ewogICJ0eXBlIjogInByZXYiLAogICJpdGVtIjogewogICAgImlkIjogNjI3NTEzMCwKICAgICJjcmVhdGVkX2F0IjogIjIwMjItMDktMTNUMTc6MDQ6MTIuMDI0MTI2WiIKICB9Cn0
+        ///     &#x3D;
+        /// </example>
         [DataMember(Name = "previous_cursor", IsRequired = true, EmitDefaultValue = true)]
         public string PreviousCursor { get; set; }
 
         /// <summary>
-        /// Last item as an encoded string
+        ///     Last item as an encoded string
         /// </summary>
         /// <value>Last item as an encoded string</value>
-        /// <example>ewogICJ0eXBlIjogInByZXYiLAogICJpdGVtIjogewogICAgImlkIjogNjI3NTEzMCwKICAgICJjcmVhdGVkX2F0IjogIjIwMjItMDktMTNUMTc6MDQ6MTIuMDI0MTI2WiIKICB9Cn0&#x3D;</example>
+        /// <example>
+        ///     ewogICJ0eXBlIjogInByZXYiLAogICJpdGVtIjogewogICAgImlkIjogNjI3NTEzMCwKICAgICJjcmVhdGVkX2F0IjogIjIwMjItMDktMTNUMTc6MDQ6MTIuMDI0MTI2WiIKICB9Cn0
+        ///     &#x3D;
+        /// </example>
         [DataMember(Name = "next_cursor", IsRequired = true, EmitDefaultValue = true)]
         public string NextCursor { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class Page {\n");
             sb.Append("  PreviousCursor: ").Append(PreviousCursor).Append("\n");
             sb.Append("  NextCursor: ").Append(NextCursor).Append("\n");
@@ -88,14 +84,12 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

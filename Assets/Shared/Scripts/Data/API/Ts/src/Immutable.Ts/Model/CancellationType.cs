@@ -9,46 +9,32 @@
  */
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// Whether the cancellation was done on-chain or off-chain or as a result of an underfunded account
+    ///     Whether the cancellation was done on-chain or off-chain or as a result of an underfunded account
     /// </summary>
     /// <value>Whether the cancellation was done on-chain or off-chain or as a result of an underfunded account</value>
     [JsonConverter(typeof(StringEnumConverter))]
     public enum CancellationType
     {
         /// <summary>
-        /// Enum ONCHAIN for value: ON_CHAIN
+        ///     Enum ONCHAIN for value: ON_CHAIN
         /// </summary>
-        [EnumMember(Value = "ON_CHAIN")]
-        ONCHAIN,
+        [EnumMember(Value = "ON_CHAIN")] ONCHAIN,
 
         /// <summary>
-        /// Enum OFFCHAIN for value: OFF_CHAIN
+        ///     Enum OFFCHAIN for value: OFF_CHAIN
         /// </summary>
-        [EnumMember(Value = "OFF_CHAIN")]
-        OFFCHAIN,
+        [EnumMember(Value = "OFF_CHAIN")] OFFCHAIN,
 
         /// <summary>
-        /// Enum UNDERFUNDED for value: UNDERFUNDED
+        ///     Enum UNDERFUNDED for value: UNDERFUNDED
         /// </summary>
-        [EnumMember(Value = "UNDERFUNDED")]
-        UNDERFUNDED
+        [EnumMember(Value = "UNDERFUNDED")] UNDERFUNDED
     }
-
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -6,18 +5,16 @@ using Object = UnityEngine.Object;
 namespace HyperCasual.Core
 {
     /// <summary>
-    /// Encapsulates utility Coroutine methods.
-    /// This class enables us to run coroutines from non-MonoBehaviour classes.
-    /// It instantiates a hidden GameObject and adds an empty MonoBehaviour component
-    /// to it that is used for starting/stopping coroutines.
+    ///     Encapsulates utility Coroutine methods.
+    ///     This class enables us to run coroutines from non-MonoBehaviour classes.
+    ///     It instantiates a hidden GameObject and adds an empty MonoBehaviour component
+    ///     to it that is used for starting/stopping coroutines.
     /// </summary>
     public static class Coroutines
     {
-        public class CoroutineHelper : MonoBehaviour { }
+        private static MonoBehaviour s_Instance;
 
-        static MonoBehaviour s_Instance;
-
-        static MonoBehaviour Instance
+        private static MonoBehaviour Instance
         {
             get
             {
@@ -34,14 +31,17 @@ namespace HyperCasual.Core
         }
 
         /// <summary>
-        /// Starts a coroutine
+        ///     Starts a coroutine
         /// </summary>
         /// <param name="routine">The coroutine to start</param>
         /// <returns>The started coroutine</returns>
-        public static Coroutine StartCoroutine(IEnumerator routine) => Instance.StartCoroutine(routine);
+        public static Coroutine StartCoroutine(IEnumerator routine)
+        {
+            return Instance.StartCoroutine(routine);
+        }
 
         /// <summary>
-        /// Stops a coroutine
+        ///     Stops a coroutine
         /// </summary>
         /// <param name="coroutine">The coroutine to stop</param>
         public static void StopCoroutine(ref Coroutine coroutine)
@@ -51,6 +51,10 @@ namespace HyperCasual.Core
                 Instance.StopCoroutine(coroutine);
                 coroutine = null;
             }
+        }
+
+        public class CoroutineHelper : MonoBehaviour
+        {
         }
     }
 }

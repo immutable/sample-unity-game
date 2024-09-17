@@ -1,36 +1,31 @@
+using System;
 using HyperCasual.Core;
+using Immutable.Passport;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using Immutable.Passport;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// This View contains celebration screen functionalities
+    ///     This View contains celebration screen functionalities
     /// </summary>
     public class SetupWalletScreen : View
     {
+        [SerializeField] private TextMeshProUGUI m_Title;
 
-        [SerializeField]
-        TextMeshProUGUI m_Title;
-        [SerializeField]
-        GameObject m_Loading;
-        [SerializeField]
-        GameObject m_Success;
-        [SerializeField]
-        TextMeshProUGUI m_ErrorMessage;
-        [SerializeField]
-        HyperCasualButton m_NextButton;
-        [SerializeField]
-        HyperCasualButton m_TryAgainButton;
-        [SerializeField]
-        AbstractGameEvent m_MintEvent;
-        [SerializeField]
-        AbstractGameEvent m_NextEvent;
+        [SerializeField] private GameObject m_Loading;
+
+        [SerializeField] private GameObject m_Success;
+
+        [SerializeField] private TextMeshProUGUI m_ErrorMessage;
+
+        [SerializeField] private HyperCasualButton m_NextButton;
+
+        [SerializeField] private HyperCasualButton m_TryAgainButton;
+
+        [SerializeField] private AbstractGameEvent m_MintEvent;
+
+        [SerializeField] private AbstractGameEvent m_NextEvent;
 
         public void OnEnable()
         {
@@ -57,7 +52,7 @@ namespace HyperCasual.Runner
                 // Set up provider
                 await Passport.Instance.ConnectEvm();
                 // Set up wallet (includes creating a wallet for new players)
-                List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
+                var accounts = await Passport.Instance.ZkEvmRequestAccounts();
                 SaveManager.Instance.WalletAddress = accounts[0]; // Grab player's first wallet
 
                 m_Title.text = "Your wallet has been successfully set up!";

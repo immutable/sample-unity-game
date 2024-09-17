@@ -14,15 +14,31 @@ using System.Collections.Generic;
 namespace Immutable.Search.Client
 {
     /// <summary>
-    /// <see cref="GlobalConfiguration"/> provides a compile-time extension point for globally configuring
-    /// API Clients.
+    ///     <see cref="GlobalConfiguration" /> provides a compile-time extension point for globally configuring
+    ///     API Clients.
     /// </summary>
     /// <remarks>
-    /// A customized implementation via partial class may reside in another file and may
-    /// be excluded from automatic generation via a .openapi-generator-ignore file.
+    ///     A customized implementation via partial class may reside in another file and may
+    ///     be excluded from automatic generation via a .openapi-generator-ignore file.
     /// </remarks>
-    public partial class GlobalConfiguration : Configuration
+    public class GlobalConfiguration : Configuration
     {
+        /// <summary>
+        ///     Gets or sets the default Configuration.
+        /// </summary>
+        /// <value>Configuration.</value>
+        public static IReadableConfiguration Instance
+        {
+            get => _globalConfiguration;
+            set
+            {
+                lock (GlobalConfigSync)
+                {
+                    _globalConfiguration = value;
+                }
+            }
+        }
+
         #region Private Members
 
         private static readonly object GlobalConfigSync = new { };
@@ -38,7 +54,9 @@ namespace Immutable.Search.Client
         }
 
         /// <inheritdoc />
-        public GlobalConfiguration(IDictionary<string, string> defaultHeader, IDictionary<string, string> apiKey, IDictionary<string, string> apiKeyPrefix, string basePath = "http://localhost:3000/api") : base(defaultHeader, apiKey, apiKeyPrefix, basePath)
+        public GlobalConfiguration(IDictionary<string, string> defaultHeader, IDictionary<string, string> apiKey,
+            IDictionary<string, string> apiKeyPrefix, string basePath = "http://localhost:3000/api") : base(
+            defaultHeader, apiKey, apiKeyPrefix, basePath)
         {
         }
 
@@ -48,21 +66,5 @@ namespace Immutable.Search.Client
         }
 
         #endregion Constructors
-
-        /// <summary>
-        /// Gets or sets the default Configuration.
-        /// </summary>
-        /// <value>Configuration.</value>
-        public static IReadableConfiguration Instance
-        {
-            get { return _globalConfiguration; }
-            set
-            {
-                lock (GlobalConfigSync)
-                {
-                    _globalConfiguration = value;
-                }
-            }
-        }
     }
 }

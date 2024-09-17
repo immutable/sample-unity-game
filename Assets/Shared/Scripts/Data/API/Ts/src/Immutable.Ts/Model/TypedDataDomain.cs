@@ -9,82 +9,73 @@
  */
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// TypedDataDomain
+    ///     TypedDataDomain
     /// </summary>
     [DataContract(Name = "TypedDataDomain")]
-    public partial class TypedDataDomain
+    public class TypedDataDomain
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TypedDataDomain" /> class.
+        ///     Initializes a new instance of the <see cref="TypedDataDomain" /> class.
         /// </summary>
         /// <param name="chainId">chainId.</param>
         /// <param name="name">name.</param>
         /// <param name="salt">salt.</param>
         /// <param name="verifyingContract">verifyingContract.</param>
         /// <param name="varVersion">varVersion.</param>
-        public TypedDataDomain(string chainId = default(string), string name = default(string), string salt = default(string), string verifyingContract = default(string), string varVersion = default(string))
+        public TypedDataDomain(string chainId = default, string name = default, string salt = default,
+            string verifyingContract = default, string varVersion = default)
         {
-            this.ChainId = chainId;
-            this.Name = name;
-            this.Salt = salt;
-            this.VerifyingContract = verifyingContract;
-            this.VarVersion = varVersion;
+            ChainId = chainId;
+            Name = name;
+            Salt = salt;
+            VerifyingContract = verifyingContract;
+            VarVersion = varVersion;
         }
 
         /// <summary>
-        /// Gets or Sets ChainId
+        ///     Gets or Sets ChainId
         /// </summary>
         [DataMember(Name = "chainId", EmitDefaultValue = false)]
         public string ChainId { get; set; }
 
         /// <summary>
-        /// Gets or Sets Name
+        ///     Gets or Sets Name
         /// </summary>
         [DataMember(Name = "name", EmitDefaultValue = false)]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or Sets Salt
+        ///     Gets or Sets Salt
         /// </summary>
         [DataMember(Name = "salt", EmitDefaultValue = false)]
         public string Salt { get; set; }
 
         /// <summary>
-        /// Gets or Sets VerifyingContract
+        ///     Gets or Sets VerifyingContract
         /// </summary>
         [DataMember(Name = "verifyingContract", EmitDefaultValue = false)]
         public string VerifyingContract { get; set; }
 
         /// <summary>
-        /// Gets or Sets VarVersion
+        ///     Gets or Sets VarVersion
         /// </summary>
         [DataMember(Name = "version", EmitDefaultValue = false)]
         public string VarVersion { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class TypedDataDomain {\n");
             sb.Append("  ChainId: ").Append(ChainId).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
@@ -96,14 +87,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

@@ -1,58 +1,54 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using HyperCasual.Core;
 using HyperCasual.Runner;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System;
-using System.Collections;
-using UnityEngine;
 
 namespace HyperCasual.Gameplay
 {
     /// <summary>
-    /// This singleton determines the state of the game based on observed game events.
+    ///     This singleton determines the state of the game based on observed game events.
     /// </summary>
     [Serializable]
     public class SequenceManager : AbstractSingleton<SequenceManager>
     {
-        [SerializeField]
-        GameObject[] m_PreloadedAssets;
-        [SerializeField]
-        AbstractLevelData[] m_Levels;
-        [SerializeField]
-        GameObject[] m_LevelManagers;
-        public AbstractLevelData[] Levels => m_Levels;
-        [Header("Events")]
-        [SerializeField] AbstractGameEvent m_ContinueEvent;
-        [SerializeField] AbstractGameEvent m_BackEvent;
-        [SerializeField] AbstractGameEvent m_WinEvent;
-        [SerializeField] AbstractGameEvent m_LoseEvent;
-        [SerializeField] AbstractGameEvent m_PauseEvent;
-        [SerializeField] AbstractGameEvent m_SetupWalletEvent;
-        [SerializeField] AbstractGameEvent m_MintEvent;
-        [SerializeField] AbstractGameEvent m_UnlockedSkinEvent;
-        [SerializeField] AbstractGameEvent m_CollectEvent;
-        [SerializeField] AbstractGameEvent m_InventoryEvent;
-        [SerializeField] AbstractGameEvent m_MarketplaceEvent;
-        [Header("Other")]
-        [SerializeField]
-        float m_SplashDelay = 2f;
+        [SerializeField] private GameObject[] m_PreloadedAssets;
 
-        readonly StateMachine m_StateMachine = new();
-        IState m_SplashScreenState;
-        IState m_MainMenuState;
-        IState m_InventoryState;
-        IState m_MarketplaceState;
-        IState m_LevelSelectState;
-        readonly List<IState> m_LevelStates = new();
+        [SerializeField] private AbstractLevelData[] m_Levels;
+
+        [SerializeField] private GameObject[] m_LevelManagers;
+
+        [Header("Events")][SerializeField] private AbstractGameEvent m_ContinueEvent;
+
+        [SerializeField] private AbstractGameEvent m_BackEvent;
+        [SerializeField] private AbstractGameEvent m_WinEvent;
+        [SerializeField] private AbstractGameEvent m_LoseEvent;
+        [SerializeField] private AbstractGameEvent m_PauseEvent;
+        [SerializeField] private AbstractGameEvent m_SetupWalletEvent;
+        [SerializeField] private AbstractGameEvent m_MintEvent;
+        [SerializeField] private AbstractGameEvent m_UnlockedSkinEvent;
+        [SerializeField] private AbstractGameEvent m_CollectEvent;
+        [SerializeField] private AbstractGameEvent m_InventoryEvent;
+        [SerializeField] private AbstractGameEvent m_MarketplaceEvent;
+
+        [Header("Other")][SerializeField] private float m_SplashDelay = 2f;
+
+        private readonly List<IState> m_LevelStates = new();
+
+        private readonly StateMachine m_StateMachine = new();
         public IState m_CurrentLevel;
+        private IState m_InventoryState;
+        private IState m_LevelSelectState;
+        private IState m_MainMenuState;
+        private IState m_MarketplaceState;
 
-        SceneController m_SceneController;
+        private SceneController m_SceneController;
+        private IState m_SplashScreenState;
+        public AbstractLevelData[] Levels => m_Levels;
 
         /// <summary>
-        /// Initializes the SequenceManager
+        ///     Initializes the SequenceManager
         /// </summary>
         public void Initialize()
         {
@@ -68,15 +64,12 @@ namespace HyperCasual.Gameplay
             SetStartingLevel(0);
         }
 
-        void InstantiatePreloadedAssets()
+        private void InstantiatePreloadedAssets()
         {
-            foreach (var asset in m_PreloadedAssets)
-            {
-                Instantiate(asset);
-            }
+            foreach (var asset in m_PreloadedAssets) Instantiate(asset);
         }
 
-        void CreateMenuNavigationSequence()
+        private void CreateMenuNavigationSequence()
         {
             // Create states
             var splashDelay = new DelayState(m_SplashDelay);
@@ -96,7 +89,7 @@ namespace HyperCasual.Gameplay
             m_MarketplaceState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
         }
 
-        void CreateLevelSequences()
+        private void CreateLevelSequences()
         {
             m_LevelStates.Clear();
 
@@ -106,13 +99,9 @@ namespace HyperCasual.Gameplay
             {
                 IState state = null;
                 if (level is SceneRef sceneLevel)
-                {
                     state = CreateLevelState(sceneLevel.m_ScenePath);
-                }
                 else
-                {
                     state = CreateLevelState(level);
-                }
                 lastState = AddLevelPeripheralStates(state, m_LevelSelectState, lastState);
             }
 
@@ -137,26 +126,26 @@ namespace HyperCasual.Gameplay
         }
 
         /// <summary>
-        /// Creates a level state from a scene
+        ///     Creates a level state from a scene
         /// </summary>
         /// <param name="scenePath"></param>
         /// <returns></returns>
-        IState CreateLevelState(string scenePath)
+        private IState CreateLevelState(string scenePath)
         {
             return new LoadSceneState(m_SceneController, scenePath);
         }
 
         /// <summary>
-        /// Creates a level state from a level data
+        ///     Creates a level state from a level data
         /// </summary>
         /// <param name="levelData"></param>
         /// <returns></returns>
-        IState CreateLevelState(AbstractLevelData levelData)
+        private IState CreateLevelState(AbstractLevelData levelData)
         {
             return new LoadLevelFromDef(m_SceneController, levelData, m_LevelManagers);
         }
 
-        IState AddLevelPeripheralStates(IState loadLevelState, IState quitState, IState lastState)
+        private IState AddLevelPeripheralStates(IState loadLevelState, IState quitState, IState lastState)
         {
             //Create states
             m_LevelStates.Add(loadLevelState);
@@ -201,7 +190,7 @@ namespace HyperCasual.Gameplay
         }
 
         /// <summary>
-        /// Changes the starting gameplay level in the sequence of levels by making a slight change to its links
+        ///     Changes the starting gameplay level in the sequence of levels by making a slight change to its links
         /// </summary>
         /// <param name="index">Index of the level to set as starting level</param>
         public void SetStartingLevel(int index)
@@ -212,30 +201,30 @@ namespace HyperCasual.Gameplay
             m_LevelSelectState.EnableLinks();
         }
 
-        void ShowUI<T>() where T : View
+        private void ShowUI<T>() where T : View
         {
             UIManager.Instance.Show<T>();
         }
 
-        void OnMainMenuDisplayed()
+        private void OnMainMenuDisplayed()
         {
             ShowUI<MainMenu>();
             AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
         }
 
-        void OnInventoryDisplayed()
+        private void OnInventoryDisplayed()
         {
             ShowUI<InventoryScreen>();
             AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
         }
 
-        void OnMarketplaceDisplayed()
+        private void OnMarketplaceDisplayed()
         {
             ShowUI<MarketplaceScreen>();
             AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
         }
 
-        void OnWinScreenDisplayed(IState currentLevel)
+        private void OnWinScreenDisplayed(IState currentLevel)
         {
             UIManager.Instance.Show<LevelCompleteScreen>();
             var currentLevelIndex = m_LevelStates.IndexOf(currentLevel);
@@ -248,13 +237,13 @@ namespace HyperCasual.Gameplay
                 SaveManager.Instance.LevelProgress = levelProgress + 1;
         }
 
-        void OnLevelSelectionDisplayed()
+        private void OnLevelSelectionDisplayed()
         {
             ShowUI<LevelSelectionScreen>();
             AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
         }
 
-        void OnGamePlayStarted(IState current)
+        private void OnGamePlayStarted(IState current)
         {
             m_CurrentLevel = current;
             ShowUI<Hud>();

@@ -10,126 +10,110 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
-using System.Reflection;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// Any type that can be used where a big number is needed.
+    ///     Any type that can be used where a big number is needed.
     /// </summary>
     [JsonConverter(typeof(BigNumberishJsonConverter))]
     [DataContract(Name = "BigNumberish")]
-    public partial class BigNumberish : AbstractOpenAPISchema
+    public class BigNumberish : AbstractOpenAPISchema
     {
+        private object _actualInstance;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="BigNumberish" /> class
-        /// with the <see cref="string" /> class
+        ///     Initializes a new instance of the <see cref="BigNumberish" /> class
+        ///     with the <see cref="string" /> class
         /// </summary>
         /// <param name="actualInstance">An instance of string.</param>
         public BigNumberish(string actualInstance)
         {
-            this.IsNullable = false;
-            this.SchemaType= "oneOf";
-            this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
+            IsNullable = false;
+            SchemaType = "oneOf";
+            ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BigNumberish" /> class
-        /// with the <see cref="decimal" /> class
+        ///     Initializes a new instance of the <see cref="BigNumberish" /> class
+        ///     with the <see cref="decimal" /> class
         /// </summary>
         /// <param name="actualInstance">An instance of decimal.</param>
         public BigNumberish(decimal actualInstance)
         {
-            this.IsNullable = false;
-            this.SchemaType= "oneOf";
-            this.ActualInstance = actualInstance;
+            IsNullable = false;
+            SchemaType = "oneOf";
+            ActualInstance = actualInstance;
         }
 
-
-        private Object _actualInstance;
-
         /// <summary>
-        /// Gets or Sets ActualInstance
+        ///     Gets or Sets ActualInstance
         /// </summary>
-        public override Object ActualInstance
+        public override object ActualInstance
         {
-            get
-            {
-                return _actualInstance;
-            }
+            get => _actualInstance;
             set
             {
                 if (value.GetType() == typeof(decimal) || value is decimal)
-                {
-                    this._actualInstance = value;
-                }
+                    _actualInstance = value;
                 else if (value.GetType() == typeof(string) || value is string)
-                {
-                    this._actualInstance = value;
-                }
+                    _actualInstance = value;
                 else
-                {
                     throw new ArgumentException("Invalid instance found. Must be the following types: decimal, string");
-                }
             }
         }
 
         /// <summary>
-        /// Get the actual instance of `string`. If the actual instance is not `string`,
-        /// the InvalidClassException will be thrown
+        ///     Get the actual instance of `string`. If the actual instance is not `string`,
+        ///     the InvalidClassException will be thrown
         /// </summary>
         /// <returns>An instance of string</returns>
         public string GetString()
         {
-            return (string)this.ActualInstance;
+            return (string)ActualInstance;
         }
 
         /// <summary>
-        /// Get the actual instance of `decimal`. If the actual instance is not `decimal`,
-        /// the InvalidClassException will be thrown
+        ///     Get the actual instance of `decimal`. If the actual instance is not `decimal`,
+        ///     the InvalidClassException will be thrown
         /// </summary>
         /// <returns>An instance of decimal</returns>
         public decimal GetDecimal()
         {
-            return (decimal)this.ActualInstance;
+            return (decimal)ActualInstance;
         }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
             var sb = new StringBuilder();
             sb.Append("class BigNumberish {\n");
-            sb.Append("  ActualInstance: ").Append(this.ActualInstance).Append("\n");
+            sb.Append("  ActualInstance: ").Append(ActualInstance).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public override string ToJson()
         {
-            return JsonConvert.SerializeObject(this.ActualInstance, BigNumberish.SerializerSettings);
+            return JsonConvert.SerializeObject(ActualInstance, SerializerSettings);
         }
 
         /// <summary>
-        /// Converts the JSON string into an instance of BigNumberish
+        ///     Converts the JSON string into an instance of BigNumberish
         /// </summary>
         /// <param name="jsonString">JSON string</param>
         /// <returns>An instance of BigNumberish</returns>
@@ -137,99 +121,93 @@ namespace Immutable.Ts.Model
         {
             BigNumberish newBigNumberish = null;
 
-            if (string.IsNullOrEmpty(jsonString))
-            {
-                return newBigNumberish;
-            }
-            int match = 0;
-            List<string> matchedTypes = new List<string>();
+            if (string.IsNullOrEmpty(jsonString)) return newBigNumberish;
+            var match = 0;
+            var matchedTypes = new List<string>();
 
             try
             {
                 // if it does not contains "AdditionalProperties", use SerializerSettings to deserialize
                 if (typeof(decimal).GetProperty("AdditionalProperties") == null)
-                {
-                    newBigNumberish = new BigNumberish(JsonConvert.DeserializeObject<decimal>(jsonString, BigNumberish.SerializerSettings));
-                }
+                    newBigNumberish =
+                        new BigNumberish(JsonConvert.DeserializeObject<decimal>(jsonString, SerializerSettings));
                 else
-                {
-                    newBigNumberish = new BigNumberish(JsonConvert.DeserializeObject<decimal>(jsonString, BigNumberish.AdditionalPropertiesSerializerSettings));
-                }
+                    newBigNumberish =
+                        new BigNumberish(JsonConvert.DeserializeObject<decimal>(jsonString,
+                            AdditionalPropertiesSerializerSettings));
                 matchedTypes.Add("decimal");
                 match++;
             }
             catch (Exception exception)
             {
                 // deserialization failed, try the next one
-                System.Diagnostics.Debug.WriteLine(string.Format("Failed to deserialize `{0}` into decimal: {1}", jsonString, exception.ToString()));
+                Debug.WriteLine("Failed to deserialize `{0}` into decimal: {1}", jsonString, exception);
             }
 
             try
             {
                 // if it does not contains "AdditionalProperties", use SerializerSettings to deserialize
                 if (typeof(string).GetProperty("AdditionalProperties") == null)
-                {
-                    newBigNumberish = new BigNumberish(JsonConvert.DeserializeObject<string>(jsonString, BigNumberish.SerializerSettings));
-                }
+                    newBigNumberish =
+                        new BigNumberish(JsonConvert.DeserializeObject<string>(jsonString, SerializerSettings));
                 else
-                {
-                    newBigNumberish = new BigNumberish(JsonConvert.DeserializeObject<string>(jsonString, BigNumberish.AdditionalPropertiesSerializerSettings));
-                }
+                    newBigNumberish =
+                        new BigNumberish(JsonConvert.DeserializeObject<string>(jsonString,
+                            AdditionalPropertiesSerializerSettings));
                 matchedTypes.Add("string");
                 match++;
             }
             catch (Exception exception)
             {
                 // deserialization failed, try the next one
-                System.Diagnostics.Debug.WriteLine(string.Format("Failed to deserialize `{0}` into string: {1}", jsonString, exception.ToString()));
+                Debug.WriteLine("Failed to deserialize `{0}` into string: {1}", jsonString, exception);
             }
 
             if (match == 0)
-            {
-                throw new InvalidDataException("The JSON string `" + jsonString + "` cannot be deserialized into any schema defined.");
-            }
-            else if (match > 1)
-            {
-                throw new InvalidDataException("The JSON string `" + jsonString + "` incorrectly matches more than one schema (should be exactly one match): " + String.Join(",", matchedTypes));
-            }
+                throw new InvalidDataException("The JSON string `" + jsonString +
+                                               "` cannot be deserialized into any schema defined.");
+            if (match > 1)
+                throw new InvalidDataException("The JSON string `" + jsonString +
+                                               "` incorrectly matches more than one schema (should be exactly one match): " +
+                                               string.Join(",", matchedTypes));
 
             // deserialization is considered successful at this point if no exception has been thrown.
             return newBigNumberish;
         }
-
     }
 
     /// <summary>
-    /// Custom JSON converter for BigNumberish
+    ///     Custom JSON converter for BigNumberish
     /// </summary>
     public class BigNumberishJsonConverter : JsonConverter
     {
         /// <summary>
-        /// To write the JSON string
+        ///     To write the JSON string
         /// </summary>
         /// <param name="writer">JSON writer</param>
         /// <param name="value">Object to be converted into a JSON string</param>
         /// <param name="serializer">JSON Serializer</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteRawValue((string)(typeof(BigNumberish).GetMethod("ToJson").Invoke(value, null)));
+            writer.WriteRawValue((string)typeof(BigNumberish).GetMethod("ToJson").Invoke(value, null));
         }
 
         /// <summary>
-        /// To convert a JSON string into an object
+        ///     To convert a JSON string into an object
         /// </summary>
         /// <param name="reader">JSON reader</param>
         /// <param name="objectType">Object type</param>
         /// <param name="existingValue">Existing value</param>
         /// <param name="serializer">JSON Serializer</param>
         /// <returns>The object converted from the JSON string</returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
         {
-            switch(reader.TokenType) 
+            switch (reader.TokenType)
             {
-                case JsonToken.String: 
+                case JsonToken.String:
                     return new BigNumberish(Convert.ToString(reader.Value));
-                case JsonToken.Float: 
+                case JsonToken.Float:
                     return new BigNumberish(Convert.ToDecimal(reader.Value));
                 case JsonToken.StartObject:
                     return BigNumberish.FromJson(JObject.Load(reader).ToString(Formatting.None));
@@ -241,7 +219,7 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Check if the object can be converted
+        ///     Check if the object can be converted
         /// </summary>
         /// <param name="objectType">Object type</param>
         /// <returns>True if the object can be converted</returns>
@@ -250,5 +228,4 @@ namespace Immutable.Ts.Model
             return false;
         }
     }
-
 }

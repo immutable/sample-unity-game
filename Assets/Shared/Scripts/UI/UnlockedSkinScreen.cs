@@ -1,44 +1,40 @@
-using System.ComponentModel;
-using HyperCasual.Core;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
 using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using HyperCasual.Core;
 using Immutable.Passport;
 using Immutable.Passport.Model;
+using TMPro;
+using UnityEngine;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// This View contains celebration screen functionalities
+    ///     This View contains celebration screen functionalities
     /// </summary>
     public class UnlockedSkinScreen : View
     {
-        [SerializeField]
-        GameObject m_Title;
-        [SerializeField]
-        GameObject m_Loading;
-        [SerializeField]
-        TextMeshProUGUI m_ErrorMessage;
-        [SerializeField]
-        HyperCasualButton m_CraftButton;
-        [SerializeField]
-        HyperCasualButton m_NextButton;
-        [SerializeField]
-        HyperCasualButton m_TryAgainButton;
-        [SerializeField]
-        AbstractGameEvent m_NextLevelEvent;
-        [SerializeField]
-        AbstractGameEvent m_CollectSkinEvent;
-
         public enum CraftSkinState
         {
             Crafting, // Crafting a skin
             Crafted, // Successfully crafted a skin
             Failed // Failed to craft
         }
+
+        [SerializeField] private GameObject m_Title;
+
+        [SerializeField] private GameObject m_Loading;
+
+        [SerializeField] private TextMeshProUGUI m_ErrorMessage;
+
+        [SerializeField] private HyperCasualButton m_CraftButton;
+
+        [SerializeField] private HyperCasualButton m_NextButton;
+
+        [SerializeField] private HyperCasualButton m_TryAgainButton;
+
+        [SerializeField] private AbstractGameEvent m_NextLevelEvent;
+
+        [SerializeField] private AbstractGameEvent m_CollectSkinEvent;
 
         private CraftSkinState? m_CraftState;
 
@@ -70,8 +66,6 @@ namespace HyperCasual.Runner
                         ShowCraftButton(false);
                         ShowNextButton(true);
                         ShowError(true);
-                        break;
-                    default:
                         break;
                 }
             }
@@ -118,7 +112,7 @@ namespace HyperCasual.Runner
             m_CraftState = CraftSkinState.Crafting;
 
             // Burn tokens and mint a new skin i.e. crafting a skin
-            string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest()
+            var transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest
             {
                 to = Contract.TOKEN, // Immutable Runner Token contract address
                 data = "0x1e957f1e", // Call craftSkin() in the contract
@@ -130,10 +124,7 @@ namespace HyperCasual.Runner
 
             // If successfully crafted skin and this screen is visible, go to collect skin screen
             // otherwise it will be picked in the OnEnable function above when this screen reappears
-            if (m_CraftState == CraftSkinState.Crafted && gameObject.active)
-            {
-                CollectSkin();
-            }
+            if (m_CraftState == CraftSkinState.Crafted && gameObject.active) CollectSkin();
         }
 
         private void CollectSkin()

@@ -1,21 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Numerics;
-using System.Net.Http;
-using UnityEngine;
-using UnityEngine.UI;
-using Immutable.Passport;
-using TMPro;
-using UnityEngine.Networking;
-using Cysharp.Threading.Tasks;
-using Immutable.Passport.Model;
 using Immutable.Search.Model;
+using TMPro;
+using UnityEngine;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// Represents an order list item in the marketplace.
+    ///     Represents an order list item in the marketplace.
     /// </summary>
     public class OrderListObject : MonoBehaviour
     {
@@ -27,7 +18,7 @@ namespace HyperCasual.Runner
         private StackBundle m_Order;
 
         /// <summary>
-        /// Initialises the order list item with the given order data.
+        ///     Initialises the order list item with the given order data.
         /// </summary>
         /// <param name="order">The order data to display.</param>
         public async void Initialise(StackBundle order)
@@ -37,20 +28,20 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Updates the UI elements with the order data.
+        ///     Updates the UI elements with the order data.
         /// </summary>
         private async void UpdateData()
         {
             if (m_Order.Market?.FloorListing != null)
             {
-                string amount = m_Order.Market.FloorListing.PriceDetails.Amount.Value;
+                var amount = m_Order.Market.FloorListing.PriceDetails.Amount.Value;
 
-                decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
+                var quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
                 m_AmountText.text = $"Floor price: {quantity} IMR";
             }
             else
             {
-                m_AmountText.text = $"Floor price: N/A";
+                m_AmountText.text = "Floor price: N/A";
             }
 
             // Get and display asset details

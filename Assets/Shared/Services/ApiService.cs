@@ -3,7 +3,6 @@ using System.Net.Http;
 using Cysharp.Threading.Tasks;
 using HyperCasual.Runner;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Shared.Services
 {
@@ -11,8 +10,8 @@ namespace Shared.Services
     {
         public static async UniTask<bool> MintCoins(string to, string quantity)
         {
-            bool success = false;
-            string url = $"{Config.SERVER_URL}/mint/token";
+            var success = false;
+            var url = $"{Config.SERVER_URL}/mint/token";
             Debug.Log($"MintCoins url: {url}");
 #if UNITY_WEBGL
             var form = new WWWForm();
@@ -28,9 +27,9 @@ namespace Shared.Services
             var nvc = new List<KeyValuePair<string, string>>
             {
                 // Set 'to' to the player's wallet address
-                new KeyValuePair<string, string>("to", to),
+                new("to", to),
                 // Set 'quanity' to the number of coins collected
-                new KeyValuePair<string, string>("quantity", quantity)
+                new("quantity", quantity)
             };
             using var client = new HttpClient();
             using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
@@ -42,7 +41,7 @@ namespace Shared.Services
 
         public static async UniTask<bool> MintFox(string to)
         {
-            string url = $"{Config.SERVER_URL}/mint/fox";
+            var url = $"{Config.SERVER_URL}/mint/fox";
             Debug.Log($"MintFox url: {url}");
 #if UNITY_WEBGL
             var form = new WWWForm();
@@ -57,7 +56,7 @@ namespace Shared.Services
             var nvc = new List<KeyValuePair<string, string>>
             {
                 // Set 'to' to the player's wallet address
-                new KeyValuePair<string, string>("to", to)
+                new("to", to)
             };
             using var client = new HttpClient();
             using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };

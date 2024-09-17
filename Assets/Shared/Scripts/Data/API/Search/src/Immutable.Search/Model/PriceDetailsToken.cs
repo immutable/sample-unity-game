@@ -10,126 +10,111 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
-using System.Reflection;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    /// Token details
+    ///     Token details
     /// </summary>
     [JsonConverter(typeof(PriceDetailsTokenJsonConverter))]
     [DataContract(Name = "PriceDetails_token")]
-    public partial class PriceDetailsToken : AbstractOpenAPISchema
+    public class PriceDetailsToken : AbstractOpenAPISchema
     {
+        private object _actualInstance;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="PriceDetailsToken" /> class
-        /// with the <see cref="NativeToken" /> class
+        ///     Initializes a new instance of the <see cref="PriceDetailsToken" /> class
+        ///     with the <see cref="NativeToken" /> class
         /// </summary>
         /// <param name="actualInstance">An instance of NativeToken.</param>
         public PriceDetailsToken(NativeToken actualInstance)
         {
-            this.IsNullable = false;
-            this.SchemaType= "oneOf";
-            this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
+            IsNullable = false;
+            SchemaType = "oneOf";
+            ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PriceDetailsToken" /> class
-        /// with the <see cref="ERC20Token" /> class
+        ///     Initializes a new instance of the <see cref="PriceDetailsToken" /> class
+        ///     with the <see cref="ERC20Token" /> class
         /// </summary>
         /// <param name="actualInstance">An instance of ERC20Token.</param>
         public PriceDetailsToken(ERC20Token actualInstance)
         {
-            this.IsNullable = false;
-            this.SchemaType= "oneOf";
-            this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
+            IsNullable = false;
+            SchemaType = "oneOf";
+            ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
-
-        private Object _actualInstance;
-
         /// <summary>
-        /// Gets or Sets ActualInstance
+        ///     Gets or Sets ActualInstance
         /// </summary>
-        public override Object ActualInstance
+        public override object ActualInstance
         {
-            get
-            {
-                return _actualInstance;
-            }
+            get => _actualInstance;
             set
             {
                 if (value.GetType() == typeof(ERC20Token) || value is ERC20Token)
-                {
-                    this._actualInstance = value;
-                }
+                    _actualInstance = value;
                 else if (value.GetType() == typeof(NativeToken) || value is NativeToken)
-                {
-                    this._actualInstance = value;
-                }
+                    _actualInstance = value;
                 else
-                {
-                    throw new ArgumentException("Invalid instance found. Must be the following types: ERC20Token, NativeToken");
-                }
+                    throw new ArgumentException(
+                        "Invalid instance found. Must be the following types: ERC20Token, NativeToken");
             }
         }
 
         /// <summary>
-        /// Get the actual instance of `NativeToken`. If the actual instance is not `NativeToken`,
-        /// the InvalidClassException will be thrown
+        ///     Get the actual instance of `NativeToken`. If the actual instance is not `NativeToken`,
+        ///     the InvalidClassException will be thrown
         /// </summary>
         /// <returns>An instance of NativeToken</returns>
         public NativeToken GetNativeToken()
         {
-            return (NativeToken)this.ActualInstance;
+            return (NativeToken)ActualInstance;
         }
 
         /// <summary>
-        /// Get the actual instance of `ERC20Token`. If the actual instance is not `ERC20Token`,
-        /// the InvalidClassException will be thrown
+        ///     Get the actual instance of `ERC20Token`. If the actual instance is not `ERC20Token`,
+        ///     the InvalidClassException will be thrown
         /// </summary>
         /// <returns>An instance of ERC20Token</returns>
         public ERC20Token GetERC20Token()
         {
-            return (ERC20Token)this.ActualInstance;
+            return (ERC20Token)ActualInstance;
         }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
             var sb = new StringBuilder();
             sb.Append("class PriceDetailsToken {\n");
-            sb.Append("  ActualInstance: ").Append(this.ActualInstance).Append("\n");
+            sb.Append("  ActualInstance: ").Append(ActualInstance).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public override string ToJson()
         {
-            return JsonConvert.SerializeObject(this.ActualInstance, PriceDetailsToken.SerializerSettings);
+            return JsonConvert.SerializeObject(ActualInstance, SerializerSettings);
         }
 
         /// <summary>
-        /// Converts the JSON string into an instance of PriceDetailsToken
+        ///     Converts the JSON string into an instance of PriceDetailsToken
         /// </summary>
         /// <param name="jsonString">JSON string</param>
         /// <returns>An instance of PriceDetailsToken</returns>
@@ -137,95 +122,91 @@ namespace Immutable.Search.Model
         {
             PriceDetailsToken newPriceDetailsToken = null;
 
-            if (string.IsNullOrEmpty(jsonString))
-            {
-                return newPriceDetailsToken;
-            }
-            int match = 0;
-            List<string> matchedTypes = new List<string>();
+            if (string.IsNullOrEmpty(jsonString)) return newPriceDetailsToken;
+            var match = 0;
+            var matchedTypes = new List<string>();
 
             try
             {
                 // if it does not contains "AdditionalProperties", use SerializerSettings to deserialize
                 if (typeof(ERC20Token).GetProperty("AdditionalProperties") == null)
-                {
-                    newPriceDetailsToken = new PriceDetailsToken(JsonConvert.DeserializeObject<ERC20Token>(jsonString, PriceDetailsToken.SerializerSettings));
-                }
+                    newPriceDetailsToken =
+                        new PriceDetailsToken(
+                            JsonConvert.DeserializeObject<ERC20Token>(jsonString, SerializerSettings));
                 else
-                {
-                    newPriceDetailsToken = new PriceDetailsToken(JsonConvert.DeserializeObject<ERC20Token>(jsonString, PriceDetailsToken.AdditionalPropertiesSerializerSettings));
-                }
+                    newPriceDetailsToken =
+                        new PriceDetailsToken(JsonConvert.DeserializeObject<ERC20Token>(jsonString,
+                            AdditionalPropertiesSerializerSettings));
                 matchedTypes.Add("ERC20Token");
                 match++;
             }
             catch (Exception exception)
             {
                 // deserialization failed, try the next one
-                System.Diagnostics.Debug.WriteLine(string.Format("Failed to deserialize `{0}` into ERC20Token: {1}", jsonString, exception.ToString()));
+                Debug.WriteLine("Failed to deserialize `{0}` into ERC20Token: {1}", jsonString, exception);
             }
 
             try
             {
                 // if it does not contains "AdditionalProperties", use SerializerSettings to deserialize
                 if (typeof(NativeToken).GetProperty("AdditionalProperties") == null)
-                {
-                    newPriceDetailsToken = new PriceDetailsToken(JsonConvert.DeserializeObject<NativeToken>(jsonString, PriceDetailsToken.SerializerSettings));
-                }
+                    newPriceDetailsToken =
+                        new PriceDetailsToken(
+                            JsonConvert.DeserializeObject<NativeToken>(jsonString, SerializerSettings));
                 else
-                {
-                    newPriceDetailsToken = new PriceDetailsToken(JsonConvert.DeserializeObject<NativeToken>(jsonString, PriceDetailsToken.AdditionalPropertiesSerializerSettings));
-                }
+                    newPriceDetailsToken =
+                        new PriceDetailsToken(JsonConvert.DeserializeObject<NativeToken>(jsonString,
+                            AdditionalPropertiesSerializerSettings));
                 matchedTypes.Add("NativeToken");
                 match++;
             }
             catch (Exception exception)
             {
                 // deserialization failed, try the next one
-                System.Diagnostics.Debug.WriteLine(string.Format("Failed to deserialize `{0}` into NativeToken: {1}", jsonString, exception.ToString()));
+                Debug.WriteLine("Failed to deserialize `{0}` into NativeToken: {1}", jsonString, exception);
             }
 
             if (match == 0)
-            {
-                throw new InvalidDataException("The JSON string `" + jsonString + "` cannot be deserialized into any schema defined.");
-            }
-            else if (match > 1)
-            {
-                throw new InvalidDataException("The JSON string `" + jsonString + "` incorrectly matches more than one schema (should be exactly one match): " + String.Join(",", matchedTypes));
-            }
+                throw new InvalidDataException("The JSON string `" + jsonString +
+                                               "` cannot be deserialized into any schema defined.");
+            if (match > 1)
+                throw new InvalidDataException("The JSON string `" + jsonString +
+                                               "` incorrectly matches more than one schema (should be exactly one match): " +
+                                               string.Join(",", matchedTypes));
 
             // deserialization is considered successful at this point if no exception has been thrown.
             return newPriceDetailsToken;
         }
-
     }
 
     /// <summary>
-    /// Custom JSON converter for PriceDetailsToken
+    ///     Custom JSON converter for PriceDetailsToken
     /// </summary>
     public class PriceDetailsTokenJsonConverter : JsonConverter
     {
         /// <summary>
-        /// To write the JSON string
+        ///     To write the JSON string
         /// </summary>
         /// <param name="writer">JSON writer</param>
         /// <param name="value">Object to be converted into a JSON string</param>
         /// <param name="serializer">JSON Serializer</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteRawValue((string)(typeof(PriceDetailsToken).GetMethod("ToJson").Invoke(value, null)));
+            writer.WriteRawValue((string)typeof(PriceDetailsToken).GetMethod("ToJson").Invoke(value, null));
         }
 
         /// <summary>
-        /// To convert a JSON string into an object
+        ///     To convert a JSON string into an object
         /// </summary>
         /// <param name="reader">JSON reader</param>
         /// <param name="objectType">Object type</param>
         /// <param name="existingValue">Existing value</param>
         /// <param name="serializer">JSON Serializer</param>
         /// <returns>The object converted from the JSON string</returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
         {
-            switch(reader.TokenType) 
+            switch (reader.TokenType)
             {
                 case JsonToken.StartObject:
                     return PriceDetailsToken.FromJson(JObject.Load(reader).ToString(Formatting.None));
@@ -237,7 +218,7 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        /// Check if the object can be converted
+        ///     Check if the object can be converted
         /// </summary>
         /// <param name="objectType">Object type</param>
         /// <returns>True if the object can be converted</returns>
@@ -246,5 +227,4 @@ namespace Immutable.Search.Model
             return false;
         }
     }
-
 }

@@ -9,69 +9,66 @@
  */
 
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// V1TsSdkOrderbookCancelOrdersPost200ResponseResult
+    ///     V1TsSdkOrderbookCancelOrdersPost200ResponseResult
     /// </summary>
     [DataContract(Name = "_v1_ts_sdk_orderbook_cancelOrders_post_200_response_result")]
-    public partial class V1TsSdkOrderbookCancelOrdersPost200ResponseResult
+    public class V1TsSdkOrderbookCancelOrdersPost200ResponseResult
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="V1TsSdkOrderbookCancelOrdersPost200ResponseResult" /> class.
+        ///     Initializes a new instance of the <see cref="V1TsSdkOrderbookCancelOrdersPost200ResponseResult" /> class.
         /// </summary>
         /// <param name="failedCancellations">Orders which failed to be cancelled.</param>
         /// <param name="pendingCancellations">Orders which are marked for cancellation but the cancellation cannot be guaranteed.</param>
         /// <param name="successfulCancellations">Orders which were successfully cancelled.</param>
-        public V1TsSdkOrderbookCancelOrdersPost200ResponseResult(List<V1TsSdkOrderbookCancelOrdersPost200ResponseResultFailedCancellationsInner> failedCancellations = default(List<V1TsSdkOrderbookCancelOrdersPost200ResponseResultFailedCancellationsInner>), List<string> pendingCancellations = default(List<string>), List<string> successfulCancellations = default(List<string>))
+        public V1TsSdkOrderbookCancelOrdersPost200ResponseResult(
+            List<V1TsSdkOrderbookCancelOrdersPost200ResponseResultFailedCancellationsInner> failedCancellations =
+                default, List<string> pendingCancellations = default, List<string> successfulCancellations = default)
         {
-            this.FailedCancellations = failedCancellations;
-            this.PendingCancellations = pendingCancellations;
-            this.SuccessfulCancellations = successfulCancellations;
+            FailedCancellations = failedCancellations;
+            PendingCancellations = pendingCancellations;
+            SuccessfulCancellations = successfulCancellations;
         }
 
         /// <summary>
-        /// Orders which failed to be cancelled
+        ///     Orders which failed to be cancelled
         /// </summary>
         /// <value>Orders which failed to be cancelled</value>
         [DataMember(Name = "failed_cancellations", EmitDefaultValue = false)]
-        public List<V1TsSdkOrderbookCancelOrdersPost200ResponseResultFailedCancellationsInner> FailedCancellations { get; set; }
+        public List<V1TsSdkOrderbookCancelOrdersPost200ResponseResultFailedCancellationsInner> FailedCancellations
+        {
+            get;
+            set;
+        }
 
         /// <summary>
-        /// Orders which are marked for cancellation but the cancellation cannot be guaranteed
+        ///     Orders which are marked for cancellation but the cancellation cannot be guaranteed
         /// </summary>
         /// <value>Orders which are marked for cancellation but the cancellation cannot be guaranteed</value>
         [DataMember(Name = "pending_cancellations", EmitDefaultValue = false)]
         public List<string> PendingCancellations { get; set; }
 
         /// <summary>
-        /// Orders which were successfully cancelled
+        ///     Orders which were successfully cancelled
         /// </summary>
         /// <value>Orders which were successfully cancelled</value>
         [DataMember(Name = "successful_cancellations", EmitDefaultValue = false)]
         public List<string> SuccessfulCancellations { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class V1TsSdkOrderbookCancelOrdersPost200ResponseResult {\n");
             sb.Append("  FailedCancellations: ").Append(FailedCancellations).Append("\n");
             sb.Append("  PendingCancellations: ").Append(PendingCancellations).Append("\n");
@@ -81,14 +78,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

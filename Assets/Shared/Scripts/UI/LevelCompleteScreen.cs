@@ -1,58 +1,58 @@
-using System.ComponentModel;
+using System;
+using System.Numerics;
+using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
+using Immutable.Passport;
+using Shared.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-using System.Collections.Generic;
-using Immutable.Passport;
-using Cysharp.Threading.Tasks;
-using System.Numerics;
-using Shared.Services;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// This View contains celebration screen functionalities
+    ///     This View contains celebration screen functionalities
     /// </summary>
     public class LevelCompleteScreen : View
     {
-        [SerializeField]
-        HyperCasualButton m_NextButton;
-        [SerializeField]
-        HyperCasualButton m_TryAgainButton;
-        [SerializeField]
-        HyperCasualButton m_ContinuePassportButton;
-        [SerializeField]
-        Image[] m_Coins;
-        [SerializeField]
-        TextMeshProUGUI m_FoodText;
-        [SerializeField]
-        Slider m_XpSlider;
-        [SerializeField]
-        GameObject m_Loading;
-        [SerializeField]
-        GameObject m_CompletedContainer;
-        [SerializeField]
-        TextMeshProUGUI m_ErrorMessage;
+        [SerializeField] private HyperCasualButton m_NextButton;
 
-        [SerializeField]
-        AbstractGameEvent m_NextLevelEvent;
-        [SerializeField]
-        AbstractGameEvent m_SetupWalletEvent;
-        [SerializeField]
-        AbstractGameEvent m_UnlockedSkinEvent;
+        [SerializeField] private HyperCasualButton m_TryAgainButton;
+
+        [SerializeField] private HyperCasualButton m_ContinuePassportButton;
+
+        [SerializeField] private Image[] m_Coins;
+
+        [SerializeField] private TextMeshProUGUI m_FoodText;
+
+        [SerializeField] private Slider m_XpSlider;
+
+        [SerializeField] private GameObject m_Loading;
+
+        [SerializeField] private GameObject m_CompletedContainer;
+
+        [SerializeField] private TextMeshProUGUI m_ErrorMessage;
+
+        [SerializeField] private AbstractGameEvent m_NextLevelEvent;
+
+        [SerializeField] private AbstractGameEvent m_SetupWalletEvent;
+
+        [SerializeField] private AbstractGameEvent m_UnlockedSkinEvent;
+
+        private int m_CoinCount = -1;
+
+        private int m_FoodValue;
+
+        private float m_XpValue;
 
         /// <summary>
-        /// The slider that displays the XP value 
+        ///     The slider that displays the XP value
         /// </summary>
         public Slider XpSlider => m_XpSlider;
 
-        int m_FoodValue;
-
         /// <summary>
-        /// The amount of food to display on the celebration screen.
-        /// The setter method also sets the celebration screen text.
+        ///     The amount of food to display on the celebration screen.
+        ///     The setter method also sets the celebration screen text.
         /// </summary>
         public int FoodValue
         {
@@ -67,11 +67,9 @@ namespace HyperCasual.Runner
             }
         }
 
-        float m_XpValue;
-
         /// <summary>
-        /// The amount of XP to display on the celebration screen.
-        /// The setter method also sets the celebration screen slider value.
+        ///     The amount of XP to display on the celebration screen.
+        ///     The setter method also sets the celebration screen slider value.
         /// </summary>
         public float XpValue
         {
@@ -86,10 +84,8 @@ namespace HyperCasual.Runner
             }
         }
 
-        int m_CoinCount = -1;
-
         /// <summary>
-        /// The number of tokens to display on the celebration screen.
+        ///     The number of tokens to display on the celebration screen.
         /// </summary>
         public int CoinCount
         {
@@ -137,13 +133,13 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Mints collected coins (i.e. Immutable Runner Token) to the player's wallet
+        ///     Mints collected coins (i.e. Immutable Runner Token) to the player's wallet
         /// </summary>
         private async UniTask MintCoins()
         {
             // This function is similar to MintCoins() in MintScreen.cs. Consider refactoring duplicate code in production.
             Debug.Log("Minting coins...");
-            bool success = false;
+            var success = false;
 
             // Show loading
             ShowLoading(true);
@@ -160,12 +156,12 @@ namespace HyperCasual.Runner
                 else
                 {
                     // Get the player's wallet address to mint the coins to
-                    string address = SaveManager.Instance.WalletAddress;
+                    var address = SaveManager.Instance.WalletAddress;
                     if (address != null)
                     {
                         // Calculate the quantity to mint
                         // Need to take into account Immutable Runner Token decimal value i.e. 18
-                        BigInteger quantity = BigInteger.Multiply(new BigInteger(m_CoinCount), BigInteger.Pow(10, 18));
+                        var quantity = BigInteger.Multiply(new BigInteger(m_CoinCount), BigInteger.Pow(10, 18));
                         Debug.Log($"Quantity: {quantity}");
                         success = await ApiService.MintCoins(address, quantity.ToString());
                     }
@@ -223,15 +219,11 @@ namespace HyperCasual.Runner
         {
             // Check if the player is already using a new skin
             if (!SaveManager.Instance.UseNewSkin)
-            {
                 // Player is not using a new skin, take player to Unlocked Skin screen
                 m_UnlockedSkinEvent.Raise();
-            }
             else
-            {
                 // Player is already using a new skin, take player to the next level
                 m_NextLevelEvent.Raise();
-            }
         }
 
         private void ShowCompletedContainer(bool show)
@@ -260,17 +252,13 @@ namespace HyperCasual.Runner
             m_TryAgainButton.gameObject.SetActive(show);
         }
 
-        void DisplayCoins(int count)
+        private void DisplayCoins(int count)
         {
             count = Mathf.Clamp(count, 0, m_Coins.Length);
 
             if (m_Coins.Length > 0 && count >= 0 && count <= m_Coins.Length)
-            {
-                for (int i = 0; i < m_Coins.Length; i++)
-                {
+                for (var i = 0; i < m_Coins.Length; i++)
                     m_Coins[i].gameObject.SetActive(i < count);
-                }
-            }
         }
     }
 }

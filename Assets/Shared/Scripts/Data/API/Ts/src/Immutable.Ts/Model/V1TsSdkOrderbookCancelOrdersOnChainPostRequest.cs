@@ -10,72 +10,66 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// V1TsSdkOrderbookCancelOrdersOnChainPostRequest
+    ///     V1TsSdkOrderbookCancelOrdersOnChainPostRequest
     /// </summary>
     [DataContract(Name = "_v1_ts_sdk_orderbook_cancelOrdersOnChain_post_request")]
-    public partial class V1TsSdkOrderbookCancelOrdersOnChainPostRequest
+    public class V1TsSdkOrderbookCancelOrdersOnChainPostRequest
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="V1TsSdkOrderbookCancelOrdersOnChainPostRequest" /> class.
+        ///     Initializes a new instance of the <see cref="V1TsSdkOrderbookCancelOrdersOnChainPostRequest" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected V1TsSdkOrderbookCancelOrdersOnChainPostRequest() { }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="V1TsSdkOrderbookCancelOrdersOnChainPostRequest" /> class.
-        /// </summary>
-        /// <param name="orderIds">orderIds (required).</param>
-        /// <param name="accountAddress">accountAddress (required).</param>
-        public V1TsSdkOrderbookCancelOrdersOnChainPostRequest(List<string> orderIds = default(List<string>), string accountAddress = default(string))
+        protected V1TsSdkOrderbookCancelOrdersOnChainPostRequest()
         {
-            // to ensure "orderIds" is required (not null)
-            if (orderIds == null)
-            {
-                throw new ArgumentNullException("orderIds is a required property for V1TsSdkOrderbookCancelOrdersOnChainPostRequest and cannot be null");
-            }
-            this.OrderIds = orderIds;
-            // to ensure "accountAddress" is required (not null)
-            if (accountAddress == null)
-            {
-                throw new ArgumentNullException("accountAddress is a required property for V1TsSdkOrderbookCancelOrdersOnChainPostRequest and cannot be null");
-            }
-            this.AccountAddress = accountAddress;
         }
 
         /// <summary>
-        /// Gets or Sets OrderIds
+        ///     Initializes a new instance of the <see cref="V1TsSdkOrderbookCancelOrdersOnChainPostRequest" /> class.
+        /// </summary>
+        /// <param name="orderIds">orderIds (required).</param>
+        /// <param name="accountAddress">accountAddress (required).</param>
+        public V1TsSdkOrderbookCancelOrdersOnChainPostRequest(List<string> orderIds = default,
+            string accountAddress = default)
+        {
+            // to ensure "orderIds" is required (not null)
+            if (orderIds == null)
+                throw new ArgumentNullException(
+                    "orderIds is a required property for V1TsSdkOrderbookCancelOrdersOnChainPostRequest and cannot be null");
+            OrderIds = orderIds;
+            // to ensure "accountAddress" is required (not null)
+            if (accountAddress == null)
+                throw new ArgumentNullException(
+                    "accountAddress is a required property for V1TsSdkOrderbookCancelOrdersOnChainPostRequest and cannot be null");
+            AccountAddress = accountAddress;
+        }
+
+        /// <summary>
+        ///     Gets or Sets OrderIds
         /// </summary>
         [DataMember(Name = "orderIds", IsRequired = true, EmitDefaultValue = true)]
         public List<string> OrderIds { get; set; }
 
         /// <summary>
-        /// Gets or Sets AccountAddress
+        ///     Gets or Sets AccountAddress
         /// </summary>
         [DataMember(Name = "accountAddress", IsRequired = true, EmitDefaultValue = true)]
         public string AccountAddress { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class V1TsSdkOrderbookCancelOrdersOnChainPostRequest {\n");
             sb.Append("  OrderIds: ").Append(OrderIds).Append("\n");
             sb.Append("  AccountAddress: ").Append(AccountAddress).Append("\n");
@@ -84,14 +78,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

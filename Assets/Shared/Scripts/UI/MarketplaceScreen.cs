@@ -1,44 +1,42 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using HyperCasual.Core;
-using HyperCasual.Gameplay;
-using UnityEngine;
-using UnityEngine.UI;
-using Immutable.Passport;
 using Cysharp.Threading.Tasks;
-using System.Net.Http;
-using TMPro;
+using HyperCasual.Core;
+using Immutable.Passport;
 using Immutable.Search.Api;
 using Immutable.Search.Client;
 using Immutable.Search.Model;
+using TMPro;
+using UnityEngine;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// The marketplace view which displays currently listed skins.
+    ///     The marketplace view which displays currently listed skins.
     /// </summary>
     public class MarketplaceScreen : View
     {
-        private static readonly List<string> COLOURS = new List<string> { "All", "Tropical Indigo", "Cyclamen", "Robin Egg Blue", "Mint", "Mindaro", "Amaranth Pink" };
-        private static readonly List<string> SPEEDS = new List<string> { "All", "Slow", "Medium", "Fast" };
+        private static readonly List<string> COLOURS = new()
+            { "All", "Tropical Indigo", "Cyclamen", "Robin Egg Blue", "Mint", "Mindaro", "Amaranth Pink" };
+
+        private static readonly List<string> SPEEDS = new() { "All", "Slow", "Medium", "Fast" };
 
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
         [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private TMP_Dropdown m_ColoursDropdown;
         [SerializeField] private TMP_Dropdown m_SpeedDropdown;
-        [SerializeField] private OrderListObject m_OrderObj = null;
-        [SerializeField] private Transform m_ListParent = null;
+        [SerializeField] private OrderListObject m_OrderObj;
+        [SerializeField] private Transform m_ListParent;
         [SerializeField] private InfiniteScrollView m_ScrollView;
-        private List<StackBundle> m_Orders = new List<StackBundle>();
 
         // Pagination
-        private bool m_IsLoadingMore = false;
+        private bool m_IsLoadingMore;
+        private readonly List<StackBundle> m_Orders = new();
         private Page m_Page;
 
         /// <summary>
-        /// Sets up the marketplace list and fetches active orers.
+        ///     Sets up the marketplace list and fetches active orers.
         /// </summary>
         private async void OnEnable()
         {
@@ -64,7 +62,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Configures the dropdown filters for colours and speeds.
+        ///     Configures the dropdown filters for colours and speeds.
         /// </summary>
         private void SetupFilters()
         {
@@ -78,13 +76,13 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Configures the order list item view
+        ///     Configures the order list item view
         /// </summary>
         private void OnCreateItemView(int index, GameObject item)
         {
             if (index < m_Orders.Count)
             {
-                StackBundle order = m_Orders[index];
+                var order = m_Orders[index];
 
                 // Initialise the view with order
                 var itemComponent = item.GetComponent<OrderListObject>();
@@ -96,33 +94,27 @@ namespace HyperCasual.Runner
                     clickable.ClearAllSubscribers();
                     clickable.OnClick += () =>
                     {
-                        OrderDetailsView view = UIManager.Instance.GetView<OrderDetailsView>();
-                        UIManager.Instance.Show(view, true);
+                        var view = UIManager.Instance.GetView<OrderDetailsView>();
+                        UIManager.Instance.Show(view);
                         view.Initialise(order);
                     };
                 }
             }
 
             // Load more orders if nearing the end of the list
-            if (index >= m_Orders.Count - 5 && !m_IsLoadingMore)
-            {
-                LoadOrders();
-            }
+            if (index >= m_Orders.Count - 5 && !m_IsLoadingMore) LoadOrders();
         }
 
         /// <summary>
-        /// Loads orders and adds them to the scroll view.
+        ///     Loads orders and adds them to the scroll view.
         /// </summary>
         private async void LoadOrders()
         {
-            if (m_IsLoadingMore)
-            {
-                return;
-            }
+            if (m_IsLoadingMore) return;
 
             m_IsLoadingMore = true;
 
-            List<StackBundle> orders = await GetStacks();
+            var orders = await GetStacks();
             if (orders != null && orders.Count > 0)
             {
                 m_Orders.AddRange(orders);
@@ -137,9 +129,9 @@ namespace HyperCasual.Runner
         {
             Debug.Log("Fetching stacks assets...");
 
-            List<StackBundle> stacks = new List<StackBundle>();
+            var stacks = new List<StackBundle>();
 
-            Configuration config = new Configuration();
+            var config = new Configuration();
             config.BasePath = Config.SEARCH_BASE_URL;
             var apiInstance = new SearchApi(config);
 
@@ -175,7 +167,8 @@ namespace HyperCasual.Runner
                 // List<AttributeQuery>? trait = new List<AttributeQuery>();
                 // trait.Add(new AttributeQuery("Colour", "Tropical Indigo"));
 
-                SearchStacksResult result = await apiInstance.SearchStacksAsync(Config.CHAIN_NAME, new List<string> { Contract.SKIN }, pageSize: Config.PAGE_SIZE);
+                var result = await apiInstance.SearchStacksAsync(Config.CHAIN_NAME, new List<string> { Contract.SKIN },
+                    pageSize: Config.PAGE_SIZE);
                 m_Page = result.Page;
                 return result.Result;
             }
@@ -194,7 +187,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Cleans up views and handles the back button click
+        ///     Cleans up views and handles the back button click
         /// </summary>
         private void OnBackButtonClick()
         {

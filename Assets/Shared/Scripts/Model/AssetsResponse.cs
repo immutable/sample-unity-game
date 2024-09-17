@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace HyperCasual.Runner
@@ -27,5 +26,4 @@ namespace HyperCasual.Runner
         public List<AssetAttribute> attributes;
         public string metadata_id;
     }
-
 }

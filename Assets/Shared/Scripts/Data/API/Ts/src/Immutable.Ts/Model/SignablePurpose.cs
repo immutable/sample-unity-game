@@ -9,39 +9,27 @@
  */
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// Defines SignablePurpose
+    ///     Defines SignablePurpose
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
     public enum SignablePurpose
     {
         /// <summary>
-        /// Enum CREATELISTING for value: CREATE_LISTING
+        ///     Enum CREATELISTING for value: CREATE_LISTING
         /// </summary>
-        [EnumMember(Value = "CREATE_LISTING")]
-        CREATELISTING,
+        [EnumMember(Value = "CREATE_LISTING")] CREATELISTING,
 
         /// <summary>
-        /// Enum OFFCHAINCANCELLATION for value: OFF_CHAIN_CANCELLATION
+        ///     Enum OFFCHAINCANCELLATION for value: OFF_CHAIN_CANCELLATION
         /// </summary>
         [EnumMember(Value = "OFF_CHAIN_CANCELLATION")]
         OFFCHAINCANCELLATION
     }
-
 }

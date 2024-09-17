@@ -4,11 +4,11 @@ public class RotateAnimation : MonoBehaviour
 {
     public RectTransform rt;
 
-    void Start()
+    private void Start()
     {
     }
 
-    void Update()
+    private void Update()
     {
         transform.Rotate(Vector3.forward * -10);
     }

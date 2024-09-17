@@ -9,67 +9,66 @@
  */
 
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// Response schema for the fulfillOrder endpoint
+    ///     Response schema for the fulfillOrder endpoint
     /// </summary>
     [DataContract(Name = "_v1_ts_sdk_orderbook_fulfillOrder_post_200_response")]
-    public partial class V1TsSdkOrderbookFulfillOrderPost200Response
+    public class V1TsSdkOrderbookFulfillOrderPost200Response
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="V1TsSdkOrderbookFulfillOrderPost200Response" /> class.
+        ///     Initializes a new instance of the <see cref="V1TsSdkOrderbookFulfillOrderPost200Response" /> class.
         /// </summary>
         /// <param name="actions">actions.</param>
-        /// <param name="expiration">User MUST submit the fulfillment transaction before the expiration Submitting after the expiration will result in a on chain revert.</param>
+        /// <param name="expiration">
+        ///     User MUST submit the fulfillment transaction before the expiration Submitting after the
+        ///     expiration will result in a on chain revert.
+        /// </param>
         /// <param name="order">order.</param>
-        public V1TsSdkOrderbookFulfillOrderPost200Response(List<TransactionAction> actions = default(List<TransactionAction>), string expiration = default(string), Order order = default(Order))
+        public V1TsSdkOrderbookFulfillOrderPost200Response(List<TransactionAction> actions = default,
+            string expiration = default, Order order = default)
         {
-            this.Actions = actions;
-            this.Expiration = expiration;
-            this.Order = order;
+            Actions = actions;
+            Expiration = expiration;
+            Order = order;
         }
 
         /// <summary>
-        /// Gets or Sets Actions
+        ///     Gets or Sets Actions
         /// </summary>
         [DataMember(Name = "actions", EmitDefaultValue = false)]
         public List<TransactionAction> Actions { get; set; }
 
         /// <summary>
-        /// User MUST submit the fulfillment transaction before the expiration Submitting after the expiration will result in a on chain revert
+        ///     User MUST submit the fulfillment transaction before the expiration Submitting after the expiration will result in a
+        ///     on chain revert
         /// </summary>
-        /// <value>User MUST submit the fulfillment transaction before the expiration Submitting after the expiration will result in a on chain revert</value>
+        /// <value>
+        ///     User MUST submit the fulfillment transaction before the expiration Submitting after the expiration will result
+        ///     in a on chain revert
+        /// </value>
         [DataMember(Name = "expiration", EmitDefaultValue = false)]
         public string Expiration { get; set; }
 
         /// <summary>
-        /// Gets or Sets Order
+        ///     Gets or Sets Order
         /// </summary>
         [DataMember(Name = "order", EmitDefaultValue = false)]
         public Order Order { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class V1TsSdkOrderbookFulfillOrderPost200Response {\n");
             sb.Append("  Actions: ").Append(Actions).Append("\n");
             sb.Append("  Expiration: ").Append(Expiration).Append("\n");
@@ -79,14 +78,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

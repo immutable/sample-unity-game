@@ -10,126 +10,111 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
-using System.Reflection;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// Action
+    ///     Action
     /// </summary>
     [JsonConverter(typeof(ActionJsonConverter))]
     [DataContract(Name = "Action")]
-    public partial class Action : AbstractOpenAPISchema
+    public class Action : AbstractOpenAPISchema
     {
+        private object _actualInstance;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="Action" /> class
-        /// with the <see cref="TransactionAction" /> class
+        ///     Initializes a new instance of the <see cref="Action" /> class
+        ///     with the <see cref="TransactionAction" /> class
         /// </summary>
         /// <param name="actualInstance">An instance of TransactionAction.</param>
         public Action(TransactionAction actualInstance)
         {
-            this.IsNullable = false;
-            this.SchemaType= "oneOf";
-            this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
+            IsNullable = false;
+            SchemaType = "oneOf";
+            ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Action" /> class
-        /// with the <see cref="SignableAction" /> class
+        ///     Initializes a new instance of the <see cref="Action" /> class
+        ///     with the <see cref="SignableAction" /> class
         /// </summary>
         /// <param name="actualInstance">An instance of SignableAction.</param>
         public Action(SignableAction actualInstance)
         {
-            this.IsNullable = false;
-            this.SchemaType= "oneOf";
-            this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
+            IsNullable = false;
+            SchemaType = "oneOf";
+            ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
-
-        private Object _actualInstance;
-
         /// <summary>
-        /// Gets or Sets ActualInstance
+        ///     Gets or Sets ActualInstance
         /// </summary>
-        public override Object ActualInstance
+        public override object ActualInstance
         {
-            get
-            {
-                return _actualInstance;
-            }
+            get => _actualInstance;
             set
             {
                 if (value.GetType() == typeof(SignableAction) || value is SignableAction)
-                {
-                    this._actualInstance = value;
-                }
+                    _actualInstance = value;
                 else if (value.GetType() == typeof(TransactionAction) || value is TransactionAction)
-                {
-                    this._actualInstance = value;
-                }
+                    _actualInstance = value;
                 else
-                {
-                    throw new ArgumentException("Invalid instance found. Must be the following types: SignableAction, TransactionAction");
-                }
+                    throw new ArgumentException(
+                        "Invalid instance found. Must be the following types: SignableAction, TransactionAction");
             }
         }
 
         /// <summary>
-        /// Get the actual instance of `TransactionAction`. If the actual instance is not `TransactionAction`,
-        /// the InvalidClassException will be thrown
+        ///     Get the actual instance of `TransactionAction`. If the actual instance is not `TransactionAction`,
+        ///     the InvalidClassException will be thrown
         /// </summary>
         /// <returns>An instance of TransactionAction</returns>
         public TransactionAction GetTransactionAction()
         {
-            return (TransactionAction)this.ActualInstance;
+            return (TransactionAction)ActualInstance;
         }
 
         /// <summary>
-        /// Get the actual instance of `SignableAction`. If the actual instance is not `SignableAction`,
-        /// the InvalidClassException will be thrown
+        ///     Get the actual instance of `SignableAction`. If the actual instance is not `SignableAction`,
+        ///     the InvalidClassException will be thrown
         /// </summary>
         /// <returns>An instance of SignableAction</returns>
         public SignableAction GetSignableAction()
         {
-            return (SignableAction)this.ActualInstance;
+            return (SignableAction)ActualInstance;
         }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
             var sb = new StringBuilder();
             sb.Append("class Action {\n");
-            sb.Append("  ActualInstance: ").Append(this.ActualInstance).Append("\n");
+            sb.Append("  ActualInstance: ").Append(ActualInstance).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public override string ToJson()
         {
-            return JsonConvert.SerializeObject(this.ActualInstance, Action.SerializerSettings);
+            return JsonConvert.SerializeObject(ActualInstance, SerializerSettings);
         }
 
         /// <summary>
-        /// Converts the JSON string into an instance of Action
+        ///     Converts the JSON string into an instance of Action
         /// </summary>
         /// <param name="jsonString">JSON string</param>
         /// <returns>An instance of Action</returns>
@@ -137,95 +122,87 @@ namespace Immutable.Ts.Model
         {
             Action newAction = null;
 
-            if (string.IsNullOrEmpty(jsonString))
-            {
-                return newAction;
-            }
-            int match = 0;
-            List<string> matchedTypes = new List<string>();
+            if (string.IsNullOrEmpty(jsonString)) return newAction;
+            var match = 0;
+            var matchedTypes = new List<string>();
 
             try
             {
                 // if it does not contains "AdditionalProperties", use SerializerSettings to deserialize
                 if (typeof(SignableAction).GetProperty("AdditionalProperties") == null)
-                {
-                    newAction = new Action(JsonConvert.DeserializeObject<SignableAction>(jsonString, Action.SerializerSettings));
-                }
+                    newAction = new Action(
+                        JsonConvert.DeserializeObject<SignableAction>(jsonString, SerializerSettings));
                 else
-                {
-                    newAction = new Action(JsonConvert.DeserializeObject<SignableAction>(jsonString, Action.AdditionalPropertiesSerializerSettings));
-                }
+                    newAction = new Action(JsonConvert.DeserializeObject<SignableAction>(jsonString,
+                        AdditionalPropertiesSerializerSettings));
                 matchedTypes.Add("SignableAction");
                 match++;
             }
             catch (Exception exception)
             {
                 // deserialization failed, try the next one
-                System.Diagnostics.Debug.WriteLine(string.Format("Failed to deserialize `{0}` into SignableAction: {1}", jsonString, exception.ToString()));
+                Debug.WriteLine("Failed to deserialize `{0}` into SignableAction: {1}", jsonString, exception);
             }
 
             try
             {
                 // if it does not contains "AdditionalProperties", use SerializerSettings to deserialize
                 if (typeof(TransactionAction).GetProperty("AdditionalProperties") == null)
-                {
-                    newAction = new Action(JsonConvert.DeserializeObject<TransactionAction>(jsonString, Action.SerializerSettings));
-                }
+                    newAction = new Action(
+                        JsonConvert.DeserializeObject<TransactionAction>(jsonString, SerializerSettings));
                 else
-                {
-                    newAction = new Action(JsonConvert.DeserializeObject<TransactionAction>(jsonString, Action.AdditionalPropertiesSerializerSettings));
-                }
+                    newAction = new Action(JsonConvert.DeserializeObject<TransactionAction>(jsonString,
+                        AdditionalPropertiesSerializerSettings));
                 matchedTypes.Add("TransactionAction");
                 match++;
             }
             catch (Exception exception)
             {
                 // deserialization failed, try the next one
-                System.Diagnostics.Debug.WriteLine(string.Format("Failed to deserialize `{0}` into TransactionAction: {1}", jsonString, exception.ToString()));
+                Debug.WriteLine("Failed to deserialize `{0}` into TransactionAction: {1}", jsonString, exception);
             }
 
             if (match == 0)
-            {
-                throw new InvalidDataException("The JSON string `" + jsonString + "` cannot be deserialized into any schema defined.");
-            }
-            else if (match > 1)
-            {
-                throw new InvalidDataException("The JSON string `" + jsonString + "` incorrectly matches more than one schema (should be exactly one match): " + String.Join(",", matchedTypes));
-            }
+                throw new InvalidDataException("The JSON string `" + jsonString +
+                                               "` cannot be deserialized into any schema defined.");
+            if (match > 1)
+                throw new InvalidDataException("The JSON string `" + jsonString +
+                                               "` incorrectly matches more than one schema (should be exactly one match): " +
+                                               string.Join(",", matchedTypes));
 
             // deserialization is considered successful at this point if no exception has been thrown.
             return newAction;
         }
-
     }
 
     /// <summary>
-    /// Custom JSON converter for Action
+    ///     Custom JSON converter for Action
     /// </summary>
     public class ActionJsonConverter : JsonConverter
     {
         /// <summary>
-        /// To write the JSON string
+        ///     To write the JSON string
         /// </summary>
         /// <param name="writer">JSON writer</param>
         /// <param name="value">Object to be converted into a JSON string</param>
         /// <param name="serializer">JSON Serializer</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteRawValue((string)(typeof(Action).GetMethod("ToJson").Invoke(value, null)));
+            writer.WriteRawValue((string)typeof(Action).GetMethod("ToJson").Invoke(value, null));
         }
 
         /// <summary>
-        /// To convert a JSON string into an object
+        ///     To convert a JSON string into an object
         /// </summary>
         /// <param name="reader">JSON reader</param>
         /// <param name="objectType">Object type</param>
         /// <param name="existingValue">Existing value</param>
         /// <param name="serializer">JSON Serializer</param>
         /// <returns>The object converted from the JSON string</returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
         {
-            switch(reader.TokenType) 
+            switch (reader.TokenType)
             {
                 case JsonToken.StartObject:
                     return Action.FromJson(JObject.Load(reader).ToString(Formatting.None));
@@ -237,7 +214,7 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Check if the object can be converted
+        ///     Check if the object can be converted
         /// </summary>
         /// <param name="objectType">Object type</param>
         /// <returns>True if the object can be converted</returns>
@@ -246,5 +223,4 @@ namespace Immutable.Ts.Model
             return false;
         }
     }
-
 }

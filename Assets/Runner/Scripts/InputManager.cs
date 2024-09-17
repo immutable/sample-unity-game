@@ -1,67 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
-using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// A simple Input Manager for a Runner game.
+    ///     A simple Input Manager for a Runner game.
     /// </summary>
     public class InputManager : MonoBehaviour
     {
+        [SerializeField] private float m_InputSensitivity = 1.5f;
+
+        private bool m_HasInput;
+        private Vector3 m_InputPosition;
+        private Vector3 m_PreviousInputPosition;
+
         /// <summary>
-        /// Returns the InputManager.
+        ///     Returns the InputManager.
         /// </summary>
-        public static InputManager Instance => s_Instance;
-        static InputManager s_Instance;
+        public static InputManager Instance { get; private set; }
 
-        [SerializeField]
-        float m_InputSensitivity = 1.5f;
-
-        bool m_HasInput;
-        Vector3 m_InputPosition;
-        Vector3 m_PreviousInputPosition;
-
-        void Awake()
+        private void Awake()
         {
-            if (s_Instance != null && s_Instance != this)
+            if (Instance != null && Instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
 
-            s_Instance = this;
+            Instance = this;
         }
 
-        void OnEnable()
+        private void Update()
         {
-            EnhancedTouchSupport.Enable();
-        }
-
-        void OnDisable()
-        {
-            EnhancedTouchSupport.Disable();
-        }
-
-        void Update()
-        {
-            if (PlayerController.Instance == null)
-            {
-                return;
-            }
+            if (PlayerController.Instance == null) return;
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX || UNITY_WEBGL
             m_InputPosition = Mouse.current.position.ReadValue();
 
             if (Mouse.current.leftButton.isPressed)
             {
-                if (!m_HasInput)
-                {
-                    m_PreviousInputPosition = m_InputPosition;
-                }
+                if (!m_HasInput) m_PreviousInputPosition = m_InputPosition;
                 m_HasInput = true;
             }
             else
@@ -88,7 +67,8 @@ namespace HyperCasual.Runner
 
             if (m_HasInput)
             {
-                float normalizedDeltaPosition = (m_InputPosition.x - m_PreviousInputPosition.x) / Screen.width * m_InputSensitivity;
+                var normalizedDeltaPosition =
+                    (m_InputPosition.x - m_PreviousInputPosition.x) / Screen.width * m_InputSensitivity;
                 PlayerController.Instance.SetDeltaPosition(normalizedDeltaPosition);
             }
             else
@@ -98,6 +78,15 @@ namespace HyperCasual.Runner
 
             m_PreviousInputPosition = m_InputPosition;
         }
+
+        private void OnEnable()
+        {
+            EnhancedTouchSupport.Enable();
+        }
+
+        private void OnDisable()
+        {
+            EnhancedTouchSupport.Disable();
+        }
     }
 }
-

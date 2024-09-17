@@ -9,45 +9,31 @@
  */
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// Defines TransactionPurpose
+    ///     Defines TransactionPurpose
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
     public enum TransactionPurpose
     {
         /// <summary>
-        /// Enum APPROVAL for value: APPROVAL
+        ///     Enum APPROVAL for value: APPROVAL
         /// </summary>
-        [EnumMember(Value = "APPROVAL")]
-        APPROVAL,
+        [EnumMember(Value = "APPROVAL")] APPROVAL,
 
         /// <summary>
-        /// Enum FULFILLORDER for value: FULFILL_ORDER
+        ///     Enum FULFILLORDER for value: FULFILL_ORDER
         /// </summary>
-        [EnumMember(Value = "FULFILL_ORDER")]
-        FULFILLORDER,
+        [EnumMember(Value = "FULFILL_ORDER")] FULFILLORDER,
 
         /// <summary>
-        /// Enum CANCEL for value: CANCEL
+        ///     Enum CANCEL for value: CANCEL
         /// </summary>
-        [EnumMember(Value = "CANCEL")]
-        CANCEL
+        [EnumMember(Value = "CANCEL")] CANCEL
     }
-
 }

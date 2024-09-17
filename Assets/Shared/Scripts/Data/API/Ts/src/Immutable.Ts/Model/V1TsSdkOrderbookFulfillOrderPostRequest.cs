@@ -10,97 +10,91 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// V1TsSdkOrderbookFulfillOrderPostRequest
+    ///     V1TsSdkOrderbookFulfillOrderPostRequest
     /// </summary>
     [DataContract(Name = "_v1_ts_sdk_orderbook_fulfillOrder_post_request")]
-    public partial class V1TsSdkOrderbookFulfillOrderPostRequest
+    public class V1TsSdkOrderbookFulfillOrderPostRequest
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="V1TsSdkOrderbookFulfillOrderPostRequest" /> class.
+        ///     Initializes a new instance of the <see cref="V1TsSdkOrderbookFulfillOrderPostRequest" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected V1TsSdkOrderbookFulfillOrderPostRequest() { }
+        protected V1TsSdkOrderbookFulfillOrderPostRequest()
+        {
+        }
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="V1TsSdkOrderbookFulfillOrderPostRequest" /> class.
+        ///     Initializes a new instance of the <see cref="V1TsSdkOrderbookFulfillOrderPostRequest" /> class.
         /// </summary>
         /// <param name="listingId">listingId (required).</param>
         /// <param name="takerAddress">takerAddress (required).</param>
         /// <param name="takerFees">takerFees (required).</param>
         /// <param name="amountToFill">amountToFill.</param>
-        public V1TsSdkOrderbookFulfillOrderPostRequest(string listingId = default(string), string takerAddress = default(string), List<V1TsSdkOrderbookFulfillOrderPostRequestTakerFeesInner> takerFees = default(List<V1TsSdkOrderbookFulfillOrderPostRequestTakerFeesInner>), string amountToFill = default(string))
+        public V1TsSdkOrderbookFulfillOrderPostRequest(string listingId = default, string takerAddress = default,
+            List<V1TsSdkOrderbookFulfillOrderPostRequestTakerFeesInner> takerFees = default,
+            string amountToFill = default)
         {
             // to ensure "listingId" is required (not null)
             if (listingId == null)
-            {
-                throw new ArgumentNullException("listingId is a required property for V1TsSdkOrderbookFulfillOrderPostRequest and cannot be null");
-            }
-            this.ListingId = listingId;
+                throw new ArgumentNullException(
+                    "listingId is a required property for V1TsSdkOrderbookFulfillOrderPostRequest and cannot be null");
+            ListingId = listingId;
             // to ensure "takerAddress" is required (not null)
             if (takerAddress == null)
-            {
-                throw new ArgumentNullException("takerAddress is a required property for V1TsSdkOrderbookFulfillOrderPostRequest and cannot be null");
-            }
-            this.TakerAddress = takerAddress;
+                throw new ArgumentNullException(
+                    "takerAddress is a required property for V1TsSdkOrderbookFulfillOrderPostRequest and cannot be null");
+            TakerAddress = takerAddress;
             // to ensure "takerFees" is required (not null)
             if (takerFees == null)
-            {
-                throw new ArgumentNullException("takerFees is a required property for V1TsSdkOrderbookFulfillOrderPostRequest and cannot be null");
-            }
-            this.TakerFees = takerFees;
-            this.AmountToFill = amountToFill;
+                throw new ArgumentNullException(
+                    "takerFees is a required property for V1TsSdkOrderbookFulfillOrderPostRequest and cannot be null");
+            TakerFees = takerFees;
+            AmountToFill = amountToFill;
         }
 
         /// <summary>
-        /// listingId
+        ///     listingId
         /// </summary>
         /// <value>listingId</value>
         [DataMember(Name = "listingId", IsRequired = true, EmitDefaultValue = true)]
         public string ListingId { get; set; }
 
         /// <summary>
-        /// takerAddress
+        ///     takerAddress
         /// </summary>
         /// <value>takerAddress</value>
         [DataMember(Name = "takerAddress", IsRequired = true, EmitDefaultValue = true)]
         public string TakerAddress { get; set; }
 
         /// <summary>
-        /// takerFees
+        ///     takerFees
         /// </summary>
         /// <value>takerFees</value>
         [DataMember(Name = "takerFees", IsRequired = true, EmitDefaultValue = true)]
         public List<V1TsSdkOrderbookFulfillOrderPostRequestTakerFeesInner> TakerFees { get; set; }
 
         /// <summary>
-        /// amountToFill
+        ///     amountToFill
         /// </summary>
         /// <value>amountToFill</value>
         [DataMember(Name = "amountToFill", EmitDefaultValue = false)]
         public string AmountToFill { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class V1TsSdkOrderbookFulfillOrderPostRequest {\n");
             sb.Append("  ListingId: ").Append(ListingId).Append("\n");
             sb.Append("  TakerAddress: ").Append(TakerAddress).Append("\n");
@@ -111,14 +105,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

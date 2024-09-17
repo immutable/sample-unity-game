@@ -1,98 +1,65 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// A class used to generate terrain for 
-    /// Runner levels.
+    ///     A class used to generate terrain for
+    ///     Runner levels.
     /// </summary>
     public class TerrainGenerator : MonoBehaviour
     {
         /// <summary>
-        /// Contains all the measurements needed for the 
-        /// TerrainGenerator to create a new piece of Terrain.
-        /// </summary>
-        public struct TerrainDimensions
-        {
-            /// <summary>
-            /// Width of the terrain to generate.
-            /// </summary>
-            public float Width;
-
-            /// <summary>
-            /// Length of the terrain to generate.
-            /// </summary>
-            public float Length;
-
-            /// <summary>
-            /// Length of terrain to add before the start of the level.
-            /// </summary>
-            public float StartBuffer;
-
-            /// <summary>
-            /// Length of terrain to add after the end of the level.
-            /// </summary>
-            public float EndBuffer;
-
-            /// <summary>
-            /// Thickness of the terrain to generate.
-            /// </summary>
-            public float Thickness;
-        }
-
-        /// <summary>
-        /// Creates and instantiates a Terrain GameObject, built
-        /// with the specified width, length, and thickness.
+        ///     Creates and instantiates a Terrain GameObject, built
+        ///     with the specified width, length, and thickness.
         /// </summary>
         /// <param name="terrainDimensions">
-        /// The dimensions of the terrain to generate
+        ///     The dimensions of the terrain to generate
         /// </param>
         /// <param name="terrainMaterial">
-        /// The material to apply to the terrain.
+        ///     The material to apply to the terrain.
         /// </param>
         /// <param name="terrainGameObject">
-        /// A new GameObject that is created to hold the terrain.
+        ///     A new GameObject that is created to hold the terrain.
         /// </param>
-        public static void CreateTerrain(TerrainDimensions terrainDimensions, Material terrainMaterial, ref GameObject terrainGameObject)
+        public static void CreateTerrain(TerrainDimensions terrainDimensions, Material terrainMaterial,
+            ref GameObject terrainGameObject)
         {
-            float width = terrainDimensions.Width;
-            float length = terrainDimensions.Length;
-            float startBuffer = terrainDimensions.StartBuffer;
-            float endBuffer = terrainDimensions.EndBuffer;
-            float thickness = terrainDimensions.Thickness;
+            var width = terrainDimensions.Width;
+            var length = terrainDimensions.Length;
+            var startBuffer = terrainDimensions.StartBuffer;
+            var endBuffer = terrainDimensions.EndBuffer;
+            var thickness = terrainDimensions.Thickness;
 
-            Mesh mesh = new Mesh();
+            var mesh = new Mesh();
             mesh.name = "Terrain";
-            Vector3[] vertices = new Vector3[24];
-            Vector3[] normals = new Vector3[24];
-            Vector2[] uvs = new Vector2[24];
-            int[] triangles = new int[36];
+            var vertices = new Vector3[24];
+            var normals = new Vector3[24];
+            var uvs = new Vector2[24];
+            var triangles = new int[36];
 
-            float halfWidth = width * 0.5f;
-            float beginningOfStartBuffer = -startBuffer;
-            float endOfEndBuffer = length + endBuffer;
+            var halfWidth = width * 0.5f;
+            var beginningOfStartBuffer = -startBuffer;
+            var endOfEndBuffer = length + endBuffer;
 
-            Vector3 upperStartLeft = new Vector3(-halfWidth, 0.0f, beginningOfStartBuffer);
-            Vector3 upperStartRight = new Vector3(halfWidth, 0.0f, beginningOfStartBuffer);
-            Vector3 lowerStartLeft = new Vector3(-halfWidth, -thickness, beginningOfStartBuffer);
-            Vector3 lowerStartRight = new Vector3(halfWidth, -thickness, beginningOfStartBuffer);
+            var upperStartLeft = new Vector3(-halfWidth, 0.0f, beginningOfStartBuffer);
+            var upperStartRight = new Vector3(halfWidth, 0.0f, beginningOfStartBuffer);
+            var lowerStartLeft = new Vector3(-halfWidth, -thickness, beginningOfStartBuffer);
+            var lowerStartRight = new Vector3(halfWidth, -thickness, beginningOfStartBuffer);
 
-            Vector3 upperEndLeft = new Vector3(-halfWidth, 0.0f, endOfEndBuffer);
-            Vector3 upperEndRight = new Vector3(halfWidth, 0.0f, endOfEndBuffer);
-            Vector3 lowerEndLeft = new Vector3(-halfWidth, -thickness, endOfEndBuffer);
-            Vector3 lowerEndRight = new Vector3(halfWidth, -thickness, endOfEndBuffer);
+            var upperEndLeft = new Vector3(-halfWidth, 0.0f, endOfEndBuffer);
+            var upperEndRight = new Vector3(halfWidth, 0.0f, endOfEndBuffer);
+            var lowerEndLeft = new Vector3(-halfWidth, -thickness, endOfEndBuffer);
+            var lowerEndRight = new Vector3(halfWidth, -thickness, endOfEndBuffer);
 
-            Vector3 upNormal = Vector3.up;
-            Vector3 rightNormal = Vector3.right;
-            Vector3 forwardNormal = Vector3.forward;
-            Vector3 downNormal = -upNormal;
-            Vector3 leftNormal = -rightNormal;
-            Vector3 backwardNormal = -forwardNormal;
+            var upNormal = Vector3.up;
+            var rightNormal = Vector3.right;
+            var forwardNormal = Vector3.forward;
+            var downNormal = -upNormal;
+            var leftNormal = -rightNormal;
+            var backwardNormal = -forwardNormal;
 
-            int vertexIndex = 0;
-            int triangleIndex = 0;
+            var vertexIndex = 0;
+            var triangleIndex = 0;
 
             // Top Plane
 
@@ -267,20 +234,48 @@ namespace HyperCasual.Runner
             if (terrainGameObject != null)
             {
                 if (Application.isPlaying)
-                {
                     Destroy(terrainGameObject);
-                }
                 else
-                {
                     DestroyImmediate(terrainGameObject);
-                }
             }
 
             terrainGameObject = new GameObject("Terrain");
-            MeshFilter meshFilter = terrainGameObject.AddComponent<MeshFilter>();
+            var meshFilter = terrainGameObject.AddComponent<MeshFilter>();
             meshFilter.sharedMesh = mesh;
-            MeshRenderer meshRenderer = terrainGameObject.AddComponent<MeshRenderer>();
+            var meshRenderer = terrainGameObject.AddComponent<MeshRenderer>();
             meshRenderer.sharedMaterial = terrainMaterial;
+        }
+
+        /// <summary>
+        ///     Contains all the measurements needed for the
+        ///     TerrainGenerator to create a new piece of Terrain.
+        /// </summary>
+        public struct TerrainDimensions
+        {
+            /// <summary>
+            ///     Width of the terrain to generate.
+            /// </summary>
+            public float Width;
+
+            /// <summary>
+            ///     Length of the terrain to generate.
+            /// </summary>
+            public float Length;
+
+            /// <summary>
+            ///     Length of terrain to add before the start of the level.
+            /// </summary>
+            public float StartBuffer;
+
+            /// <summary>
+            ///     Length of terrain to add after the end of the level.
+            /// </summary>
+            public float EndBuffer;
+
+            /// <summary>
+            ///     Thickness of the terrain to generate.
+            /// </summary>
+            public float Thickness;
         }
     }
 }

@@ -9,65 +9,56 @@
  */
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Ts.Client.OpenAPIDateConverter;
 
 namespace Immutable.Ts.Model
 {
     /// <summary>
-    /// OrderStatusOneOf3
+    ///     OrderStatusOneOf3
     /// </summary>
     [DataContract(Name = "OrderStatus_oneOf_3")]
-    public partial class OrderStatusOneOf3
+    public class OrderStatusOneOf3
     {
         /// <summary>
-        /// A terminal order status indicating that an order has been fulfilled.
+        ///     A terminal order status indicating that an order has been fulfilled.
         /// </summary>
         /// <value>A terminal order status indicating that an order has been fulfilled.</value>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum NameEnum
         {
             /// <summary>
-            /// Enum FILLED for value: FILLED
+            ///     Enum FILLED for value: FILLED
             /// </summary>
-            [EnumMember(Value = "FILLED")]
-            FILLED
+            [EnumMember(Value = "FILLED")] FILLED
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="OrderStatusOneOf3" /> class.
+        /// </summary>
+        /// <param name="name">A terminal order status indicating that an order has been fulfilled..</param>
+        public OrderStatusOneOf3(NameEnum? name = default)
+        {
+            Name = name;
         }
 
 
         /// <summary>
-        /// A terminal order status indicating that an order has been fulfilled.
+        ///     A terminal order status indicating that an order has been fulfilled.
         /// </summary>
         /// <value>A terminal order status indicating that an order has been fulfilled.</value>
         [DataMember(Name = "name", EmitDefaultValue = false)]
         public NameEnum? Name { get; set; }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OrderStatusOneOf3" /> class.
-        /// </summary>
-        /// <param name="name">A terminal order status indicating that an order has been fulfilled..</param>
-        public OrderStatusOneOf3(NameEnum? name = default(NameEnum?))
-        {
-            this.Name = name;
-        }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class OrderStatusOneOf3 {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("}\n");
@@ -75,14 +66,12 @@ namespace Immutable.Ts.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }
