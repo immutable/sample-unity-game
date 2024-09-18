@@ -40,7 +40,10 @@ namespace HyperCasual.Runner
             {
                 // Setup infinite scroll view and load assets
                 m_ScrollView.OnCreateItemView += OnCreateItemView;
-                LoadAssets();
+                if (m_Assets.Count == 0)
+                {
+                    LoadAssets();
+                }
 
                 // Gets the player's balance
                 m_Balance.UpdateBalance();
@@ -54,7 +57,6 @@ namespace HyperCasual.Runner
         {
             if (index < m_Assets.Count)
             {
-                // AssetModel asset = m_Assets[index];
                 var asset = m_Assets[index];
 
                 // Initialise the view with asset
@@ -75,7 +77,11 @@ namespace HyperCasual.Runner
             }
 
             // Load more assets if nearing the end of the list
-            if (index >= m_Assets.Count - 5 && !m_IsLoadingMore) LoadAssets();
+            if (index >= m_Assets.Count - 5 && !m_IsLoadingMore)
+            {
+                Debug.Log("Inventory Load more");
+                LoadAssets();
+            }
         }
 
         /// <summary>
@@ -102,7 +108,7 @@ namespace HyperCasual.Runner
         {
             Debug.Log("Fetching assets...");
 
-            var stacks = new List<AssetModel>();
+            var assets = new List<AssetModel>();
 
             try
             {
@@ -111,21 +117,21 @@ namespace HyperCasual.Runner
                 if (string.IsNullOrEmpty(address))
                 {
                     Debug.LogError("Could not get player's wallet");
-                    return stacks;
+                    return assets;
                 }
 
                 var url =
-                    $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/accounts/{address}/nfts?contract_address={Contract.SKIN}&page_size=6";
+                    $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/accounts/{address}/nfts?contract_address={Contract.SKIN}&page_size={Config.PAGE_SIZE}";
 
                 // Pagination
                 if (!string.IsNullOrEmpty(m_Page?.next_cursor))
                 {
                     url += $"&page_cursor={m_Page.next_cursor}";
                 }
-                else if (m_Page != null && m_Page.next_cursor == null)
+                else if (m_Page != null && string.IsNullOrEmpty(m_Page?.next_cursor))
                 {
                     Debug.Log("No more player assets to load");
-                    return stacks;
+                    return assets;
                 }
 
                 using var client = new HttpClient();
@@ -139,7 +145,7 @@ namespace HyperCasual.Runner
                     if (!string.IsNullOrEmpty(responseBody))
                     {
                         var assetsResponse = JsonUtility.FromJson<AssetsResponse>(responseBody);
-                        stacks = assetsResponse?.result ?? new List<AssetModel>();
+                        assets = assetsResponse?.result ?? new List<AssetModel>();
 
                         // Update pagination information
                         m_Page = assetsResponse?.page;
@@ -156,7 +162,7 @@ namespace HyperCasual.Runner
                 Debug.Log($"Failed to fetch assets: {ex.Message}");
             }
 
-            return stacks;
+            return assets;
         }
 
         /// <summary>

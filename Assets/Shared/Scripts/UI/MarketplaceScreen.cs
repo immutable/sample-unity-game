@@ -142,7 +142,7 @@ namespace HyperCasual.Runner
                 {
                     nextCursor = m_Page.NextCursor;
                 }
-                else if (m_Page != null && (m_Page.NextCursor == null || m_Orders.Count < Config.PAGE_SIZE))
+                else if (m_Page != null && string.IsNullOrEmpty(m_Page?.NextCursor))
                 {
                     Debug.Log("No more assets to load");
                     return stacks;
@@ -168,7 +168,7 @@ namespace HyperCasual.Runner
                 // trait.Add(new AttributeQuery("Colour", "Tropical Indigo"));
 
                 var result = await apiInstance.SearchStacksAsync(Config.CHAIN_NAME, new List<string> { Contract.SKIN },
-                    pageSize: Config.PAGE_SIZE);
+                    pageSize: Config.PAGE_SIZE, pageCursor: nextCursor);
                 m_Page = result.Page;
                 return result.Result;
             }
