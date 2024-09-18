@@ -39,7 +39,7 @@ namespace HyperCasual.Runner
         {
             if (m_Asset != null)
             {
-                m_NameText.text = m_Asset.name;
+                m_NameText.text = $"{m_Asset.name} #{m_Asset.token_id}";
                 m_CollectionText.text = m_Asset.contract_address;
                 m_Image.LoadUrl(m_Asset.image);
             }
