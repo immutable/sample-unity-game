@@ -11,6 +11,10 @@ using Immutable.Passport.Model;
 using Immutable.Search.Model;
 using TMPro;
 using UnityEngine;
+using Immutable.Ts.Api;
+using Immutable.Ts.Client;
+using Immutable.Ts.Model;
+using Newtonsoft.Json;
 
 namespace HyperCasual.Runner
 {
@@ -26,7 +30,6 @@ namespace HyperCasual.Runner
         [SerializeField] private Transform m_AttributesListParent;
         [SerializeField] private AttributeView m_AttributeObj;
         [SerializeField] private ImageUrlObject m_Image;
-        [SerializeField] private GameObject m_Progress;
         [SerializeField] private CustomDialog m_CustomDialog;
 
         [SerializeField] private Transform m_ListingParent;
@@ -37,6 +40,15 @@ namespace HyperCasual.Runner
         private readonly List<ListingObject> m_ListingViews = new();
 
         private StackBundle m_Order;
+        
+        private readonly DefaultApi m_TsApi;
+        
+        public OrderDetailsView()
+        {
+            var tsConfig = new Configuration();
+            tsConfig.BasePath = Config.TS_BASE_URL;
+            m_TsApi = new DefaultApi(tsConfig);
+        }
 
         private async void OnEnable()
         {
@@ -72,9 +84,6 @@ namespace HyperCasual.Runner
         {
             m_Order = order;
             UpdateData();
-
-            // Hide progress
-            m_Progress.SetActive(false);
         }
 
         /// <summary>
@@ -116,7 +125,8 @@ namespace HyperCasual.Runner
             ClearAttributes();
 
             // Populate attributes
-            foreach (var attribute in m_Order.Stack.Attributes)
+            List<NFTMetadataAttribute> attributes = m_Order.Stack?.Attributes ?? new List<NFTMetadataAttribute>();
+            foreach (var attribute in attributes)
             {
                 var newAttribute = Instantiate(m_AttributeObj, m_AttributesListParent); // Create a new asset object
                 newAttribute.gameObject.SetActive(true);
@@ -166,51 +176,31 @@ namespace HyperCasual.Runner
         /// </summary>
         private async UniTask<bool> OnBuyButtonClick(Listing listing)
         {
-            var address = SaveManager.Instance.WalletAddress;
-            var data = new FulfullOrderRequest
-            {
-                takerAddress = address,
-                listingId = listing.ListingId,
-                takerFees = listing.PriceDetails.Fees.Select(fee => new FulfullOrderRequestFee
-                {
-                    amount = fee.Amount,
-                    recipientAddress = fee.RecipientAddress
-                }).ToArray()
-            };
-
             try
             {
-                var json = JsonUtility.ToJson(data);
-                Debug.Log($"json = {json}");
-
-                using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post,
-                    "http://localhost:8080/v1/ts-sdk/v1/orderbook/fulfillOrder")
+                var fees = listing.PriceDetails.Fees
+                    .Select(fee => new V1TsSdkOrderbookFulfillOrderPostRequestTakerFeesInner
+                    (
+                        amount: fee.Amount,
+                        recipientAddress: fee.RecipientAddress
+                    )).ToList();
+                V1TsSdkOrderbookFulfillOrderPostRequest request = new V1TsSdkOrderbookFulfillOrderPostRequest(
+                    takerAddress: SaveManager.Instance.WalletAddress,
+                    listingId: listing.ListingId,
+                    takerFees: fees);
+                V1TsSdkOrderbookFulfillOrderPost200Response createListingResponse = await m_TsApi.V1TsSdkOrderbookFulfillOrderPostAsync(request);
+                
+                if (createListingResponse.Actions.Count > 0)
                 {
-                    Content = new StringContent(json, Encoding.UTF8, "application/json")
-                };
-                using var res = await client.SendAsync(req);
-
-                if (!res.IsSuccessStatusCode)
-                {
-                    var errorBody = await res.Content.ReadAsStringAsync();
-                    Debug.Log($"errorBody = {errorBody}");
-                    await m_CustomDialog.ShowDialog("Error", "Failed to buy", "OK");
-                    return false;
-                }
-
-                var responseBody = await res.Content.ReadAsStringAsync();
-                var response = JsonUtility.FromJson<FulfullOrderResponse>(responseBody);
-                if (response.transactions != null)
-                {
-                    foreach (var transaction in response.transactions)
+                    foreach (var transaction in createListingResponse.Actions)
                     {
                         var transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest
                         {
-                            to = transaction.to, // Immutable seaport contract
-                            data = transaction.data, // 87201b41 fulfillAvailableAdvancedOrders
+                            to = transaction.PopulatedTransactions.To, // Immutable seaport contract
+                            data = transaction.PopulatedTransactions.Data, // 87201b41 fulfillAvailableAdvancedOrders
                             value = "0"
                         });
+                        Debug.Log($"Transaction hash: {transactionHash}");
                     }
 
                     // Validate that order is fulfilled
@@ -224,15 +214,22 @@ namespace HyperCasual.Runner
 
                     return true;
                 }
-
-                return false;
+            }
+            catch (ApiException e)
+            {
+                Debug.LogError("Exception when calling: " + e.Message);
+                Debug.LogError("Status Code: " + e.ErrorCode);
+                ErrorModel errorModel = JsonConvert.DeserializeObject<ErrorModel>($"{e.ErrorContent}");
+                await m_CustomDialog.ShowDialog("Error", errorModel.message, "OK");
+                Debug.LogError(e.StackTrace);
             }
             catch (Exception ex)
             {
                 Debug.Log($"Failed to buy: {ex.Message}");
                 await m_CustomDialog.ShowDialog("Error", "Failed to buy", "OK");
-                return false;
             }
+
+            return false;
         }
 
         /// <summary>
@@ -243,7 +240,7 @@ namespace HyperCasual.Runner
             Debug.Log("Confirming order is filled...");
 
             var conditionMet = await PollingHelper.PollAsync(
-                $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_Order.Listings[0].ListingId}",
+                $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/orders/listings/{m_Order.Listings[0].ListingId}",
                 responseBody =>
                 {
                     var listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);

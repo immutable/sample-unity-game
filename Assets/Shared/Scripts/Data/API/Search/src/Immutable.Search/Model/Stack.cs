@@ -46,12 +46,10 @@ namespace Immutable.Search.Model
         /// <param name="animationUrl">The animation url of the NFT (required).</param>
         /// <param name="youtubeUrl">The youtube URL of NFT (required).</param>
         /// <param name="attributes">List of Metadata attributes (required).</param>
-        /// <param name="totalCount">Total count of NFTs in the stack matching the filter params (required).</param>
         public Stack(Guid stackId = default, Chain chain = default, string contractAddress = default,
             DateTime createdAt = default, DateTime updatedAt = default, string name = default,
             string description = default, string image = default, string externalUrl = default,
-            string animationUrl = default, string youtubeUrl = default, List<NFTMetadataAttribute> attributes = default,
-            int totalCount = default)
+            string animationUrl = default, string youtubeUrl = default, List<NFTMetadataAttribute> attributes = default)
         {
             StackId = stackId;
             // to ensure "chain" is required (not null)
@@ -92,7 +90,6 @@ namespace Immutable.Search.Model
             if (attributes == null)
                 throw new ArgumentNullException("attributes is a required property for Stack and cannot be null");
             Attributes = attributes;
-            TotalCount = totalCount;
         }
 
         /// <summary>
@@ -187,14 +184,6 @@ namespace Immutable.Search.Model
         public List<NFTMetadataAttribute> Attributes { get; set; }
 
         /// <summary>
-        ///     Total count of NFTs in the stack matching the filter params
-        /// </summary>
-        /// <value>Total count of NFTs in the stack matching the filter params</value>
-        /// <example>1</example>
-        [DataMember(Name = "total_count", IsRequired = true, EmitDefaultValue = true)]
-        public int TotalCount { get; set; }
-
-        /// <summary>
         ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -214,7 +203,6 @@ namespace Immutable.Search.Model
             sb.Append("  AnimationUrl: ").Append(AnimationUrl).Append("\n");
             sb.Append("  YoutubeUrl: ").Append(YoutubeUrl).Append("\n");
             sb.Append("  Attributes: ").Append(Attributes).Append("\n");
-            sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

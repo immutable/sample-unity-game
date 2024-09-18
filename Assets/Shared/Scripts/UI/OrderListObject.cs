@@ -46,7 +46,7 @@ namespace HyperCasual.Runner
 
             // Get and display asset details
             m_NameText.text = m_Order.Stack.Name;
-            m_CountText.text = $"Total count: {m_Order.Stack.TotalCount}";
+            m_CountText.text = $"Total count: {m_Order.StackCount}";
             m_Image.LoadUrl(m_Order.Stack.Image);
         }
 
