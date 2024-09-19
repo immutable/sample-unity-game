@@ -524,8 +524,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4986908211239487415}
   m_HandleRect: {fileID: 2602276242752267194}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.86333334
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3664,7 +3664,7 @@ GameObject:
   - component: {fileID: 1434711093444192206}
   - component: {fileID: 8120807956211276150}
   m_Layer: 5
-  m_Name: OrderObject
+  m_Name: StackObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4138,9 +4138,8 @@ MonoBehaviour:
   m_Balance: {fileID: 8026118861294500791}
   m_ColoursDropdown: {fileID: 8004575839892644515}
   m_SpeedDropdown: {fileID: 2828885607642083255}
-  m_OrderObj: {fileID: 8860545491911896429}
-  m_ListParent: {fileID: 3995018089020746221}
   m_ScrollView: {fileID: 2174789502373950655}
+  m_StackObj: {fileID: 8860545491911896429}
 --- !u!1 &7518897395523842868
 GameObject:
   m_ObjectHideFlags: 0

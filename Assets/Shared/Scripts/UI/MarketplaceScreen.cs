@@ -13,66 +13,76 @@ using UnityEngine;
 namespace HyperCasual.Runner
 {
     /// <summary>
-    ///     The marketplace view which displays currently listed skins.
+    ///     Displays a marketplace view for currently listed skins.
     /// </summary>
     public class MarketplaceScreen : View
     {
-        private static readonly List<string> COLOURS = new()
+        // Lists of available colours and speeds for filtering
+        private static readonly List<string> s_Colours = new()
             { "All", "Tropical Indigo", "Cyclamen", "Robin Egg Blue", "Mint", "Mindaro", "Amaranth Pink" };
 
-        private static readonly List<string> SPEEDS = new() { "All", "Slow", "Medium", "Fast" };
+        private static readonly List<string> s_Speeds = new() { "All", "Slow", "Medium", "Fast" };
 
+        // Back button and its event
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
+
+        // Player's balance display
         [SerializeField] private BalanceObject m_Balance;
+
+        // Dropdown filters for colours and speeds
         [SerializeField] private TMP_Dropdown m_ColoursDropdown;
         [SerializeField] private TMP_Dropdown m_SpeedDropdown;
-        [SerializeField] private OrderListObject m_OrderObj;
-        [SerializeField] private Transform m_ListParent;
-        [SerializeField] private InfiniteScrollView m_ScrollView;
-        private readonly List<StackBundle> m_Orders = new();
 
-        // Pagination
+        // Infinite scrolling list of stacks
+        [SerializeField] private InfiniteScrollView m_ScrollView;
+
+        // Template for displaying a stack
+        [SerializeField] private OrderListObject m_StackObj;
+
+        // List to store the loaded stacks
+        private readonly List<StackBundle> m_Stacks = new();
+
+        // Pagination and loading state
         private bool m_IsLoadingMore;
         private Page m_Page;
 
+        /// <summary>
+        ///     Resets the marketplace view, clearing the current stacks and resetting pagination.
+        /// </summary>
         private void Reset()
         {
-            // Clear the order list
-            m_Orders.Clear();
-
-            // Reset pagination information
+            m_Stacks.Clear();
             m_Page = null;
 
-            // Reset the InfiniteScrollView
+            // Reset the scroll view
             m_ScrollView.TotalItemCount = 0;
-            m_ScrollView.Clear(); // Resets the scroll view
+            m_ScrollView.Clear();
         }
 
         /// <summary>
-        ///     Sets up the marketplace list and fetches active orers.
+        ///     Sets up the marketplace screen and loads initial stacks.
         /// </summary>
-        private async void OnEnable()
+        private void OnEnable()
         {
-            // Hide order template item
-            m_OrderObj.gameObject.SetActive(false);
+            // Hide the stack template
+            m_StackObj.gameObject.SetActive(false);
 
-            // Add listener to back button
+            // Attach back button listener
             m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
 
-            if (Passport.Instance != null)
-            {
-                // Setup infinite scroll view and load orders
-                m_ScrollView.OnCreateItemView += OnCreateItemView;
-                if (m_Orders.Count == 0) LoadOrders();
+            if (Passport.Instance == null) return;
+            
+            // Set up the infinite scroll view and load stacks
+            m_ScrollView.OnCreateItemView += OnCreateItemView;
+            if (m_Stacks.Count == 0) LoadStacks();
 
-                // Setup filters
-                SetupFilters();
+            // Initialise dropdown filters
+            SetupFilters();
 
-                // Gets the player's balance
-                m_Balance.UpdateBalance();
-            }
+            // Update player's balance
+            m_Balance.UpdateBalance();
         }
 
         /// <summary>
@@ -80,38 +90,43 @@ namespace HyperCasual.Runner
         /// </summary>
         private void SetupFilters()
         {
+            // Set up colour dropdown
             m_ColoursDropdown.ClearOptions();
-            m_ColoursDropdown.AddOptions(COLOURS);
+            m_ColoursDropdown.AddOptions(s_Colours);
             m_ColoursDropdown.value = 0; // Default to "All"
             m_ColoursDropdown.onValueChanged.AddListener(delegate
             {
                 Reset();
-                LoadOrders();
+                LoadStacks();
             });
 
+            // Set up speed dropdown
             m_SpeedDropdown.ClearOptions();
-            m_SpeedDropdown.AddOptions(SPEEDS);
+            m_SpeedDropdown.AddOptions(s_Speeds);
             m_SpeedDropdown.value = 0; // Default to "All"
             m_SpeedDropdown.onValueChanged.AddListener(delegate
             {
                 Reset();
-                LoadOrders();
+                LoadStacks();
             });
         }
 
         /// <summary>
-        ///     Configures the order list item view
+        ///     Configures each item view in the stack list.
         /// </summary>
+        /// <param name="index">Index of the item in the stack list.</param>
+        /// <param name="item">GameObject representing the item view.</param>
         private void OnCreateItemView(int index, GameObject item)
         {
-            if (index < m_Orders.Count)
+            if (index < m_Stacks.Count)
             {
-                var order = m_Orders[index];
+                var stack = m_Stacks[index];
 
-                // Initialise the view with order
+                // Initialise the item view with the stack data
                 var itemComponent = item.GetComponent<OrderListObject>();
-                itemComponent.Initialise(order);
-                // Set up click listener
+                itemComponent.Initialise(stack);
+
+                // Set up click handling for the item
                 var clickable = item.GetComponent<ClickableView>();
                 if (clickable != null)
                 {
@@ -120,124 +135,102 @@ namespace HyperCasual.Runner
                     {
                         var view = UIManager.Instance.GetView<OrderDetailsView>();
                         UIManager.Instance.Show(view);
-                        view.Initialise(order);
+                        view.Initialise(stack);
                     };
                 }
             }
 
-            // Load more orders if nearing the end of the list
-            if (index >= m_Orders.Count - 5 && !m_IsLoadingMore) LoadOrders();
+            // Load more stacks if nearing the end of the list
+            if (index >= m_Stacks.Count - 5 && !m_IsLoadingMore) LoadStacks();
         }
 
         /// <summary>
-        ///     Loads orders and adds them to the scroll view.
+        ///     Loads stacks and adds them to the scroll view.
         /// </summary>
-        private async void LoadOrders()
+        private async void LoadStacks()
         {
             if (m_IsLoadingMore) return;
 
             m_IsLoadingMore = true;
 
-            var orders = await GetStacks();
-            if (orders != null && orders.Count > 0)
+            // Fetch the next set of stacks
+            var stacks = await GetStacks();
+            if (stacks != null && stacks.Count > 0)
             {
-                m_Orders.AddRange(orders);
-                m_ScrollView.TotalItemCount = m_Orders.Count;
+                m_Stacks.AddRange(stacks);
+                m_ScrollView.TotalItemCount = m_Stacks.Count;
             }
 
             m_IsLoadingMore = false;
         }
 
-        // Uses mocked stacks endpoint
+        /// <summary>
+        ///     Fetches the list of stacks from the API.
+        /// </summary>
+        /// <returns>List of StackBundle objects representing the stacks.</returns>
         private async UniTask<List<StackBundle>> GetStacks()
         {
-            Debug.Log("Fetching stacks assets...");
+            Debug.Log("Fetching stacks...");
 
             var stacks = new List<StackBundle>();
-
-            var config = new Configuration();
-            config.BasePath = Config.SEARCH_BASE_URL;
+            var config = new Configuration { BasePath = Config.SEARCH_BASE_URL };
             var apiInstance = new SearchApi(config);
 
             try
             {
-                string? nextCursor = null;
-                if (!string.IsNullOrEmpty(m_Page?.NextCursor))
-                {
-                    nextCursor = m_Page.NextCursor;
-                }
-                else if (m_Page != null && string.IsNullOrEmpty(m_Page?.NextCursor))
+                var nextCursor = m_Page?.NextCursor ?? null;
+                if (m_Page != null && string.IsNullOrEmpty(nextCursor))
                 {
                     Debug.Log("No more assets to load");
                     return stacks;
                 }
 
-                // Filter by metadata
-                var combinedObject = new Dictionary<string, object>();
-                if (m_ColoursDropdown.value != 0 || m_SpeedDropdown.value != 0)
-                {
-                    if (m_ColoursDropdown.value != 0)
+                // Filter based on dropdown selections
+                var filters = new Dictionary<string, object>();
+                if (m_ColoursDropdown.value != 0)
+                    filters["Colour"] = new
                     {
-                        var colourObject = new
-                        {
-                            Colour = new
-                            {
-                                values = new List<string> { COLOURS[m_ColoursDropdown.value] },
-                                condition = "eq"
-                            }
-                        };
-
-                        combinedObject["Colour"] = colourObject.Colour;
-                    }
-
-                    if (m_SpeedDropdown.value != 0)
+                        values = new List<string> { s_Colours[m_ColoursDropdown.value] },
+                        condition = "eq"
+                    };
+                if (m_SpeedDropdown.value != 0)
+                    filters["Speed"] = new
                     {
-                        var speedObject = new
-                        {
-                            Speed = new
-                            {
-                                values = new List<string> { SPEEDS[m_SpeedDropdown.value] },
-                                condition = "eq"
-                            }
-                        };
+                        values = new List<string> { s_Speeds[m_SpeedDropdown.value] },
+                        condition = "eq"
+                    };
 
-                        combinedObject["Speed"] = speedObject.Speed;
-                    }
-                }
+                var trait = filters.Count > 0 ? JsonConvert.SerializeObject(filters) : null;
 
-                string? trait = null;
-                if (combinedObject.Count > 0) trait = JsonConvert.SerializeObject(combinedObject);
-
+                // Fetch stacks from the API
                 var result = await apiInstance.SearchStacksAsync(
                     Config.CHAIN_NAME,
                     new List<string> { Contract.SKIN },
                     trait: trait,
                     pageSize: Config.PAGE_SIZE, pageCursor: nextCursor);
+
                 m_Page = result.Page;
                 return result.Result;
             }
             catch (ApiException e)
             {
-                Debug.LogError("Exception when calling: " + e.Message);
-                Debug.LogError("Status Code: " + e.ErrorCode);
+                Debug.LogError($"API error: {e.Message} (Status Code: {e.ErrorCode})");
                 Debug.LogError(e.StackTrace);
             }
             catch (Exception ex)
             {
-                Debug.Log($"Failed to fetch assets: {ex.Message}");
+                Debug.LogError($"Error fetching stacks: {ex.Message}");
             }
 
             return stacks;
         }
 
         /// <summary>
-        ///     Cleans up views and handles the back button click
+        ///     Handles the back button click event, cleaning up views and navigating back.
         /// </summary>
         private void OnBackButtonClick()
         {
             Reset();
-
-            // Trigger back button event
             m_BackEvent.Raise();
         }
     }
