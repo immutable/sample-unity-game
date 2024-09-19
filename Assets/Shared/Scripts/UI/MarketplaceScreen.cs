@@ -73,7 +73,7 @@ namespace HyperCasual.Runner
             m_BackButton.AddListener(OnBackButtonClick);
 
             if (Passport.Instance == null) return;
-            
+
             // Set up the infinite scroll view and load stacks
             m_ScrollView.OnCreateItemView += OnCreateItemView;
             if (m_Stacks.Count == 0) LoadStacks();
