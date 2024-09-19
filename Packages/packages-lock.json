@@ -15,14 +15,14 @@
       "hash": "b992a061fbf68ff1eb475d0837065b0549ed31ba"
     },
     "com.immutable.passport": {
-      "version": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Passport#v1.15.0",
+      "version": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Passport#v1.25.2",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.2.0",
         "com.cysharp.unitask": "2.3.3"
       },
-      "hash": "42ecbcd313769f4fda31a97fde0104a8e5fc6edd"
+      "hash": "b3cb334875c18c5dc56b278fb868bb363ea42d74"
     },
     "com.unity.burst": {
       "version": "1.8.4",
