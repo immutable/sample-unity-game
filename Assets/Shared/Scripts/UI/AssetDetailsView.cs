@@ -333,29 +333,12 @@ namespace HyperCasual.Runner
         /// <returns>The listing ID is asset was successfully listed</returns>
         private async UniTask<string> PrepareListing(string price)
         {
-            var address = SaveManager.Instance.WalletAddress;
-
-            var data = new PrepareListingRequest
-            {
-                makerAddress = address,
-                sell = new PrepareListingERC721Item
-                {
-                    contractAddress = Contract.SKIN,
-                    tokenId = m_Asset.token_id
-                },
-                buy = new PrepareListingERC20Item
-                {
-                    amount = price,
-                    contractAddress = Contract.TOKEN
-                }
-            };
-
             try
             {
                 var prepareListingResponse = await m_TsApi.V1TsSdkOrderbookPrepareListingPostAsync(
                     new V1TsSdkOrderbookPrepareListingPostRequest
                     (
-                        makerAddress: address,
+                        makerAddress: SaveManager.Instance.WalletAddress,
                         sell: new V1TsSdkOrderbookPrepareListingPostRequestSell(
                             new ERC721Item(Contract.SKIN, m_Asset.token_id)),
                         buy: new V1TsSdkOrderbookPrepareListingPostRequestBuy(
@@ -465,17 +448,10 @@ namespace HyperCasual.Runner
             m_CancelButton.gameObject.SetActive(false);
             m_Progress.gameObject.SetActive(true);
 
-            var address = SaveManager.Instance.WalletAddress;
-            var data = new CancelListingRequest
-            {
-                accountAddress = address,
-                orderIds = new List<string> { m_Listing.id }
-            };
-
             try
             {
                 var request = new V1TsSdkOrderbookCancelOrdersOnChainPostRequest(
-                    accountAddress: address,
+                    accountAddress: SaveManager.Instance.WalletAddress,
                     orderIds: new List<string> { m_Listing.id });
                 var response = await m_TsApi.V1TsSdkOrderbookCancelOrdersOnChainPostAsync(request);
 
