@@ -40,7 +40,7 @@ namespace HyperCasual.Runner
                 }
 
                 using var client = new HttpClient();
-                HttpResponseMessage response = await client.GetAsync($"http://localhost:6060/balance?address={address}");
+                HttpResponseMessage response = await client.GetAsync($"{Config.SERVER_URL}/balance?address={address}");
 
                 if (response.IsSuccessStatusCode)
                 {
