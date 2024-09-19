@@ -60,7 +60,7 @@ namespace HyperCasual.Runner
 #if UNITY_EDITOR
                 if (PrefabUtility.IsPartOfNonAssetPrefabInstance(gameObject))
 #endif
-                m_Transform.SetParent(LevelManager.Instance.transform);
+                    m_Transform.SetParent(LevelManager.Instance.transform);
             }
         }
 
