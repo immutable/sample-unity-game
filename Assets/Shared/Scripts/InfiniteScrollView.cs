@@ -10,12 +10,12 @@ namespace HyperCasual.Runner
         [SerializeField] private ScrollRect m_ScrollRect; // The ScrollRect component
         [SerializeField] private RectTransform m_Content; // The content container for the scroll view
         [SerializeField] private GameObject m_ItemPrefab; // Prefab for the items in the scroll view
+        private readonly List<GameObject> m_VisibleItems = new();
         private bool m_IsInitialised; // Flag to check if the component is initialised
         private int m_ItemCount;
         private int m_ItemHeight;
 
         private RectTransform m_RectTransform;
-        private readonly List<GameObject> m_VisibleItems = new();
 
         public int TotalItemCount
         {

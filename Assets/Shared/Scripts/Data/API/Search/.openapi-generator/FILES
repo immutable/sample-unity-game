@@ -16,7 +16,6 @@ docs/APIError429.md
 docs/APIError429AllOf.md
 docs/APIError500.md
 docs/APIError500AllOf.md
-docs/AttributeQuery.md
 docs/BackfillRequest.md
 docs/BasicAPIError.md
 docs/Chain.md
@@ -57,7 +56,6 @@ src/Immutable.Search.Test/Model/APIError429AllOfTests.cs
 src/Immutable.Search.Test/Model/APIError429Tests.cs
 src/Immutable.Search.Test/Model/APIError500AllOfTests.cs
 src/Immutable.Search.Test/Model/APIError500Tests.cs
-src/Immutable.Search.Test/Model/AttributeQueryTests.cs
 src/Immutable.Search.Test/Model/BackfillRequestTests.cs
 src/Immutable.Search.Test/Model/BasicAPIErrorTests.cs
 src/Immutable.Search.Test/Model/ChainTests.cs
@@ -114,7 +112,6 @@ src/Immutable.Search/Model/APIError429AllOf.cs
 src/Immutable.Search/Model/APIError500.cs
 src/Immutable.Search/Model/APIError500AllOf.cs
 src/Immutable.Search/Model/AbstractOpenAPISchema.cs
-src/Immutable.Search/Model/AttributeQuery.cs
 src/Immutable.Search/Model/BackfillRequest.cs
 src/Immutable.Search/Model/BasicAPIError.cs
 src/Immutable.Search/Model/Chain.cs

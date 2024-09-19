@@ -1,20 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Numerics;
-using System.Text;
 using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
 using Immutable.Passport;
 using Immutable.Passport.Model;
 using Immutable.Search.Model;
-using TMPro;
-using UnityEngine;
 using Immutable.Ts.Api;
 using Immutable.Ts.Client;
 using Immutable.Ts.Model;
 using Newtonsoft.Json;
+using TMPro;
+using UnityEngine;
 
 namespace HyperCasual.Runner
 {
@@ -36,13 +34,13 @@ namespace HyperCasual.Runner
         [SerializeField] private ListingObject m_ListingObj;
         [SerializeField] private GameObject m_EmptyListingText;
         private readonly List<AttributeView> m_AttributeViews = new();
-        private Listing m_Listing;
         private readonly List<ListingObject> m_ListingViews = new();
 
-        private StackBundle m_Order;
-        
         private readonly DefaultApi m_TsApi;
-        
+        private Listing m_Listing;
+
+        private StackBundle m_Order;
+
         public OrderDetailsView()
         {
             var tsConfig = new Configuration();
@@ -125,7 +123,7 @@ namespace HyperCasual.Runner
             ClearAttributes();
 
             // Populate attributes
-            List<NFTMetadataAttribute> attributes = m_Order.Stack?.Attributes ?? new List<NFTMetadataAttribute>();
+            var attributes = m_Order.Stack?.Attributes ?? new List<NFTMetadataAttribute>();
             foreach (var attribute in attributes)
             {
                 var newAttribute = Instantiate(m_AttributeObj, m_AttributesListParent); // Create a new asset object
@@ -181,15 +179,15 @@ namespace HyperCasual.Runner
                 var fees = listing.PriceDetails.Fees
                     .Select(fee => new V1TsSdkOrderbookFulfillOrderPostRequestTakerFeesInner
                     (
-                        amount: fee.Amount,
-                        recipientAddress: fee.RecipientAddress
+                        fee.Amount,
+                        fee.RecipientAddress
                     )).ToList();
-                V1TsSdkOrderbookFulfillOrderPostRequest request = new V1TsSdkOrderbookFulfillOrderPostRequest(
+                var request = new V1TsSdkOrderbookFulfillOrderPostRequest(
                     takerAddress: SaveManager.Instance.WalletAddress,
                     listingId: listing.ListingId,
                     takerFees: fees);
-                V1TsSdkOrderbookFulfillOrderPost200Response createListingResponse = await m_TsApi.V1TsSdkOrderbookFulfillOrderPostAsync(request);
-                
+                var createListingResponse = await m_TsApi.V1TsSdkOrderbookFulfillOrderPostAsync(request);
+
                 if (createListingResponse.Actions.Count > 0)
                 {
                     foreach (var transaction in createListingResponse.Actions)
@@ -219,7 +217,7 @@ namespace HyperCasual.Runner
             {
                 Debug.LogError("Exception when calling: " + e.Message);
                 Debug.LogError("Status Code: " + e.ErrorCode);
-                ErrorModel errorModel = JsonConvert.DeserializeObject<ErrorModel>($"{e.ErrorContent}");
+                var errorModel = JsonConvert.DeserializeObject<ErrorModel>($"{e.ErrorContent}");
                 await m_CustomDialog.ShowDialog("Error", errorModel.message, "OK");
                 Debug.LogError(e.StackTrace);
             }

@@ -7,9 +7,9 @@ namespace HyperCasual.Core
     /// </summary>
     public class EventLink : ILink, IGameEventListener
     {
-        private bool m_EventRaised;
         private readonly AbstractGameEvent m_GameEvent;
         private readonly IState m_NextState;
+        private bool m_EventRaised;
 
         /// <param name="gameEvent">the event this link listens to</param>
         /// <param name="nextState">the next state</param>

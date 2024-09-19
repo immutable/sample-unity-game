@@ -37,17 +37,13 @@ namespace Immutable.Search.Model
         /// <param name="stackId">stackId (required).</param>
         /// <param name="marketStack">marketStack (required).</param>
         /// <param name="marketCollection">marketCollection (required).</param>
-        public StackQuoteResult(Chain chain = default, string stackId = default, Market marketStack = default,
+        public StackQuoteResult(Chain chain = default, Guid stackId = default, Market marketStack = default,
             Market marketCollection = default)
         {
             // to ensure "chain" is required (not null)
             if (chain == null)
                 throw new ArgumentNullException("chain is a required property for StackQuoteResult and cannot be null");
             Chain = chain;
-            // to ensure "stackId" is required (not null)
-            if (stackId == null)
-                throw new ArgumentNullException(
-                    "stackId is a required property for StackQuoteResult and cannot be null");
             StackId = stackId;
             // to ensure "marketStack" is required (not null)
             if (marketStack == null)
@@ -71,7 +67,7 @@ namespace Immutable.Search.Model
         ///     Gets or Sets StackId
         /// </summary>
         [DataMember(Name = "stack_id", IsRequired = true, EmitDefaultValue = true)]
-        public string StackId { get; set; }
+        public Guid StackId { get; set; }
 
         /// <summary>
         ///     Gets or Sets MarketStack

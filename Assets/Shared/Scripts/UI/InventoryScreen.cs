@@ -40,10 +40,7 @@ namespace HyperCasual.Runner
             {
                 // Setup infinite scroll view and load assets
                 m_ScrollView.OnCreateItemView += OnCreateItemView;
-                if (m_Assets.Count == 0)
-                {
-                    LoadAssets();
-                }
+                if (m_Assets.Count == 0) LoadAssets();
 
                 // Gets the player's balance
                 m_Balance.UpdateBalance();

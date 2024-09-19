@@ -59,13 +59,13 @@ namespace HyperCasual.Runner
         [SerializeField] private AssetListingObject m_ListingObj;
 
         [SerializeField] private CustomDialog m_CustomDialog;
-        private AssetModel m_Asset;
 
         private readonly List<AttributeView> m_Attributes = new();
-        private OldListing m_Listing;
 
         private readonly SearchApi m_SearchApi;
         private readonly DefaultApi m_TsApi;
+        private AssetModel m_Asset;
+        private OldListing m_Listing;
 
         public AssetDetailsView()
         {
@@ -169,7 +169,7 @@ namespace HyperCasual.Runner
             try
             {
                 var response = await m_SearchApi.QuotesForStacksAsync(Config.CHAIN_NAME, Contract.SKIN,
-                    new List<string> { m_Asset.metadata_id });
+                    new List<Guid> { Guid.Parse(m_Asset.metadata_id) });
                 if (response.Result.Count > 0)
                 {
                     var quote = response.Result[0];
@@ -428,7 +428,8 @@ namespace HyperCasual.Runner
         /// </summary>
         /// <param name="signature">The signature for the listing.</param>
         /// <param name="preparedListing">The prepared listing data.</param>
-        private async UniTask<string?> ListAsset(string signature, V1TsSdkOrderbookPrepareListingPost200Response preparedListing)
+        private async UniTask<string?> ListAsset(string signature,
+            V1TsSdkOrderbookPrepareListingPost200Response preparedListing)
         {
             try
             {
@@ -473,10 +474,10 @@ namespace HyperCasual.Runner
 
             try
             {
-                V1TsSdkOrderbookCancelOrdersOnChainPostRequest request = new V1TsSdkOrderbookCancelOrdersOnChainPostRequest(
+                var request = new V1TsSdkOrderbookCancelOrdersOnChainPostRequest(
                     accountAddress: address,
                     orderIds: new List<string> { m_Listing.id });
-                V1TsSdkOrderbookCancelOrdersOnChainPost200Response response = await m_TsApi.V1TsSdkOrderbookCancelOrdersOnChainPostAsync(request);
+                var response = await m_TsApi.V1TsSdkOrderbookCancelOrdersOnChainPostAsync(request);
 
                 if (response?.CancellationAction.PopulatedTransactions.To != null)
                 {

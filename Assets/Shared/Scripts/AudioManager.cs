@@ -15,13 +15,13 @@ namespace HyperCasual.Runner
 
         [SerializeField] private AudioSource m_EffectSource;
 
-        [SerializeField][Min(0f)] private float m_MinSoundInterval = 0.1f;
+        [SerializeField] [Min(0f)] private float m_MinSoundInterval = 0.1f;
 
         [SerializeField] private SoundIDClipPair[] m_Sounds;
 
-        private readonly Dictionary<SoundID, AudioClip> m_Clips = new();
-
         private readonly AudioSettings m_AudioSettings = new();
+
+        private readonly Dictionary<SoundID, AudioClip> m_Clips = new();
 
         private float m_LastSoundPlayTime;
 

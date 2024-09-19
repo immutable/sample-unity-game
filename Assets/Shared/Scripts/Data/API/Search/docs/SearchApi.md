@@ -205,7 +205,7 @@ No authorization required
 
 <a id="quotesforstacks"></a>
 # **QuotesForStacks**
-> QuotesForStacksResult QuotesForStacks (string chainName, string contractAddress, List<string> stackId, string? pageCursor = null)
+> QuotesForStacksResult QuotesForStacks (string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = null)
 
 Get pricing data for a list of stack ids
 
@@ -230,7 +230,7 @@ namespace Example
             var apiInstance = new SearchApi(config);
             var chainName = imtbl-zkevm-testnet;  // string | The name of chain
             var contractAddress = "contractAddress_example";  // string | Contract address for collection that these stacks are on
-            var stackId = new List<string>(); // List<string> | List of stack ids to get pricing data for
+            var stackId = new List<Guid>(); // List<Guid> | List of stack ids to get pricing data for
             var pageCursor = "pageCursor_example";  // string? | Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional) 
 
             try
@@ -276,7 +276,7 @@ catch (ApiException e)
 |------|------|-------------|-------|
 | **chainName** | **string** | The name of chain |  |
 | **contractAddress** | **string** | Contract address for collection that these stacks are on |  |
-| **stackId** | [**List&lt;string&gt;**](string.md) | List of stack ids to get pricing data for |  |
+| **stackId** | [**List&lt;Guid&gt;**](Guid.md) | List of stack ids to get pricing data for |  |
 | **pageCursor** | **string?** | Encoded page cursor to retrieve previous or next page. Use the value returned in the response. | [optional]  |
 
 ### Return type
@@ -307,7 +307,7 @@ No authorization required
 
 <a id="searchstacks"></a>
 # **SearchStacks**
-> SearchStacksResult SearchStacks (string chainName, List<string> contractAddress, string? accountAddress = null, bool? onlyIncludeOwnerListings = null, List<AttributeQuery>? trait = null, string? keyword = null, int? pageSize = null, string? pageCursor = null)
+> SearchStacksResult SearchStacks (string chainName, List<string> contractAddress, string? accountAddress = null, bool? onlyIncludeOwnerListings = null, string? trait = null, string? keyword = null, int? pageSize = null, string? pageCursor = null)
 
 Search NFT stacks
 
@@ -334,7 +334,7 @@ namespace Example
             var contractAddress = new List<string>(); // List<string> | List of contract addresses to filter by
             var accountAddress = 1334120697966828340666039427861105342297873844179;  // string? | Account address to filter by (optional) 
             var onlyIncludeOwnerListings = true;  // bool? | Whether to the listings should include only the owner created listings (optional) 
-            var trait = new List<AttributeQuery>?(); // List<AttributeQuery>? | Traits to filter by (optional) 
+            var trait = "trait_example";  // string? | JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\"rarity\": {\"values\": [\"common\", \"rare\"], \"condition\": \"eq\"}})) (optional) 
             var keyword = sword;  // string? | Keyword to search NFT name and description. Alphanumeric characters only. (optional) 
             var pageSize = 100;  // int? | Number of results to return per page (optional)  (default to 100)
             var pageCursor = "pageCursor_example";  // string? | Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional) 
@@ -384,7 +384,7 @@ catch (ApiException e)
 | **contractAddress** | [**List&lt;string&gt;**](string.md) | List of contract addresses to filter by |  |
 | **accountAddress** | **string?** | Account address to filter by | [optional]  |
 | **onlyIncludeOwnerListings** | **bool?** | Whether to the listings should include only the owner created listings | [optional]  |
-| **trait** | [**List&lt;AttributeQuery&gt;?**](AttributeQuery.md) | Traits to filter by | [optional]  |
+| **trait** | **string?** | JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) | [optional]  |
 | **keyword** | **string?** | Keyword to search NFT name and description. Alphanumeric characters only. | [optional]  |
 | **pageSize** | **int?** | Number of results to return per page | [optional] [default to 100] |
 | **pageCursor** | **string?** | Encoded page cursor to retrieve previous or next page. Use the value returned in the response. | [optional]  |

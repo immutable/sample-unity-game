@@ -29,6 +29,8 @@ namespace HyperCasual.Runner
 
         private static readonly Color s_Blue = new(0.0f, 0.0f, 1.0f, 1.0f);
         private static readonly string s_LevelParentTag = "LevelParent";
+
+        private readonly List<Spawnable> m_SelectedSpawnables = new();
         private Color m_ActiveColor;
         private bool m_AttemptedToLoadPreviousLevel;
         private bool m_AutoSaveCamera;
@@ -42,8 +44,6 @@ namespace HyperCasual.Runner
 
         private GameObject m_LevelParentGO;
         private GameObject m_LoadedLevelGO;
-
-        private readonly List<Spawnable> m_SelectedSpawnables = new();
         private GameObject m_TerrainGO;
         internal bool HasLoadedLevel { get; private set; }
         internal LevelDefinition SourceLevelDefinition { get; private set; }
