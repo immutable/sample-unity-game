@@ -25,7 +25,7 @@ namespace HyperCasual.Runner
         public async void Initialise(StackBundle stack)
         {
             m_Stack = stack;
-            
+
             await UpdateData();
         }
 

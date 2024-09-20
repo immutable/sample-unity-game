@@ -26,7 +26,7 @@ namespace HyperCasual.Runner
         public List<AssetAttribute> attributes;
         public string metadata_id;
     }
-    
+
     [Serializable]
     public class AssetAttribute
     {

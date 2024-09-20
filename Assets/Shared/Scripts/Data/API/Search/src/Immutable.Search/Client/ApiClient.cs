@@ -281,9 +281,9 @@ namespace Immutable.Search.Client
 
             if (options.HeaderParameters != null)
                 foreach (var headerParam in options.HeaderParameters)
-                foreach (var value in headerParam.Value)
-                    // Todo make content headers actually content headers
-                    request.SetRequestHeader(headerParam.Key, value);
+                    foreach (var value in headerParam.Value)
+                        // Todo make content headers actually content headers
+                        request.SetRequestHeader(headerParam.Key, value);
 
             if (options.Cookies != null && options.Cookies.Count > 0)
             {
