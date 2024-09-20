@@ -61,7 +61,11 @@ To support minting and crafting in the game, three NFT collections need to be pr
 5. Open `Assets/Runner/Scripts/Config.cs` 
     1. Update`ZK_TOKEN_TOKEN_ADDRESS` to the contract address of Immutable Runner Token
     2. Update`ZK_SKIN_TOKEN_ADDRESS` to the contract address of Immutable Skin Token
-6. The game uses [zkEVM Send Transactions](https://docs.immutable.com/docs/zkEVM/sdks/unity#zkevm-send-transaction) to perform crafting, so you must [contact us](https://docs.immutable.com/docs/x/contact/) for pre-approval.
+6. The game uses [zkEVM Send Transactions](https://docs.immutable.com/docs/zkEVM/sdks/unity#zkevm-send-transaction) to perform crafting, so you must [contact us](https://docs.immutable.com/docs/x/contact/) for pre-approval. You will need to provide us:
+    1. The name of the game
+    2. The environment i.e. Testnet
+    3. The client ID
+    4. The `ZK_TOKEN_TOKEN_ADDRESS` and the function signature of the [craftSkin](https://github.com/immutable/sample-passport-unity-game/blob/d003639beb8b6ae91dbb590a20349d4ba67e79b2/contracts/contracts/RunnerToken.sol#L57) method, i.e. `0x63daf310`
 
 #### Immutable X
 
@@ -75,7 +79,11 @@ To support minting and crafting in the game, three NFT collections need to be pr
 3. Open `Assets/Runner/Scripts/Config.cs` 
     1. Update`TOKEN_TOKEN_ADDRESS` to the contract address of Immutable Runner Token
     2. Update`SKIN_TOKEN_ADDRESS` to the contract address of Immutable Skin Token
-4. The game uses [Immutable X Single and Bulk transfer](https://docs.immutable.com/docs/x/sdks/unity/#immutable-x-transfer) to perform crafting, so you must [contact us](https://docs.immutable.com/docs/x/contact/) for pre-approval.
+4. The game uses [Immutable X Single and Bulk transfer](https://docs.immutable.com/docs/x/sdks/unity/#immutable-x-transfer) to perform crafting, so you must [contact us](https://docs.immutable.com/docs/x/contact/) for pre-approval. You will need to provide us:
+    1. The name of the game
+    2. The environment i.e. Sandbox
+    3. The client ID
+    2. The `TOKEN_TOKEN_ADDRESS` and the receiver's address `0x0000000000000000000000000000000000000000`
 
 ## Running the game on Windows and macOS
 

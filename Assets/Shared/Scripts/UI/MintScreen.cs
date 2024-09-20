@@ -167,7 +167,7 @@ namespace HyperCasual.Runner
 
         private void ShowLoading(bool show)
         {
-            m_Loading.gameObject.SetActive(show);
+            m_Loading?.gameObject.SetActive(show);
         }
 
         private void ShowError(bool show)
