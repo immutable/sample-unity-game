@@ -28,6 +28,9 @@ namespace HyperCasual.Runner
         [SerializeField] private Transform m_ListParent = null;
         [SerializeField] private InfiniteScrollView m_ScrollView;
         private List<StackBundle> m_Assets = new List<StackBundle>();
+        WebViewObject webViewObject;
+
+        string Url = "http://localhost:3000/checkout/add-funds/";
 
         // Pagination
         private bool m_IsLoadingMore = false;
@@ -146,7 +149,8 @@ namespace HyperCasual.Runner
                     return stacks;
                 }
 
-                SearchStacksResult result = await apiInstance.SearchStacksAsync(Config.CHAIN_NAME, new List<string> { Contract.SKIN }, accountAddress: address, pageCursor: nextCursor, pageSize: 6);
+                SearchStacksResult result = await apiInstance.SearchStacksAsync(Config.CHAIN_NAME,
+                    new List<string> { Contract.SKIN }, accountAddress: address, pageCursor: nextCursor, pageSize: 6);
                 m_Page = result.Page;
                 return result.Result;
             }
@@ -233,7 +237,79 @@ namespace HyperCasual.Runner
         /// </summary>
         private void OnAddFundsButtonClick()
         {
-            Application.OpenURL("https://checkout-playground.sandbox.immutable.com/add-funds/");
+            webViewObject = (new GameObject("WebViewObject")).AddComponent<WebViewObject>();
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+            webViewObject.canvas = GameObject.Find("Canvas");
+#endif
+            webViewObject.Init(
+                cb: (msg) =>
+                {
+                    Debug.Log(string.Format("CallFromJS[{0}]", msg));
+                    if (msg == "close")
+                    {
+                        Destroy(webViewObject.gameObject);
+                    }
+                },
+                err: (msg) => { Debug.Log(string.Format("CallOnError[{0}]", msg)); },
+                httpErr: (msg) => { Debug.Log(string.Format("CallOnHttpError[{0}]", msg)); },
+                started: (msg) => { Debug.Log(string.Format("CallOnStarted[{0}]", msg)); },
+                hooked: (msg) => { Debug.Log(string.Format("CallOnHooked[{0}]", msg)); },
+                cookies: (msg) => { Debug.Log(string.Format("CallOnCookies[{0}]", msg)); },
+                ld: (msg) =>
+                {
+                    Debug.Log(string.Format("CallOnLoaded[{0}]", msg));
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX || UNITY_IOS
+                    // NOTE: the following js definition is required only for UIWebView; if
+                    // enabledWKWebView is true and runtime has WKWebView, Unity.call is defined
+                    // directly by the native plugin.
+#if true
+                    var js = @"
+                    if (!(window.webkit && window.webkit.messageHandlers)) {
+                        window.Unity = {
+                            call: function(msg) {
+                                window.location = 'unity:' + msg;
+                            }
+                        };
+                    }
+                ";
+#else
+                // NOTE: depending on the situation, you might prefer this 'iframe' approach.
+                // cf. https://github.com/gree/unity-webview/issues/189
+                var js = @"
+                    if (!(window.webkit && window.webkit.messageHandlers)) {
+                        window.Unity = {
+                            call: function(msg) {
+                                var iframe = document.createElement('IFRAME');
+                                iframe.setAttribute('src', 'unity:' + msg);
+                                document.documentElement.appendChild(iframe);
+                                iframe.parentNode.removeChild(iframe);
+                                iframe = null;
+                            }
+                        };
+                    }
+                ";
+#endif
+#elif UNITY_WEBPLAYER || UNITY_WEBGL
+                var js = @"
+                    window.Unity = {
+                        call:function(msg) {
+                            parent.unityWebView.sendMessage('WebViewObject', msg);
+                        }
+                    };
+                ";
+#else
+                var js = "";
+#endif
+                    webViewObject.EvaluateJS(js + @"Unity.call('ua=' + navigator.userAgent)");
+                }
+            );
+            Vector2 size = new Vector2(430, 640);
+
+            webViewObject.SetCenterPositionWithScale(Vector2.zero, size);
+
+            webViewObject.LoadURL(Url.Replace(" ", "%20"));
+
+            webViewObject.SetVisibility(true);
         }
     }
 }

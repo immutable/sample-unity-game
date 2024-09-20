@@ -5,8 +5,8 @@ namespace HyperCasual.Runner
 {
     public static class Config
     {
-        // public const string SERVER_URL = "https://sample-passport-unity-game-api.dev.immutable.com/fox";
-        public const string SERVER_URL = "http://localhost:6060";
+        public const string SERVER_URL = "https://sample-passport-unity-game-api.dev.immutable.com/fox";
+        // public const string SERVER_URL = "http://localhost:6060";
         public const string SDK_API = "https://api.sandbox.immutable.com/v1/ts-sdk/v1";
         public const string CLIENT_ID = "ZJL7JvetcDFBNDlgRs5oJoxuAUUl6uQj";
         // public const string CLIENT_ID = "2Ng38UmEg0Morz1xOQLtsDs72Wx8uyGL"; // Devnet
