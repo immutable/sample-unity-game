@@ -165,9 +165,7 @@ namespace HyperCasual.Runner
 
             ResetSpeed();
 
-            m_Fox.GetComponent<Renderer>().material.SetTexture("_BaseMap",
-                MemoryCache.s_UseCoolerSkin ? m_foxGradientTexture :
-                SaveManager.Instance.UseNewSkin ? m_foxBlueTexture : m_foxOriginalTexture);
+            m_Fox.GetComponent<Renderer>().material.SetTexture("_BaseMap", SaveManager.Instance.UseNewSkin ? m_foxBlueTexture : m_foxOriginalTexture);
         }
 
         /// <summary>
