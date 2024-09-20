@@ -298,7 +298,7 @@ namespace HyperCasual.Runner
                     };
                 ";
 #else
-                var js = "";
+                    var js = "";
 #endif
                     webViewObject.EvaluateJS(js + @"Unity.call('ua=' + navigator.userAgent)");
                 }

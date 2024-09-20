@@ -125,7 +125,7 @@ namespace HyperCasual.Runner
                 value = "0"
             });
             Debug.Log($"Craft transaction hash: {response.transactionHash}");
-            
+
             if (response.status != "1")
             {
                 m_CraftState = CraftSkinState.Failed;
