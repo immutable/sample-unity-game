@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Immutable.Passport;
+using Cysharp.Threading.Tasks;
 
 namespace HyperCasual.Runner
 {
@@ -29,6 +30,7 @@ namespace HyperCasual.Runner
         async void OnEnable()
         {
             ShowLoading(true);
+            m_Email.gameObject.SetActive(false);
 
             // Set listener to 'Start' button
             m_StartButton.RemoveListener(OnStartButtonClick);
@@ -54,6 +56,7 @@ namespace HyperCasual.Runner
                     await Passport.Instance.ConnectEvm();
                     List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
                     SaveManager.Instance.WalletAddress = accounts[0];
+                    await GetPlayersEmail();
                 }
             }
             else
@@ -71,6 +74,20 @@ namespace HyperCasual.Runner
         void OnDisable()
         {
             m_StartButton.RemoveListener(OnStartButtonClick);
+        }
+
+        private async UniTask GetPlayersEmail()
+        {
+            try
+            {
+                m_Email.text = await Passport.Instance.GetEmail();
+                m_Email.gameObject.SetActive(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.Log("Failed to get player's email");
+                m_Email.gameObject.SetActive(false);
+            }
         }
 
         void OnStartButtonClick()
@@ -101,6 +118,8 @@ namespace HyperCasual.Runner
                 ShowLogoutButton(false);
                 // Reset all other values
                 SaveManager.Instance.Clear();
+                m_Email.text = "";
+                m_Email.gameObject.SetActive(false);
             }
             catch (Exception ex)
             {
@@ -126,11 +145,6 @@ namespace HyperCasual.Runner
         void ShowLogoutButton(bool show)
         {
             m_LogoutButton.gameObject.SetActive(show);
-        }
-
-        void ShowEmail(bool show)
-        {
-            m_Email.gameObject.SetActive(show);
         }
     }
 }
