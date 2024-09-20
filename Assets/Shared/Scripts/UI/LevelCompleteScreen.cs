@@ -3,11 +3,12 @@ using HyperCasual.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Immutable.Passport;
-using Immutable.Passport.Model;
 using System;
 using System.Collections.Generic;
+using Immutable.Passport;
 using Cysharp.Threading.Tasks;
+using System.Numerics;
+using System.Net.Http;
 
 namespace HyperCasual.Runner
 {
@@ -19,85 +20,55 @@ namespace HyperCasual.Runner
         [SerializeField]
         HyperCasualButton m_NextButton;
         [SerializeField]
+        HyperCasualButton m_TryAgainButton;
+        [SerializeField]
         HyperCasualButton m_ContinuePassportButton;
         [SerializeField]
-        Image[] m_Stars;
+        Image[] m_Coins;
         [SerializeField]
-        AbstractGameEvent m_NextLevelEvent;
-        [SerializeField]
-        TextMeshProUGUI m_GoldText;
+        TextMeshProUGUI m_FoodText;
         [SerializeField]
         Slider m_XpSlider;
         [SerializeField]
         GameObject m_Loading;
-
         [SerializeField]
         GameObject m_CompletedContainer;
         [SerializeField]
-        GameObject m_MintedContainer;
-        [SerializeField]
-        GameObject m_SkinUnlockedContainer;
-        [SerializeField]
-        GameObject m_BonusSkinContainer;
+        TextMeshProUGUI m_ErrorMessage;
 
-        // Minted Fox
         [SerializeField]
-        TextMeshProUGUI m_MintedTitle;
+        AbstractGameEvent m_NextLevelEvent;
         [SerializeField]
-        HyperCasualButton m_MintedNextButton;
+        AbstractGameEvent m_SetupWalletEvent;
+        [SerializeField]
+        AbstractGameEvent m_UnlockedSkinEvent;
 
-        // Unlocked Skin
-        [SerializeField]
-        TextMeshProUGUI m_SkinUnlockedErrorMessage;
-        [SerializeField]
-        HyperCasualButton m_SkinUnlockedGetButton;
-        [SerializeField]
-        HyperCasualButton m_SkinUnlockedNextButton;
-        [SerializeField]
-        GameObject m_SkinUnlockedLoading;
-
-        // Bonus
-        [SerializeField]
-        HyperCasualButton m_BonusSkinGetButton;
-        [SerializeField]
-        HyperCasualButton m_BonusSkinNextButton;
-        [SerializeField]
-        GameObject m_BonusSkinLoading;
-        [SerializeField]
-        TextMeshProUGUI m_BonusSkinMessage;
-        
         /// <summary>
         /// The slider that displays the XP value 
         /// </summary>
         public Slider XpSlider => m_XpSlider;
 
-        int m_GoldValue;
+        int m_FoodValue;
 
-        private ConnectResponse? ConnectResponse;
-
-        private ApiService Api = new();
-        private bool MintingTokens = false;
-        private string? Address;
-        
         /// <summary>
-        /// The amount of gold to display on the celebration screen.
+        /// The amount of food to display on the celebration screen.
         /// The setter method also sets the celebration screen text.
         /// </summary>
-        public int GoldValue
+        public int FoodValue
         {
-            get => m_GoldValue;
+            get => m_FoodValue;
             set
             {
-                if (m_GoldValue != value)
+                if (m_FoodValue != value)
                 {
-                    m_GoldValue = value;
-                    m_GoldText.text = GoldValue.ToString();
+                    m_FoodValue = value;
+                    m_FoodText.text = FoodValue.ToString();
                 }
             }
         }
 
         float m_XpValue;
-        
+
         /// <summary>
         /// The amount of XP to display on the celebration screen.
         /// The setter method also sets the celebration screen slider value.
@@ -115,501 +86,186 @@ namespace HyperCasual.Runner
             }
         }
 
-        int m_StarCount = -1;
-        
+        int m_CoinCount = -1;
+
         /// <summary>
-        /// The number of stars to display on the celebration screen.
+        /// The number of tokens to display on the celebration screen.
         /// </summary>
-        public int StarCount
+        public int CoinCount
         {
-            get => m_StarCount;
+            get => m_CoinCount;
             set
             {
-                if (m_StarCount != value)
+                if (m_CoinCount != value)
                 {
-                    m_StarCount = value;
-                    DisplayStars(m_StarCount);
+                    m_CoinCount = value;
+                    DisplayCoins(m_CoinCount);
                 }
             }
         }
 
         public async void OnEnable()
         {
-            var connected = await Passport.Instance.HasCredentialsSaved();
-            HideLoading();
-            ShowContinueWithPassportButton(!connected);
-            ShowNextButton(connected);
-            ShowCompletedContainer(true);
-            ShowMintedContainer(false);
-            ShowSkinUnlockedContainer(false);
-            ShowBonusSkinContainer(false);
-
-            // Continue with Passport button
-            m_ContinuePassportButton.RemoveListener(OnContinueButtonClicked);
-            m_ContinuePassportButton.AddListener(OnContinueButtonClicked);
-
-            // Burn to get new skin button
-            m_SkinUnlockedGetButton.RemoveListener(OnBurnTokens);
-            m_SkinUnlockedGetButton.AddListener(OnBurnTokens);
-
-            // Get bonus skin button
-            m_BonusSkinGetButton.RemoveListener(BurnSkinForCoolerSkin);
-            m_BonusSkinGetButton.AddListener(BurnSkinForCoolerSkin);
-
-            // Next level button on Completed screen
+            // Set listener to 'Next' button
             m_NextButton.RemoveListener(OnNextButtonClicked);
-// #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
-            // Show new skin when level 2 completes
-            // And user is not already using it
-            if (MemoryCache.CurrentLevel == 2 && !MemoryCache.UseNewSkin)
+            m_NextButton.AddListener(OnNextButtonClicked);
+
+            // Set listener to "Continue with Passport" button
+            m_ContinuePassportButton.RemoveListener(OnContinueWithPassportButtonClicked);
+            m_ContinuePassportButton.AddListener(OnContinueWithPassportButtonClicked);
+
+            // Set listener to "Try again" button
+            m_TryAgainButton.RemoveListener(OnTryAgainButtonClicked);
+            m_TryAgainButton.AddListener(OnTryAgainButtonClicked);
+
+            ShowError(false);
+            ShowLoading(false);
+
+            // If player is logged into Passport mint coins to player
+            if (SaveManager.Instance.IsLoggedIn)
             {
-                m_NextButton.AddListener(OnNextButtonClickedShowNewSkin);
-            }
-            // Show bonus skin when level 3 completes
-            // And user already uses the new skin
-            // And user is not using cooler skin
-            else if (MemoryCache.CurrentLevel == 3 && MemoryCache.UseNewSkin && !MemoryCache.UseCoolerSkin)
-            {
-                m_NextButton.AddListener(OnNextButtonClickedShowBonusSkin);
+                // Mint collected coins to player
+                await MintCoins();
             }
             else
             {
-                m_NextButton.AddListener(OnNextButtonClicked);
+                // Show 'Next' button if player is already logged into Passport
+                ShowNextButton(SaveManager.Instance.IsLoggedIn);
+                // Show "Continue with Passport" button if the player is not logged into Passport
+                ShowContinueWithPassportButton(!SaveManager.Instance.IsLoggedIn);
             }
-// #else
-//             m_NextButton.AddListener(OnNextButtonClicked);
-// #endif
-
-            // Next level button on Minted Fox (and Tokens) screen
-            m_MintedNextButton.RemoveListener(OnNextButtonClicked);
-            m_MintedNextButton.AddListener(OnNextButtonClicked);
-
-            // Next level button on New Skin Unlocked screen
-            m_SkinUnlockedNextButton.RemoveListener(OnNextButtonClicked);
-            m_SkinUnlockedNextButton.AddListener(OnNextButtonClicked);
-
-            // Next/Pass button on bonus skin screen
-            m_BonusSkinNextButton.RemoveListener(OnNextButtonClicked);
-            m_BonusSkinNextButton.AddListener(OnNextButtonClicked);
-
-// #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
-            // If the user is connected to Passport, try and mint the tokens in the background
-            // if minting did not complete in time, we just ignore any errors
-            if (connected)
-            {
-                MintTokens();
-            }
-// #endif
         }
 
-        void OnNextButtonClicked()
+        /// <summary>
+        /// Mints collected coins (i.e. Immutable Runner Token) to the player's wallet
+        /// </summary>
+        private async UniTask MintCoins()
         {
-            Debug.Log("On Next Button Clicked");
-            // Reset screens
-            ShowCompletedContainer(true);
-            ShowMintedContainer(false);
-            ShowSkinUnlockedContainer(false);
-            ShowBonusSkinContainer(false);
+            // This function is similar to MintCoins() in MintScreen.cs. Consider refactoring duplicate code in production.
+            Debug.Log("Minting coins...");
+            bool success = false;
 
-            m_NextLevelEvent.Raise();
-        }
+            // Show loading
+            ShowLoading(true);
+            ShowNextButton(false);
+            ShowError(false);
 
-        async void OnContinueButtonClicked()
-        {
-            try 
+            try
             {
-                ShowContinueWithPassportButton(false);
-                ShowLoading();
-
-#if UNITY_ANDROID || UNITY_IPHONE || (UNITY_STANDALONE_OSX && !UNITY_EDITOR_OSX)
-                await Passport.Instance.ConnectImxPKCE();
-#else
-                await Passport.Instance.ConnectImx();
-#endif
-
-                // If in zkEVM mode, connect to EVM
-                if (SaveManager.Instance.ZkEvm)
+                // Don't mint any coins if player did not collect any
+                if (m_CoinCount == 0)
                 {
-                    await Passport.Instance.ConnectEvm();
-                    // Get address and save it
-                    List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
-                    Address = accounts[0];
+                    success = true;
                 }
                 else
                 {
-                    // Get address and save it
-                    Address = await Passport.Instance.GetAddress();
+                    var address = SaveManager.Instance.WalletAddress; // Get the player's wallet address to mint the coins to
+                    if (address != null)
+                    {
+                        success = await ApiService.MintTokens(m_CoinCount, address);
+                    }
                 }
-
-// #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
-                // Successfully connected                
-                MintFoxAndTokens();
-// #else
-//                 ShowContinueWithPassportButton(false);
-//                 HideLoading();
-//                 ShowNextButton(true);
-// #endif
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-                Debug.Log($"Failed to connect: {ex.Message}");
+                Debug.Log($"Failed to mint coins: {ex.Message}");
+            }
+
+            ShowLoading(false);
+            ShowNextButton(success);
+            ShowError(!success);
+        }
+
+        private async void OnContinueWithPassportButtonClicked()
+        {
+            try
+            {
+                // Show loading
                 ShowContinueWithPassportButton(false);
-                HideLoading();
+                ShowLoading(true);
+
+                // Log into Passport
+#if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
+                await Passport.Instance.LoginPKCE();
+#else
+                await Passport.Instance.Login();
+#endif
+
+                // Successfully logged in
+                // Save a persistent flag in the game that the player is logged in
+                SaveManager.Instance.IsLoggedIn = true;
+                // Show 'Next' button
                 ShowNextButton(true);
+                ShowLoading(false);
+                // Take the player to the Setup Wallet screen
+                m_SetupWalletEvent.Raise();
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Failed to log into Passport: {ex.Message}");
+                // Show Continue with Passport button again
+                ShowContinueWithPassportButton(true);
+                ShowLoading(false);
             }
         }
 
-        void OnNextButtonClickedShowNewSkin()
+        private async void OnTryAgainButtonClicked()
         {
-            Debug.Log("On Next Button Clicked Show New Skin");
-            ShowCompletedContainer(false);
-            ShowMintedContainer(false);
-            ShowSkinUnlockedContainer(true);
-            ShowBonusSkinContainer(false);
+            await MintCoins();
         }
 
-        void OnNextButtonClickedShowBonusSkin()
+        private void OnNextButtonClicked()
         {
-            Debug.Log("On Next Button Clicked Show Bonus Skin");
-            ShowCompletedContainer(false);
-            ShowMintedContainer(false);
-            ShowSkinUnlockedContainer(false);
-            ShowBonusSkinContainer(true);
+            // Check if the player is already using a new skin
+            if (!SaveManager.Instance.UseNewSkin)
+            {
+                // Player is not using a new skin, take player to Unlocked Skin screen
+                m_UnlockedSkinEvent.Raise();
+            }
+            else
+            {
+                // Player is already using a new skin, take player to the next level
+                m_NextLevelEvent.Raise();
+            }
         }
 
-        void ShowCompletedContainer(bool show)
+        private void ShowCompletedContainer(bool show)
         {
             m_CompletedContainer.gameObject.SetActive(show);
         }
 
-        void ShowMintedContainer(bool show)
-        {
-            m_MintedContainer.gameObject.SetActive(show);
-        }
-
-        void ShowSkinUnlockedContainer(bool show)
-        {
-            m_SkinUnlockedContainer.gameObject.SetActive(show);
-            if (show)
-            {
-                // Reset all other views
-                m_SkinUnlockedLoading.gameObject.SetActive(false);
-                m_SkinUnlockedErrorMessage.gameObject.SetActive(false);
-                m_SkinUnlockedGetButton.gameObject.SetActive(true);
-            }
-        }
-
-        void ShowBonusSkinContainer(bool show)
-        {
-            m_BonusSkinContainer.gameObject.SetActive(show);
-            if (show)
-            {
-                // Reset all other views
-                m_BonusSkinLoading.gameObject.SetActive(false);
-                ShowBonusSkinMessage("Burn your current skin\nfor a cooler skin!");
-                m_BonusSkinGetButton.gameObject.SetActive(true);
-            }
-        }
-
-        void ShowContinueWithPassportButton(bool show)
+        private void ShowContinueWithPassportButton(bool show)
         {
             m_ContinuePassportButton.gameObject.SetActive(show);
         }
 
-        void ShowNextButton(bool show)
+        private void ShowNextButton(bool show)
         {
             m_NextButton.gameObject.SetActive(show);
         }
 
-        void ShowLoading()
+        private void ShowLoading(bool show)
         {
-            m_Loading.gameObject.SetActive(true);
+            m_Loading.gameObject.SetActive(show);
         }
 
-        void HideLoading()
+        private void ShowError(bool show)
         {
-            m_Loading.gameObject.SetActive(false);
+            m_ErrorMessage.gameObject.SetActive(show);
+            m_TryAgainButton.gameObject.SetActive(show);
         }
 
-        public void ConfirmCode()
+        void DisplayCoins(int count)
         {
-            if (ConnectResponse != null)
-            {
-                Application.OpenURL(ConnectResponse.url);
-            }
-        }
+            count = Mathf.Clamp(count, 0, m_Coins.Length);
 
-        void DisplayStars(int count)
-        {
-            count = Mathf.Clamp(count, 0, m_Stars.Length);
-
-            if (m_Stars.Length > 0 && count >= 0 && count <= m_Stars.Length)
+            if (m_Coins.Length > 0 && count >= 0 && count <= m_Coins.Length)
             {
-                for (int i = 0; i < m_Stars.Length; i++)
+                for (int i = 0; i < m_Coins.Length; i++)
                 {
-                    m_Stars[i].gameObject.SetActive(i < count);
+                    m_Coins[i].gameObject.SetActive(i < count);
                 }
             }
-        }
-
-        private async UniTask GetWalletAddress()
-        {
-            if (Address == null)
-            {
-                if (SaveManager.Instance.ZkEvm)
-                {
-                    List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
-                    Address = accounts[0];
-                }
-                else
-                {
-                    Address = await Passport.Instance.GetAddress();
-                }
-            }
-        }
-
-        public void OnWalletClicked()
-        {
-            if (Address != null)
-            {
-                if (SaveManager.Instance.ZkEvm)
-                {
-                    Application.OpenURL($"https://explorer.testnet.immutable.com/address/{Address}");
-                }
-                else 
-                {
-                    Application.OpenURL($"http://localhost:6060/wallet?user={Address}");
-                }
-            }
-        }
-
-        private async void MintFoxAndTokens()
-        {
-            // Mint fox
-            bool mintedFox = await Api.MintFox(Address);
-
-            if (StarCount > 0)
-            {
-                // User collected tokens
-                bool mintedTokens = await Api.MintTokens(StarCount, Address);
-
-                if (!mintedFox && !mintedTokens)
-                {
-                    Debug.Log($"Failed to mint both a fox and tokens");
-                    ShowContinueWithPassportButton(false);
-                    HideLoading();
-                    ShowNextButton(true);
-                }
-                else
-                {
-                    string numTokens = StarCount == 1 ? "a token" : $"{StarCount} tokens";
-                    if (mintedFox && mintedTokens)
-                    {
-                        m_MintedTitle.text = $"You now own a Fox and {numTokens}!";
-                    }
-                    else if (mintedFox && !mintedTokens)
-                    {
-                        m_MintedTitle.text = $"You now own a Fox!";
-                    }
-                    else if (!mintedFox && mintedTokens)
-                    {
-                        m_MintedTitle.text = $"You now own {numTokens}";
-                    }
-                    HideLoading();
-                    ShowCompletedContainer(false);
-                    ShowMintedContainer(true);
-                }
-            }
-            else
-            {
-                // User did not collect and tokens
-                if (mintedFox)
-                {
-                    m_MintedTitle.text = $"You now own a Fox!";
-                    HideLoading();
-                    ShowCompletedContainer(false);
-                    ShowMintedContainer(true);
-                }
-                else
-                {
-                    Debug.Log($"Failed to mint a fox");
-                    ShowContinueWithPassportButton(false);
-                    HideLoading();
-                    ShowNextButton(true);
-                }
-            }
-        }
-
-        private async void MintTokens()
-        {
-            if (!MintingTokens)
-            {
-                MintingTokens = true;
-                try
-                {
-                    await GetWalletAddress();
-                    if (StarCount > 0)
-                    {
-                        bool mintedTokens = await Api.MintTokens(StarCount, Address);
-                        Debug.Log(mintedTokens ? "Minted tokens" : $"Failed to mint tokens");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.Log($"Error minting tokens: {ex.Message}");
-                }
-                MintingTokens = false;
-            }
-        }
-
-        private async void OnBurnTokens()
-        {
-            Debug.Log("On Burn Tokens...");
-            m_SkinUnlockedLoading.gameObject.SetActive(true);
-            m_SkinUnlockedGetButton.gameObject.SetActive(false);
-
-            await GetWalletAddress();
-            List<TokenModel> tokens = await Api.GetTokens(3, Address);
-            if (tokens.Count >= 3)
-            {
-                try
-                {
-                    if (SaveManager.Instance.ZkEvm)
-                    {
-                        long now = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                        Debug.Log($"Start OnBurnTokens zkEVMSendTransaction {DateTimeOffset.Now.ToUnixTimeMilliseconds() - now}");
-
-                        string encodedData = await Api.GetTokenCraftSkinEcodedData(tokens[0].token_id, tokens[1].token_id, tokens[2].token_id);
-                        string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest() {
-                            to = ApiService.ZK_TOKEN_TOKEN_ADDRESS,
-                            data = encodedData,
-                            value = "0"
-                        });
-                        Debug.Log($"End OnBurnTokens zkEVMSendTransaction {DateTimeOffset.Now.ToUnixTimeMilliseconds() - now}");
-                        Debug.Log($"Transaction hash: {transactionHash}");
-                        MemoryCache.UseNewSkin = true;
-                        ShowSkinUnlockedMessage("You now have the skin and can use it!");
-                    }
-                    else
-                    {
-                        // Burn tokens
-                        List<NftTransferDetails> transferDetails = new List<NftTransferDetails>();
-                        tokens.ForEach(delegate (TokenModel token)
-                        {
-                            Debug.Log($"Got token ID: {token.token_id}");
-                            transferDetails.Add(new NftTransferDetails(
-                                "0x0000000000000000000000000000000000000000",
-                                token.token_id,
-                                ApiService.TOKEN_TOKEN_ADDRESS.ToLower()));
-                        });
-                        var response = await Passport.Instance.ImxBatchNftTransfer(transferDetails.ToArray());
-
-                        // Mint skin
-                        bool mintedSkin = await Api.MintSkin(Address);
-                        if (mintedSkin)
-                        {
-
-                            MemoryCache.UseNewSkin = true;
-                            ShowSkinUnlockedMessage("You now have the skin and can use it!");
-                        }
-                        else
-                        {
-                            Debug.Log($"Something went wrong while minting skin");
-                            ShowSkinUnlockedMessage("Something went wrong :(");
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.Log($"Something went wrong while burning tokens {ex.Message}");
-                    ShowSkinUnlockedMessage("Something went wrong :(");
-                }
-            }
-            else 
-            {
-                ShowSkinUnlockedMessage("Not enough tokens to burn");
-            }
-        }
-
-        private void ShowSkinUnlockedMessage(string message)
-        {
-            m_SkinUnlockedErrorMessage.text = message;
-            m_SkinUnlockedErrorMessage.gameObject.SetActive(true);
-            m_SkinUnlockedGetButton.gameObject.SetActive(false);
-            m_SkinUnlockedLoading.gameObject.SetActive(false);
-        }
-
-        private async void BurnSkinForCoolerSkin()
-        {
-            Debug.Log("On Burn Skin For Cooler Skins...");
-            m_BonusSkinLoading.gameObject.SetActive(true);
-            m_BonusSkinGetButton.gameObject.SetActive(false);
-
-            await GetWalletAddress();
-            List<TokenModel> tokens = await Api.GetSkin(Address);
-            if (tokens.Count > 0)
-            {
-                try
-                {
-                    if (SaveManager.Instance.ZkEvm)
-                    {
-                        long now = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                        Debug.Log($"Start BurnSkinForCoolerSkin zkEVMSendTransaction {DateTimeOffset.Now.ToUnixTimeMilliseconds() - now}");
-                        string encodedData = await Api.GetSkinCraftSkinEcodedData(tokens[0].token_id);
-                        string transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest() {
-                            to = ApiService.ZK_SKIN_TOKEN_ADDRESS,
-                            data = encodedData,
-                            value = "0"
-                        });
-                        Debug.Log($"End BurnSkinForCoolerSkin zkEVMSendTransaction {DateTimeOffset.Now.ToUnixTimeMilliseconds() - now}");
-                        Debug.Log($"Transaction hash: {transactionHash}");
-                        MemoryCache.UseCoolerSkin = true;
-                        ShowBonusSkinMessage("You now have a cooler skin and can use it!");
-                    }
-                    else 
-                    {
-                        // Burn skin
-                        TokenModel skin = tokens[0];
-                        var response = await Passport.Instance.ImxTransfer(
-                            UnsignedTransferRequest.ERC721(
-                                "0x0000000000000000000000000000000000000000",
-                                skin.token_id,
-                                ApiService.SKIN_TOKEN_ADDRESS
-                            )
-                        );
-
-                        // Mint skin
-                        bool mintedSkin = await Api.MintSkin(Address);
-                        if (mintedSkin)
-                        {
-
-                            MemoryCache.UseCoolerSkin = true;
-                            ShowBonusSkinMessage("You now have a cooler skin and can use it!");
-                        }
-                        else
-                        {
-                            Debug.Log($"Something went wrong while minting skin");
-                            ShowBonusSkinMessage("Something went wrong :(");
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.Log($"Something went wrong while burning tokens {ex.Message}");
-                    ShowBonusSkinMessage("Something went wrong :(");
-                }
-            }
-            else 
-            {
-                ShowBonusSkinMessage("No skin to burn");
-            }
-        }
-    
-        private void ShowBonusSkinMessage(string message)
-        {
-            m_BonusSkinMessage.text = message;
-            m_BonusSkinMessage.gameObject.SetActive(true);
-            m_BonusSkinGetButton.gameObject.SetActive(false);
-            m_BonusSkinLoading.gameObject.SetActive(false);
         }
     }
 }

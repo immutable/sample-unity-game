@@ -130,7 +130,7 @@ namespace HyperCasual.Runner
         Vector3 GetPlayerPosition()
         {
             Vector3 playerPosition = Vector3.up;
-            if (PlayerController.Instance != null) 
+            if (PlayerController.Instance != null)
             {
                 playerPosition = PlayerController.Instance.GetPlayerTop();
             }

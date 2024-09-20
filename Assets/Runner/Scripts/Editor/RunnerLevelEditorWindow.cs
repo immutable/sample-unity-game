@@ -66,7 +66,7 @@ namespace HyperCasual.Runner
             window.LoadAutoSaveSettings();
         }
 
-        void OnFocus() 
+        void OnFocus()
         {
             SceneView.duringSceneGui -= OnSceneGUI;
             SceneView.duringSceneGui += OnSceneGUI;
@@ -183,7 +183,7 @@ namespace HyperCasual.Runner
                     Debug.LogError($"Could not load level with path {levelPath}. Specify a valid level to continue.");
                     m_AttemptedToLoadPreviousLevel = true;
                 }
-                
+
                 return;
             }
 
@@ -487,7 +487,7 @@ namespace HyperCasual.Runner
                     {
                         Debug.LogWarning("No instance of PlayerController found in the scene. No changes saved!");
                     }
-                    else 
+                    else
                     {
                         Debug.LogWarning("More than two instances of PlayerController found in the scene. No changes saved!");
                     }
@@ -515,7 +515,7 @@ namespace HyperCasual.Runner
                     {
                         Debug.LogWarning("No instance of CameraManager found in the scene. No changes saved!");
                     }
-                    else 
+                    else
                     {
                         Debug.LogWarning("More than two instances of CameraManager found in the scene. No changes saved!");
                     }

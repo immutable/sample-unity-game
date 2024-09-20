@@ -13,7 +13,7 @@ namespace HyperCasual.Gameplay
     {
         [SerializeField]
         SequenceManager m_SequenceManagerPrefab;
-        
+
         void Start()
         {
             Instantiate(m_SequenceManagerPrefab);

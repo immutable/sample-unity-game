@@ -12,7 +12,7 @@ namespace HyperCasual.Core
         /// The event this class is observing
         /// </summary>
         public AbstractGameEvent m_Event;
-        
+
         /// <summary>
         /// The event handler invoked once the event is triggered
         /// </summary>
@@ -33,7 +33,7 @@ namespace HyperCasual.Core
         {
             m_Event.RemoveListener(this);
         }
-        
+
         /// <summary>
         /// The event handler that is called when the subscribed event is triggered
         /// </summary>

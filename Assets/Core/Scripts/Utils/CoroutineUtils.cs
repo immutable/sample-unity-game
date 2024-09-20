@@ -11,10 +11,10 @@ namespace HyperCasual.Core
     /// It instantiates a hidden GameObject and adds an empty MonoBehaviour component
     /// to it that is used for starting/stopping coroutines.
     /// </summary>
-    public static class Coroutines 
+    public static class Coroutines
     {
         public class CoroutineHelper : MonoBehaviour { }
-        
+
         static MonoBehaviour s_Instance;
 
         static MonoBehaviour Instance
@@ -32,7 +32,7 @@ namespace HyperCasual.Core
                 return s_Instance;
             }
         }
-        
+
         /// <summary>
         /// Starts a coroutine
         /// </summary>

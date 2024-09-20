@@ -5,8 +5,9 @@ using HyperCasual.Core;
 using HyperCasual.Runner;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Immutable.Passport;
-using Immutable.Passport.Model;
+using System;
+using System.Collections;
+using UnityEngine;
 
 namespace HyperCasual.Gameplay
 {
@@ -34,11 +35,19 @@ namespace HyperCasual.Gameplay
         AbstractGameEvent m_LoseEvent;
         [SerializeField]
         AbstractGameEvent m_PauseEvent;
+        [SerializeField]
+        AbstractGameEvent m_SetupWalletEvent;
+        [SerializeField]
+        AbstractGameEvent m_MintEvent;
+        [SerializeField]
+        AbstractGameEvent m_UnlockedSkinEvent;
+        [SerializeField]
+        AbstractGameEvent m_CollectEvent;
         [Header("Other")]
         [SerializeField]
         float m_SplashDelay = 2f;
 
-        readonly StateMachine m_StateMachine = new ();
+        readonly StateMachine m_StateMachine = new();
         IState m_SplashScreenState;
         IState m_MainMenuState;
         IState m_LevelSelectState;
@@ -46,19 +55,19 @@ namespace HyperCasual.Gameplay
         public IState m_CurrentLevel;
 
         SceneController m_SceneController;
-        
+
         /// <summary>
         /// Initializes the SequenceManager
         /// </summary>
         public void Initialize()
         {
             m_SceneController = new SceneController(SceneManager.GetActiveScene());
-            
+
             InstantiatePreloadedAssets();
 
             m_SplashScreenState = new State(ShowUI<SplashScreen>);
             m_StateMachine.Run(m_SplashScreenState);
-            
+
             CreateMenuNavigationSequence();
             CreateLevelSequences();
             SetStartingLevel(0);
@@ -75,13 +84,13 @@ namespace HyperCasual.Gameplay
         void CreateMenuNavigationSequence()
         {
             // Create states
-            var passportDelay = new AsyncState(Passport.Init(Constants.CLIENT_ID, Immutable.Passport.Model.Environment.SANDBOX, "imxsample://callback", "imxsample://callback/logout"));
+            var splashDelay = new DelayState(m_SplashDelay);
             m_MainMenuState = new State(OnMainMenuDisplayed);
             m_LevelSelectState = new State(OnLevelSelectionDisplayed);
-            
+
             //Connect the states
-            m_SplashScreenState.AddLink(new Link(passportDelay));
-            passportDelay.AddLink(new Link(m_MainMenuState));
+            m_SplashScreenState.AddLink(new Link(splashDelay));
+            splashDelay.AddLink(new Link(m_MainMenuState));
             m_MainMenuState.AddLink(new EventLink(m_ContinueEvent, m_LevelSelectState));
             m_LevelSelectState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
         }
@@ -89,7 +98,7 @@ namespace HyperCasual.Gameplay
         void CreateLevelSequences()
         {
             m_LevelStates.Clear();
-            
+
             //Create and connect all level states
             IState lastState = null;
             foreach (var level in m_Levels)
@@ -110,6 +119,20 @@ namespace HyperCasual.Gameplay
             var unloadLastScene = new UnloadLastSceneState(m_SceneController);
             lastState?.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
             unloadLastScene.AddLink(new Link(m_LevelSelectState));
+
+            var setupWalletState = new PauseState(ShowUI<SetupWalletScreen>);
+            var mintState = new PauseState(ShowUI<MintScreen>);
+            var unlockedSkinState = new PauseState(ShowUI<UnlockedSkinScreen>);
+            var collectedSkinState = new PauseState(ShowUI<CollectedSkinScreen>);
+            lastState?.AddLink(new EventLink(m_SetupWalletEvent, setupWalletState
+            ));
+            lastState?.AddLink(new EventLink(m_UnlockedSkinEvent, unlockedSkinState));
+            setupWalletState.AddLink(new EventLink(m_MintEvent, mintState));
+            setupWalletState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
+            mintState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
+            unlockedSkinState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
+            unlockedSkinState.AddLink(new EventLink(m_CollectEvent, collectedSkinState));
+            collectedSkinState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
         }
 
         /// <summary>
@@ -121,7 +144,7 @@ namespace HyperCasual.Gameplay
         {
             return new LoadSceneState(m_SceneController, scenePath);
         }
-        
+
         /// <summary>
         /// Creates a level state from a level data
         /// </summary>
@@ -131,7 +154,7 @@ namespace HyperCasual.Gameplay
         {
             return new LoadLevelFromDef(m_SceneController, levelData, m_LevelManagers);
         }
-        
+
         IState AddLevelPeripheralStates(IState loadLevelState, IState quitState, IState lastState)
         {
             //Create states
@@ -142,15 +165,22 @@ namespace HyperCasual.Gameplay
             var pauseState = new PauseState(ShowUI<PauseMenu>);
             var unloadLose = new UnloadLastSceneState(m_SceneController);
             var unloadPause = new UnloadLastSceneState(m_SceneController);
+            var setupWalletState = new PauseState(ShowUI<SetupWalletScreen>);
+            var mintState = new PauseState(ShowUI<MintScreen>);
+            var unlockedSkinState = new PauseState(ShowUI<UnlockedSkinScreen>);
+            var collectedSkinState = new PauseState(ShowUI<CollectedSkinScreen>);
 
             //Connect the states
             lastState?.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
+            lastState?.AddLink(new EventLink(m_SetupWalletEvent, setupWalletState
+            ));
+            lastState?.AddLink(new EventLink(m_UnlockedSkinEvent, unlockedSkinState));
             loadLevelState.AddLink(new Link(gameplayState));
 
             gameplayState.AddLink(new EventLink(m_WinEvent, winState));
             gameplayState.AddLink(new EventLink(m_LoseEvent, loseState));
             gameplayState.AddLink(new EventLink(m_PauseEvent, pauseState));
-            
+
             loseState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
             loseState.AddLink(new EventLink(m_BackEvent, unloadLose));
             unloadLose.AddLink(new Link(quitState));
@@ -158,7 +188,14 @@ namespace HyperCasual.Gameplay
             pauseState.AddLink(new EventLink(m_ContinueEvent, gameplayState));
             pauseState.AddLink(new EventLink(m_BackEvent, unloadPause));
             unloadPause.AddLink(new Link(m_MainMenuState));
-            
+
+            setupWalletState.AddLink(new EventLink(m_MintEvent, mintState));
+            setupWalletState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
+            mintState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
+            unlockedSkinState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
+            unlockedSkinState.AddLink(new EventLink(m_CollectEvent, collectedSkinState));
+            collectedSkinState.AddLink(new EventLink(m_ContinueEvent, loadLevelState));
+
             return winState;
         }
 
@@ -169,8 +206,8 @@ namespace HyperCasual.Gameplay
         public void SetStartingLevel(int index)
         {
             m_LevelSelectState.RemoveAllLinks();
-            m_LevelSelectState.AddLink( new EventLink(m_ContinueEvent, m_LevelStates[index]));
-            m_LevelSelectState.AddLink(new EventLink(m_BackEvent, m_MainMenuState)); 
+            m_LevelSelectState.AddLink(new EventLink(m_ContinueEvent, m_LevelStates[index]));
+            m_LevelSelectState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
             m_LevelSelectState.EnableLinks();
         }
 
@@ -178,7 +215,7 @@ namespace HyperCasual.Gameplay
         {
             UIManager.Instance.Show<T>();
         }
-        
+
         void OnMainMenuDisplayed()
         {
             ShowUI<MainMenu>();
@@ -189,10 +226,10 @@ namespace HyperCasual.Gameplay
         {
             UIManager.Instance.Show<LevelCompleteScreen>();
             var currentLevelIndex = m_LevelStates.IndexOf(currentLevel);
-            
+
             if (currentLevelIndex == -1)
                 throw new Exception($"{nameof(currentLevel)} is invalid!");
-            
+
             var levelProgress = SaveManager.Instance.LevelProgress;
             if (currentLevelIndex == levelProgress && currentLevelIndex < m_LevelStates.Count - 1)
                 SaveManager.Instance.LevelProgress = levelProgress + 1;
@@ -203,7 +240,7 @@ namespace HyperCasual.Gameplay
             ShowUI<LevelSelectionScreen>();
             AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
         }
-        
+
         void OnGamePlayStarted(IState current)
         {
             m_CurrentLevel = current;

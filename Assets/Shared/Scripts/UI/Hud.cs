@@ -15,7 +15,7 @@ namespace HyperCasual.Gameplay
     public class Hud : View
     {
         [SerializeField]
-        TextMeshProUGUI m_GoldText;
+        TextMeshProUGUI m_FoodText;
         [SerializeField]
         Slider m_XpSlider;
         [SerializeField]
@@ -28,27 +28,27 @@ namespace HyperCasual.Gameplay
         /// </summary>
         public Slider XpSlider => m_XpSlider;
 
-        int m_GoldValue;
-        
+        int m_FoodValue;
+
         /// <summary>
         /// The amount of gold to display on the hud.
         /// The setter method also sets the hud text.
         /// </summary>
-        public int GoldValue
+        public int FoodValue
         {
-            get => m_GoldValue;
+            get => m_FoodValue;
             set
             {
-                if (m_GoldValue != value)
+                if (m_FoodValue != value)
                 {
-                    m_GoldValue = value;
-                    m_GoldText.text = GoldValue.ToString();
+                    m_FoodValue = value;
+                    m_FoodText.text = FoodValue.ToString();
                 }
             }
         }
 
         float m_XpValue;
-        
+
         /// <summary>
         /// The amount of XP to display on the hud.
         /// The setter method also sets the hud slider value.

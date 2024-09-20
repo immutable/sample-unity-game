@@ -38,7 +38,9 @@ export const mintFoxToken = async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: "Failed to mint token: " + error?.toString() });
+    return res
+      .status(400)
+      .json({ message: "Failed to mint token: " + error?.toString() });
   }
 };
 
@@ -68,6 +70,8 @@ export const mintFox = async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: "Failed to mint skin: " + error?.toString() });
+    return res
+      .status(400)
+      .json({ message: "Failed to mint skin: " + error?.toString() });
   }
 };

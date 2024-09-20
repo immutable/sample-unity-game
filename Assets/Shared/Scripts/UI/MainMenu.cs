@@ -1,11 +1,10 @@
+using System;
 using System.Collections.Generic;
 using HyperCasual.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Immutable.Passport;
-using Immutable.Passport.Model;
-using Cysharp.Threading.Tasks;
 
 namespace HyperCasual.Runner
 {
@@ -17,124 +16,61 @@ namespace HyperCasual.Runner
         [SerializeField]
         HyperCasualButton m_StartButton;
         [SerializeField]
-        HyperCasualButton m_InventoryButton;
-        [SerializeField]
-        HyperCasualButton m_ShopButton;
-        [SerializeField]
         AbstractGameEvent m_StartButtonEvent;
         [SerializeField]
-        TextMeshProUGUI m_ConnectedAs;
+        TextMeshProUGUI m_Email;
         [SerializeField]
         HyperCasualButton m_LogoutButton;
         [SerializeField]
         GameObject m_Loading;
-        [SerializeField]
-        Toggle m_zkEVMToggle;
 
-        public override async void Show() 
+        Passport passport;
+
+        async void OnEnable()
         {
-            Debug.Log("Showing Main menu screen");
-            base.Show();
+            ShowLoading(true);
 
-            m_Loading.gameObject.SetActive(true);
-            m_ShopButton.gameObject.SetActive(false);
-            m_InventoryButton.gameObject.SetActive(false);
-            bool isConnected = MemoryCache.IsConnected;
-            if (isConnected)
+            // Set listener to 'Start' button
+            m_StartButton.RemoveListener(OnStartButtonClick);
+            m_StartButton.AddListener(OnStartButtonClick);
+            // Set listener to 'Logout' button
+            m_LogoutButton.RemoveListener(OnLogoutButtonClick);
+            m_LogoutButton.AddListener(OnLogoutButtonClick);
+
+            // Initialise Passport
+            string environment = Immutable.Passport.Model.Environment.SANDBOX;
+            passport = await Passport.Init(Config.CLIENT_ID, environment, Config.REDIRECT_URI, Config.LOGOUT_URI);
+
+            // Check if the player is supposed to be logged in and if there are credentials saved
+            if (SaveManager.Instance.IsLoggedIn && await Passport.Instance.HasCredentialsSaved())
             {
-                await ShowConnectedEmail();
+                // Try to log in using saved credentials
+                bool success = await Passport.Instance.Login(useCachedSession: true);
+                // Update the login flag
+                SaveManager.Instance.IsLoggedIn = success;
+                // Set up wallet if successful
+                if (success)
+                {
+                    await Passport.Instance.ConnectEvm();
+                    List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
+                    SaveManager.Instance.WalletAddress = accounts[0];
+                }
             }
             else
             {
-                m_ShopButton.gameObject.SetActive(false);
-                m_InventoryButton.gameObject.SetActive(false);
-                bool hasCredsSaved = await Passport.Instance.HasCredentialsSaved();
-                if (hasCredsSaved)
-                {
-                    bool connected = await Passport.Instance.ConnectImx(useCachedSession: true);
-                    if (connected)
-                    {
-                        MemoryCache.IsConnected = true;
-                        await ShowConnectedEmail();
-                    }
-                    else
-                    {
-                        Debug.Log("Attempted to silently connect to Passport, but couldn't so logged out");
-                        ResetValues();
-                        hasCredsSaved = await Passport.Instance.HasCredentialsSaved();
-                        Debug.Log($"After logged out is credentials still there? {hasCredsSaved}");
-                    }
-                }
+                // No saved credentials to re-login the player, reset the login flag
+                SaveManager.Instance.IsLoggedIn = false;
+                SaveManager.Instance.WalletAddress = null;
             }
 
-            m_Loading.gameObject.SetActive(false);
-            m_StartButton.gameObject.SetActive(true);
-
-            m_zkEVMToggle.isOn = SaveManager.Instance.ZkEvm;
-            m_zkEVMToggle.onValueChanged.AddListener(delegate {
-                SaveManager.Instance.ZkEvm = m_zkEVMToggle.isOn;
-            });
+            ShowLoading(false);
+            // Show the logout button if the player is logged in
+            ShowLogoutButton(SaveManager.Instance.IsLoggedIn);
         }
 
-        private async UniTask ShowConnectedEmail()
-        {
-            m_ConnectedAs.gameObject.SetActive(true);
-            m_LogoutButton.gameObject.SetActive(true);
-            
-            string? email = await Passport.Instance.GetEmail();
-            string? address = null;
-            if (SaveManager.Instance.ZkEvm)
-            {
-                await Passport.Instance.ConnectEvm();
-                List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
-                address = accounts[0];
-            } else {
-                address = await Passport.Instance.GetAddress();
-            }
-            m_ConnectedAs.text = email != null && address != null ? $"{email}\n{address}" : "Connected";
-            // m_ShopButton.gameObject.SetActive(true);
-            // m_InventoryButton.gameObject.SetActive(true);
-        }
-
-        public async void OnLogout()
-        {
-            m_LogoutButton.gameObject.SetActive(false);
-            m_ConnectedAs.gameObject.SetActive(false);
-            m_Loading.gameObject.SetActive(true);
-            m_ShopButton.gameObject.SetActive(false);
-            m_InventoryButton.gameObject.SetActive(false);
-            m_StartButton.gameObject.SetActive(false);
-
-#if UNITY_ANDROID || UNITY_IPHONE || (UNITY_STANDALONE_OSX && !UNITY_EDITOR_OSX)
-            await Passport.Instance.LogoutPKCE();
-#else
-            await Passport.Instance.Logout();
-#endif
-            m_Loading.gameObject.SetActive(false);
-            m_StartButton.gameObject.SetActive(true);
-            ResetValues();
-        }
-
-        private void ResetValues()
-        {
-            SaveManager.Instance.LevelProgress = 0;
-            MemoryCache.IsConnected = false;
-            MemoryCache.UseNewSkin = false;
-            MemoryCache.UseCoolerSkin = false;
-        }
-
-        void OnEnable()
-        {
-            m_StartButton.AddListener(OnStartButtonClick);
-            m_InventoryButton.AddListener(OnInventoryButtonClick);
-            m_ShopButton.AddListener(OnShopButtonClick);
-        }
-        
         void OnDisable()
         {
             m_StartButton.RemoveListener(OnStartButtonClick);
-            m_InventoryButton.RemoveListener(OnInventoryButtonClick);
-            m_ShopButton.RemoveListener(OnShopButtonClick);
         }
 
         void OnStartButtonClick()
@@ -143,18 +79,58 @@ namespace HyperCasual.Runner
             AudioManager.Instance.PlayEffect(SoundID.ButtonSound);
         }
 
-        void OnInventoryButtonClick()
+        async void OnLogoutButtonClick()
         {
-            // Not implemented
-            // UIManager.Instance.Show<InventoryView>();
-            // AudioManager.Instance.PlayEffect(SoundID.ButtonSound);
+            try
+            {
+                // Hide the 'Logout' button
+                ShowLogoutButton(false);
+                // Show loading
+                ShowLoading(true);
+
+                // Logout
+#if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
+                await passport.LogoutPKCE();
+#else
+                await passport.Logout();
+#endif
+
+                // Reset the login flag
+                SaveManager.Instance.IsLoggedIn = false;
+                // Successfully logged out, hide 'Logout' button
+                ShowLogoutButton(false);
+                // Reset all other values
+                SaveManager.Instance.Clear();
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Failed to log out: {ex.Message}");
+                // Failed to logout so show 'Logout' button again
+                ShowLogoutButton(true);
+            }
+            // Hide loading
+            ShowLoading(false);
         }
 
-        void OnShopButtonClick()
+        void ShowLoading(bool show)
         {
-            // Not implemented
-            // UIManager.Instance.Show<MarketplaceView>();
-            // AudioManager.Instance.PlayEffect(SoundID.ButtonSound);
+            m_Loading.gameObject.SetActive(show);
+            ShowStartButton(!show);
+        }
+
+        void ShowStartButton(bool show)
+        {
+            m_StartButton.gameObject.SetActive(show);
+        }
+
+        void ShowLogoutButton(bool show)
+        {
+            m_LogoutButton.gameObject.SetActive(show);
+        }
+
+        void ShowEmail(bool show)
+        {
+            m_Email.gameObject.SetActive(show);
         }
     }
 }

@@ -104,7 +104,7 @@ namespace HyperCasual.Runner
         /// </param>
         public virtual void SetScale(Vector3 scale)
         {
-           m_Transform.localScale = scale;
+            m_Transform.localScale = scale;
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace HyperCasual.Runner
         /// This method can be overriden in classes that extend Spawnable
         /// to hold any logic needed to reset that object to its default state.
         /// </summary>
-        public virtual void ResetSpawnable() {}
+        public virtual void ResetSpawnable() { }
 
         protected virtual void OnEnable()
         {
@@ -182,8 +182,8 @@ namespace HyperCasual.Runner
 
             Vector3 position = m_Position;
 
-            position.x = m_LevelDefinition.GridSize * Mathf.Round(position.x/m_LevelDefinition.GridSize);
-            position.z = m_LevelDefinition.GridSize * Mathf.Round(position.z/m_LevelDefinition.GridSize);
+            position.x = m_LevelDefinition.GridSize * Mathf.Round(position.x / m_LevelDefinition.GridSize);
+            position.z = m_LevelDefinition.GridSize * Mathf.Round(position.z / m_LevelDefinition.GridSize);
 
             m_Transform.position = position;
 

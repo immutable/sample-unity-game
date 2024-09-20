@@ -20,17 +20,17 @@ namespace HyperCasual.Runner
             /// Width of the terrain to generate.
             /// </summary>
             public float Width;
-            
+
             /// <summary>
             /// Length of the terrain to generate.
             /// </summary>
             public float Length;
-            
+
             /// <summary>
             /// Length of terrain to add before the start of the level.
             /// </summary>
             public float StartBuffer;
-            
+
             /// <summary>
             /// Length of terrain to add after the end of the level.
             /// </summary>

@@ -9,15 +9,9 @@ using System;
 
 namespace HyperCasual.Core
 {
-    public class ApiService {
-
-        public const string TOKEN_TOKEN_ADDRESS = "";
-        public const string ZK_TOKEN_TOKEN_ADDRESS = "";
-        public const string SKIN_TOKEN_ADDRESS = "";
-        public const string ZK_SKIN_TOKEN_ADDRESS = "";
-        private const string SERVER_BASE_URL = "http://localhost:6060";
-
-        public async UniTask<bool> MintTokens(int num, string address)
+    public static class ApiService
+    {
+        public static async UniTask<bool> MintTokens(int num, string address)
         {
             Debug.Log($"Minting {num} tokens...");
             if (address != null)
@@ -28,7 +22,7 @@ namespace HyperCasual.Core
                     new KeyValuePair<string, string>("number", $"{num}")
                 };
                 using var client = new HttpClient();
-                string url = SaveManager.Instance.ZkEvm ? $"{SERVER_BASE_URL}/zkmint/token": $"{SERVER_BASE_URL}/mint/token";
+                string url = SaveManager.Instance.ZkEvm ? $"{Config.SERVER_BASE_URL}/zkmint/token" : $"{Config.SERVER_BASE_URL}/mint/token";
                 using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
                 using var res = await client.SendAsync(req);
                 return res.IsSuccessStatusCode;
@@ -36,7 +30,7 @@ namespace HyperCasual.Core
             return false;
         }
 
-        public async UniTask<bool> MintFox(string address)
+        public static async UniTask<bool> MintFox(string address)
         {
             Debug.Log("Minting fox...");
             if (address != null)
@@ -46,7 +40,7 @@ namespace HyperCasual.Core
                     new KeyValuePair<string, string>("toUserWallet", address)
                 };
                 using var client = new HttpClient();
-                string url = SaveManager.Instance.ZkEvm ? $"{SERVER_BASE_URL}/zkmint/character": $"{SERVER_BASE_URL}/mint/character";
+                string url = SaveManager.Instance.ZkEvm ? $"{Config.SERVER_BASE_URL}/zkmint/character" : $"{Config.SERVER_BASE_URL}/mint/character";
                 using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
                 using var res = await client.SendAsync(req);
                 return res.IsSuccessStatusCode;
@@ -54,7 +48,7 @@ namespace HyperCasual.Core
             return false;
         }
 
-        public async UniTask<bool> MintSkin(string address)
+        public static async UniTask<bool> MintSkin(string address)
         {
             Debug.Log("Minting skin...");
             if (address != null)
@@ -64,7 +58,7 @@ namespace HyperCasual.Core
                     new KeyValuePair<string, string>("toUserWallet", address)
                 };
                 using var client = new HttpClient();
-                string url = SaveManager.Instance.ZkEvm ? $"{SERVER_BASE_URL}/zkmint/skin": $"{SERVER_BASE_URL}/mint/skin";
+                string url = SaveManager.Instance.ZkEvm ? $"{Config.SERVER_BASE_URL}/zkmint/skin" : $"{Config.SERVER_BASE_URL}/mint/skin";
                 using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
                 using var res = await client.SendAsync(req);
                 return res.IsSuccessStatusCode;
@@ -72,12 +66,12 @@ namespace HyperCasual.Core
             return false;
         }
 
-        public async Task<List<TokenModel>> GetTokens(int numOfTokens, string address)
+        public static async Task<List<TokenModel>> GetTokens(int numOfTokens, string address)
         {
             using var client = new HttpClient();
-            string url = SaveManager.Instance.ZkEvm ? 
-            $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/{address}/nfts?contract_address={ZK_TOKEN_TOKEN_ADDRESS}" 
-            : $"https://api.sandbox.x.immutable.com/v1/assets?collection={TOKEN_TOKEN_ADDRESS}&page_size={numOfTokens}&user={address}";
+            string url = SaveManager.Instance.ZkEvm ?
+            $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/{address}/nfts?contract_address={Config.ZK_TOKEN_TOKEN_ADDRESS}"
+            : $"https://api.sandbox.x.immutable.com/v1/assets?collection={Config.TOKEN_TOKEN_ADDRESS}&page_size={numOfTokens}&user={address}";
             Debug.Log($"Get Tokens url: {url}");
             HttpResponseMessage response = await client.GetAsync(url);
             if (response.IsSuccessStatusCode)
@@ -95,12 +89,12 @@ namespace HyperCasual.Core
             }
         }
 
-        public async Task<List<TokenModel>> GetSkin(string address)
+        public static async Task<List<TokenModel>> GetSkin(string address)
         {
             using var client = new HttpClient();
             string url = SaveManager.Instance.ZkEvm ?
-            $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/{address}/nfts?contract_address={ZK_SKIN_TOKEN_ADDRESS}" 
-            : $"https://api.sandbox.x.immutable.com/v1/assets?collection={SKIN_TOKEN_ADDRESS}&page_size=1&user={address}";
+            $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/accounts/{address}/nfts?contract_address={Config.ZK_SKIN_TOKEN_ADDRESS}"
+            : $"https://api.sandbox.x.immutable.com/v1/assets?collection={Config.SKIN_TOKEN_ADDRESS}&page_size=1&user={address}";
             Debug.Log($"Get Skin url: {url}");
             HttpResponseMessage response = await client.GetAsync(url);
             if (response.IsSuccessStatusCode)
@@ -118,7 +112,7 @@ namespace HyperCasual.Core
             }
         }
 
-        public async Task<string?> GetTokenCraftSkinEcodedData(string tokenId1, string tokenId2, string tokenId3)
+        public static async Task<string?> GetTokenCraftSkinEcodedData(string tokenId1, string tokenId2, string tokenId3)
         {
             var nvc = new List<KeyValuePair<string, string>>
             {
@@ -127,22 +121,22 @@ namespace HyperCasual.Core
                 new KeyValuePair<string, string>("tokenId3", tokenId3)
             };
             using var client = new HttpClient();
-            using var req = new HttpRequestMessage(HttpMethod.Post, $"{SERVER_BASE_URL}/zk/token/craftskin/encodeddata") { Content = new FormUrlEncodedContent(nvc) };
+            using var req = new HttpRequestMessage(HttpMethod.Post, $"{Config.SERVER_BASE_URL}/zk/token/craftskin/encodeddata") { Content = new FormUrlEncodedContent(nvc) };
             using var res = await client.SendAsync(req);
-            
+
             string responseBody = await res.Content.ReadAsStringAsync();
             EncodedDataResponse encodedDataResponse = JsonUtility.FromJson<EncodedDataResponse>(responseBody);
             return encodedDataResponse.data;
         }
 
-        public async Task<string?> GetSkinCraftSkinEcodedData(string tokenId)
+        public static async Task<string?> GetSkinCraftSkinEcodedData(string tokenId)
         {
             var nvc = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("tokenId", tokenId)
             };
             using var client = new HttpClient();
-            using var req = new HttpRequestMessage(HttpMethod.Post, $"{SERVER_BASE_URL}/zk/skin/craftskin/encodeddata") { Content = new FormUrlEncodedContent(nvc) };
+            using var req = new HttpRequestMessage(HttpMethod.Post, $"{Config.SERVER_BASE_URL}/zk/skin/craftskin/encodeddata") { Content = new FormUrlEncodedContent(nvc) };
             using var res = await client.SendAsync(req);
 
             string responseBody = await res.Content.ReadAsStringAsync();

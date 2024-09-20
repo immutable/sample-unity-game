@@ -30,7 +30,7 @@ namespace HyperCasual.Runner
         {
             m_Button.onClick.RemoveListener(OnClick);
         }
-        
+
         /// <summary>
         /// Adds a listener the button event.
         /// </summary>
@@ -39,7 +39,7 @@ namespace HyperCasual.Runner
         {
             m_Action += handler;
         }
-        
+
         /// <summary>
         /// Removes a listener from the button event.
         /// </summary>
@@ -53,7 +53,7 @@ namespace HyperCasual.Runner
         {
             m_Button.onClick.RemoveListener(OnClick);
         }
-        
+
         protected virtual void OnClick()
         {
             m_Action?.Invoke();

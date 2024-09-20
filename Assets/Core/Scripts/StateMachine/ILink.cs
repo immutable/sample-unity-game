@@ -16,15 +16,15 @@ namespace HyperCasual.Core
         /// <param name="nextState">The next state that this link points to</param>
         /// <returns>true: the link is open for transition</returns>
         bool Validate(out IState nextState);
-        
+
         /// <summary>
         /// Activates the link
         /// </summary>
-        void Enable(){}
-        
+        void Enable() { }
+
         /// <summary>
         /// Deactivates the link
         /// </summary>
-        void Disable(){}
+        void Disable() { }
     }
 }

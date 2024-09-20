@@ -128,7 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d67b05fc6c9e8424b8c698b885b16384, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_GoldText: {fileID: 3523445250983894359}
+  m_FoodText: {fileID: 3523445250983894359}
   m_XpSlider: {fileID: 2418144166341577247}
   m_PauseButton: {fileID: 6004565484081077508}
   m_PauseEvent: {fileID: 11400000, guid: 4bbf7a853b87f44299489a25eb0d9ce5, type: 2}
@@ -761,7 +761,7 @@ PrefabInstance:
     - target: {fileID: 2910761123095850727, guid: 5a03a3a59cfb547b5b913cde3282c131,
         type: 3}
       propertyPath: m_Name
-      value: Gold Container
+      value: Food Container
       objectReference: {fileID: 0}
     - target: {fileID: 4174385919738700553, guid: 5a03a3a59cfb547b5b913cde3282c131,
         type: 3}

@@ -8,7 +8,7 @@ namespace HyperCasual.Core
     public class Link : ILink
     {
         readonly IState m_NextState;
-        
+
         /// <param name="nextState">the next state</param>
         public Link(IState nextState)
         {

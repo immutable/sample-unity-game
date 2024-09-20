@@ -24,13 +24,13 @@ namespace HyperCasual.Core
 
         View m_CurrentView;
 
-        readonly Stack<View> m_History = new ();
+        readonly Stack<View> m_History = new();
 
         void Start()
         {
             m_Views = m_Root.GetComponentsInChildren<View>(true).ToList();
             Init();
-            
+
             // m_ViewLayer.ResizeToSafeArea(m_Canvas);
         }
 

@@ -14,19 +14,19 @@ namespace HyperCasual.Runner
     public class Inventory : AbstractSingleton<Inventory>
     {
         [SerializeField]
-        GenericGameEventListener m_GoldEventListener;
+        GenericGameEventListener m_FoodEventListener;
         [SerializeField]
-        GenericGameEventListener m_KeyEventListener;
+        GenericGameEventListener m_CoinEventListener;
         [SerializeField]
         GenericGameEventListener m_WinEventListener;
         [SerializeField]
         GenericGameEventListener m_LoseEventListener;
 
-        int m_TempGold;
-        int m_TotalGold;
+        int m_TempFood;
+        int m_TotalFood;
         float m_TempXp;
         float m_TotalXp;
-        int m_TempKeys;
+        int m_TempCoins;
 
         /// <summary>
         /// Temporary const
@@ -42,43 +42,43 @@ namespace HyperCasual.Runner
 
         void Start()
         {
-            m_GoldEventListener.EventHandler = OnGoldPicked;
-            m_KeyEventListener.EventHandler = OnKeyPicked;
+            m_FoodEventListener.EventHandler = OnFoodPicked;
+            m_CoinEventListener.EventHandler = OnCoinPicked;
             m_WinEventListener.EventHandler = OnWin;
             m_LoseEventListener.EventHandler = OnLose;
 
-            m_TempGold = 0;
-            m_TotalGold = SaveManager.Instance.Currency;
+            m_TempFood = 0;
+            m_TotalFood = SaveManager.Instance.Food;
             m_TempXp = 0;
             m_TotalXp = SaveManager.Instance.XP;
-            m_TempKeys = 0;
+            m_TempCoins = 0;
 
             m_LevelCompleteScreen = UIManager.Instance.GetView<LevelCompleteScreen>();
             m_Hud = UIManager.Instance.GetView<Hud>();
-        } 
+        }
 
         void OnEnable()
         {
-            m_GoldEventListener.Subscribe();
-            m_KeyEventListener.Subscribe();
+            m_FoodEventListener.Subscribe();
+            m_CoinEventListener.Subscribe();
             m_WinEventListener.Subscribe();
             m_LoseEventListener.Subscribe();
         }
 
         void OnDisable()
         {
-            m_GoldEventListener.Unsubscribe();
-            m_KeyEventListener.Unsubscribe();
+            m_FoodEventListener.Unsubscribe();
+            m_CoinEventListener.Unsubscribe();
             m_WinEventListener.Unsubscribe();
             m_LoseEventListener.Unsubscribe();
         }
 
-        void OnGoldPicked()
+        void OnFoodPicked()
         {
-            if (m_GoldEventListener.m_Event is ItemPickedEvent goldPickedEvent)
+            if (m_FoodEventListener.m_Event is ItemPickedEvent foodPickedEvent)
             {
-                m_TempGold += goldPickedEvent.Count;
-                m_Hud.GoldValue = m_TempGold;
+                m_TempFood += foodPickedEvent.Count;
+                m_Hud.FoodValue = m_TempFood;
             }
             else
             {
@@ -86,11 +86,11 @@ namespace HyperCasual.Runner
             }
         }
 
-        void OnKeyPicked()
+        void OnCoinPicked()
         {
-            if (m_KeyEventListener.m_Event is ItemPickedEvent keyPickedEvent)
+            if (m_CoinEventListener.m_Event is ItemPickedEvent coinPickedEvent)
             {
-                m_TempKeys += keyPickedEvent.Count;
+                m_TempCoins += coinPickedEvent.Count;
             }
             else
             {
@@ -100,27 +100,25 @@ namespace HyperCasual.Runner
 
         void OnWin()
         {
-            m_TotalGold += m_TempGold;
-            m_TempGold = 0;
-            SaveManager.Instance.Currency = m_TotalGold;
+            m_TotalFood += m_TempFood;
+            m_TempFood = 0;
+            SaveManager.Instance.Food = m_TotalFood;
 
-            m_LevelCompleteScreen.GoldValue = m_TotalGold;
+            m_LevelCompleteScreen.FoodValue = m_TotalFood;
             m_LevelCompleteScreen.XpSlider.minValue = m_TotalXp;
             m_LevelCompleteScreen.XpSlider.maxValue = k_MilestoneFactor * (m_TotalXp + m_TempXp);
             m_LevelCompleteScreen.XpValue = m_TotalXp + m_TempXp;
 
-            m_LevelCompleteScreen.StarCount = m_TempKeys;
+            m_LevelCompleteScreen.CoinCount = m_TempCoins;
 
             m_TotalXp += m_TempXp;
             m_TempXp = 0f;
             SaveManager.Instance.XP = m_TotalXp;
-
-            m_LevelCompleteScreen.OnEnable();
         }
 
         void OnLose()
         {
-            m_TempGold = 0;
+            m_TempFood = 0;
             m_TotalXp += m_TempXp;
             m_TempXp = 0f;
             SaveManager.Instance.XP = m_TotalXp;
@@ -132,7 +130,7 @@ namespace HyperCasual.Runner
             {
                 m_TempXp += PlayerController.Instance.Speed * Time.deltaTime;
                 m_Hud.XpValue = m_TempXp;
-                
+
                 if (SequenceManager.Instance.m_CurrentLevel is LoadLevelFromDef loadLevelFromDef)
                 {
                     m_Hud.XpSlider.minValue = 0;

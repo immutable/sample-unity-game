@@ -44,16 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad3c9063ae27648e5bb39802427ca51e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_GoldEventListener:
+  m_FoodEventListener:
     m_Event: {fileID: 11400000, guid: a796f105604544326aea1a54797b65ba, type: 2}
-  m_KeyEventListener:
+  m_CoinEventListener:
     m_Event: {fileID: 11400000, guid: d8fa6750a045f40cdb26e0f0442f8be5, type: 2}
   m_WinEventListener:
     m_Event: {fileID: 11400000, guid: 4facc4ba26e884ef88b6c2506fa5ae2c, type: 2}
   m_LoseEventListener:
     m_Event: {fileID: 11400000, guid: 2b6d3353ba4d84d3ca725ef1835ca96f, type: 2}
-  m_TempGold: 0
-  m_TotalGold: 0
-  m_TempXp: 0
-  m_TotalXp: 0
-  m_TempKeys: 0

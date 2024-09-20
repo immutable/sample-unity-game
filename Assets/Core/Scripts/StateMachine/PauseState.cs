@@ -11,9 +11,9 @@ namespace HyperCasual.Core
     public class PauseState : AbstractState
     {
         readonly Action m_OnPause;
-        
+
         public override string Name => $"{nameof(PauseState)}";
-        
+
         /// <param name="onPause">The action that is invoked when the game loop paused</param>
         public PauseState(Action onPause)
         {
@@ -30,7 +30,7 @@ namespace HyperCasual.Core
         {
             yield return null;
         }
-        
+
         public override void Exit()
         {
             Time.timeScale = 1f;
