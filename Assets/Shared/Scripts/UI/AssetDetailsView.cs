@@ -505,6 +505,7 @@ namespace HyperCasual.Runner
                 responseBody =>
                 {
                     var listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
+                    m_Listing = listingResponse.result;
                     return listingResponse.result?.status.name == status;
                 });
 
