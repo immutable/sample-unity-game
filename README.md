@@ -89,9 +89,10 @@ The local server is used to mint and help craft assets.
 
 1. Navigate to `server/`
 2. Run `npm install`
-3. Run `npm run dev`
-4. Switch to the platform you would like to run on in Build Settings
-5. Start the game
+3. Run `npm run build`
+4. Run `npm run dev`
+5. Switch to the platform you would like to run on in Build Settings
+6. Start the game
     1. If you are running the game inside the Editor, open `Assets/Shared/Scenes/Boot.unity`
 
 ## Running the game on Android and iOS
