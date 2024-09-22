@@ -21,15 +21,9 @@ What makes this game unique is that the Fox, Skins and Immutable Runner coins wi
 * iOS
 * macOS
 
-## Installation
+## Pre-requisite
 
-> [!IMPORTANT]
-> Some files are stored on Git Large File Storage, so you must download and install git-lfs from [here](https://git-lfs.github.com/).
-
-1. Clone the [unity-immutable-sdk](https://github.com/immutable/unity-immutable-sdk) repository
-2. Clone this repository inside the `unity-immutable-sdk` directory
-
-Alternatively, you could change the path to the Immutable Passport package yourself in the [manifest](https://github.com/immutable/sample-passport-unity-game/blob/main/Packages/manifest.json) file (`"com.immutable.passport": "file:../../src/Packages/Passport"`).
+Some files are stored on Git Large File Storage, so you must download and install git-lfs from [here](https://git-lfs.github.com/).
 
 ## How to run the game
 
@@ -128,19 +122,19 @@ The [local server](https://github.com/immutable/sample-passport-unity-game/tree/
 
 ## Crafting
 
+### zkEVM
+Crafting is done by calling the craft function in the smart contract. This is done by using zkEVM Send Transaction.
+
+For example, to claim the cooler skin, the user needs to burn their current skin first:
+* [Get the encoded data](https://github.com/immutable/sample-unity-game/blob/a1544a14f7f960dc5741f1e0264e82860397a858/Assets/Shared/Scripts/UI/UnlockedSkinScreen.cs#L126) required to call the RunnerSkin contract's [`craftSkin` function](https://github.com/immutable/sample-passport-unity-game/blob/d003639beb8b6ae91dbb590a20349d4ba67e79b2/contracts/contracts/RunnerSkin.sol#L52) by calling [`POST /zk/skin/craftskin/encodeddata`](https://github.com/immutable/sample-passport-unity-game/blob/ed06ce54c77d0e53837e494ae3acb04b4e98f7df/server/src/routes/posts.ts#L13)
+* Use zkEVM Send Transaction to [call the `craftSkin` function](https://github.com/immutable/sample-unity-game/blob/a1544a14f7f960dc5741f1e0264e82860397a858/Assets/Shared/Scripts/UI/UnlockedSkinScreen.cs#L127) by passing the RunnerSkin contract address and the encoded data
+  * Note that the craftSkin function does all the burning and minting
+
 ### Immutable X
 Crafting is done by using the Immutable X Single and Bulk transfer functions.
 
 Required asset(s) to craft a new asset is transferred to `0x0000000000000000000000000000000000000000` to burn them. Once that is successful, the new asset is minted to the gamer's wallet using the local server.
 
 For example, to claim the first skin, the user needs to burn three of their tokens:
-* [Burn three tokens](https://github.com/immutable/sample-passport-unity-game/blob/ed06ce54c77d0e53837e494ae3acb04b4e98f7df/Assets/Shared/Scripts/UI/LevelCompleteScreen.cs#L504) using Immutable X Bulk Transfer
-* [Mint skin](https://github.com/immutable/sample-passport-unity-game/blob/ed06ce54c77d0e53837e494ae3acb04b4e98f7df/Assets/Shared/Scripts/UI/LevelCompleteScreen.cs#L507) using the [`POST /mint/skin`](https://github.com/immutable/sample-passport-unity-game/blob/ed06ce54c77d0e53837e494ae3acb04b4e98f7df/server/src/routes/posts.ts#L7)
-
-### zkEVM
-Crafting is done by calling the craft function in the smart contract. This is done by using zkEVM Send Transaction.
-
-For example, to claim the cooler skin, the user needs to burn their current skin first:
-* [Get the encoded data](https://github.com/immutable/sample-passport-unity-game/blob/ed06ce54c77d0e53837e494ae3acb04b4e98f7df/Assets/Shared/Scripts/UI/LevelCompleteScreen.cs#L557) required to call the RunnerSkin contract's [`craftSkin` function](https://github.com/immutable/sample-passport-unity-game/blob/d003639beb8b6ae91dbb590a20349d4ba67e79b2/contracts/contracts/RunnerSkin.sol#L52) by calling [`POST /zk/skin/craftskin/encodeddata`](https://github.com/immutable/sample-passport-unity-game/blob/ed06ce54c77d0e53837e494ae3acb04b4e98f7df/server/src/routes/posts.ts#L13)
-* Use zkEVM Send Transaction to [call the `craftSkin` function](https://github.com/immutable/sample-passport-unity-game/blob/ed06ce54c77d0e53837e494ae3acb04b4e98f7df/Assets/Shared/Scripts/UI/LevelCompleteScreen.cs#L558) by passing the RunnerSkin contract address and the encoded data
-  * Note that the craftSkin function does all the burning and minting
+* [Burn three tokens](https://github.com/immutable/sample-unity-game/blob/a1544a14f7f960dc5741f1e0264e82860397a858/Assets/Shared/Scripts/UI/UnlockedSkinScreen.cs#L146) using Immutable X Bulk Transfer
+* [Mint skin](https://github.com/immutable/sample-unity-game/blob/a1544a14f7f960dc5741f1e0264e82860397a858/Assets/Shared/Scripts/UI/UnlockedSkinScreen.cs#L152) using the [`POST /mint/skin`](https://github.com/immutable/sample-passport-unity-game/blob/ed06ce54c77d0e53837e494ae3acb04b4e98f7df/server/src/routes/posts.ts#L7)
