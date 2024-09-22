@@ -55,10 +55,20 @@ namespace HyperCasual.Runner
                 ShowSuccess(false);
 
                 // Set up provider
-                await Passport.Instance.ConnectEvm();
-                // Set up wallet (includes creating a wallet for new players)
-                var accounts = await Passport.Instance.ZkEvmRequestAccounts();
-                SaveManager.Instance.WalletAddress = accounts[0]; // Grab player's first wallet
+                if (SaveManager.Instance.ZkEvm)
+                {
+                    await Passport.Instance.ConnectEvm();
+                    // Set up wallet (includes creating a wallet for new players)
+                    var accounts = await Passport.Instance.ZkEvmRequestAccounts();
+                    SaveManager.Instance.WalletAddress = accounts[0]; // Grab player's first wallet
+                }
+                else
+                {
+                    // Not checking if whether the connect IMX is successful or not as player's
+                    // only get to this screen after completing login
+                    await Passport.Instance.ConnectImx(useCachedSession: true);
+                    SaveManager.Instance.WalletAddress = await Passport.Instance.GetAddress();
+                }
 
                 m_Title.text = "Your wallet has been successfully set up!";
                 ShowLoading(false);

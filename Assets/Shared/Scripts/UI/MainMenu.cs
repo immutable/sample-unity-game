@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Immutable.Passport;
+using Immutable.Passport.Core.Logging;
 using Cysharp.Threading.Tasks;
 
 namespace HyperCasual.Runner
@@ -14,16 +15,12 @@ namespace HyperCasual.Runner
     /// </summary>
     public class MainMenu : View
     {
-        [SerializeField]
-        HyperCasualButton m_StartButton;
-        [SerializeField]
-        AbstractGameEvent m_StartButtonEvent;
-        [SerializeField]
-        TextMeshProUGUI m_Email;
-        [SerializeField]
-        HyperCasualButton m_LogoutButton;
-        [SerializeField]
-        GameObject m_Loading;
+        [SerializeField] HyperCasualButton m_StartButton;
+        [SerializeField] AbstractGameEvent m_StartButtonEvent;
+        [SerializeField] TextMeshProUGUI m_Email;
+        [SerializeField] HyperCasualButton m_LogoutButton;
+        [SerializeField] GameObject m_Loading;
+        [SerializeField] Toggle m_ZkEVMToggle;
 
         Passport passport;
 
@@ -39,23 +36,57 @@ namespace HyperCasual.Runner
             m_LogoutButton.RemoveListener(OnLogoutButtonClick);
             m_LogoutButton.AddListener(OnLogoutButtonClick);
 
+            // Set Passport log level
+            Passport.LogLevel = LogLevel.Info;
+
             // Initialise Passport
             string environment = Immutable.Passport.Model.Environment.SANDBOX;
             passport = await Passport.Init(Config.CLIENT_ID, environment, Config.REDIRECT_URI, Config.LOGOUT_URI);
+
+            // Check which chain to use
+            m_ZkEVMToggle.isOn = SaveManager.Instance.ZkEvm;
+            m_ZkEVMToggle.onValueChanged.AddListener(delegate
+            {
+                SaveManager.Instance.ZkEvm = m_ZkEVMToggle.isOn;
+                SetupRollup();
+            });
+
+            // Initial set up
+            SetupRollup();
+        }
+
+        private async void SetupRollup()
+        {
+            ShowLoading(true);
 
             // Check if the player is supposed to be logged in and if there are credentials saved
             if (SaveManager.Instance.IsLoggedIn && await Passport.Instance.HasCredentialsSaved())
             {
                 // Try to log in using saved credentials
-                bool success = await Passport.Instance.Login(useCachedSession: true);
-                // Update the login flag
+                bool success;
+                if (SaveManager.Instance.ZkEvm)
+                {
+                    success = await Passport.Instance.Login(useCachedSession: true);
+                    if (success)
+                    {
+                        await Passport.Instance.ConnectEvm();
+                        List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
+                        SaveManager.Instance.WalletAddress = accounts[0];
+                    }
+                }
+                else
+                {
+                    success = await Passport.Instance.ConnectImx(useCachedSession: true);
+                    if (success)
+                    {
+                        SaveManager.Instance.WalletAddress = await Passport.Instance.GetAddress();
+                    }
+                }
+
+                // Update the login flag and retrieve player's email if login is successful
                 SaveManager.Instance.IsLoggedIn = success;
-                // Set up wallet if successful
                 if (success)
                 {
-                    await Passport.Instance.ConnectEvm();
-                    List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
-                    SaveManager.Instance.WalletAddress = accounts[0];
                     await GetPlayersEmail();
                 }
             }
@@ -69,6 +100,7 @@ namespace HyperCasual.Runner
             ShowLoading(false);
             // Show the logout button if the player is logged in
             ShowLogoutButton(SaveManager.Instance.IsLoggedIn);
+
         }
 
         void OnDisable()
@@ -116,10 +148,17 @@ namespace HyperCasual.Runner
                 SaveManager.Instance.IsLoggedIn = false;
                 // Successfully logged out, hide 'Logout' button
                 ShowLogoutButton(false);
+
+                // Save rollup selection
+                bool zkEVM = SaveManager.Instance.ZkEvm;
+
                 // Reset all other values
                 SaveManager.Instance.Clear();
                 m_Email.text = "";
                 m_Email.gameObject.SetActive(false);
+
+                // Restore rollup selection
+                SaveManager.Instance.ZkEvm = zkEVM;
             }
             catch (Exception ex)
             {

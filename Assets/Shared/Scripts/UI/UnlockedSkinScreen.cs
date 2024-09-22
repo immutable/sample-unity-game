@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Immutable.Passport;
 using Immutable.Passport.Model;
@@ -117,30 +118,62 @@ namespace HyperCasual.Runner
         {
             m_CraftState = CraftSkinState.Crafting;
 
-            // Burn tokens and mint a new skin i.e. crafting a skin
-            string encodedData = await ApiService.GetTokenCraftSkinEcodedData(tokens[0].token_id, tokens[1].token_id, tokens[2].token_id);
-            TransactionReceiptResponse response = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest()
+            try
             {
-                to = Config.ZK_TOKEN_TOKEN_ADDRESS,
-                data = encodedData,
-                value = "0"
-            });
-            Debug.Log($"Craft transaction hash: {response.transactionHash}");
+                // Burn tokens and mint a new skin i.e. crafting a skin
+                if (SaveManager.Instance.ZkEvm)
+                {
+                    string encodedData = await ApiService.GetTokenCraftSkinEcodedData(tokens[0].token_id, tokens[1].token_id, tokens[2].token_id);
+                    TransactionReceiptResponse response = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest()
+                    {
+                        to = Config.ZK_TOKEN_TOKEN_ADDRESS,
+                        data = encodedData,
+                        value = "0"
+                    });
+                    Debug.Log($"Craft transaction hash: {response.transactionHash}");
 
-            if (response.status != "1")
+                    if (response.status != "1")
+                    {
+                        m_ErrorMessage.text = "Failed to craft your skin :(";
+                        m_CraftState = CraftSkinState.Failed;
+                        return;
+                    }
+                }
+                else
+                {
+                    // Burn tokens first
+                    string burnAddress = "0x0000000000000000000000000000000000000000";
+                    var response = await Passport.Instance.ImxBatchNftTransfer(
+                        tokens.Select(token => new NftTransferDetails(burnAddress, token.token_id, Config.TOKEN_TOKEN_ADDRESS.ToLower()))
+                        .ToArray());
+                    Debug.Log($"Successfully burned {response.transfer_ids.Length} coins.");
+
+                    // Mint skin
+                    bool mintedSkin = await ApiService.MintSkin(SaveManager.Instance.WalletAddress);
+
+                    if (!mintedSkin)
+                    {
+                        Debug.Log($"Something went wrong while minting sking");
+                        m_ErrorMessage.text = "Failed to craft your skin :(";
+                        m_CraftState = CraftSkinState.Failed;
+                        return;
+                    }
+                }
+
+                m_CraftState = CraftSkinState.Crafted;
+
+                // If successfully crafted skin and this screen is visible, go to collect skin screen
+                // otherwise it will be picked in the OnEnable function above when this screen reappears
+                if (m_CraftState == CraftSkinState.Crafted && gameObject.active)
+                {
+                    CollectSkin();
+                }
+            }
+            catch (Exception ex)
             {
+                Debug.Log($"Something went wrong while crafting {ex.Message}");
                 m_ErrorMessage.text = "Failed to craft your skin :(";
                 m_CraftState = CraftSkinState.Failed;
-                return;
-            }
-
-            m_CraftState = CraftSkinState.Crafted;
-
-            // If successfully crafted skin and this screen is visible, go to collect skin screen
-            // otherwise it will be picked in the OnEnable function above when this screen reappears
-            if (m_CraftState == CraftSkinState.Crafted && gameObject.active)
-            {
-                CollectSkin();
             }
         }
 

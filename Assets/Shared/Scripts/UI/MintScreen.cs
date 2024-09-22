@@ -109,7 +109,6 @@ namespace HyperCasual.Runner
         /// <returns>True if minted a fox successfully to player's wallet. Otherwise, false.</returns>
         private async UniTask<bool> MintFox()
         {
-            Debug.Log("Minting fox...");
             try
             {
                 var address = SaveManager.Instance.WalletAddress; // Get the player's wallet address to mint the fox to
@@ -131,7 +130,6 @@ namespace HyperCasual.Runner
         /// <returns>True if minted coins successfully to player's wallet. Otherwise, false.</returns>
         private async UniTask<bool> MintCoins()
         {
-            Debug.Log("Minting coins...");
             try
             {
                 int coinsCollected = GetNumCoinsCollected(); // Get number of coins collected
@@ -224,8 +222,15 @@ namespace HyperCasual.Runner
         {
             // Get the player's wallet address to mint the fox to
             string address = SaveManager.Instance.WalletAddress;
-            // Show the player's tokens on the block explorer page.
-            Application.OpenURL($"https://explorer.testnet.immutable.com/address/{address}?tab=tokens");
+            if (SaveManager.Instance.ZkEvm)
+            {
+                // Show the player's tokens on the block explorer page.
+                Application.OpenURL($"https://explorer.testnet.immutable.com/address/{address}?tab=tokens");
+            }
+            else
+            {
+                Application.OpenURL($"{Config.SERVER_BASE_URL}/wallet?user={address}");
+            }
         }
     }
 }
