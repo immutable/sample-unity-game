@@ -116,7 +116,7 @@ namespace HyperCasual.Runner
 
         private async void Craft(List<TokenModel> tokens)
         {
-            m_CraftState = CraftSkinState.Crafting;
+            CraftState = CraftSkinState.Crafting;
 
             try
             {
@@ -135,7 +135,7 @@ namespace HyperCasual.Runner
                     if (response.status != "1")
                     {
                         m_ErrorMessage.text = "Failed to craft your skin :(";
-                        m_CraftState = CraftSkinState.Failed;
+                        CraftState = CraftSkinState.Failed;
                         return;
                     }
                 }
@@ -155,12 +155,12 @@ namespace HyperCasual.Runner
                     {
                         Debug.Log($"Something went wrong while minting sking");
                         m_ErrorMessage.text = "Failed to craft your skin :(";
-                        m_CraftState = CraftSkinState.Failed;
+                        CraftState = CraftSkinState.Failed;
                         return;
                     }
                 }
 
-                m_CraftState = CraftSkinState.Crafted;
+                CraftState = CraftSkinState.Crafted;
 
                 // If successfully crafted skin and this screen is visible, go to collect skin screen
                 // otherwise it will be picked in the OnEnable function above when this screen reappears
@@ -173,26 +173,26 @@ namespace HyperCasual.Runner
             {
                 Debug.Log($"Something went wrong while crafting {ex.Message}");
                 m_ErrorMessage.text = "Failed to craft your skin :(";
-                m_CraftState = CraftSkinState.Failed;
+                CraftState = CraftSkinState.Failed;
             }
         }
 
         private void CollectSkin()
         {
             m_CollectSkinEvent.Raise();
-            m_CraftState = null;
+            CraftState = null;
         }
 
         private async void OnCraftButtonClicked()
         {
-            m_CraftState = CraftSkinState.Crafting;
+            CraftState = CraftSkinState.Crafting;
 
             // Check if user has enough tokens to craft a skin
             List<TokenModel> tokens = await ApiService.GetTokens(3, SaveManager.Instance.WalletAddress);
-            if (tokens.Count < 0)
+            if (tokens.Count > 0)
             {
                 m_ErrorMessage.text = "You do not have enough tokens :(";
-                m_CraftState = CraftSkinState.Failed;
+                CraftState = CraftSkinState.Failed;
                 m_TryAgainButton.gameObject.SetActive(false);
                 return;
             }
