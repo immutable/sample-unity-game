@@ -175,11 +175,6 @@ namespace HyperCasual.Runner
             m_MarketplaceButton.gameObject.SetActive(show);
         }
 
-        private void ShowEmail(bool show)
-        {
-            m_Email.gameObject.SetActive(show);
-        }
-
         public void OnInventoryButtonClick()
         {
             m_InventoryButtonEvent.Raise();
