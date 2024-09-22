@@ -45,7 +45,9 @@ To support minting and crafting in the game, three NFT collections need to be pr
 
 #### Immutable zkEVM
 
-1. Follow [this](https://docs.immutable.com/tutorials/zkEVM/build-unity-game/nft-contracts) step on how to deploy ERC721 contracts on Immutable zkEVM.
+1. [Set up your development wallet](https://docs.immutable.com/docs/zkEVM/guides/wallet)
+2. [Obtain Test-$IMX](https://docs.immutable.com/docs/zkEVM/guides/faucet) so you can send transactions (specifically to mint assets in this game) and deploy smart contracts on zkEVM Testnet
+3. Follow [this](https://docs.immutable.com/docs/zkEVM/deploy-contracts) guide or use [this](https://github.com/immutable/sample-passport-unity-game/blob/main/contracts/README.md) to deploy the [three zkEVM contracts](https://github.com/immutable/sample-passport-unity-game/tree/main/contracts/contracts) the game requires
 4. Rename `server/.env.example` to `.env`:
     1. Update `PRIVATE_KEY` with your admin wallet's private key
     2. Update `ZK_TOKEN_TOKEN_ADDRESS` to the contract address of Immutable Runner Token
