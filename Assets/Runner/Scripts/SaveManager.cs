@@ -25,7 +25,7 @@ namespace HyperCasual.Runner
         const string k_QualityLevel = "QualityLevel";
         const string k_IsLoggedIn = "IsLoggedIn";
         const string k_UseNewSkin = "UseNewSkin";
-        private const string k_WalletAddress = "WalletAddress";
+        private string k_WalletAddress = "WalletAddress";
         const string k_zkEVM = "zkEVM";
 
         void Awake()
