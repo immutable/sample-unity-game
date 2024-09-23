@@ -45,7 +45,7 @@ namespace HyperCasual.Runner
             get => m_CraftState;
             set
             {
-                m_CraftState = value;
+                CraftState = value;
                 switch (m_CraftState)
                 {
                     case CraftSkinState.Crafting:
@@ -113,12 +113,12 @@ namespace HyperCasual.Runner
 
         private async void Craft()
         {
-            m_CraftState = CraftSkinState.Crafting;
+            CraftState = CraftSkinState.Crafting;
 
             // Burn tokens and mint a new skin i.e. crafting a skin
             await Task.Delay(TimeSpan.FromSeconds(5));
 
-            m_CraftState = CraftSkinState.Crafted;
+            CraftState = CraftSkinState.Crafted;
 
             // If successfully crafted skin and this screen is visible, go to collect skin screen
             // otherwise it will be picked in the OnEnable function above when this screen reappears
@@ -131,7 +131,7 @@ namespace HyperCasual.Runner
         private void CollectSkin()
         {
             m_CollectSkinEvent.Raise();
-            m_CraftState = null;
+            CraftState = null;
         }
 
         private void OnCraftButtonClicked()
