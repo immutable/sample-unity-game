@@ -5,21 +5,21 @@ using UnityEngine.UI;
 
 namespace Xsolla.Core.Browser
 {
-	internal class SinglePageBrowser2D : MonoBehaviour
-	{
-		[SerializeField] private Button CloseButton;
-		[SerializeField] private Button FullscreenButton;
-		[SerializeField] private Button BackButton;
-		[SerializeField] private Vector2Int Viewport = new Vector2Int(1920, 1080);
-		[SerializeField] private GameObject PreloaderPrefab;
+    internal class SinglePageBrowser2D : MonoBehaviour
+    {
+        [SerializeField] private Button CloseButton;
+        [SerializeField] private Button FullscreenButton;
+        [SerializeField] private Button BackButton;
+        [SerializeField] private Vector2Int Viewport = new Vector2Int(1920, 1080);
+        [SerializeField] private GameObject PreloaderPrefab;
 
 #pragma warning disable CS0067
-		public event Action<IXsollaBrowser> BrowserInitEvent;
-		public event Action BrowserCloseRequest;
-		public event Action ToggleFullscreenRequest;
+        public event Action<IXsollaBrowser> BrowserInitEvent;
+        public event Action BrowserCloseRequest;
+        public event Action ToggleFullscreenRequest;
 
-		public event Action<string, Action> AlertDialogEvent;
-		public event Action<string, Action, Action> ConfirmDialogEvent;
+        public event Action<string, Action> AlertDialogEvent;
+        public event Action<string, Action, Action> ConfirmDialogEvent;
 #pragma warning restore CS0067
 
 #if UNITY_EDITOR || UNITY_STANDALONE
@@ -261,5 +261,5 @@ namespace Xsolla.Core.Browser
 			dialog.Accept();
 		}
 #endif
-	}
+    }
 }

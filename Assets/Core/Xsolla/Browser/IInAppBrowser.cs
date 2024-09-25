@@ -2,34 +2,34 @@ using System;
 
 namespace Xsolla.Core
 {
-	public interface IInAppBrowser
-	{
-		event Action OpenEvent;
+    public interface IInAppBrowser
+    {
+        event Action OpenEvent;
 
-		event Action<BrowserCloseInfo> CloseEvent;
+        event Action<BrowserCloseInfo> CloseEvent;
 
-		event Action<string> UrlChangeEvent;
+        event Action<string> UrlChangeEvent;
 
-		event Action<string, Action> AlertDialogEvent;
+        event Action<string, Action> AlertDialogEvent;
 
-		event Action<string, Action, Action> ConfirmDialogEvent;
+        event Action<string, Action, Action> ConfirmDialogEvent;
 
-		bool IsOpened { get; }
-		
-		bool IsFullScreen { get; }
+        bool IsOpened { get; }
 
-		void Open(string url);
+        bool IsFullScreen { get; }
 
-		void Close(float delay = 0f, bool isManually = false);
+        void Open(string url);
 
-		void AddInitHandler(Action callback);
+        void Close(float delay = 0f, bool isManually = false);
 
-		void AddCloseHandler(Action callback);
+        void AddInitHandler(Action callback);
 
-		void AddUrlChangeHandler(Action<string> callback);
+        void AddCloseHandler(Action callback);
 
-		void UpdateSize(int width, int height);
-		
-		void SetFullscreenMode(bool isFullscreen);
-	}
+        void AddUrlChangeHandler(Action<string> callback);
+
+        void UpdateSize(int width, int height);
+
+        void SetFullscreenMode(bool isFullscreen);
+    }
 }

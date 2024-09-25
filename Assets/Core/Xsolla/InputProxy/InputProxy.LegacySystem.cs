@@ -3,20 +3,20 @@ using UnityEngine;
 
 namespace Xsolla.Core
 {
-	public static class InputProxy
-	{
-		public static bool GetKeyDown(KeyCode code)
-		{
-			return Input.GetKeyDown(code);
-		}
+    public static class InputProxy
+    {
+        public static bool GetKeyDown(KeyCode code)
+        {
+            return Input.GetKeyDown(code);
+        }
 
-		public static bool GetKeyUp(KeyCode code)
-		{
-			return Input.GetKeyUp(code);
-		}
+        public static bool GetKeyUp(KeyCode code)
+        {
+            return Input.GetKeyUp(code);
+        }
 
-		public static Vector3 MousePosition => Input.mousePosition;
-	}
+        public static Vector3 MousePosition => Input.mousePosition;
+    }
 }
 
 #endif

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 namespace Xsolla.Core.Browser
 {
 #if !(UNITY_EDITOR || UNITY_STANDALONE)
-	internal class XsollaInAppBrowser : MonoBehaviour { }
+    internal class XsollaInAppBrowser : MonoBehaviour { }
 #else
 	internal class XsollaInAppBrowser : MonoBehaviour, IInAppBrowser
 	{

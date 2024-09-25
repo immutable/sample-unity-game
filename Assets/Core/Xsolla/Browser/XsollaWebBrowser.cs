@@ -6,16 +6,16 @@ using System.Runtime.InteropServices;
 
 namespace Xsolla.Core
 {
-	public class XsollaWebBrowser : MonoBehaviour
-	{
-		private static IInAppBrowser _inAppBrowser;
+    public class XsollaWebBrowser : MonoBehaviour
+    {
+        private static IInAppBrowser _inAppBrowser;
 
-		public static IInAppBrowser InAppBrowser
-		{
-			get
-			{
+        public static IInAppBrowser InAppBrowser
+        {
+            get
+            {
 #if !(UNITY_EDITOR || UNITY_STANDALONE)
-				return null;
+                return null;
 #else
 				if (_inAppBrowser == null)
 				{
@@ -35,12 +35,12 @@ namespace Xsolla.Core
 
 				return _inAppBrowser;
 #endif
-			}
-		}
+            }
+        }
 
-		public static void Open(string url, bool forcePlatformBrowser = false)
-		{
-			XDebug.Log($"WebBrowser. Open url: {url}");
+        public static void Open(string url, bool forcePlatformBrowser = false)
+        {
+            XDebug.Log($"WebBrowser. Open url: {url}");
 #if UNITY_EDITOR || UNITY_STANDALONE
 			if (InAppBrowser != null && !forcePlatformBrowser)
 			{
@@ -55,14 +55,14 @@ namespace Xsolla.Core
 #pragma warning restore 0618
 			return;
 #else
-			Application.OpenURL(url);
+            Application.OpenURL(url);
 #endif
-		}
+        }
 
-		public static void Close(float delay = 0)
-		{
-			InAppBrowser?.Close(delay);
-		}
+        public static void Close(float delay = 0)
+        {
+            InAppBrowser?.Close(delay);
+        }
 
 #if UNITY_WEBGL
 		[DllImport("__Internal")]
@@ -79,5 +79,5 @@ namespace Xsolla.Core
 			ClosePaystationWidget();
 		}
 #endif
-	}
+    }
 }
