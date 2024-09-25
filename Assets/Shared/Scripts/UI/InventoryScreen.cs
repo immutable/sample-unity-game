@@ -12,6 +12,7 @@ using TMPro;
 using Immutable.Search.Client;
 using Immutable.Search.Model;
 using Immutable.Search.Api;
+using Xsolla.Core;
 
 namespace HyperCasual.Runner
 {
@@ -233,7 +234,7 @@ namespace HyperCasual.Runner
         /// </summary>
         private void OnAddFundsButtonClick()
         {
-            Application.OpenURL("https://checkout-playground.sandbox.immutable.com/add-funds/");
+            XsollaWebBrowser.Open("https://checkout-playground.sandbox.immutable.com/embedded/add-funds");
         }
     }
 }
