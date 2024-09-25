@@ -52,8 +52,7 @@ namespace HyperCasual.Runner
             m_MarketplaceButton.AddListener(OnMarketplaceButtonClick);
 
             // Initialise Passport
-            var environment = Environment.SANDBOX;
-            passport = await Passport.Init(Config.CLIENT_ID, environment, Config.REDIRECT_URI,
+            passport = await Passport.Init(Config.CLIENT_ID, Config.ENVIRONEMNT, Config.REDIRECT_URI,
                 Config.LOGOUT_REIDIRECT_URI);
 
             // Check if the player is supposed to be logged in and if there are credentials saved

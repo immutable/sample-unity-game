@@ -1,3 +1,5 @@
+using Immutable.Passport.Model;
+
 namespace HyperCasual.Runner
 {
     public static class Config
@@ -7,6 +9,7 @@ namespace HyperCasual.Runner
 
         // public const string CLIENT_ID = "ZJL7JvetcDFBNDlgRs5oJoxuAUUl6uQj";
         public const string CLIENT_ID = "2Ng38UmEg0Morz1xOQLtsDs72Wx8uyGL"; // Devnet
+        public const string ENVIRONEMNT = Environment.DEVELOPMENT;
 
 #if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
         public const string REDIRECT_URI = "immutablerunner://callback";
@@ -30,7 +33,7 @@ namespace HyperCasual.Runner
         public const string BASE_URL = "https://api.dev.immutable.com";
 
         public const string SEARCH_BASE_URL = "https://api.dev.immutable.com";
-        public const string TS_BASE_URL = "http://localhost:8080"; //"https://api.dev.immutable.com";
+        public const string TS_BASE_URL = "https://api.dev.immutable.com";
         public const int PAGE_SIZE = 10;
     }
 
