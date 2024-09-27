@@ -40,7 +40,9 @@ namespace HyperCasual.Runner
                 }
 
                 using var client = new HttpClient();
-                HttpResponseMessage response = await client.GetAsync($"{Config.SERVER_URL}/balance?address={address}");
+                string requestUrl = $"{Config.SDK_API}/token/balance?wallet_address={address}&contract_address={Contract.TOKEN}";
+                Debug.Log($"Requesting balance for {address} from {requestUrl}");
+                HttpResponseMessage response = await client.GetAsync(requestUrl);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -54,7 +56,7 @@ namespace HyperCasual.Runner
                 }
                 else
                 {
-                    Debug.Log($"Failed to get balance");
+                    Debug.Log($"Failed to get balance {response}");
                 }
             }
             catch (Exception ex)

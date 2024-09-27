@@ -7,6 +7,14 @@
       "dependencies": {},
       "hash": "b992a061fbf68ff1eb475d0837065b0549ed31ba"
     },
+    "com.immutable.marketplace": {
+      "version": "file:../../unity-immutable-sdk/src/Packages/Marketplace",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.cysharp.unitask": "2.3.3"
+      }
+    },
     "com.immutable.passport": {
       "version": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Passport#v1.25.2",
       "depth": 0,

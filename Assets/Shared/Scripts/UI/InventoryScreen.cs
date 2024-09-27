@@ -12,7 +12,6 @@ using TMPro;
 using Immutable.Search.Client;
 using Immutable.Search.Model;
 using Immutable.Search.Api;
-using Xsolla.Core;
 
 namespace HyperCasual.Runner
 {
@@ -28,6 +27,7 @@ namespace HyperCasual.Runner
         [SerializeField] private AssetListObject m_AssetObj = null;
         [SerializeField] private Transform m_ListParent = null;
         [SerializeField] private InfiniteScrollView m_ScrollView;
+        [SerializeField] private AddFunds m_AddFunds;
         private List<StackBundle> m_Assets = new List<StackBundle>();
 
         // Pagination
@@ -234,7 +234,7 @@ namespace HyperCasual.Runner
         /// </summary>
         private void OnAddFundsButtonClick()
         {
-            XsollaWebBrowser.Open("https://checkout-playground.sandbox.immutable.com/embedded/add-funds");
+            m_AddFunds.Show();
         }
     }
 }
