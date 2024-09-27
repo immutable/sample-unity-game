@@ -19,6 +19,14 @@ namespace HyperCasual.Runner
         private StackBundle m_Stack;
 
         /// <summary>
+        ///     If an order is already assigned, refresh the displayed data
+        /// </summary>
+        private async void OnEnable()
+        {
+            if (m_Stack != null) await UpdateData();
+        }
+
+        /// <summary>
         ///     Initialises the list item with the provided stack data.
         /// </summary>
         /// <param name="stack">The stack data to display in the UI.</param>
@@ -53,17 +61,6 @@ namespace HyperCasual.Runner
 
             // Load and display the image
             await m_Image.LoadUrl(m_Stack.Stack.Image);
-        }
-
-        /// <summary>
-        ///     If an order is already assigned, refresh the displayed data
-        /// </summary>
-        private async void OnEnable()
-        {
-            if (m_Stack != null)
-            {
-                await UpdateData();
-            }
         }
     }
 }

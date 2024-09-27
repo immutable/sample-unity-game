@@ -2,9 +2,9 @@ using System;
 using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
 using Immutable.Passport;
+using Immutable.Passport.Core.Logging;
 using TMPro;
 using UnityEngine;
-using Environment = Immutable.Passport.Model.Environment;
 
 namespace HyperCasual.Runner
 {
@@ -52,6 +52,7 @@ namespace HyperCasual.Runner
             m_MarketplaceButton.AddListener(OnMarketplaceButtonClick);
 
             // Initialise Passport
+            Passport.LogLevel = LogLevel.Debug;
             passport = await Passport.Init(Config.CLIENT_ID, Config.ENVIRONEMNT, Config.REDIRECT_URI,
                 Config.LOGOUT_REIDIRECT_URI);
 

@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -244,9 +245,6 @@ namespace HyperCasual.Runner
         /// </summary>
         private async void OnSellButtonClicked()
         {
-            m_SellButton.gameObject.SetActive(false);
-            m_Progress.gameObject.SetActive(true);
-
             var (result, price) = await m_CustomDialog.ShowDialog(
                 $"List {m_Asset.name} for sale",
                 "Enter your price below (in IMR):",
@@ -257,24 +255,18 @@ namespace HyperCasual.Runner
 
             if (result)
             {
+                m_SellButton.gameObject.SetActive(false);
+                m_Progress.gameObject.SetActive(true);
+
                 var amount = Math.Floor(decimal.Parse(price) * (decimal)BigInteger.Pow(10, 18));
-                var listingId = await PrepareListing($"{amount}");
+
+                var listingId = await Sell($"{amount}");
 
                 m_SellButton.gameObject.SetActive(listingId == null);
                 m_CancelButton.gameObject.SetActive(listingId != null);
+                m_AmountText.text = listingId != null ? $"{price} IMR" : "Not listed";
                 m_Progress.gameObject.SetActive(false);
-
-                if (listingId != null)
-                {
-                    // TODO update to use get stack bundle by stack ID endpoint instead
-                    m_AmountText.text = $"{price} IMR";
-
-                    return; // true;
-                }
             }
-
-            m_SellButton.gameObject.SetActive(true);
-            m_Progress.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -326,81 +318,86 @@ namespace HyperCasual.Runner
             return null;
         }
 
+        private async UniTask<V1TsSdkOrderbookPrepareListingPost200Response> PrepareListing(
+            string nftTokenAddress, string tokenId, string price, string erc20TokenAddress)
+        {
+            // Define the NFT to sell, using its contract address and token ID
+            var nft = new ERC721Item(nftTokenAddress, tokenId);
+
+            // Define the ERC20 token that the buyer will use to purchase the NFT
+            var buy = new ERC20Item(price, erc20TokenAddress);
+
+            // Call the Orderbook function to prepare the listing for sale
+            return await m_TsApi.V1TsSdkOrderbookPrepareListingPostAsync(
+                new V1TsSdkOrderbookPrepareListingPostRequest
+                (
+                    makerAddress: SaveManager.Instance.WalletAddress,
+                    sell: new V1TsSdkOrderbookPrepareListingPostRequestSell(nft),
+                    buy: new V1TsSdkOrderbookPrepareListingPostRequestBuy(buy)
+                ));
+        }
+
+        private async UniTask SignAndSubmitApproval(
+            V1TsSdkOrderbookPrepareListingPost200Response prepareListingResponse)
+        {
+            var transactionAction = prepareListingResponse.Actions.FirstOrDefault(action =>
+                ReferenceEquals(action.ActualInstance, typeof(TransactionAction)));
+            // Send approval transaction if it is required
+            if (transactionAction != null)
+            {
+                var tx = transactionAction.GetTransactionAction();
+                var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(
+                    new TransactionRequest
+                    {
+                        to = tx.PopulatedTransactions.To,
+                        data = tx.PopulatedTransactions.Data,
+                        value = "0"
+                    });
+
+                if (transactionResponse.status != "1") throw new Exception("Failed to sign and submit approval");
+            }
+        }
+
+        private async UniTask<string> SignListing(V1TsSdkOrderbookPrepareListingPost200Response prepareListingResponse)
+        {
+            var signableAction =
+                prepareListingResponse.Actions.FirstOrDefault(action => action.GetSignableAction() != null);
+
+            if (signableAction == null) throw new Exception("No listing to sign");
+            
+            var message = signableAction.GetSignableAction().Message;
+            
+            // Use Unity Passport package to sign typed data function to sign the listing payload
+            return await Passport.Instance.ZkEvmSignTypedDataV4(
+                JsonConvert.SerializeObject(message, Formatting.Indented));
+        }
+
         /// <summary>
         ///     Prepares the listing for the asset.
         /// </summary>
         /// <param name="price">The price of the asset in smallest unit.</param>
         /// <returns>The listing ID is asset was successfully listed</returns>
-        private async UniTask<string> PrepareListing(string price)
+        private async UniTask<string?> Sell(string price)
         {
             try
             {
-                var prepareListingResponse = await m_TsApi.V1TsSdkOrderbookPrepareListingPostAsync(
-                    new V1TsSdkOrderbookPrepareListingPostRequest
-                    (
-                        makerAddress: SaveManager.Instance.WalletAddress,
-                        sell: new V1TsSdkOrderbookPrepareListingPostRequestSell(
-                            new ERC721Item(Contract.SKIN, m_Asset.token_id)),
-                        buy: new V1TsSdkOrderbookPrepareListingPostRequestBuy(
-                            new ERC20Item(price, Contract.TOKEN))
-                    ));
+                V1TsSdkOrderbookPrepareListingPost200Response prepareListingResponse =
+                    await PrepareListing(Contract.SKIN, m_Asset.token_id, $"{price}", Contract.TOKEN);
 
-                var transactionAction =
-                    prepareListingResponse.Actions.FirstOrDefault(action =>
-                        action.ActualInstance == typeof(TransactionAction));
-                if (transactionAction != null)
-                {
-                    var tx = transactionAction.GetTransactionAction();
-                    var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(
-                        new TransactionRequest
-                        {
-                            to = tx.PopulatedTransactions.To,
-                            data = tx.PopulatedTransactions.Data,
-                            value = "0"
-                        });
+                await SignAndSubmitApproval(prepareListingResponse);
 
-                    if (transactionResponse.status != "1")
-                    {
-                        await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing.", "OK");
-                        return null;
-                    }
-                }
+                string signature = await SignListing(prepareListingResponse);
 
-                // Sign payload
-                var signableAction =
-                    prepareListingResponse.Actions.FirstOrDefault(action => action.GetSignableAction() != null);
+                string listingId = await ListAsset(signature, prepareListingResponse);
+                Debug.Log($"Listing ID: {listingId}");
 
-                if (signableAction != null)
-                {
-                    var message = signableAction.GetSignableAction().Message;
-                    var signature =
-                        await Passport.Instance.ZkEvmSignTypedDataV4(
-                            JsonConvert.SerializeObject(message, Formatting.Indented));
-
-                    Debug.Log($"Signature: {signature}");
-
-                    // (bool result, string signature) = await m_CustomDialog.ShowDialog(
-                    //     "Confirm listing",
-                    //     "Enter signed payload:",
-                    //     "Confirm",
-                    //     negativeButtonText: "Cancel",
-                    //     showInputField: true
-                    // );
-                    // if (result)
-                    // {
-                    return await ListAsset(signature, prepareListingResponse);
-                    // }
-                }
-
-                Debug.Log("Failed to sell as there is nothing to sign");
-                await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing", "OK");
-                return null;
+                await ConfirmListingStatus(listingId, "ACTIVE");
             }
             catch (Exception ex)
             {
                 Debug.Log($"Failed to sell: {ex.Message}");
                 Debug.LogError(ex.StackTrace);
-                await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing", "OK");
+                await m_CustomDialog.ShowDialog("Failed to sell", ex.Message, "OK");
             }
 
             return null;
@@ -411,31 +408,19 @@ namespace HyperCasual.Runner
         /// </summary>
         /// <param name="signature">The signature for the listing.</param>
         /// <param name="preparedListing">The prepared listing data.</param>
-        private async UniTask<string?> ListAsset(string signature,
+        private async UniTask<string> ListAsset(string signature,
             V1TsSdkOrderbookPrepareListingPost200Response preparedListing)
         {
-            try
-            {
-                var createListingResponse = await m_TsApi.V1TsSdkOrderbookCreateListingPostAsync(
-                    new V1TsSdkOrderbookCreateListingPostRequest
-                    (
-                        new List<FeeValue>(),
-                        preparedListing.OrderComponents,
-                        preparedListing.OrderHash,
-                        signature
-                    ));
+            var createListingResponse = await m_TsApi.V1TsSdkOrderbookCreateListingPostAsync(
+                new V1TsSdkOrderbookCreateListingPostRequest
+                (
+                    new List<FeeValue>(),
+                    preparedListing.OrderComponents,
+                    preparedListing.OrderHash,
+                    signature
+                ));
 
-                Debug.Log($"Listing ID: {createListingResponse.Result.Id}");
-                await ConfirmListingStatus(createListingResponse.Result.Id, "ACTIVE");
-
-                return createListingResponse.Result.Id;
-            }
-            catch (Exception ex)
-            {
-                Debug.Log($"Failed to list: {ex.Message}");
-                await m_CustomDialog.ShowDialog("Error", "Failed to list", "OK");
-                return null;
-            }
+            return createListingResponse.Result.Id;
         }
 
         /// <summary>

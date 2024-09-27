@@ -84,8 +84,8 @@ void PixShader(Input input, inout SurfaceOutput o)
     float3 emission = reflcol.rgb * lerp(_ReflectFaceColor.rgb, _ReflectOutlineColor.rgb, saturate(sd + outline * 0.5))
         * faceColor.a;
     #else
-	float3 n = float3(0, 0, -1);
-	float3 emission = float3(0, 0, 0);
+    float3 n = float3(0, 0, -1);
+    float3 emission = float3(0, 0, 0);
     #endif
 
     #if GLOW_ON
