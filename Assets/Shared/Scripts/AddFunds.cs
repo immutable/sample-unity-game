@@ -26,7 +26,7 @@ namespace HyperCasual.Runner
             m_CancelButton.onClick.AddListener(OnCancelButtonClicked);
             gameObject.SetActive(true);
         }
-        
+
         private async void OnFiatButtonClicked()
         {
             string environment = Immutable.Passport.Model.Environment.SANDBOX;
@@ -35,15 +35,15 @@ namespace HyperCasual.Runner
             OnRamp onRamp = new OnRamp(environment, email, walletAddress.FirstOrDefault());
             string link = await onRamp.GetLink();
             Debug.Log($"onRamp.GetOnRampLink: {link}");
-            
+
             XsollaWebBrowser.Open(link);
         }
-        
+
         private void OnTokenButtonClicked()
         {
             Application.OpenURL($"https://checkout-playground.sandbox.immutable.com/embedded/add-funds/?publishableKey=pk_imapik-test-Xdera%40&passportClientId={Config.CLIENT_ID}&redirectUri={Config.REDIRECT_URI}");
         }
-        
+
         private void OnCancelButtonClicked()
         {
             gameObject.SetActive(false);
