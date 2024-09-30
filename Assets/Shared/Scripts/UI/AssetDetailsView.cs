@@ -486,7 +486,7 @@ namespace HyperCasual.Runner
             Debug.Log($"Confirming listing {listingId} is {status}...");
 
             var conditionMet = await PollingHelper.PollAsync(
-                $"https://api.dev.immutable.com/v1/chains/imtbl-zkevm-devnet/orders/listings/{listingId}",
+                $"{Config.BASE_URL}/v1/chains/imtbl-zkevm-devnet/orders/listings/{listingId}",
                 responseBody =>
                 {
                     var listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
