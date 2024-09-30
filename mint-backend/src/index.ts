@@ -4,15 +4,11 @@ import express, {
   Request,
   Response,
 } from 'express';
-import axios from 'axios';
 import cors from 'cors';
 import http from 'http';
 import { providers, Wallet, Contract, utils } from 'ethers';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import { config, orderbook } from '@imtbl/sdk';
-import { TransactionAction, FeeValue } from '@imtbl/sdk/dist/orderbook';
-import { v4 as uuidv4 } from 'uuid';
 
 dotenv.config();
 
@@ -23,8 +19,6 @@ app.use(express.json()); // Handle JSON
 app.use(cors()); // Enable CORS
 const router: Router = express.Router();
 
-const apiEnv = 'dev';
-const chainName = 'imtbl-zkevm-devnet';
 const zkEvmProvider = new providers.JsonRpcProvider(`https://rpc.dev.immutable.com`);
 
 // Contract addresses
