@@ -114,7 +114,6 @@ Class | Method | HTTP request | Description
  - [Model.APIError429AllOf](APIError429AllOf.md)
  - [Model.APIError500](APIError500.md)
  - [Model.APIError500AllOf](APIError500AllOf.md)
- - [Model.AttributeQuery](AttributeQuery.md)
  - [Model.BackfillRequest](BackfillRequest.md)
  - [Model.BasicAPIError](BasicAPIError.md)
  - [Model.Chain](Chain.md)

@@ -1,18 +1,22 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
-using System.Numerics;
-using System.Net.Http;
-using System.Text;
 using System.Linq;
-using HyperCasual.Core;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using UnityEngine.Networking;
+using System.Net.Http;
+using System.Numerics;
 using Cysharp.Threading.Tasks;
+using HyperCasual.Core;
 using Immutable.Passport;
 using Immutable.Passport.Model;
+using Immutable.Search.Api;
 using Immutable.Search.Model;
+using Immutable.Ts.Api;
+using Immutable.Ts.Client;
+using Immutable.Ts.Model;
+using Newtonsoft.Json;
+using TMPro;
+using UnityEngine;
+using ApiException = Immutable.Search.Client.ApiException;
 
 namespace HyperCasual.Runner
 {
@@ -22,26 +26,58 @@ namespace HyperCasual.Runner
         [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private ImageUrlObject m_Image;
         [SerializeField] private TextMeshProUGUI m_NameText;
+
+        [SerializeField] private TextMeshProUGUI m_AmountText;
+
+        // Market
+        [SerializeField] private TextMeshProUGUI m_FloorPriceText;
+
+        [SerializeField] private TextMeshProUGUI m_LastTradePriceText;
+
+        // Details
+        [SerializeField] private TextMeshProUGUI m_TokenIdText;
+
         [SerializeField] private TextMeshProUGUI m_CollectionText;
+
         // Attributes
         [SerializeField] private Transform m_AttributesListParent;
+
         [SerializeField] private AttributeView m_AttributeObj;
+
+        // Actions
+        [SerializeField] private HyperCasualButton m_SellButton;
+        [SerializeField] private HyperCasualButton m_CancelButton;
+        [SerializeField] private GameObject m_Progress;
+
         // Not listed
         [SerializeField] private GameObject m_EmptyNotListed;
-        [SerializeField] private Transform m_NotListedParent = null;
-        private List<AssetNotListedObject> m_NotListedViews = new List<AssetNotListedObject>();
-        [SerializeField] private AssetNotListedObject m_NotListedObj = null;
+        [SerializeField] private Transform m_NotListedParent;
+        [SerializeField] private AssetNotListedObject m_NotListedObj;
 
         // Listings
         [SerializeField] private GameObject m_EmptyListing;
-        [SerializeField] private Transform m_ListingParent = null;
-        private List<AssetListingObject> m_ListingViews = new List<AssetListingObject>();
-        [SerializeField] private AssetListingObject m_ListingObj = null;
+        [SerializeField] private Transform m_ListingParent;
+        [SerializeField] private AssetListingObject m_ListingObj;
 
         [SerializeField] private CustomDialog m_CustomDialog;
 
-        private List<AttributeView> m_Attributes = new List<AttributeView>();
-        private StackBundle m_Asset;
+        private readonly List<AttributeView> m_Attributes = new();
+
+        private readonly SearchApi m_SearchApi;
+        private readonly DefaultApi m_TsApi;
+        private AssetModel m_Asset;
+        private OldListing m_Listing;
+
+        public AssetDetailsView()
+        {
+            var tsConfig = new Configuration();
+            tsConfig.BasePath = Config.BASE_URL;
+            m_TsApi = new DefaultApi(tsConfig);
+
+            var searchConfig = new Immutable.Search.Client.Configuration();
+            searchConfig.BasePath = Config.BASE_URL;
+            m_SearchApi = new SearchApi(searchConfig);
+        }
 
         private void OnEnable()
         {
@@ -51,145 +87,149 @@ namespace HyperCasual.Runner
 
             m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
+            m_SellButton.RemoveListener(OnSellButtonClicked);
+            m_SellButton.AddListener(OnSellButtonClicked);
+            m_CancelButton.RemoveListener(OnCancelButtonClicked);
+            m_CancelButton.AddListener(OnCancelButtonClicked);
 
             // Gets the player's balance
             m_Balance.UpdateBalance();
         }
 
         /// <summary>
-        /// Initialises the UI based on the asset.
+        ///     Cleans up data
+        /// </summary>
+        private void OnDisable()
+        {
+            m_NameText.text = "";
+            m_TokenIdText.text = "";
+            m_CollectionText.text = "";
+            m_AmountText.text = "";
+            m_FloorPriceText.text = "";
+            m_LastTradePriceText.text = "";
+
+            m_Asset = null;
+            ClearAttributes();
+        }
+
+        /// <summary>
+        ///     Initialises the UI based on the asset.
         /// </summary>
         /// <param name="asset">The asset to display.</param>
-        public async void Initialise(StackBundle asset)
+        public async void Initialise(AssetModel asset)
         {
             m_Asset = asset;
 
-            m_NameText.text = m_Asset.Stack.Name;
-            m_CollectionText.text = $"Collection: {m_Asset.Stack.ContractAddress}";
+            m_NameText.text = m_Asset.name;
+            m_TokenIdText.text = $"Token ID: {m_Asset.token_id}";
+            m_CollectionText.text = $"Collection: {m_Asset.contract_address}";
+            m_AmountText.text = "-";
+            m_FloorPriceText.text = "Floor price: -";
+            m_LastTradePriceText.text = "Last trade price: -";
 
             // Clear existing attributes
             ClearAttributes();
 
             // Populate attributes
-            foreach (NFTMetadataAttribute attribute in m_Asset.Stack.Attributes)
+            foreach (var a in m_Asset.attributes)
             {
-                AttributeView newAttribute = Instantiate(m_AttributeObj, m_AttributesListParent);
+                NFTMetadataAttribute attribute = new(traitType: a.trait_type,
+                    value: new NFTMetadataAttributeValue(a.value));
+                var newAttribute = Instantiate(m_AttributeObj, m_AttributesListParent);
                 newAttribute.gameObject.SetActive(true);
                 newAttribute.Initialise(attribute);
                 m_Attributes.Add(newAttribute);
             }
 
             // Download and display the image
-            m_Image.LoadUrl(m_Asset.Stack.Image);
+            m_Image.LoadUrl(m_Asset.image);
 
-            UpdateLists();
+            // Check if asset is listed
+            m_Listing = await GetActiveListingId();
+            m_SellButton.gameObject.SetActive(m_Listing == null);
+            m_CancelButton.gameObject.SetActive(m_Listing != null);
+
+            // Price if it's listed
+            if (m_Listing != null)
+            {
+                var amount = m_Listing.buy[0].amount;
+                var quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
+                m_AmountText.text = $"{quantity} IMR";
+            }
+            else
+            {
+                m_AmountText.text = "Not listed";
+            }
+
+            // Get market data
+            GetMarketData();
         }
 
-        private void UpdateLists()
+        private async void GetMarketData()
         {
-            // Clear not listed list
-            ClearNotListedList();
-
-            // Populate not listed items
-            foreach (Listing stackListing in m_Asset.NotListed)
+            try
             {
-                AssetNotListedObject item = Instantiate(m_NotListedObj, m_NotListedParent);
-                item.gameObject.SetActive(true);
-                item.Initialise(stackListing, OnSellButtonClicked); // Initialise the view with data
-                m_NotListedViews.Add(item); // Add to the list of displayed attributes
-            }
-            m_EmptyNotListed.SetActive(m_Asset.NotListed.Count == 0);
-
-            // Clear all existing listings
-            ClearListings();
-
-            // Populate listings
-            foreach (Listing stackListing in m_Asset.Listings)
-            {
-                AssetListingObject item = Instantiate(m_ListingObj, m_ListingParent);
-                item.gameObject.SetActive(true);
-                item.Initialise(stackListing, OnCancelButtonClicked); // Initialise the view with data
-                m_ListingViews.Add(item); // Add to the list of displayed attributes
-            }
-            m_EmptyListing.SetActive(m_Asset.Listings.Count == 0);
-        }
-
-        /// <summary>
-        /// Handles the click event for the sell button.
-        /// </summary>
-        private async UniTask<bool> OnSellButtonClicked(Listing listing)
-        {
-            (bool result, string price) = await m_CustomDialog.ShowDialog(
-                $"List {m_Asset.Stack.Name} for sale",
-                "Enter your price below (in IMR):",
-                "Confirm",
-                negativeButtonText: "Cancel",
-                showInputField: true
-            );
-
-            if (result)
-            {
-                decimal amount = Math.Floor(decimal.Parse(price) * (decimal)BigInteger.Pow(10, 18));
-                string listingId = await PrepareListing(listing, $"{amount}");
-
-                if (listingId != null)
+                var response = await m_SearchApi.QuotesForStacksAsync(Config.CHAIN_NAME, Contract.SKIN,
+                    new List<Guid> { Guid.Parse(m_Asset.metadata_id) });
+                if (response.Result.Count > 0)
                 {
-                    // TODO update to use get stack bundle by stack ID endpoint instead
-                    // Locally remove token from not listed list
-                    // var listingToRemove = m_Asset.notListed.FirstOrDefault(l => l.token_id == listing.token_id);
-                    // if (listingToRemove != null)
-                    // {
-                    //     m_Asset.notListed.Remove(listingToRemove);
-                    // }
+                    var quote = response.Result[0];
+                    var market = quote.MarketStack;
 
-                    // Locally add listing to listing
-                    m_Asset.Listings.Insert(0, await GetListing(listingId));
+                    if (market?.FloorListing != null)
+                    {
+                        var quantity = (decimal)BigInteger.Parse(market.FloorListing.PriceDetails.Amount.Value) /
+                                       (decimal)BigInteger.Pow(10, 18);
+                        m_FloorPriceText.text = $"Floor price: {quantity} IMR";
+                    }
+                    else
+                    {
+                        m_FloorPriceText.text = "Floor price: N/A";
+                    }
 
-                    UpdateLists();
-
-                    return true;
+                    if (market?.LastTrade?.PriceDetails?.Count > 0)
+                    {
+                        var quantity = (decimal)BigInteger.Parse(market.LastTrade.PriceDetails[0].Amount.Value) /
+                                       (decimal)BigInteger.Pow(10, 18);
+                        m_LastTradePriceText.text = $"Last trade price: {quantity} IMR";
+                    }
+                    else
+                    {
+                        m_LastTradePriceText.text = "Last trade price: N/A";
+                    }
                 }
             }
-
-            return false;
+            catch (ApiException e)
+            {
+                Debug.LogError("Exception when calling: " + e.Message);
+                Debug.LogError("Status Code: " + e.ErrorCode);
+                Debug.LogError(e.StackTrace);
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Failed to get market data: {ex.Message}");
+            }
         }
 
-        /// <summary>
-        /// Gets the details for the listing
-        /// </summary>
-        private async UniTask<Listing> GetListing(string listingId) // TODO To replace with get stack by ID endpoint
+        // TODO not required one we have the NFT search endpoint
+        private async UniTask<OldListing?> GetActiveListingId()
         {
             try
             {
                 using var client = new HttpClient();
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{listingId}";
+                var url =
+                    $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/orders/listings?sell_item_contract_address={Contract.SKIN}&sell_item_token_id={m_Asset.token_id}&status=ACTIVE";
+                Debug.Log($"GetActiveListingId URL: {url}");
 
-                HttpResponseMessage response = await client.GetAsync(url);
+                var response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    OrderResponse orderResponse = JsonUtility.FromJson<OrderResponse>(responseBody);
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var listingResponse = JsonUtility.FromJson<ListingsResponse>(responseBody);
 
-                    return new Listing
-                    {
-                        ListingId = orderResponse.result.id,
-                        PriceDetails = new PriceDetails
-                        {
-                            Token = new PriceDetailsToken(new ERC20Token(symbol: "IMR")),
-                            Amount = new PaymentAmount
-                            {
-                                Value = orderResponse.result.buy[0].amount
-                            },
-                            Fees = orderResponse.result.fees.Select(fee => new Immutable.Search.Model.Fee
-                            {
-                                Amount = fee.amount,
-                                RecipientAddress = fee.recipient_address,
-                            }).ToList()
-                        },
-                        TokenId = orderResponse.result.sell[0].token_id,
-                        Creator = orderResponse.result.account_address,
-
-                    };
+                    // Check if the listing exists
+                    if (listingResponse.result.Count > 0 && listingResponse.result[0].status.name == "ACTIVE")
+                        return listingResponse.result[0];
                 }
             }
             catch (Exception ex)
@@ -201,277 +241,266 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Prepares the listing for the asset.
+        ///     Handles the click event for the sell button.
         /// </summary>
-        /// <param name="listing">The asset to prepare for listing.</param>
-        /// <param name="price">The price of the asset in smallest unit.</param>
-        /// <returns>The listing ID is asset was successfully listed</returns>
-        private async UniTask<string> PrepareListing(Listing asset, string price)
+        private async void OnSellButtonClicked()
         {
-            string address = SaveManager.Instance.WalletAddress;
+            var (result, price) = await m_CustomDialog.ShowDialog(
+                $"List {m_Asset.name} for sale",
+                "Enter your price below (in IMR):",
+                "Confirm",
+                "Cancel",
+                true
+            );
 
-            var data = new PrepareListingRequest
+            if (result)
             {
-                makerAddress = address,
-                sell = new PrepareListingERC721Item
-                {
-                    contractAddress = Contract.SKIN,
-                    tokenId = asset.TokenId,
-                },
-                buy = new PrepareListingERC20Item
-                {
-                    amount = price,
-                    contractAddress = Contract.TOKEN,
-                }
-            };
+                m_SellButton.gameObject.SetActive(false);
+                m_Progress.gameObject.SetActive(true);
 
+                var amount = Math.Floor(decimal.Parse(price) * (decimal)BigInteger.Pow(10, 18));
+
+                var listingId = await Sell($"{amount}");
+                Debug.Log($"Sell complete: Listing ID: {listingId}");
+
+                m_SellButton.gameObject.SetActive(listingId == null);
+                m_CancelButton.gameObject.SetActive(listingId != null);
+                m_AmountText.text = listingId != null ? $"{price} IMR" : "Not listed";
+                m_Progress.gameObject.SetActive(false);
+            }
+        }
+
+        /// <summary>
+        ///     Gets the details for the listing
+        /// </summary>
+        private async UniTask<Listing> GetListing(string listingId) // TODO To replace with get stack by ID endpoint
+        {
             try
             {
-                var json = JsonUtility.ToJson(data);
-                Debug.Log($"json = {json}");
-
                 using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/v1/ts-sdk/v1/orderbook/prepareListing")
+                var url = $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/orders/listings/{listingId}";
+                Debug.Log($"Get listing URL: {url}");
+
+                var response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
                 {
-                    Content = new StringContent(json, Encoding.UTF8, "application/json")
-                };
-                using var res = await client.SendAsync(req);
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var orderResponse = JsonUtility.FromJson<OrderResponse>(responseBody);
 
-                if (!res.IsSuccessStatusCode)
-                {
-                    await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing.", "OK");
-                    return null;
-                }
-
-                string responseBody = await res.Content.ReadAsStringAsync();
-                PrepareListingResponse response = JsonUtility.FromJson<PrepareListingResponse>(responseBody);
-
-                // Send transaction if required
-                var transaction = response.actions.FirstOrDefault(action => action.type == "TRANSACTION");
-                if (transaction != null)
-                {
-                    var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
-                    {
-                        to = transaction.populatedTransactions.to,
-                        data = transaction.populatedTransactions.data,
-                        value = "0"
-                    });
-
-                    if (transactionResponse.status != "1")
-                    {
-                        await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing.", "OK");
-                        return null;
-                    }
-                }
-
-                // Sign payload
-                var signable = response.actions.FirstOrDefault(action => action.type == "SIGNABLE");
-                if (signable != null)
-                {
-                    Debug.Log($"Sign: {JsonUtility.ToJson(signable.message)}");
-
-                    signable.message.types.EIP712Domain = new List<NameType>
-                    {
-                        new NameType { name = "name", type = "string" },
-                        new NameType { name = "version", type = "string" },
-                        new NameType { name = "chainId", type = "uint256" },
-                        new NameType { name = "verifyingContract", type = "address" }
-                    };
-
-                    var eip712TypedData = new EIP712TypedData
-                    {
-                        domain = signable.message.domain,
-                        types = signable.message.types,
-                        message = signable.message.value,
-                        primaryType = "OrderComponents"
-                    };
-
-                    Debug.Log($"EIP712TypedData: {JsonUtility.ToJson(eip712TypedData)}");
-                    // string signature = await Passport.Instance.ZkEvmSignTypedDataV4(JsonUtility.ToJson(eip712TypedData));
-                    // Debug.Log($"Signature: {signature}");
-
-                    (bool result, string signature) = await m_CustomDialog.ShowDialog(
-                        "Confirm listing",
-                        "Enter signed payload:",
-                        "Confirm",
-                        negativeButtonText: "Cancel",
-                        showInputField: true
+                    return new Listing(
+                        orderResponse.result.id,
+                        new PriceDetails
+                        (
+                            new PriceDetailsToken(new ERC20Token(symbol: "IMR", contractAddress: Contract.TOKEN,
+                                decimals: 18)),
+                            new PaymentAmount(orderResponse.result.buy[0].amount, orderResponse.result.buy[0].amount),
+                            new PaymentAmount(orderResponse.result.buy[0].amount,
+                                orderResponse.result.buy[0].amount), // Mocked
+                            orderResponse.result.fees.Select(fee => new Immutable.Search.Model.Fee(
+                                    fee.amount, Immutable.Search.Model.Fee.TypeEnum.ROYALTY, fee.recipient_address))
+                                .ToList()
+                        ),
+                        orderResponse.result.sell[0].token_id,
+                        orderResponse.result.account_address,
+                        "1"
                     );
-                    if (result)
-                    {
-                        return await ListAsset(signature, response, address);
-                    }
+                }
+                else
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    Debug.Log($"Failed to get listing: {responseBody}");
                 }
             }
             catch (Exception ex)
             {
+                Debug.Log($"Failed to get listing: {ex.Message}");
+            }
+
+            return null;
+        }
+
+        private async UniTask<V1TsSdkOrderbookPrepareListingPost200Response> PrepareListing(
+            string nftTokenAddress, string tokenId, string price, string erc20TokenAddress)
+        {
+            // Define the NFT to sell, using its contract address and token ID
+            var nft = new ERC721Item(nftTokenAddress, tokenId);
+
+            // Define the ERC20 token that the buyer will use to purchase the NFT
+            var buy = new ERC20Item(price, erc20TokenAddress);
+
+            // Call the Orderbook function to prepare the listing for sale
+            return await m_TsApi.V1TsSdkOrderbookPrepareListingPostAsync(
+                new V1TsSdkOrderbookPrepareListingPostRequest
+                (
+                    makerAddress: SaveManager.Instance.WalletAddress,
+                    sell: new V1TsSdkOrderbookPrepareListingPostRequestSell(nft),
+                    buy: new V1TsSdkOrderbookPrepareListingPostRequestBuy(buy)
+                ));
+        }
+
+        private async UniTask SignAndSubmitApproval(
+            V1TsSdkOrderbookPrepareListingPost200Response prepareListingResponse)
+        {
+            var transactionAction = prepareListingResponse.Actions.FirstOrDefault(action =>
+                ReferenceEquals(action.ActualInstance, typeof(TransactionAction)));
+            // Send approval transaction if it is required
+            if (transactionAction != null)
+            {
+                var tx = transactionAction.GetTransactionAction();
+                var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(
+                    new TransactionRequest
+                    {
+                        to = tx.PopulatedTransactions.To,
+                        data = tx.PopulatedTransactions.Data,
+                        value = "0"
+                    });
+
+                if (transactionResponse.status != "1") throw new Exception("Failed to sign and submit approval");
+            }
+        }
+
+        private async UniTask<string> SignListing(V1TsSdkOrderbookPrepareListingPost200Response prepareListingResponse)
+        {
+            var signableAction =
+                prepareListingResponse.Actions.FirstOrDefault(action => action.GetSignableAction() != null);
+
+            if (signableAction == null) throw new Exception("No listing to sign");
+
+            var message = signableAction.GetSignableAction().Message;
+
+            // Use Unity Passport package to sign typed data function to sign the listing payload
+            return "";//await Passport.Instance.ZkEvmSignTypedDataV4(
+                      //JsonConvert.SerializeObject(message, Formatting.Indented));
+        }
+
+        /// <summary>
+        ///     Prepares the listing for the asset.
+        /// </summary>
+        /// <param name="price">The price of the asset in smallest unit.</param>
+        /// <returns>The listing ID is asset was successfully listed</returns>
+        private async UniTask<string?> Sell(string price)
+        {
+            try
+            {
+                V1TsSdkOrderbookPrepareListingPost200Response prepareListingResponse =
+                    await PrepareListing(Contract.SKIN, m_Asset.token_id, $"{price}", Contract.TOKEN);
+
+                await SignAndSubmitApproval(prepareListingResponse);
+
+                string signature = await SignListing(prepareListingResponse);
+
+                string listingId = await ListAsset(signature, prepareListingResponse);
+                Debug.Log($"Listing ID: {listingId}");
+
+                await ConfirmListingStatus(listingId, "ACTIVE");
+
+                return listingId;
+            }
+            catch (Exception ex)
+            {
                 Debug.Log($"Failed to sell: {ex.Message}");
-                await m_CustomDialog.ShowDialog("Error", "Failed to prepare listing", "OK");
+                Debug.LogError(ex.StackTrace);
+                await m_CustomDialog.ShowDialog("Failed to sell", ex.Message, "OK");
             }
 
             return null;
         }
 
         /// <summary>
-        /// Finalises the listing of the asset.
+        ///     Finalises the listing of the asset.
         /// </summary>
         /// <param name="signature">The signature for the listing.</param>
         /// <param name="preparedListing">The prepared listing data.</param>
-        /// <param name="address">The wallet address of the user.</param>
-        private async UniTask<string?> ListAsset(string signature, PrepareListingResponse preparedListing, string address)
+        private async UniTask<string> ListAsset(string signature,
+            V1TsSdkOrderbookPrepareListingPost200Response preparedListing)
         {
-            var data = new CreateListingRequest
-            {
-                makerFees = new List<CreateListingFeeValue>(),
-                orderComponents = preparedListing.orderComponents,
-                orderHash = preparedListing.orderHash,
-                orderSignature = signature
-            };
+            var createListingResponse = await m_TsApi.V1TsSdkOrderbookCreateListingPostAsync(
+                new V1TsSdkOrderbookCreateListingPostRequest
+                (
+                    new List<FeeValue>(),
+                    preparedListing.OrderComponents,
+                    preparedListing.OrderHash,
+                    signature
+                ));
 
-            try
-            {
-                var json = JsonUtility.ToJson(data);
-                Debug.Log($"json = {json}");
-
-                using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:6060/v1/ts-sdk/v1/orderbook/createListing")
-                {
-                    Content = new StringContent(json, Encoding.UTF8, "application/json")
-                };
-                using var res = await client.SendAsync(req);
-
-                if (!res.IsSuccessStatusCode)
-                {
-                    string errorBody = await res.Content.ReadAsStringAsync();
-                    Debug.Log($"Error: {errorBody}");
-                    await m_CustomDialog.ShowDialog("Error", "Failed to list", "OK");
-                    return null;
-                }
-                else
-                {
-                    string responseBody = await res.Content.ReadAsStringAsync();
-                    CreateListingResponse response = JsonUtility.FromJson<CreateListingResponse>(responseBody);
-                    Debug.Log($"Listing ID: {response.result.id}");
-
-                    // Validate that listing is active
-                    await ConfirmListingStatus(response.result.id, "ACTIVE");
-                    return response.result.id;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.Log($"Failed to list: {ex.Message}");
-                await m_CustomDialog.ShowDialog("Error", "Failed to list", "OK");
-                return null;
-            }
+            return createListingResponse.Result.Id;
         }
 
         /// <summary>
-        /// Cancels the listing of the asset.
+        ///     Cancels the listing of the asset.
         /// </summary>
-        private async UniTask<bool> OnCancelButtonClicked(Listing listing)
+        private async void OnCancelButtonClicked()
         {
-            Debug.Log($"Cancel listing {listing.ListingId}");
+            Debug.Log($"Cancel listing {m_Listing.id}");
 
-            string address = SaveManager.Instance.WalletAddress;
-            var data = new CancelListingRequest
-            {
-                accountAddress = address,
-                orderIds = new List<string> { listing.ListingId }
-            };
+            m_CancelButton.gameObject.SetActive(false);
+            m_Progress.gameObject.SetActive(true);
 
             try
             {
-                var json = JsonUtility.ToJson(data);
-                Debug.Log($"json = {json}");
+                var request = new V1TsSdkOrderbookCancelOrdersOnChainPostRequest(
+                    accountAddress: SaveManager.Instance.WalletAddress,
+                    orderIds: new List<string> { m_Listing.id });
+                var response = await m_TsApi.V1TsSdkOrderbookCancelOrdersOnChainPostAsync(request);
 
-                using var client = new HttpClient();
-                using var req = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:8080/v1/ts-sdk/v1/orderbook/cancelOrdersOnChain")
+                if (response?.CancellationAction.PopulatedTransactions.To != null)
                 {
-                    Content = new StringContent(json, Encoding.UTF8, "application/json")
-                };
-
-                using var res = await client.SendAsync(req);
-
-                if (!res.IsSuccessStatusCode)
-                {
-                    await m_CustomDialog.ShowDialog("Error", "Failed to cancel listing", "OK");
-                    return false;
-                }
-
-                string responseBody = await res.Content.ReadAsStringAsync();
-                Debug.Log($"responseBody = {responseBody}");
-
-                CancelListingResponse response = JsonUtility.FromJson<CancelListingResponse>(responseBody);
-                if (response?.cancellationAction.populatedTransaction.to != null)
-                {
-                    var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest()
-                    {
-                        to = response.cancellationAction.populatedTransaction.to, // Immutable seaport contract
-                        data = response.cancellationAction.populatedTransaction.data, // fd9f1e10 cancel
-                        value = "0"
-                    });
+                    var transactionResponse = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(
+                        new TransactionRequest
+                        {
+                            to = response.CancellationAction.PopulatedTransactions.To, // Immutable seaport contract
+                            data = response.CancellationAction.PopulatedTransactions.Data, // fd9f1e10 cancel
+                            value = "0"
+                        });
 
                     if (transactionResponse.status == "1")
                     {
                         // Validate that listing has been cancelled
-                        await ConfirmListingStatus(listing.ListingId, "CANCELLED");
+                        await ConfirmListingStatus(m_Listing.id, "CANCELLED");
 
                         // TODO update to use get stack bundle by stack ID endpoint instead
-                        // Locally remove listing
-                        var listingToRemove = m_Asset.Listings.FirstOrDefault(l => l.ListingId == listing.ListingId);
-                        if (listingToRemove != null)
-                        {
-                            m_Asset.Listings.Remove(listingToRemove);
-                        }
 
-                        // Locally add asset to not listed list
-                        // m_Asset.notListed.Insert(0, listing); // TODO
+                        m_SellButton.gameObject.SetActive(true);
+                        m_Progress.gameObject.SetActive(false);
+                        m_AmountText.text = "Not listed";
 
-                        UpdateLists();
-
-                        return true;
-                    }
-                    else
-                    {
-                        await m_CustomDialog.ShowDialog("Error", "Failed to cancel listing", "OK");
-                        return false;
+                        return;
                     }
                 }
 
-                return false;
+                m_Progress.gameObject.SetActive(false);
+                m_CancelButton.gameObject.SetActive(true);
+                await m_CustomDialog.ShowDialog("Error", "Failed to cancel listing", "OK");
             }
             catch (Exception ex)
             {
                 Debug.LogException(ex);
+                m_Progress.gameObject.SetActive(false);
+                m_CancelButton.gameObject.SetActive(true);
                 await m_CustomDialog.ShowDialog("Error", "Failed to cancel listing", "OK");
-                return false;
             }
         }
 
         /// <summary>
-        /// Polls the listing status until it transitions to the given status or the operation times out after 1 minute.
+        ///     Polls the listing status until it transitions to the given status or the operation times out after 1 minute.
         /// </summary>
         private async UniTask ConfirmListingStatus(string listingId, string status)
         {
             Debug.Log($"Confirming listing {listingId} is {status}...");
 
-            bool conditionMet = await PollingHelper.PollAsync(
-                $"https://api.dev.immutable.com/v1/chains/imtbl-zkevm-devnet/orders/listings/{listingId}",
-                (responseBody) =>
+            var conditionMet = await PollingHelper.PollAsync(
+                $"{Config.BASE_URL}/v1/chains/imtbl-zkevm-devnet/orders/listings/{listingId}",
+                responseBody =>
                 {
-                    ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
+                    var listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
+                    m_Listing = listingResponse.result;
                     return listingResponse.result?.status.name == status;
                 });
 
             if (conditionMet)
-            {
                 await m_CustomDialog.ShowDialog("Success", $"Listing is {status.ToLower()}.", "OK");
-            }
             else
-            {
                 await m_CustomDialog.ShowDialog("Error", $"Failed to confirm if listing is {status.ToLower()}.", "OK");
-            }
         }
 
         private void OnBackButtonClick()
@@ -480,53 +509,12 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Removes all the attribute views
+        ///     Removes all the attribute views
         /// </summary>
         private void ClearAttributes()
         {
-            foreach (AttributeView attribute in m_Attributes)
-            {
-                Destroy(attribute.gameObject);
-            }
+            foreach (var attribute in m_Attributes) Destroy(attribute.gameObject);
             m_Attributes.Clear();
-        }
-
-        /// <summary>
-        /// Removes all the not for sale views
-        /// </summary>
-        private void ClearNotListedList()
-        {
-            foreach (AssetNotListedObject listing in m_NotListedViews)
-            {
-                Destroy(listing.gameObject);
-            }
-            m_NotListedViews.Clear();
-        }
-
-        /// <summary>
-        /// Removes all the listing views
-        /// </summary>
-        private void ClearListings()
-        {
-            foreach (AssetListingObject listing in m_ListingViews)
-            {
-                Destroy(listing.gameObject);
-            }
-            m_ListingViews.Clear();
-        }
-
-        /// <summary>
-        /// Cleans up data
-        /// </summary>
-        private void OnDisable()
-        {
-            m_NameText.text = "";
-            m_CollectionText.text = ""; ;
-
-            m_Asset = null;
-            ClearAttributes();
-            ClearNotListedList();
-            ClearListings();
         }
     }
 }

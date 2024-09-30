@@ -1,16 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HyperCasual.Core
 {
     /// <summary>
-    /// Encapsulates utility classes that helps with reading/writing JSON data on PlayerPrefs
+    ///     Encapsulates utility classes that helps with reading/writing JSON data on PlayerPrefs
     /// </summary>
     public static class PlayerPrefsUtils
     {
         /// <summary>
-        /// Deserializes a class from JSON data stored on PlayerPrefs.
+        ///     Deserializes a class from JSON data stored on PlayerPrefs.
         /// </summary>
         /// <param name="key">PlayerPrefs key name</param>
         /// <typeparam name="T">The class type to deserialize</typeparam>
@@ -18,12 +16,12 @@ namespace HyperCasual.Core
         public static T Read<T>(string key) where T : new()
         {
             return PlayerPrefs.HasKey(key)
-                    ? JsonUtility.FromJson<T>(PlayerPrefs.GetString(key))
-                    : new T();
+                ? JsonUtility.FromJson<T>(PlayerPrefs.GetString(key))
+                : new T();
         }
 
         /// <summary>
-        /// Serializes a class to JSON string data and stores it on PlayerPrefs
+        ///     Serializes a class to JSON string data and stores it on PlayerPrefs
         /// </summary>
         /// <param name="key">PlayerPrefs key name</param>
         /// <param name="data">Instance of the class to serialize</param>
@@ -34,7 +32,7 @@ namespace HyperCasual.Core
         }
 
         /// <summary>
-        /// Deletes a PlayerPrefs entry
+        ///     Deletes a PlayerPrefs entry
         /// </summary>
         /// <param name="key">PlayerPrefs key name</param>
         public static void Clear(string key)

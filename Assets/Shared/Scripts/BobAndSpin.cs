@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HyperCasual.Core
@@ -15,31 +13,25 @@ namespace HyperCasual.Core
 
         public bool Spin = true;
         public float SpinSpeed = 180.0f;
+        private Vector3 m_StartPosition;
+        private Quaternion m_StartRotation;
 
-        Transform m_Transform;
-        Vector3 m_StartPosition;
-        Quaternion m_StartRotation;
+        private Transform m_Transform;
 
-        void Awake()
+        private void Awake()
         {
             m_Transform = transform;
             m_StartPosition = m_Transform.position;
             m_StartRotation = m_Transform.rotation;
         }
 
-        void Update()
+        private void Update()
         {
-            float offset = (UsePositionBasedOffset) ? m_StartPosition.z * PositionBasedScale + Time.time : Time.time;
+            var offset = UsePositionBasedOffset ? m_StartPosition.z * PositionBasedScale + Time.time : Time.time;
 
-            if (Bob)
-            {
-                m_Transform.position = m_StartPosition + Vector3.up * Mathf.Sin(offset * BobSpeed) * BobHeight;
-            }
+            if (Bob) m_Transform.position = m_StartPosition + Vector3.up * Mathf.Sin(offset * BobSpeed) * BobHeight;
 
-            if (Spin)
-            {
-                m_Transform.rotation = m_StartRotation * Quaternion.AngleAxis(offset * SpinSpeed, Vector3.up);
-            }
+            if (Spin) m_Transform.rotation = m_StartRotation * Quaternion.AngleAxis(offset * SpinSpeed, Vector3.up);
         }
     }
 }

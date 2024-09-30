@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using HyperCasual.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,22 +5,21 @@ using UnityEngine.UI;
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// This View contains settings menu functionalities
+    ///     This View contains settings menu functionalities
     /// </summary>
     public class SettingsMenu : View
     {
-        [SerializeField]
-        HyperCasualButton m_Button;
-        [SerializeField]
-        Toggle m_EnableMusicToggle;
-        [SerializeField]
-        Toggle m_EnableSfxToggle;
-        [SerializeField]
-        Slider m_AudioVolumeSlider;
-        [SerializeField]
-        Slider m_QualitySlider;
+        [SerializeField] private HyperCasualButton m_Button;
 
-        void OnEnable()
+        [SerializeField] private Toggle m_EnableMusicToggle;
+
+        [SerializeField] private Toggle m_EnableSfxToggle;
+
+        [SerializeField] private Slider m_AudioVolumeSlider;
+
+        [SerializeField] private Slider m_QualitySlider;
+
+        private void OnEnable()
         {
             m_EnableMusicToggle.isOn = AudioManager.Instance.EnableMusic;
             m_EnableSfxToggle.isOn = AudioManager.Instance.EnableSfx;
@@ -36,7 +33,7 @@ namespace HyperCasual.Runner
             m_QualitySlider.onValueChanged.AddListener(QualitySliderChanged);
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             m_Button.RemoveListener(OnBackButtonClick);
             m_EnableMusicToggle.onValueChanged.RemoveListener(MusicToggleChanged);
@@ -45,27 +42,27 @@ namespace HyperCasual.Runner
             m_QualitySlider.onValueChanged.RemoveListener(QualitySliderChanged);
         }
 
-        void MusicToggleChanged(bool value)
+        private void MusicToggleChanged(bool value)
         {
             AudioManager.Instance.EnableMusic = value;
         }
 
-        void SfxToggleChanged(bool value)
+        private void SfxToggleChanged(bool value)
         {
             AudioManager.Instance.EnableSfx = value;
         }
 
-        void VolumeSliderChanged(float value)
+        private void VolumeSliderChanged(float value)
         {
             AudioManager.Instance.MasterVolume = value;
         }
 
-        void QualitySliderChanged(float value)
+        private void QualitySliderChanged(float value)
         {
             QualityManager.Instance.QualityLevel = (int)value;
         }
 
-        void OnBackButtonClick()
+        private void OnBackButtonClick()
         {
             UIManager.Instance.GoBack();
         }

@@ -1,13 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using HyperCasual.Core;
-using HyperCasual.Gameplay;
-using UnityEngine;
-using UnityEngine.UI;
-using Immutable.Passport;
-using Cysharp.Threading.Tasks;
 using System.Net.Http;
+using Cysharp.Threading.Tasks;
+using HyperCasual.Core;
+using Immutable.Passport;
+using UnityEngine;
 using TMPro;
 using Immutable.Search.Client;
 using Immutable.Search.Model;
@@ -16,7 +13,7 @@ using Immutable.Search.Api;
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// The inventory view which displays the player's assets (e.g. skins).
+    ///     The inventory view which displays the player's assets (e.g. skins).
     /// </summary>
     public class InventoryScreen : View
     {
@@ -24,18 +21,18 @@ namespace HyperCasual.Runner
         [SerializeField] private HyperCasualButton m_AddButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
         [SerializeField] private BalanceObject m_Balance;
-        [SerializeField] private AssetListObject m_AssetObj = null;
-        [SerializeField] private Transform m_ListParent = null;
+        [SerializeField] private AssetListObject m_AssetObj;
+        [SerializeField] private Transform m_ListParent;
         [SerializeField] private InfiniteScrollView m_ScrollView;
         [SerializeField] private AddFunds m_AddFunds;
-        private List<StackBundle> m_Assets = new List<StackBundle>();
+        private readonly List<AssetModel> m_Assets = new();
 
         // Pagination
-        private bool m_IsLoadingMore = false;
-        private Page m_Page;
+        private bool m_IsLoadingMore;
+        private PageModel m_Page;
 
         /// <summary>
-        /// Sets up the inventory list and fetches the player's assets.
+        ///     Sets up the inventory list and fetches the player's assets.
         /// </summary>
         private async void OnEnable()
         {
@@ -52,7 +49,7 @@ namespace HyperCasual.Runner
             {
                 // Setup infinite scroll view and load assets
                 m_ScrollView.OnCreateItemView += OnCreateItemView;
-                LoadAssets();
+                if (m_Assets.Count == 0) LoadAssets();
 
                 // Gets the player's balance
                 m_Balance.UpdateBalance();
@@ -60,14 +57,13 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Configures the asset list item view
+        ///     Configures the asset list item view
         /// </summary>
         private void OnCreateItemView(int index, GameObject item)
         {
             if (index < m_Assets.Count)
             {
-                // AssetModel asset = m_Assets[index];
-                StackBundle asset = m_Assets[index];
+                var asset = m_Assets[index];
 
                 // Initialise the view with asset
                 var itemComponent = item.GetComponent<AssetListObject>();
@@ -79,8 +75,8 @@ namespace HyperCasual.Runner
                     clickable.ClearAllSubscribers();
                     clickable.OnClick += () =>
                     {
-                        AssetDetailsView view = UIManager.Instance.GetView<AssetDetailsView>();
-                        UIManager.Instance.Show(view, true);
+                        var view = UIManager.Instance.GetView<AssetDetailsView>();
+                        UIManager.Instance.Show(view);
                         view.Initialise(asset);
                     };
                 }
@@ -89,23 +85,21 @@ namespace HyperCasual.Runner
             // Load more assets if nearing the end of the list
             if (index >= m_Assets.Count - 5 && !m_IsLoadingMore)
             {
+                Debug.Log("Inventory Load more");
                 LoadAssets();
             }
         }
 
         /// <summary>
-        /// Loads assets and adds them to the scroll view.
+        ///     Loads assets and adds them to the scroll view.
         /// </summary>
         private async void LoadAssets()
         {
-            if (m_IsLoadingMore)
-            {
-                return;
-            }
+            if (m_IsLoadingMore) return;
 
             m_IsLoadingMore = true;
 
-            List<StackBundle> assets = await GetStacks();
+            var assets = await GetAssets();
             if (assets != null && assets.Count > 0)
             {
                 m_Assets.AddRange(assets);
@@ -116,102 +110,69 @@ namespace HyperCasual.Runner
         }
 
         // Uses mocked stacks endpoint
-        private async UniTask<List<StackBundle>> GetStacks()
+        private async UniTask<List<AssetModel>> GetAssets()
         {
-            Debug.Log("Fetching stacks assets...");
+            Debug.Log("Fetching assets...");
 
-            List<StackBundle> stacks = new List<StackBundle>();
-
-            Configuration config = new Configuration();
-            config.BasePath = Config.SEARCH_BASE_URL;
-            var apiInstance = new SearchApi(config);
+            var assets = new List<AssetModel>();
 
             try
             {
-                string address = SaveManager.Instance.WalletAddress;
+                var address = SaveManager.Instance.WalletAddress;
 
                 if (string.IsNullOrEmpty(address))
                 {
                     Debug.LogError("Could not get player's wallet");
-                    return stacks;
+                    return assets;
                 }
 
-                string? nextCursor = null;
-                if (!string.IsNullOrEmpty(m_Page?.NextCursor))
+                var url =
+                    $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/accounts/{address}/nfts?contract_address={Contract.SKIN}&page_size={Config.PAGE_SIZE}";
+
+                // Pagination
+                if (!string.IsNullOrEmpty(m_Page?.next_cursor))
                 {
-                    nextCursor = m_Page.NextCursor;
+                    url += $"&page_cursor={m_Page.next_cursor}";
                 }
-                else if (m_Page != null && (m_Page.NextCursor != null || m_Assets.Count < Config.PAGE_SIZE))
+                else if (m_Page != null && string.IsNullOrEmpty(m_Page?.next_cursor))
                 {
-                    Debug.Log("No more assets to load");
-                    return stacks;
+                    Debug.Log("No more player assets to load");
+                    return assets;
                 }
 
-                SearchStacksResult result = await apiInstance.SearchStacksAsync(Config.CHAIN_NAME, new List<string> { Contract.SKIN }, accountAddress: address, pageCursor: nextCursor, pageSize: 6);
-                m_Page = result.Page;
-                return result.Result;
+                using var client = new HttpClient();
+                var response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    Debug.Log($"Assets response: {responseBody}");
+
+                    if (!string.IsNullOrEmpty(responseBody))
+                    {
+                        var assetsResponse = JsonUtility.FromJson<AssetsResponse>(responseBody);
+                        assets = assetsResponse?.result ?? new List<AssetModel>();
+
+                        // Update pagination information
+                        m_Page = assetsResponse?.page;
+                    }
+                }
+                else
+                {
+                    // TODO use dialogs
+                    Debug.Log("Failed to fetch assets");
+                }
             }
             catch (Exception ex)
             {
                 Debug.Log($"Failed to fetch assets: {ex.Message}");
             }
 
-            // try
-            // {
-            //     string address = SaveManager.Instance.WalletAddress;
-
-            //     if (string.IsNullOrEmpty(address))
-            //     {
-            //         Debug.LogError("Could not get player's wallet");
-            //         return stacks;
-            //     }
-
-            //     string url = $"http://localhost:6060/v1/chains/imtbl-zkevm-testnet/search/stacks?account_address={address}&contract_address={Contract.SKIN}&page_size=6";
-
-            //     // Pagination
-            //     if (!string.IsNullOrEmpty(m_Page?.next_cursor))
-            //     {
-            //         url += $"&page_cursor={m_Page.next_cursor}";
-            //     }
-            //     else if (m_Page != null && m_Page.next_cursor != null)
-            //     {
-            //         Debug.Log("No more player assets to load");
-            //         return stacks;
-            //     }
-
-            //     using var client = new HttpClient();
-            //     HttpResponseMessage response = await client.GetAsync(url);
-
-            //     if (response.IsSuccessStatusCode)
-            //     {
-            //         string responseBody = await response.Content.ReadAsStringAsync();
-            //         Debug.Log($"Assets response: {responseBody}");
-
-            //         if (!string.IsNullOrEmpty(responseBody))
-            //         {
-            //             StacksResponse stacksResponse = JsonUtility.FromJson<StacksResponse>(responseBody);
-            //             stacks = stacksResponse?.result ?? new List<StacksResult>();
-
-            //             // Update pagination information
-            //             m_Page = stacksResponse?.page;
-            //         }
-            //     }
-            //     else
-            //     {
-            //         // TODO use dialogs
-            //         Debug.Log($"Failed to fetch assets");
-            //     }
-            // }
-            // catch (Exception ex)
-            // {
-            //     Debug.Log($"Failed to fetch assets: {ex.Message}");
-            // }
-
-            return stacks;
+            return assets;
         }
 
         /// <summary>
-        /// Cleans up views and handles the back button click
+        ///     Cleans up views and handles the back button click
         /// </summary>
         private void OnBackButtonClick()
         {

@@ -1,50 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// A class representing a Spawnable object.
-    /// If a GameObject tagged "Player" collides
-    /// with this object, it will trigger a fail
-    /// state with the GameManager.
+    ///     A class representing a Spawnable object.
+    ///     If a GameObject tagged "Player" collides
+    ///     with this object, it will trigger a fail
+    ///     state with the GameManager.
     /// </summary>
     public class Gate : Spawnable
     {
-        const string k_PlayerTag = "Player";
+        private const string k_PlayerTag = "Player";
 
-        [SerializeField]
-        GateType m_GateType;
-        [SerializeField]
-        float m_Value;
-        [SerializeField]
-        RectTransform m_Text;
+        [SerializeField] private GateType m_GateType;
 
-        bool m_Applied;
-        Vector3 m_TextInitialScale;
+        [SerializeField] private float m_Value;
 
-        enum GateType
+        [SerializeField] private RectTransform m_Text;
+
+        private bool m_Applied;
+        private Vector3 m_TextInitialScale;
+
+        protected override void Awake()
         {
-            ChangeSpeed,
-            ChangeSize,
+            base.Awake();
+
+            if (m_Text != null) m_TextInitialScale = m_Text.localScale;
+        }
+
+        private void OnTriggerEnter(Collider col)
+        {
+            if (col.CompareTag(k_PlayerTag) && !m_Applied) ActivateGate();
         }
 
         /// <summary>
-        /// Sets the local scale of this spawnable object
-        /// and ensures the Text attached to this gate
-        /// does not scale.
+        ///     Sets the local scale of this spawnable object
+        ///     and ensures the Text attached to this gate
+        ///     does not scale.
         /// </summary>
         /// <param name="scale">
-        /// The scale to apply to this spawnable object.
+        ///     The scale to apply to this spawnable object.
         /// </param>
         public override void SetScale(Vector3 scale)
         {
             // Ensure the text does not get scaled
             if (m_Text != null)
             {
-                float xFactor = Mathf.Min(scale.y / scale.x, 1.0f);
-                float yFactor = Mathf.Min(scale.x / scale.y, 1.0f);
+                var xFactor = Mathf.Min(scale.y / scale.x, 1.0f);
+                var yFactor = Mathf.Min(scale.x / scale.y, 1.0f);
                 m_Text.localScale = Vector3.Scale(m_TextInitialScale, new Vector3(xFactor, yFactor, 1.0f));
 
                 m_Transform.localScale = scale;
@@ -52,33 +55,15 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Reset the gate to its initial state. Called when a level
-        /// is restarted by the GameManager.
+        ///     Reset the gate to its initial state. Called when a level
+        ///     is restarted by the GameManager.
         /// </summary>
         public override void ResetSpawnable()
         {
             m_Applied = false;
         }
 
-        protected override void Awake()
-        {
-            base.Awake();
-
-            if (m_Text != null)
-            {
-                m_TextInitialScale = m_Text.localScale;
-            }
-        }
-
-        void OnTriggerEnter(Collider col)
-        {
-            if (col.CompareTag(k_PlayerTag) && !m_Applied)
-            {
-                ActivateGate();
-            }
-        }
-
-        void ActivateGate()
+        private void ActivateGate()
         {
             switch (m_GateType)
             {
@@ -92,6 +77,12 @@ namespace HyperCasual.Runner
             }
 
             m_Applied = true;
+        }
+
+        private enum GateType
+        {
+            ChangeSpeed,
+            ChangeSize
         }
     }
 }

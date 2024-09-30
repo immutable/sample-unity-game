@@ -1,20 +1,17 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using HyperCasual.Core;
 using UnityEngine;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// This singleton provides functionality to modify quality settings in runtime
+    ///     This singleton provides functionality to modify quality settings in runtime
     /// </summary>
     public class QualityManager : AbstractSingleton<QualityManager>
     {
-        int m_QualityLevel;
+        private int m_QualityLevel;
 
         /// <summary>
-        /// The current value of quality level
+        ///     The current value of quality level
         /// </summary>
         public int QualityLevel
         {
@@ -27,7 +24,7 @@ namespace HyperCasual.Runner
             }
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             if (SaveManager.Instance.IsQualityLevelSaved)
                 QualityLevel = SaveManager.Instance.QualityLevel;
@@ -35,7 +32,7 @@ namespace HyperCasual.Runner
                 QualityLevel = 2;
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             SaveManager.Instance.QualityLevel = QualityLevel;
         }

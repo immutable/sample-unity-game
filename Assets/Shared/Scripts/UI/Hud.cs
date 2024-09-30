@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using HyperCasual.Core;
 using HyperCasual.Runner;
 using TMPro;
@@ -10,29 +7,30 @@ using UnityEngine.UI;
 namespace HyperCasual.Gameplay
 {
     /// <summary>
-    /// This View contains head-up-display functionalities
+    ///     This View contains head-up-display functionalities
     /// </summary>
     public class Hud : View
     {
-        [SerializeField]
-        TextMeshProUGUI m_FoodText;
-        [SerializeField]
-        Slider m_XpSlider;
-        [SerializeField]
-        HyperCasualButton m_PauseButton;
-        [SerializeField]
-        AbstractGameEvent m_PauseEvent;
+        [SerializeField] private TextMeshProUGUI m_FoodText;
+
+        [SerializeField] private Slider m_XpSlider;
+
+        [SerializeField] private HyperCasualButton m_PauseButton;
+
+        [SerializeField] private AbstractGameEvent m_PauseEvent;
+
+        private int m_FoodValue;
+
+        private float m_XpValue;
 
         /// <summary>
-        /// The slider that displays the XP value 
+        ///     The slider that displays the XP value
         /// </summary>
         public Slider XpSlider => m_XpSlider;
 
-        int m_FoodValue;
-
         /// <summary>
-        /// The amount of gold to display on the hud.
-        /// The setter method also sets the hud text.
+        ///     The amount of gold to display on the hud.
+        ///     The setter method also sets the hud text.
         /// </summary>
         public int FoodValue
         {
@@ -47,11 +45,9 @@ namespace HyperCasual.Gameplay
             }
         }
 
-        float m_XpValue;
-
         /// <summary>
-        /// The amount of XP to display on the hud.
-        /// The setter method also sets the hud slider value.
+        ///     The amount of XP to display on the hud.
+        ///     The setter method also sets the hud slider value.
         /// </summary>
         public float XpValue
         {
@@ -66,17 +62,17 @@ namespace HyperCasual.Gameplay
             }
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             m_PauseButton.AddListener(OnPauseButtonClick);
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             m_PauseButton.RemoveListener(OnPauseButtonClick);
         }
 
-        void OnPauseButtonClick()
+        private void OnPauseButtonClick()
         {
             m_PauseEvent.Raise();
         }

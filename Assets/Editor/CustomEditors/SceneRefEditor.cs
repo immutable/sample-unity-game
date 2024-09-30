@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using HyperCasual.Core;
 using UnityEditor;
-using UnityEngine;
 
 namespace HyperCasual.CustomEditors
 {
     /// <summary>
-    /// Custom editor for <see cref="SceneRef"/> 
+    ///     Custom editor for <see cref="SceneRef" />
     /// </summary>
     [CustomEditor(typeof(SceneRef), true)]
     public class ScenePickerEditor : Editor
     {
-        const string k_PropertyName = "m_ScenePath";
+        private const string k_PropertyName = "m_ScenePath";
 
         public override void OnInspectorGUI()
         {

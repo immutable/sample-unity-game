@@ -3,19 +3,19 @@ using UnityEngine;
 namespace HyperCasual.Core
 {
     /// <summary>
-    /// The base class for all UI elements that can be registered in UIManager
+    ///     The base class for all UI elements that can be registered in UIManager
     /// </summary>
     public abstract class View : MonoBehaviour
     {
         /// <summary>
-        /// Initializes the View
+        ///     Initializes the View
         /// </summary>
         public virtual void Initialize()
         {
         }
 
         /// <summary>
-        /// Makes the View visible
+        ///     Makes the View visible
         /// </summary>
         public virtual void Show()
         {
@@ -23,7 +23,7 @@ namespace HyperCasual.Core
         }
 
         /// <summary>
-        /// Hides the view
+        ///     Hides the view
         /// </summary>
         public virtual void Hide()
         {

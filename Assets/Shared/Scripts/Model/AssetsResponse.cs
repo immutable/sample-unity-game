@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace HyperCasual.Runner
@@ -25,6 +24,14 @@ namespace HyperCasual.Runner
         public string name;
         public string contract_address;
         public List<AssetAttribute> attributes;
+        public string metadata_id;
     }
 
+    [Serializable]
+    public class AssetAttribute
+    {
+        public string display_type;
+        public string trait_type;
+        public string value;
+    }
 }

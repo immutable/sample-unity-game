@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using HyperCasual.Core;
 using UnityEngine;
@@ -8,33 +7,26 @@ using AudioSettings = HyperCasual.Core.AudioSettings;
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// Handles playing sounds and music based on their sound ID
+    ///     Handles playing sounds and music based on their sound ID
     /// </summary>
     public class AudioManager : AbstractSingleton<AudioManager>
     {
-        [Serializable]
-        class SoundIDClipPair
-        {
-            public SoundID m_SoundID;
-            public AudioClip m_AudioClip;
-        }
+        [SerializeField] private AudioSource m_MusicSource;
 
-        [SerializeField]
-        AudioSource m_MusicSource;
-        [SerializeField]
-        AudioSource m_EffectSource;
-        [SerializeField, Min(0f)]
-        float m_MinSoundInterval = 0.1f;
-        [SerializeField]
-        SoundIDClipPair[] m_Sounds;
+        [SerializeField] private AudioSource m_EffectSource;
 
-        float m_LastSoundPlayTime;
-        readonly Dictionary<SoundID, AudioClip> m_Clips = new();
+        [SerializeField][Min(0f)] private float m_MinSoundInterval = 0.1f;
 
-        AudioSettings m_AudioSettings = new();
+        [SerializeField] private SoundIDClipPair[] m_Sounds;
+
+        private readonly AudioSettings m_AudioSettings = new();
+
+        private readonly Dictionary<SoundID, AudioClip> m_Clips = new();
+
+        private float m_LastSoundPlayTime;
 
         /// <summary>
-        /// Unmute/mute the music
+        ///     Unmute/mute the music
         /// </summary>
         public bool EnableMusic
         {
@@ -47,7 +39,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Unmute/mute all sound effects
+        ///     Unmute/mute all sound effects
         /// </summary>
         public bool EnableSfx
         {
@@ -60,7 +52,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// The Master volume of the audio listener
+        ///     The Master volume of the audio listener
         /// </summary>
         public float MasterVolume
         {
@@ -72,15 +64,12 @@ namespace HyperCasual.Runner
             }
         }
 
-        void Start()
+        private void Start()
         {
-            foreach (var sound in m_Sounds)
-            {
-                m_Clips.Add(sound.m_SoundID, sound.m_AudioClip);
-            }
+            foreach (var sound in m_Sounds) m_Clips.Add(sound.m_SoundID, sound.m_AudioClip);
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             if (SaveManager.Instance == null)
             {
@@ -99,17 +88,14 @@ namespace HyperCasual.Runner
             MasterVolume = audioSettings.MasterVolume;
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
-            if (SaveManager.Instance == null)
-            {
-                return;
-            }
+            if (SaveManager.Instance == null) return;
 
             SaveManager.Instance.SaveAudioSettings(m_AudioSettings);
         }
 
-        void PlayMusic(AudioClip audioClip, bool looping = true)
+        private void PlayMusic(AudioClip audioClip, bool looping = true)
         {
             if (m_MusicSource.isPlaying)
                 return;
@@ -120,7 +106,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Play a music based on its sound ID
+        ///     Play a music based on its sound ID
         /// </summary>
         /// <param name="soundID">The ID of the music</param>
         /// <param name="looping">Is music looping?</param>
@@ -130,14 +116,14 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Stop the current music
+        ///     Stop the current music
         /// </summary>
         public void StopMusic()
         {
             m_MusicSource.Stop();
         }
 
-        void PlayEffect(AudioClip audioClip)
+        private void PlayEffect(AudioClip audioClip)
         {
             if (Time.time - m_LastSoundPlayTime >= m_MinSoundInterval)
             {
@@ -147,7 +133,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Play a sound effect based on its sound ID
+        ///     Play a sound effect based on its sound ID
         /// </summary>
         /// <param name="soundID">The ID of the sound effect</param>
         public void PlayEffect(SoundID soundID)
@@ -156,6 +142,13 @@ namespace HyperCasual.Runner
                 return;
 
             PlayEffect(m_Clips[soundID]);
+        }
+
+        [Serializable]
+        private class SoundIDClipPair
+        {
+            public SoundID m_SoundID;
+            public AudioClip m_AudioClip;
         }
     }
 }
