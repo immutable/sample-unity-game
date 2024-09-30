@@ -44,7 +44,7 @@ namespace HyperCasual.Runner
         public OrderDetailsView()
         {
             var tsConfig = new Configuration();
-            tsConfig.BasePath = Config.TS_BASE_URL;
+            tsConfig.BasePath = Config.BASE_URL;
             m_TsApi = new DefaultApi(tsConfig);
         }
 

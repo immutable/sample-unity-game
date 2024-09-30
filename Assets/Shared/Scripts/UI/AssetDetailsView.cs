@@ -71,11 +71,11 @@ namespace HyperCasual.Runner
         public AssetDetailsView()
         {
             var tsConfig = new Configuration();
-            tsConfig.BasePath = Config.TS_BASE_URL;
+            tsConfig.BasePath = Config.BASE_URL;
             m_TsApi = new DefaultApi(tsConfig);
 
             var searchConfig = new Immutable.Search.Client.Configuration();
-            searchConfig.BasePath = Config.SEARCH_BASE_URL;
+            searchConfig.BasePath = Config.BASE_URL;
             m_SearchApi = new SearchApi(searchConfig);
         }
 

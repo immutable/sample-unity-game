@@ -173,7 +173,7 @@ namespace HyperCasual.Runner
             Debug.Log("Fetching stacks...");
 
             var stacks = new List<StackBundle>();
-            var config = new Configuration { BasePath = Config.SEARCH_BASE_URL };
+            var config = new Configuration { BasePath = Config.BASE_URL };
             var apiInstance = new SearchApi(config);
 
             try
