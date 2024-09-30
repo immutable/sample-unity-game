@@ -19,7 +19,7 @@ namespace HyperCasual.Runner
     {
         // Lists of available colours and speeds for filtering
         private static readonly List<string> s_Colours = new()
-            { "All", "Tropical Indigo", "Cyclamen", "Robin Egg Blue", "Mint", "Mindaro", "Amaranth Pink" };
+        { "All", "Tropical Indigo", "Cyclamen", "Robin Egg Blue", "Mint", "Mindaro", "Amaranth Pink" };
 
         private static readonly List<string> s_Speeds = new() { "All", "Slow", "Medium", "Fast" };
 
