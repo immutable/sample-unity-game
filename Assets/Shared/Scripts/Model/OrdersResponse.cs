@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace HyperCasual.Runner
 {
@@ -41,5 +39,4 @@ namespace HyperCasual.Runner
         public string amount;
         public string recipient_address;
     }
-
 }

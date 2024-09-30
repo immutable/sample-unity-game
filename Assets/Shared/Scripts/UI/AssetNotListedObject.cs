@@ -1,34 +1,36 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Numerics;
-using HyperCasual.Core;
-using UnityEngine;
-using UnityEngine.UI;
-using Immutable.Passport;
-using TMPro;
-using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
-using Immutable.Passport.Model;
+using HyperCasual.Core;
 using Immutable.Search.Model;
+using TMPro;
+using UnityEngine;
 
 namespace HyperCasual.Runner
 {
     public class AssetNotListedObject : View
     {
-        [SerializeField] private TextMeshProUGUI m_TokenIdText = null;
+        [SerializeField] private TextMeshProUGUI m_TokenIdText;
         [SerializeField] private HyperCasualButton m_SellButton;
-        [SerializeField] private GameObject m_Progress = null;
+        [SerializeField] private GameObject m_Progress;
         private Listing m_Asset;
         private Func<Listing, UniTask<bool>> m_OnSell;
 
-        async void OnEnable()
+        private async void OnEnable()
         {
         }
 
         /// <summary>
-        /// Initialises the UI based on the order
+        ///     Cleans up data
+        /// </summary>
+        private void OnDisable()
+        {
+            m_TokenIdText.text = "";
+
+            m_Asset = null;
+        }
+
+        /// <summary>
+        ///     Initialises the UI based on the order
         /// </summary>
         public async void Initialise(Listing listing, Func<Listing, UniTask<bool>> onSell)
         {
@@ -45,27 +47,17 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Handles the sell button click event.
+        ///     Handles the sell button click event.
         /// </summary>
         private async void OnSellButtonClick()
         {
             m_SellButton.gameObject.SetActive(false);
             m_Progress.SetActive(true);
 
-            bool success = await m_OnSell(m_Asset);
+            var success = await m_OnSell(m_Asset);
 
             m_SellButton.gameObject.SetActive(!success);
             m_Progress.SetActive(false);
-        }
-
-        /// <summary>
-        /// Cleans up data
-        /// </summary>
-        private void OnDisable()
-        {
-            m_TokenIdText.text = "";
-
-            m_Asset = null;
         }
     }
 }

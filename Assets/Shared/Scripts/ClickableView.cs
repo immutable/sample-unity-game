@@ -6,6 +6,7 @@ namespace HyperCasual.Runner
     public class ClickableView : MonoBehaviour
     {
         public delegate void OnClickAction();
+
         public event OnClickAction OnClick;
 
         public void ClearAllSubscribers()
@@ -18,5 +19,4 @@ namespace HyperCasual.Runner
             OnClick?.Invoke();
         }
     }
-
 }

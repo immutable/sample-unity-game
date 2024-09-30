@@ -51,8 +51,7 @@ namespace Immutable.Search.Model
         /// <param name="animationUrl">The animation url of the NFT (required).</param>
         /// <param name="youtubeUrl">The youtube URL of NFT (required).</param>
         /// <param name="attributes">List of Metadata attributes (required).</param>
-        /// <param name="totalCount">Total count of NFTs in the stack matching the filter params (required).</param>
-        public Stack(Guid stackId = default(Guid), Chain chain = default(Chain), string contractAddress = default(string), DateTime createdAt = default(DateTime), DateTime updatedAt = default(DateTime), string name = default(string), string description = default(string), string image = default(string), string externalUrl = default(string), string animationUrl = default(string), string youtubeUrl = default(string), List<NFTMetadataAttribute> attributes = default(List<NFTMetadataAttribute>), int totalCount = default(int))
+        public Stack(Guid stackId = default(Guid), Chain chain = default(Chain), string contractAddress = default(string), DateTime createdAt = default(DateTime), DateTime updatedAt = default(DateTime), string name = default(string), string description = default(string), string image = default(string), string externalUrl = default(string), string animationUrl = default(string), string youtubeUrl = default(string), List<NFTMetadataAttribute> attributes = default(List<NFTMetadataAttribute>))
         {
             this.StackId = stackId;
             // to ensure "chain" is required (not null)
@@ -111,7 +110,6 @@ namespace Immutable.Search.Model
                 throw new ArgumentNullException("attributes is a required property for Stack and cannot be null");
             }
             this.Attributes = attributes;
-            this.TotalCount = totalCount;
         }
 
         /// <summary>
@@ -206,14 +204,6 @@ namespace Immutable.Search.Model
         public List<NFTMetadataAttribute> Attributes { get; set; }
 
         /// <summary>
-        /// Total count of NFTs in the stack matching the filter params
-        /// </summary>
-        /// <value>Total count of NFTs in the stack matching the filter params</value>
-        /// <example>1</example>
-        [DataMember(Name = "total_count", IsRequired = true, EmitDefaultValue = true)]
-        public int TotalCount { get; set; }
-
-        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -233,7 +223,6 @@ namespace Immutable.Search.Model
             sb.Append("  AnimationUrl: ").Append(AnimationUrl).Append("\n");
             sb.Append("  YoutubeUrl: ").Append(YoutubeUrl).Append("\n");
             sb.Append("  Attributes: ").Append(Attributes).Append("\n");
-            sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

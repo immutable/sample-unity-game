@@ -1,42 +1,39 @@
 using System;
-using System.Collections.Generic;
-using HyperCasual.Core;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using Immutable.Passport;
 using Cysharp.Threading.Tasks;
+using HyperCasual.Core;
+using Immutable.Passport;
+using Immutable.Passport.Core.Logging;
+using TMPro;
+using UnityEngine;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// This View contains main menu functionalities
+    ///     This View contains main menu functionalities
     /// </summary>
     public class MainMenu : View
     {
-        [SerializeField]
-        HyperCasualButton m_StartButton;
-        [SerializeField]
-        AbstractGameEvent m_StartButtonEvent;
-        [SerializeField]
-        HyperCasualButton m_InventoryButton;
-        [SerializeField]
-        AbstractGameEvent m_InventoryButtonEvent;
-        [SerializeField]
-        HyperCasualButton m_MarketplaceButton;
-        [SerializeField]
-        AbstractGameEvent m_MarketplaceButtonEvent;
-        [SerializeField]
-        TextMeshProUGUI m_Email;
-        [SerializeField]
-        HyperCasualButton m_LogoutButton;
+        [SerializeField] private HyperCasualButton m_StartButton;
 
-        [SerializeField]
-        GameObject m_Loading;
+        [SerializeField] private AbstractGameEvent m_StartButtonEvent;
 
-        Passport passport;
+        [SerializeField] private HyperCasualButton m_InventoryButton;
 
-        async void OnEnable()
+        [SerializeField] private AbstractGameEvent m_InventoryButtonEvent;
+
+        [SerializeField] private HyperCasualButton m_MarketplaceButton;
+
+        [SerializeField] private AbstractGameEvent m_MarketplaceButtonEvent;
+
+        [SerializeField] private TextMeshProUGUI m_Email;
+
+        [SerializeField] private HyperCasualButton m_LogoutButton;
+
+        [SerializeField] private GameObject m_Loading;
+
+        private Passport passport;
+
+        private async void OnEnable()
         {
             ShowLoading(true);
             m_Email.gameObject.SetActive(false);
@@ -55,21 +52,22 @@ namespace HyperCasual.Runner
             m_MarketplaceButton.AddListener(OnMarketplaceButtonClick);
 
             // Initialise Passport
-            string environment = Immutable.Passport.Model.Environment.SANDBOX;
-            passport = await Passport.Init(Config.CLIENT_ID, environment, Config.REDIRECT_URI, Config.LOGOUT_REIDIRECT_URI);
+            Passport.LogLevel = LogLevel.Debug;
+            passport = await Passport.Init(Config.CLIENT_ID, Config.ENVIRONMENT, Config.REDIRECT_URI,
+                Config.LOGOUT_REIDIRECT_URI);
 
             // Check if the player is supposed to be logged in and if there are credentials saved
             if (SaveManager.Instance.IsLoggedIn && await Passport.Instance.HasCredentialsSaved())
             {
                 // Try to log in using saved credentials
-                bool success = await Passport.Instance.Login(useCachedSession: true);
+                var success = await Passport.Instance.Login(true);
                 // Update the login flag
                 SaveManager.Instance.IsLoggedIn = success;
                 // Set up wallet if successful
                 if (success)
                 {
                     await Passport.Instance.ConnectEvm();
-                    List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
+                    var accounts = await Passport.Instance.ZkEvmRequestAccounts();
                     SaveManager.Instance.WalletAddress = accounts[0];
                     await GetPlayersEmail();
                 }
@@ -102,13 +100,13 @@ namespace HyperCasual.Runner
             }
         }
 
-        void OnStartButtonClick()
+        private void OnStartButtonClick()
         {
             m_StartButtonEvent.Raise();
             AudioManager.Instance.PlayEffect(SoundID.ButtonSound);
         }
 
-        async void OnLogoutButtonClick()
+        private async void OnLogoutButtonClick()
         {
             try
             {
@@ -146,39 +144,35 @@ namespace HyperCasual.Runner
                 ShowInventoryButton(true);
                 ShowMarketplaceButton(true);
             }
+
             // Hide loading
             ShowLoading(false);
         }
 
-        void ShowLoading(bool show)
+        private void ShowLoading(bool show)
         {
             m_Loading.gameObject.SetActive(show);
             ShowStartButton(!show);
         }
 
-        void ShowStartButton(bool show)
+        private void ShowStartButton(bool show)
         {
             m_StartButton.gameObject.SetActive(show);
         }
 
-        void ShowLogoutButton(bool show)
+        private void ShowLogoutButton(bool show)
         {
             m_LogoutButton.gameObject.SetActive(show);
         }
 
-        void ShowInventoryButton(bool show)
+        private void ShowInventoryButton(bool show)
         {
             m_InventoryButton.gameObject.SetActive(show);
         }
 
-        void ShowMarketplaceButton(bool show)
+        private void ShowMarketplaceButton(bool show)
         {
             m_MarketplaceButton.gameObject.SetActive(show);
-        }
-
-        void ShowEmail(bool show)
-        {
-            m_Email.gameObject.SetActive(show);
         }
 
         public void OnInventoryButtonClick()

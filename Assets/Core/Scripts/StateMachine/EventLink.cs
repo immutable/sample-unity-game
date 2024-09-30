@@ -1,17 +1,15 @@
-using UnityEngine;
-
 namespace HyperCasual.Core
 {
     /// <summary>
-    /// A link that listens for a specific event and becomes open for transition if the event is raised.
-    /// If the current state is linked to next step by this link type,
-    /// The state machine waits for the event to be triggered and then moves to the next step.
+    ///     A link that listens for a specific event and becomes open for transition if the event is raised.
+    ///     If the current state is linked to next step by this link type,
+    ///     The state machine waits for the event to be triggered and then moves to the next step.
     /// </summary>
     public class EventLink : ILink, IGameEventListener
     {
-        IState m_NextState;
-        AbstractGameEvent m_GameEvent;
-        bool m_EventRaised;
+        private readonly AbstractGameEvent m_GameEvent;
+        private readonly IState m_NextState;
+        private bool m_EventRaised;
 
         /// <param name="gameEvent">the event this link listens to</param>
         /// <param name="nextState">the next state</param>
@@ -21,10 +19,15 @@ namespace HyperCasual.Core
             m_NextState = nextState;
         }
 
+        public void OnEventRaised()
+        {
+            m_EventRaised = true;
+        }
+
         public bool Validate(out IState nextState)
         {
             nextState = null;
-            bool result = false;
+            var result = false;
 
             if (m_EventRaised)
             {
@@ -33,11 +36,6 @@ namespace HyperCasual.Core
             }
 
             return result;
-        }
-
-        public void OnEventRaised()
-        {
-            m_EventRaised = true;
         }
 
         public void Enable()

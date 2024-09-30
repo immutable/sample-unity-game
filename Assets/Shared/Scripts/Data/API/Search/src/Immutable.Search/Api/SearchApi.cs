@@ -89,7 +89,7 @@ namespace Immutable.Search.Api
         /// <param name="stackId">List of stack ids to get pricing data for</param>
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>QuotesForStacksResult</returns>
-        QuotesForStacksResult QuotesForStacks(string chainName, string contractAddress, List<string> stackId, string? pageCursor = default(string?));
+        QuotesForStacksResult QuotesForStacks(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?));
 
         /// <summary>
         /// Get pricing data for a list of stack ids
@@ -103,7 +103,7 @@ namespace Immutable.Search.Api
         /// <param name="stackId">List of stack ids to get pricing data for</param>
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>ApiResponse of QuotesForStacksResult</returns>
-        ApiResponse<QuotesForStacksResult> QuotesForStacksWithHttpInfo(string chainName, string contractAddress, List<string> stackId, string? pageCursor = default(string?));
+        ApiResponse<QuotesForStacksResult> QuotesForStacksWithHttpInfo(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?));
         /// <summary>
         /// Search NFT stacks
         /// </summary>
@@ -115,12 +115,12 @@ namespace Immutable.Search.Api
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
         /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
-        /// <param name="trait">Traits to filter by (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>SearchStacksResult</returns>
-        SearchStacksResult SearchStacks(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), List<AttributeQuery>? trait = default(List<AttributeQuery>?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?));
+        SearchStacksResult SearchStacks(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?));
 
         /// <summary>
         /// Search NFT stacks
@@ -133,12 +133,12 @@ namespace Immutable.Search.Api
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
         /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
-        /// <param name="trait">Traits to filter by (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>ApiResponse of SearchStacksResult</returns>
-        ApiResponse<SearchStacksResult> SearchStacksWithHttpInfo(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), List<AttributeQuery>? trait = default(List<AttributeQuery>?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?));
+        ApiResponse<SearchStacksResult> SearchStacksWithHttpInfo(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?));
         #endregion Synchronous Operations
     }
 
@@ -215,7 +215,7 @@ namespace Immutable.Search.Api
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of QuotesForStacksResult</returns>
-        System.Threading.Tasks.Task<QuotesForStacksResult> QuotesForStacksAsync(string chainName, string contractAddress, List<string> stackId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<QuotesForStacksResult> QuotesForStacksAsync(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
 
         /// <summary>
         /// Get pricing data for a list of stack ids
@@ -230,7 +230,7 @@ namespace Immutable.Search.Api
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (QuotesForStacksResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<QuotesForStacksResult>> QuotesForStacksWithHttpInfoAsync(string chainName, string contractAddress, List<string> stackId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<QuotesForStacksResult>> QuotesForStacksWithHttpInfoAsync(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
         /// <summary>
         /// Search NFT stacks
         /// </summary>
@@ -242,13 +242,13 @@ namespace Immutable.Search.Api
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
         /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
-        /// <param name="trait">Traits to filter by (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of SearchStacksResult</returns>
-        System.Threading.Tasks.Task<SearchStacksResult> SearchStacksAsync(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), List<AttributeQuery>? trait = default(List<AttributeQuery>?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<SearchStacksResult> SearchStacksAsync(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
 
         /// <summary>
         /// Search NFT stacks
@@ -261,13 +261,13 @@ namespace Immutable.Search.Api
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
         /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
-        /// <param name="trait">Traits to filter by (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (SearchStacksResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<SearchStacksResult>> SearchStacksWithHttpInfoAsync(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), List<AttributeQuery>? trait = default(List<AttributeQuery>?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<SearchStacksResult>> SearchStacksWithHttpInfoAsync(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
         #endregion Asynchronous Operations
     }
 
@@ -311,7 +311,7 @@ namespace Immutable.Search.Api
                 new Immutable.Search.Client.Configuration { BasePath = basePath }
             );
             this.ApiClient = new Immutable.Search.Client.ApiClient(this.Configuration.BasePath);
-            this.Client = this.ApiClient;
+            this.Client =  this.ApiClient;
             this.AsynchronousClient = this.ApiClient;
             this.ExceptionFactory = Immutable.Search.Client.Configuration.DefaultExceptionFactory;
         }
@@ -727,7 +727,7 @@ namespace Immutable.Search.Api
         /// <param name="stackId">List of stack ids to get pricing data for</param>
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>QuotesForStacksResult</returns>
-        public QuotesForStacksResult QuotesForStacks(string chainName, string contractAddress, List<string> stackId, string? pageCursor = default(string?))
+        public QuotesForStacksResult QuotesForStacks(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?))
         {
             Immutable.Search.Client.ApiResponse<QuotesForStacksResult> localVarResponse = QuotesForStacksWithHttpInfo(chainName, contractAddress, stackId, pageCursor);
             return localVarResponse.Data;
@@ -742,7 +742,7 @@ namespace Immutable.Search.Api
         /// <param name="stackId">List of stack ids to get pricing data for</param>
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>ApiResponse of QuotesForStacksResult</returns>
-        public Immutable.Search.Client.ApiResponse<QuotesForStacksResult> QuotesForStacksWithHttpInfo(string chainName, string contractAddress, List<string> stackId, string? pageCursor = default(string?))
+        public Immutable.Search.Client.ApiResponse<QuotesForStacksResult> QuotesForStacksWithHttpInfo(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?))
         {
             // verify the required parameter 'chainName' is set
             if (chainName == null)
@@ -803,7 +803,7 @@ namespace Immutable.Search.Api
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of QuotesForStacksResult</returns>
-        public async System.Threading.Tasks.Task<QuotesForStacksResult> QuotesForStacksAsync(string chainName, string contractAddress, List<string> stackId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<QuotesForStacksResult> QuotesForStacksAsync(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
             var task = QuotesForStacksWithHttpInfoAsync(chainName, contractAddress, stackId, pageCursor, cancellationToken);
 #if UNITY_EDITOR || !UNITY_WEBGL
@@ -824,7 +824,7 @@ namespace Immutable.Search.Api
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (QuotesForStacksResult)</returns>
-        public async System.Threading.Tasks.Task<Immutable.Search.Client.ApiResponse<QuotesForStacksResult>> QuotesForStacksWithHttpInfoAsync(string chainName, string contractAddress, List<string> stackId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<Immutable.Search.Client.ApiResponse<QuotesForStacksResult>> QuotesForStacksWithHttpInfoAsync(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
             // verify the required parameter 'chainName' is set
             if (chainName == null)
@@ -892,12 +892,12 @@ namespace Immutable.Search.Api
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
         /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
-        /// <param name="trait">Traits to filter by (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>SearchStacksResult</returns>
-        public SearchStacksResult SearchStacks(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), List<AttributeQuery>? trait = default(List<AttributeQuery>?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?))
+        public SearchStacksResult SearchStacks(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?))
         {
             Immutable.Search.Client.ApiResponse<SearchStacksResult> localVarResponse = SearchStacksWithHttpInfo(chainName, contractAddress, accountAddress, onlyIncludeOwnerListings, trait, keyword, pageSize, pageCursor);
             return localVarResponse.Data;
@@ -911,12 +911,12 @@ namespace Immutable.Search.Api
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
         /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
-        /// <param name="trait">Traits to filter by (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>ApiResponse of SearchStacksResult</returns>
-        public Immutable.Search.Client.ApiResponse<SearchStacksResult> SearchStacksWithHttpInfo(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), List<AttributeQuery>? trait = default(List<AttributeQuery>?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?))
+        public Immutable.Search.Client.ApiResponse<SearchStacksResult> SearchStacksWithHttpInfo(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?))
         {
             // verify the required parameter 'chainName' is set
             if (chainName == null)
@@ -954,7 +954,7 @@ namespace Immutable.Search.Api
             }
             if (trait != null)
             {
-                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("multi", "trait", trait));
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "trait", trait));
             }
             if (keyword != null)
             {
@@ -990,13 +990,13 @@ namespace Immutable.Search.Api
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
         /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
-        /// <param name="trait">Traits to filter by (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of SearchStacksResult</returns>
-        public async System.Threading.Tasks.Task<SearchStacksResult> SearchStacksAsync(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), List<AttributeQuery>? trait = default(List<AttributeQuery>?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<SearchStacksResult> SearchStacksAsync(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
             var task = SearchStacksWithHttpInfoAsync(chainName, contractAddress, accountAddress, onlyIncludeOwnerListings, trait, keyword, pageSize, pageCursor, cancellationToken);
 #if UNITY_EDITOR || !UNITY_WEBGL
@@ -1015,13 +1015,13 @@ namespace Immutable.Search.Api
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
         /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
-        /// <param name="trait">Traits to filter by (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
         /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (SearchStacksResult)</returns>
-        public async System.Threading.Tasks.Task<Immutable.Search.Client.ApiResponse<SearchStacksResult>> SearchStacksWithHttpInfoAsync(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), List<AttributeQuery>? trait = default(List<AttributeQuery>?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<Immutable.Search.Client.ApiResponse<SearchStacksResult>> SearchStacksWithHttpInfoAsync(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
             // verify the required parameter 'chainName' is set
             if (chainName == null)
@@ -1061,7 +1061,7 @@ namespace Immutable.Search.Api
             }
             if (trait != null)
             {
-                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("multi", "trait", trait));
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "trait", trait));
             }
             if (keyword != null)
             {

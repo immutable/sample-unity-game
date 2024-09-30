@@ -1,96 +1,66 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Numerics;
-using System.Net.Http;
-using UnityEngine;
-using UnityEngine.UI;
-using Immutable.Passport;
-using TMPro;
-using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
-using Immutable.Passport.Model;
 using Immutable.Search.Model;
+using TMPro;
+using UnityEngine;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// Represents an order list item in the marketplace.
+    ///     Represents an individual list item in the marketplace view.
     /// </summary>
     public class OrderListObject : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI m_NameText;
         [SerializeField] private TextMeshProUGUI m_AmountText;
+        [SerializeField] private TextMeshProUGUI m_CountText;
         [SerializeField] private ImageUrlObject m_Image;
 
-        private StackBundle m_Order;
+        private StackBundle m_Stack;
 
         /// <summary>
-        /// Initialises the order list item with the given order data.
+        ///     If an order is already assigned, refresh the displayed data
         /// </summary>
-        /// <param name="order">The order data to display.</param>
-        public async void Initialise(StackBundle order)
+        private async void OnEnable()
         {
-            m_Order = order;
-            UpdateData();
+            if (m_Stack != null) await UpdateData();
         }
 
         /// <summary>
-        /// Updates the UI elements with the order data.
+        ///     Initialises the list item with the provided stack data.
         /// </summary>
-        private async void UpdateData()
+        /// <param name="stack">The stack data to display in the UI.</param>
+        public async void Initialise(StackBundle stack)
         {
-            if (m_Order.Listings.Count > 0)
-            {
-                string amount = m_Order.Listings[0].PriceDetails.Amount.Value;
-                decimal quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
-                m_AmountText.text = $"{quantity} IMR";
-            }
+            m_Stack = stack;
 
-            // Get and display asset details
-            m_NameText.text = m_Order.Stack.Name;
-            m_Image.LoadUrl(m_Order.Stack.Image);
+            await UpdateData();
         }
 
-        public async void OnEnable()
+        /// <summary>
+        ///     Updates the UI elements (name, amount, count, and image) with the order's data.
+        /// </summary>
+        private async UniTask UpdateData()
         {
-            bool isOnSale = await IsListed();
-            if (isOnSale)
+            // Display the floor price if available
+            if (m_Stack.Market?.FloorListing != null)
             {
-                UpdateData();
+                // Format the amount
+                var amount = m_Stack.Market.FloorListing.PriceDetails.Amount.Value;
+                var quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
+                m_AmountText.text = $"Floor price: {quantity} IMR";
             }
             else
             {
-                m_AmountText.text = "Not listed";
-            }
-        }
-
-        /// <summary>
-        /// Checks if the asset is listed for sale.
-        /// </summary>
-        private async UniTask<bool> IsListed()
-        {
-            try
-            {
-                using var client = new HttpClient();
-                string url = $"https://api.sandbox.immutable.com/v1/chains/imtbl-zkevm-testnet/orders/listings/{m_Order.Listings[0].ListingId}";
-
-                HttpResponseMessage response = await client.GetAsync(url);
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    ListingResponse listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
-
-                    // Check if the listing exists
-                    return listingResponse.result?.status.name == "ACTIVE";
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.Log($"Failed to check sale status: {ex.Message}");
+                m_AmountText.text = "Floor price: N/A";
             }
 
-            return false;
+            // Update name and count of the asset in the stack
+            m_NameText.text = m_Stack.Stack.Name;
+            m_CountText.text = $"Total count: {m_Stack.StackCount}";
+
+            // Load and display the image
+            await m_Image.LoadUrl(m_Stack.Stack.Image);
         }
     }
 }

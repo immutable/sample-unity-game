@@ -1,17 +1,14 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HyperCasual.Core
 {
     /// <summary>
-    /// Delays the state-machine for the set amount
+    ///     Delays the state-machine for the set amount
     /// </summary>
     public class DelayState : AbstractState
     {
-        public override string Name => nameof(DelayState);
-
-        readonly float m_DelayInSeconds;
+        private readonly float m_DelayInSeconds;
 
         /// <param name="delayInSeconds">delay in seconds</param>
         public DelayState(float delayInSeconds)
@@ -19,13 +16,12 @@ namespace HyperCasual.Core
             m_DelayInSeconds = delayInSeconds;
         }
 
+        public override string Name => nameof(DelayState);
+
         public override IEnumerator Execute()
         {
             var startTime = Time.time;
-            while (Time.time - startTime < m_DelayInSeconds)
-            {
-                yield return null;
-            }
+            while (Time.time - startTime < m_DelayInSeconds) yield return null;
         }
     }
 }

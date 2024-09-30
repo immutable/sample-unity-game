@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using HyperCasual.Core;
 using UnityEngine;
 using AudioSettings = HyperCasual.Core.AudioSettings;
@@ -7,34 +5,28 @@ using AudioSettings = HyperCasual.Core.AudioSettings;
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// A simple class used to save a load values
-    /// using PlayerPrefs.
+    ///     A simple class used to save a load values
+    ///     using PlayerPrefs.
     /// </summary>
     public class SaveManager : MonoBehaviour
     {
+        private const string k_LevelProgress = "LevelProgress";
+        private const string k_Food = "Food";
+        private const string k_Xp = "Xp";
+        private const string k_AudioSettings = "AudioSettings";
+        private const string k_QualityLevel = "QualityLevel";
+        private const string k_IsLoggedIn = "IsLoggedIn";
+        private const string k_UseNewSkin = "UseNewSkin";
+        private const string k_WalletAddress = "WalletAddress";
+
         /// <summary>
-        /// Returns the SaveManager.
+        ///     Returns the SaveManager.
         /// </summary>
-        public static SaveManager Instance => s_Instance;
-        static SaveManager s_Instance;
-
-        const string k_LevelProgress = "LevelProgress";
-        const string k_Food = "Food";
-        const string k_Xp = "Xp";
-        const string k_AudioSettings = "AudioSettings";
-        const string k_QualityLevel = "QualityLevel";
-        const string k_IsLoggedIn = "IsLoggedIn";
-        const string k_UseNewSkin = "UseNewSkin";
-        const string k_WalletAddress = "WalletAddress";
-
-        void Awake()
-        {
-            s_Instance = this;
-        }
+        public static SaveManager Instance { get; private set; }
 
         /// <summary>
-        /// Save and load level progress as an integer
-        /// Level progress 2 means the player completed level 2, but has not completed level 3
+        ///     Save and load level progress as an integer
+        ///     Level progress 2 means the player completed level 2, but has not completed level 3
         /// </summary>
         public int LevelProgress
         {
@@ -43,7 +35,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Save and load food as an integer
+        ///     Save and load food as an integer
         /// </summary>
         public int Food
         {
@@ -65,16 +57,6 @@ namespace HyperCasual.Runner
             set => PlayerPrefs.SetInt(k_QualityLevel, value);
         }
 
-        public AudioSettings LoadAudioSettings()
-        {
-            return PlayerPrefsUtils.Read<AudioSettings>(k_AudioSettings);
-        }
-
-        public void SaveAudioSettings(AudioSettings audioSettings)
-        {
-            PlayerPrefsUtils.Write(k_AudioSettings, audioSettings);
-        }
-
         public bool IsLoggedIn
         {
             get => PlayerPrefs.GetInt(k_IsLoggedIn) == 1;
@@ -91,6 +73,21 @@ namespace HyperCasual.Runner
         {
             get => PlayerPrefs.GetString(k_WalletAddress);
             set => PlayerPrefs.SetString(k_WalletAddress, value);
+        }
+
+        private void Awake()
+        {
+            Instance = this;
+        }
+
+        public AudioSettings LoadAudioSettings()
+        {
+            return PlayerPrefsUtils.Read<AudioSettings>(k_AudioSettings);
+        }
+
+        public void SaveAudioSettings(AudioSettings audioSettings)
+        {
+            PlayerPrefsUtils.Write(k_AudioSettings, audioSettings);
         }
 
         public void Clear()

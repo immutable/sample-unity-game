@@ -1,8 +1,7 @@
-using System;
+using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using Cysharp.Threading.Tasks;
 
 namespace HyperCasual.Runner
 {
@@ -20,7 +19,7 @@ namespace HyperCasual.Runner
         private UniTaskCompletionSource<(bool, string)> m_DialogTaskCompletionSource;
 
         /// <summary>
-        /// Displays the dialog with a title, message, and an optional input field.
+        ///     Displays the dialog with a title, message, and an optional input field.
         /// </summary>
         /// <param name="title">The title of the dialog.</param>
         /// <param name="message">The message of the dialog.</param>
@@ -28,7 +27,8 @@ namespace HyperCasual.Runner
         /// <param name="negativeButtonText">The text for the negative button (optional).</param>
         /// <param name="showInputField">Whether to show the input field.</param>
         /// <returns>A tuple containing a bool (true if positive button was clicked) and a string (input field value).</returns>
-        public async UniTask<(bool, string)> ShowDialog(string title, string message, string positiveButtonText, string negativeButtonText = null, bool showInputField = false)
+        public async UniTask<(bool, string)> ShowDialog(string title, string message, string positiveButtonText,
+            string negativeButtonText = null, bool showInputField = false)
         {
             m_TitleText.text = title;
             m_MessageText.text = message;
@@ -58,16 +58,16 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Handles the positive button click event.
+        ///     Handles the positive button click event.
         /// </summary>
         private void OnPositiveClicked()
         {
-            string inputValue = m_InputField.gameObject.activeSelf ? m_InputField.text : string.Empty;
+            var inputValue = m_InputField.gameObject.activeSelf ? m_InputField.text : string.Empty;
             CloseDialog(true, inputValue);
         }
 
         /// <summary>
-        /// Handles the negative button click event.
+        ///     Handles the negative button click event.
         /// </summary>
         private void OnNegativeClicked()
         {
@@ -75,7 +75,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Closes the dialog and returns the result.
+        ///     Closes the dialog and returns the result.
         /// </summary>
         /// <param name="result">True if positive button was clicked, false if negative button was clicked.</param>
         /// <param name="inputValue">The value of the input field, or an empty string if not shown.</param>

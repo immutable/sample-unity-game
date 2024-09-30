@@ -1,7 +1,7 @@
 namespace HyperCasual.Core
 {
     /// <summary>
-    /// Encapsulates audio settings parameters
+    ///     Encapsulates audio settings parameters
     /// </summary>
     public class AudioSettings
     {

@@ -17,7 +17,6 @@ Name | Type | Description | Notes
 **AnimationUrl** | **string** | The animation url of the NFT | 
 **YoutubeUrl** | **string** | The youtube URL of NFT | 
 **Attributes** | [**List&lt;NFTMetadataAttribute&gt;**](NFTMetadataAttribute.md) | List of Metadata attributes | 
-**TotalCount** | **int** | Total count of NFTs in the stack matching the filter params | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
