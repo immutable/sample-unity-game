@@ -10,79 +10,84 @@
 
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    ///     APIError403AllOf
+    /// APIError403AllOf
     /// </summary>
     [DataContract(Name = "APIError403_allOf")]
-    public class APIError403AllOf
+    public partial class APIError403AllOf
     {
         /// <summary>
-        ///     Error Code
+        /// Error Code
         /// </summary>
         /// <value>Error Code</value>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum CodeEnum
         {
             /// <summary>
-            ///     Enum AUTHENTICATIONERROR for value: AUTHENTICATION_ERROR
+            /// Enum AUTHENTICATIONERROR for value: AUTHENTICATION_ERROR
             /// </summary>
             [EnumMember(Value = "AUTHENTICATION_ERROR")]
             AUTHENTICATIONERROR = 1
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="APIError403AllOf" /> class.
-        /// </summary>
-        [JsonConstructorAttribute]
-        protected APIError403AllOf()
-        {
-        }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="APIError403AllOf" /> class.
-        /// </summary>
-        /// <param name="code">Error Code (required).</param>
-        /// <param name="details">Additional details to help resolve the error (required).</param>
-        public APIError403AllOf(CodeEnum code = default, object details = default)
-        {
-            Code = code;
-            // to ensure "details" is required (not null)
-            if (details == null)
-                throw new ArgumentNullException(
-                    "details is a required property for APIError403AllOf and cannot be null");
-            Details = details;
-        }
-
-
-        /// <summary>
-        ///     Error Code
+        /// Error Code
         /// </summary>
         /// <value>Error Code</value>
         /// <example>AUTHENTICATION_ERROR</example>
         [DataMember(Name = "code", IsRequired = true, EmitDefaultValue = true)]
         public CodeEnum Code { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="APIError403AllOf" /> class.
+        /// </summary>
+        [JsonConstructorAttribute]
+        protected APIError403AllOf() { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="APIError403AllOf" /> class.
+        /// </summary>
+        /// <param name="code">Error Code (required).</param>
+        /// <param name="details">Additional details to help resolve the error (required).</param>
+        public APIError403AllOf(CodeEnum code = default(CodeEnum), Object details = default(Object))
+        {
+            this.Code = code;
+            // to ensure "details" is required (not null)
+            if (details == null)
+            {
+                throw new ArgumentNullException("details is a required property for APIError403AllOf and cannot be null");
+            }
+            this.Details = details;
+        }
 
         /// <summary>
-        ///     Additional details to help resolve the error
+        /// Additional details to help resolve the error
         /// </summary>
         /// <value>Additional details to help resolve the error</value>
         [DataMember(Name = "details", IsRequired = true, EmitDefaultValue = true)]
-        public object Details { get; set; }
+        public Object Details { get; set; }
 
         /// <summary>
-        ///     Returns the string presentation of the object
+        /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.Append("class APIError403AllOf {\n");
             sb.Append("  Code: ").Append(Code).Append("\n");
             sb.Append("  Details: ").Append(Details).Append("\n");
@@ -91,12 +96,14 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        ///     Returns the JSON string presentation of the object
+        /// Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
         }
+
     }
+
 }

@@ -10,52 +10,62 @@
 
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    ///     Backfill request
+    /// Backfill request
     /// </summary>
     [DataContract(Name = "BackfillRequest")]
-    public class BackfillRequest
+    public partial class BackfillRequest
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="BackfillRequest" /> class.
+        /// Initializes a new instance of the <see cref="BackfillRequest" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected BackfillRequest()
-        {
-        }
-
+        protected BackfillRequest() { }
         /// <summary>
-        ///     Initializes a new instance of the <see cref="BackfillRequest" /> class.
+        /// Initializes a new instance of the <see cref="BackfillRequest" /> class.
         /// </summary>
         /// <param name="entity">The entity to be backfilled (required).</param>
         /// <param name="apiUrl">The indexer url for the given chain and entity (required).</param>
-        public BackfillRequest(string entity = default, string apiUrl = default)
+        public BackfillRequest(string entity = default(string), string apiUrl = default(string))
         {
             // to ensure "entity" is required (not null)
             if (entity == null)
+            {
                 throw new ArgumentNullException("entity is a required property for BackfillRequest and cannot be null");
-            Entity = entity;
+            }
+            this.Entity = entity;
             // to ensure "apiUrl" is required (not null)
             if (apiUrl == null)
+            {
                 throw new ArgumentNullException("apiUrl is a required property for BackfillRequest and cannot be null");
-            ApiUrl = apiUrl;
+            }
+            this.ApiUrl = apiUrl;
         }
 
         /// <summary>
-        ///     The entity to be backfilled
+        /// The entity to be backfilled
         /// </summary>
         /// <value>The entity to be backfilled</value>
         [DataMember(Name = "entity", IsRequired = true, EmitDefaultValue = true)]
         public string Entity { get; set; }
 
         /// <summary>
-        ///     The indexer url for the given chain and entity
+        /// The indexer url for the given chain and entity
         /// </summary>
         /// <value>The indexer url for the given chain and entity</value>
         /// <example>https://indexer-mr.dev.imtbl.com</example>
@@ -63,12 +73,12 @@ namespace Immutable.Search.Model
         public string ApiUrl { get; set; }
 
         /// <summary>
-        ///     Returns the string presentation of the object
+        /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.Append("class BackfillRequest {\n");
             sb.Append("  Entity: ").Append(Entity).Append("\n");
             sb.Append("  ApiUrl: ").Append(ApiUrl).Append("\n");
@@ -77,12 +87,14 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        ///     Returns the JSON string presentation of the object
+        /// Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
         }
+
     }
+
 }

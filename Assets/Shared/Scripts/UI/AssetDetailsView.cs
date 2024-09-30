@@ -261,6 +261,7 @@ namespace HyperCasual.Runner
                 var amount = Math.Floor(decimal.Parse(price) * (decimal)BigInteger.Pow(10, 18));
 
                 var listingId = await Sell($"{amount}");
+                Debug.Log($"Sell complete: Listing ID: {listingId}");
 
                 m_SellButton.gameObject.SetActive(listingId == null);
                 m_CancelButton.gameObject.SetActive(listingId != null);
@@ -364,9 +365,9 @@ namespace HyperCasual.Runner
                 prepareListingResponse.Actions.FirstOrDefault(action => action.GetSignableAction() != null);
 
             if (signableAction == null) throw new Exception("No listing to sign");
-            
+
             var message = signableAction.GetSignableAction().Message;
-            
+
             // Use Unity Passport package to sign typed data function to sign the listing payload
             return await Passport.Instance.ZkEvmSignTypedDataV4(
                 JsonConvert.SerializeObject(message, Formatting.Indented));
@@ -392,6 +393,8 @@ namespace HyperCasual.Runner
                 Debug.Log($"Listing ID: {listingId}");
 
                 await ConfirmListingStatus(listingId, "ACTIVE");
+
+                return listingId;
             }
             catch (Exception ex)
             {

@@ -10,66 +10,73 @@
 
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    ///     Quotes for stacks result
+    /// Quotes for stacks result
     /// </summary>
     [DataContract(Name = "QuotesForStacksResult")]
-    public class QuotesForStacksResult
+    public partial class QuotesForStacksResult
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="QuotesForStacksResult" /> class.
+        /// Initializes a new instance of the <see cref="QuotesForStacksResult" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected QuotesForStacksResult()
-        {
-        }
-
+        protected QuotesForStacksResult() { }
         /// <summary>
-        ///     Initializes a new instance of the <see cref="QuotesForStacksResult" /> class.
+        /// Initializes a new instance of the <see cref="QuotesForStacksResult" /> class.
         /// </summary>
         /// <param name="result">List of quotes (required).</param>
         /// <param name="page">page (required).</param>
-        public QuotesForStacksResult(List<StackQuoteResult> result = default, Page page = default)
+        public QuotesForStacksResult(List<StackQuoteResult> result = default(List<StackQuoteResult>), Page page = default(Page))
         {
             // to ensure "result" is required (not null)
             if (result == null)
-                throw new ArgumentNullException(
-                    "result is a required property for QuotesForStacksResult and cannot be null");
-            Result = result;
+            {
+                throw new ArgumentNullException("result is a required property for QuotesForStacksResult and cannot be null");
+            }
+            this.Result = result;
             // to ensure "page" is required (not null)
             if (page == null)
-                throw new ArgumentNullException(
-                    "page is a required property for QuotesForStacksResult and cannot be null");
-            Page = page;
+            {
+                throw new ArgumentNullException("page is a required property for QuotesForStacksResult and cannot be null");
+            }
+            this.Page = page;
         }
 
         /// <summary>
-        ///     List of quotes
+        /// List of quotes
         /// </summary>
         /// <value>List of quotes</value>
         [DataMember(Name = "result", IsRequired = true, EmitDefaultValue = true)]
         public List<StackQuoteResult> Result { get; set; }
 
         /// <summary>
-        ///     Gets or Sets Page
+        /// Gets or Sets Page
         /// </summary>
         [DataMember(Name = "page", IsRequired = true, EmitDefaultValue = true)]
         public Page Page { get; set; }
 
         /// <summary>
-        ///     Returns the string presentation of the object
+        /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.Append("class QuotesForStacksResult {\n");
             sb.Append("  Result: ").Append(Result).Append("\n");
             sb.Append("  Page: ").Append(Page).Append("\n");
@@ -78,12 +85,14 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        ///     Returns the JSON string presentation of the object
+        /// Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
         }
+
     }
+
 }

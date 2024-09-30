@@ -10,82 +10,93 @@
 
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    ///     APIError401
+    /// APIError401
     /// </summary>
     [DataContract(Name = "APIError401")]
-    public class APIError401
+    public partial class APIError401
     {
         /// <summary>
-        ///     Error Code
+        /// Error Code
         /// </summary>
         /// <value>Error Code</value>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum CodeEnum
         {
             /// <summary>
-            ///     Enum UNAUTHORISEDREQUEST for value: UNAUTHORISED_REQUEST
+            /// Enum UNAUTHORISEDREQUEST for value: UNAUTHORISED_REQUEST
             /// </summary>
             [EnumMember(Value = "UNAUTHORISED_REQUEST")]
             UNAUTHORISEDREQUEST = 1
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="APIError401" /> class.
-        /// </summary>
-        [JsonConstructorAttribute]
-        protected APIError401()
-        {
-        }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="APIError401" /> class.
+        /// Error Code
+        /// </summary>
+        /// <value>Error Code</value>
+        /// <example>UNAUTHORISED_REQUEST</example>
+        [DataMember(Name = "code", IsRequired = true, EmitDefaultValue = true)]
+        public CodeEnum Code { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="APIError401" /> class.
+        /// </summary>
+        [JsonConstructorAttribute]
+        protected APIError401() { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="APIError401" /> class.
         /// </summary>
         /// <param name="message">Error Message (required).</param>
         /// <param name="link">Link to IMX documentation that can help resolve this error (required).</param>
         /// <param name="traceId">Trace ID of the initial request (required).</param>
         /// <param name="code">Error Code (required).</param>
         /// <param name="details">Additional details to help resolve the error (required).</param>
-        public APIError401(string message = default, string link = default, string traceId = default,
-            CodeEnum code = default, object details = default)
+        public APIError401(string message = default(string), string link = default(string), string traceId = default(string), CodeEnum code = default(CodeEnum), Object details = default(Object))
         {
             // to ensure "message" is required (not null)
             if (message == null)
+            {
                 throw new ArgumentNullException("message is a required property for APIError401 and cannot be null");
-            Message = message;
+            }
+            this.Message = message;
             // to ensure "link" is required (not null)
             if (link == null)
+            {
                 throw new ArgumentNullException("link is a required property for APIError401 and cannot be null");
-            Link = link;
+            }
+            this.Link = link;
             // to ensure "traceId" is required (not null)
             if (traceId == null)
+            {
                 throw new ArgumentNullException("traceId is a required property for APIError401 and cannot be null");
-            TraceId = traceId;
-            Code = code;
+            }
+            this.TraceId = traceId;
+            this.Code = code;
             // to ensure "details" is required (not null)
             if (details == null)
+            {
                 throw new ArgumentNullException("details is a required property for APIError401 and cannot be null");
-            Details = details;
+            }
+            this.Details = details;
         }
 
-
         /// <summary>
-        ///     Error Code
-        /// </summary>
-        /// <value>Error Code</value>
-        /// <example>UNAUTHORISED_REQUEST</example>
-        [DataMember(Name = "code", IsRequired = true, EmitDefaultValue = true)]
-        public CodeEnum Code { get; set; }
-
-        /// <summary>
-        ///     Error Message
+        /// Error Message
         /// </summary>
         /// <value>Error Message</value>
         /// <example>all fields must be provided</example>
@@ -93,7 +104,7 @@ namespace Immutable.Search.Model
         public string Message { get; set; }
 
         /// <summary>
-        ///     Link to IMX documentation that can help resolve this error
+        /// Link to IMX documentation that can help resolve this error
         /// </summary>
         /// <value>Link to IMX documentation that can help resolve this error</value>
         /// <example>https://docs.x.immutable.com/reference/#/</example>
@@ -101,7 +112,7 @@ namespace Immutable.Search.Model
         public string Link { get; set; }
 
         /// <summary>
-        ///     Trace ID of the initial request
+        /// Trace ID of the initial request
         /// </summary>
         /// <value>Trace ID of the initial request</value>
         /// <example>e47634b79a5cd6894ddc9639ec4aad26</example>
@@ -109,19 +120,19 @@ namespace Immutable.Search.Model
         public string TraceId { get; set; }
 
         /// <summary>
-        ///     Additional details to help resolve the error
+        /// Additional details to help resolve the error
         /// </summary>
         /// <value>Additional details to help resolve the error</value>
         [DataMember(Name = "details", IsRequired = true, EmitDefaultValue = true)]
-        public object Details { get; set; }
+        public Object Details { get; set; }
 
         /// <summary>
-        ///     Returns the string presentation of the object
+        /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.Append("class APIError401 {\n");
             sb.Append("  Message: ").Append(Message).Append("\n");
             sb.Append("  Link: ").Append(Link).Append("\n");
@@ -133,12 +144,14 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        ///     Returns the JSON string presentation of the object
+        /// Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
         }
+
     }
+
 }

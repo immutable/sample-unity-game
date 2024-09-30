@@ -10,50 +10,62 @@
 
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    ///     BasicAPIError
+    /// BasicAPIError
     /// </summary>
     [DataContract(Name = "BasicAPIError")]
-    public class BasicAPIError
+    public partial class BasicAPIError
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="BasicAPIError" /> class.
+        /// Initializes a new instance of the <see cref="BasicAPIError" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected BasicAPIError()
-        {
-        }
-
+        protected BasicAPIError() { }
         /// <summary>
-        ///     Initializes a new instance of the <see cref="BasicAPIError" /> class.
+        /// Initializes a new instance of the <see cref="BasicAPIError" /> class.
         /// </summary>
         /// <param name="message">Error Message (required).</param>
         /// <param name="link">Link to IMX documentation that can help resolve this error (required).</param>
         /// <param name="traceId">Trace ID of the initial request (required).</param>
-        public BasicAPIError(string message = default, string link = default, string traceId = default)
+        public BasicAPIError(string message = default(string), string link = default(string), string traceId = default(string))
         {
             // to ensure "message" is required (not null)
             if (message == null)
+            {
                 throw new ArgumentNullException("message is a required property for BasicAPIError and cannot be null");
-            Message = message;
+            }
+            this.Message = message;
             // to ensure "link" is required (not null)
             if (link == null)
+            {
                 throw new ArgumentNullException("link is a required property for BasicAPIError and cannot be null");
-            Link = link;
+            }
+            this.Link = link;
             // to ensure "traceId" is required (not null)
             if (traceId == null)
+            {
                 throw new ArgumentNullException("traceId is a required property for BasicAPIError and cannot be null");
-            TraceId = traceId;
+            }
+            this.TraceId = traceId;
         }
 
         /// <summary>
-        ///     Error Message
+        /// Error Message
         /// </summary>
         /// <value>Error Message</value>
         /// <example>all fields must be provided</example>
@@ -61,7 +73,7 @@ namespace Immutable.Search.Model
         public string Message { get; set; }
 
         /// <summary>
-        ///     Link to IMX documentation that can help resolve this error
+        /// Link to IMX documentation that can help resolve this error
         /// </summary>
         /// <value>Link to IMX documentation that can help resolve this error</value>
         /// <example>https://docs.x.immutable.com/reference/#/</example>
@@ -69,7 +81,7 @@ namespace Immutable.Search.Model
         public string Link { get; set; }
 
         /// <summary>
-        ///     Trace ID of the initial request
+        /// Trace ID of the initial request
         /// </summary>
         /// <value>Trace ID of the initial request</value>
         /// <example>e47634b79a5cd6894ddc9639ec4aad26</example>
@@ -77,12 +89,12 @@ namespace Immutable.Search.Model
         public string TraceId { get; set; }
 
         /// <summary>
-        ///     Returns the string presentation of the object
+        /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.Append("class BasicAPIError {\n");
             sb.Append("  Message: ").Append(Message).Append("\n");
             sb.Append("  Link: ").Append(Link).Append("\n");
@@ -92,12 +104,14 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        ///     Returns the JSON string presentation of the object
+        /// Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
         }
+
     }
+
 }

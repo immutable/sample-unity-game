@@ -53,7 +53,7 @@ namespace HyperCasual.Runner
 
             // Initialise Passport
             Passport.LogLevel = LogLevel.Debug;
-            passport = await Passport.Init(Config.CLIENT_ID, Config.ENVIRONEMNT, Config.REDIRECT_URI,
+            passport = await Passport.Init(Config.CLIENT_ID, Config.ENVIRONMENT, Config.REDIRECT_URI,
                 Config.LOGOUT_REIDIRECT_URI);
 
             // Check if the player is supposed to be logged in and if there are credentials saved

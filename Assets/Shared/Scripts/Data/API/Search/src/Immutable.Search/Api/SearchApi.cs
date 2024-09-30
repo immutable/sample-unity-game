@@ -11,25 +11,27 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Net;
+using System.Net.Mime;
 using Immutable.Search.Client;
 using Immutable.Search.Model;
 
 namespace Immutable.Search.Api
 {
+
     /// <summary>
-    ///     Represents a collection of functions to interact with the API endpoints
+    /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
     public interface ISearchApiSync : IApiAccessor
     {
         #region Synchronous Operations
-
         /// <summary>
-        ///     Backfills or re-indexes a given entity
+        /// Backfills or re-indexes a given entity
         /// </summary>
         /// <remarks>
-        ///     Backfills or re-indexes a given entity
+        /// Backfills or re-indexes a given entity
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
@@ -38,355 +40,256 @@ namespace Immutable.Search.Api
         void Backfill(string chainName, BackfillRequest backfillRequest);
 
         /// <summary>
-        ///     Backfills or re-indexes a given entity
+        /// Backfills or re-indexes a given entity
         /// </summary>
         /// <remarks>
-        ///     Backfills or re-indexes a given entity
+        /// Backfills or re-indexes a given entity
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="backfillRequest"></param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<object> BackfillWithHttpInfo(string chainName, BackfillRequest backfillRequest);
-
+        ApiResponse<Object> BackfillWithHttpInfo(string chainName, BackfillRequest backfillRequest);
         /// <summary>
-        ///     Get pricing data for a list of token ids
+        /// Get pricing data for a list of token ids
         /// </summary>
         /// <remarks>
-        ///     Get pricing data for a list of token ids
+        /// Get pricing data for a list of token ids
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these token ids are on</param>
         /// <param name="tokenId">List of token ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>QuotesForNFTsResult</returns>
-        QuotesForNFTsResult QuotesForNFTs(string chainName, string contractAddress, List<string> tokenId,
-            string? pageCursor = default);
+        QuotesForNFTsResult QuotesForNFTs(string chainName, string contractAddress, List<string> tokenId, string? pageCursor = default(string?));
 
         /// <summary>
-        ///     Get pricing data for a list of token ids
+        /// Get pricing data for a list of token ids
         /// </summary>
         /// <remarks>
-        ///     Get pricing data for a list of token ids
+        /// Get pricing data for a list of token ids
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these token ids are on</param>
         /// <param name="tokenId">List of token ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>ApiResponse of QuotesForNFTsResult</returns>
-        ApiResponse<QuotesForNFTsResult> QuotesForNFTsWithHttpInfo(string chainName, string contractAddress,
-            List<string> tokenId, string? pageCursor = default);
-
+        ApiResponse<QuotesForNFTsResult> QuotesForNFTsWithHttpInfo(string chainName, string contractAddress, List<string> tokenId, string? pageCursor = default(string?));
         /// <summary>
-        ///     Get pricing data for a list of stack ids
+        /// Get pricing data for a list of stack ids
         /// </summary>
         /// <remarks>
-        ///     Get pricing data for a list of stack ids
+        /// Get pricing data for a list of stack ids
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these stacks are on</param>
         /// <param name="stackId">List of stack ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>QuotesForStacksResult</returns>
-        QuotesForStacksResult QuotesForStacks(string chainName, string contractAddress, List<Guid> stackId,
-            string? pageCursor = default);
+        QuotesForStacksResult QuotesForStacks(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?));
 
         /// <summary>
-        ///     Get pricing data for a list of stack ids
+        /// Get pricing data for a list of stack ids
         /// </summary>
         /// <remarks>
-        ///     Get pricing data for a list of stack ids
+        /// Get pricing data for a list of stack ids
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these stacks are on</param>
         /// <param name="stackId">List of stack ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>ApiResponse of QuotesForStacksResult</returns>
-        ApiResponse<QuotesForStacksResult> QuotesForStacksWithHttpInfo(string chainName, string contractAddress,
-            List<Guid> stackId, string? pageCursor = default);
-
+        ApiResponse<QuotesForStacksResult> QuotesForStacksWithHttpInfo(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?));
         /// <summary>
-        ///     Search NFT stacks
+        /// Search NFT stacks
         /// </summary>
         /// <remarks>
-        ///     Search NFT stacks
+        /// Search NFT stacks
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
-        /// <param name="onlyIncludeOwnerListings">
-        ///     Whether to the listings should include only the owner created listings
-        ///     (optional)
-        /// </param>
-        /// <param name="trait">
-        ///     JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\
-        ///     &quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}}))
-        ///     (optional)
-        /// </param>
+        /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>SearchStacksResult</returns>
-        SearchStacksResult SearchStacks(string chainName, List<string> contractAddress,
-            string? accountAddress = default, bool? onlyIncludeOwnerListings = default, string? trait = default,
-            string? keyword = default, int? pageSize = default, string? pageCursor = default);
+        SearchStacksResult SearchStacks(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?));
 
         /// <summary>
-        ///     Search NFT stacks
+        /// Search NFT stacks
         /// </summary>
         /// <remarks>
-        ///     Search NFT stacks
+        /// Search NFT stacks
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
-        /// <param name="onlyIncludeOwnerListings">
-        ///     Whether to the listings should include only the owner created listings
-        ///     (optional)
-        /// </param>
-        /// <param name="trait">
-        ///     JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\
-        ///     &quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}}))
-        ///     (optional)
-        /// </param>
+        /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>ApiResponse of SearchStacksResult</returns>
-        ApiResponse<SearchStacksResult> SearchStacksWithHttpInfo(string chainName, List<string> contractAddress,
-            string? accountAddress = default, bool? onlyIncludeOwnerListings = default, string? trait = default,
-            string? keyword = default, int? pageSize = default, string? pageCursor = default);
-
+        ApiResponse<SearchStacksResult> SearchStacksWithHttpInfo(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?));
         #endregion Synchronous Operations
     }
 
     /// <summary>
-    ///     Represents a collection of functions to interact with the API endpoints
+    /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
     public interface ISearchApiAsync : IApiAccessor
     {
         #region Asynchronous Operations
-
         /// <summary>
-        ///     Backfills or re-indexes a given entity
+        /// Backfills or re-indexes a given entity
         /// </summary>
         /// <remarks>
-        ///     Backfills or re-indexes a given entity
+        /// Backfills or re-indexes a given entity
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="backfillRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of void</returns>
-        Task BackfillAsync(string chainName, BackfillRequest backfillRequest,
-            CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task BackfillAsync(string chainName, BackfillRequest backfillRequest, System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
 
         /// <summary>
-        ///     Backfills or re-indexes a given entity
+        /// Backfills or re-indexes a given entity
         /// </summary>
         /// <remarks>
-        ///     Backfills or re-indexes a given entity
+        /// Backfills or re-indexes a given entity
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="backfillRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse</returns>
-        Task<ApiResponse<object>> BackfillWithHttpInfoAsync(string chainName, BackfillRequest backfillRequest,
-            CancellationToken cancellationToken = default);
-
+        System.Threading.Tasks.Task<ApiResponse<Object>> BackfillWithHttpInfoAsync(string chainName, BackfillRequest backfillRequest, System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
         /// <summary>
-        ///     Get pricing data for a list of token ids
+        /// Get pricing data for a list of token ids
         /// </summary>
         /// <remarks>
-        ///     Get pricing data for a list of token ids
+        /// Get pricing data for a list of token ids
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these token ids are on</param>
         /// <param name="tokenId">List of token ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of QuotesForNFTsResult</returns>
-        Task<QuotesForNFTsResult> QuotesForNFTsAsync(string chainName, string contractAddress, List<string> tokenId,
-            string? pageCursor = default, CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<QuotesForNFTsResult> QuotesForNFTsAsync(string chainName, string contractAddress, List<string> tokenId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
 
         /// <summary>
-        ///     Get pricing data for a list of token ids
+        /// Get pricing data for a list of token ids
         /// </summary>
         /// <remarks>
-        ///     Get pricing data for a list of token ids
+        /// Get pricing data for a list of token ids
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these token ids are on</param>
         /// <param name="tokenId">List of token ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (QuotesForNFTsResult)</returns>
-        Task<ApiResponse<QuotesForNFTsResult>> QuotesForNFTsWithHttpInfoAsync(string chainName, string contractAddress,
-            List<string> tokenId, string? pageCursor = default, CancellationToken cancellationToken = default);
-
+        System.Threading.Tasks.Task<ApiResponse<QuotesForNFTsResult>> QuotesForNFTsWithHttpInfoAsync(string chainName, string contractAddress, List<string> tokenId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
         /// <summary>
-        ///     Get pricing data for a list of stack ids
+        /// Get pricing data for a list of stack ids
         /// </summary>
         /// <remarks>
-        ///     Get pricing data for a list of stack ids
+        /// Get pricing data for a list of stack ids
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these stacks are on</param>
         /// <param name="stackId">List of stack ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of QuotesForStacksResult</returns>
-        Task<QuotesForStacksResult> QuotesForStacksAsync(string chainName, string contractAddress, List<Guid> stackId,
-            string? pageCursor = default, CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<QuotesForStacksResult> QuotesForStacksAsync(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
 
         /// <summary>
-        ///     Get pricing data for a list of stack ids
+        /// Get pricing data for a list of stack ids
         /// </summary>
         /// <remarks>
-        ///     Get pricing data for a list of stack ids
+        /// Get pricing data for a list of stack ids
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these stacks are on</param>
         /// <param name="stackId">List of stack ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (QuotesForStacksResult)</returns>
-        Task<ApiResponse<QuotesForStacksResult>> QuotesForStacksWithHttpInfoAsync(string chainName,
-            string contractAddress, List<Guid> stackId, string? pageCursor = default,
-            CancellationToken cancellationToken = default);
-
+        System.Threading.Tasks.Task<ApiResponse<QuotesForStacksResult>> QuotesForStacksWithHttpInfoAsync(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
         /// <summary>
-        ///     Search NFT stacks
+        /// Search NFT stacks
         /// </summary>
         /// <remarks>
-        ///     Search NFT stacks
+        /// Search NFT stacks
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
-        /// <param name="onlyIncludeOwnerListings">
-        ///     Whether to the listings should include only the owner created listings
-        ///     (optional)
-        /// </param>
-        /// <param name="trait">
-        ///     JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\
-        ///     &quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}}))
-        ///     (optional)
-        /// </param>
+        /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of SearchStacksResult</returns>
-        Task<SearchStacksResult> SearchStacksAsync(string chainName, List<string> contractAddress,
-            string? accountAddress = default, bool? onlyIncludeOwnerListings = default, string? trait = default,
-            string? keyword = default, int? pageSize = default, string? pageCursor = default,
-            CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SearchStacksResult> SearchStacksAsync(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
 
         /// <summary>
-        ///     Search NFT stacks
+        /// Search NFT stacks
         /// </summary>
         /// <remarks>
-        ///     Search NFT stacks
+        /// Search NFT stacks
         /// </remarks>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
-        /// <param name="onlyIncludeOwnerListings">
-        ///     Whether to the listings should include only the owner created listings
-        ///     (optional)
-        /// </param>
-        /// <param name="trait">
-        ///     JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\
-        ///     &quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}}))
-        ///     (optional)
-        /// </param>
+        /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (SearchStacksResult)</returns>
-        Task<ApiResponse<SearchStacksResult>> SearchStacksWithHttpInfoAsync(string chainName,
-            List<string> contractAddress, string? accountAddress = default, bool? onlyIncludeOwnerListings = default,
-            string? trait = default, string? keyword = default, int? pageSize = default, string? pageCursor = default,
-            CancellationToken cancellationToken = default);
-
+        System.Threading.Tasks.Task<ApiResponse<SearchStacksResult>> SearchStacksWithHttpInfoAsync(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken));
         #endregion Asynchronous Operations
     }
 
     /// <summary>
-    ///     Represents a collection of functions to interact with the API endpoints
+    /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
     public interface ISearchApi : ISearchApiSync, ISearchApiAsync
     {
+
     }
 
     /// <summary>
-    ///     Represents a collection of functions to interact with the API endpoints
+    /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
-    public class SearchApi : IDisposable, ISearchApi
+    public partial class SearchApi : IDisposable, ISearchApi
     {
-        private ExceptionFactory _exceptionFactory = (name, response) => null;
+        private Immutable.Search.Client.ExceptionFactory _exceptionFactory = (name, response) => null;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SearchApi" /> class.
-        ///     **IMPORTANT** This will also create an instance of HttpClient, which is less than ideal.
-        ///     It's better to reuse the
-        ///     <see
-        ///         href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests#issues-with-the-original-httpclient-class-available-in-net">
-        ///         HttpClient
-        ///         and HttpClientHandler
-        ///     </see>
-        ///     .
+        /// Initializes a new instance of the <see cref="SearchApi"/> class.
+        /// **IMPORTANT** This will also create an instance of HttpClient, which is less than ideal.
+        /// It's better to reuse the <see href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests#issues-with-the-original-httpclient-class-available-in-net">HttpClient and HttpClientHandler</see>.
         /// </summary>
         /// <returns></returns>
         public SearchApi() : this((string)null)
@@ -394,134 +297,123 @@ namespace Immutable.Search.Api
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SearchApi" /> class.
-        ///     **IMPORTANT** This will also create an instance of HttpClient, which is less than ideal.
-        ///     It's better to reuse the
-        ///     <see
-        ///         href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests#issues-with-the-original-httpclient-class-available-in-net">
-        ///         HttpClient
-        ///         and HttpClientHandler
-        ///     </see>
-        ///     .
+        /// Initializes a new instance of the <see cref="SearchApi"/> class.
+        /// **IMPORTANT** This will also create an instance of HttpClient, which is less than ideal.
+        /// It's better to reuse the <see href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests#issues-with-the-original-httpclient-class-available-in-net">HttpClient and HttpClientHandler</see>.
         /// </summary>
         /// <param name="basePath">The target service's base path in URL format.</param>
         /// <exception cref="ArgumentException"></exception>
         /// <returns></returns>
         public SearchApi(string basePath)
         {
-            Configuration = Search.Client.Configuration.MergeConfigurations(
-                GlobalConfiguration.Instance,
-                new Configuration { BasePath = basePath }
+            this.Configuration = Immutable.Search.Client.Configuration.MergeConfigurations(
+                Immutable.Search.Client.GlobalConfiguration.Instance,
+                new Immutable.Search.Client.Configuration { BasePath = basePath }
             );
-            ApiClient = new ApiClient(Configuration.BasePath);
-            Client = ApiClient;
-            AsynchronousClient = ApiClient;
-            ExceptionFactory = Search.Client.Configuration.DefaultExceptionFactory;
+            this.ApiClient = new Immutable.Search.Client.ApiClient(this.Configuration.BasePath);
+            this.Client =  this.ApiClient;
+            this.AsynchronousClient = this.ApiClient;
+            this.ExceptionFactory = Immutable.Search.Client.Configuration.DefaultExceptionFactory;
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SearchApi" /> class using Configuration object.
-        ///     **IMPORTANT** This will also create an instance of HttpClient, which is less than ideal.
-        ///     It's better to reuse the
-        ///     <see
-        ///         href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests#issues-with-the-original-httpclient-class-available-in-net">
-        ///         HttpClient
-        ///         and HttpClientHandler
-        ///     </see>
-        ///     .
+        /// Initializes a new instance of the <see cref="SearchApi"/> class using Configuration object.
+        /// **IMPORTANT** This will also create an instance of HttpClient, which is less than ideal.
+        /// It's better to reuse the <see href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests#issues-with-the-original-httpclient-class-available-in-net">HttpClient and HttpClientHandler</see>.
         /// </summary>
         /// <param name="configuration">An instance of Configuration.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <returns></returns>
-        public SearchApi(Configuration configuration)
+        public SearchApi(Immutable.Search.Client.Configuration configuration)
         {
             if (configuration == null) throw new ArgumentNullException("configuration");
 
-            Configuration = Search.Client.Configuration.MergeConfigurations(
-                GlobalConfiguration.Instance,
+            this.Configuration = Immutable.Search.Client.Configuration.MergeConfigurations(
+                Immutable.Search.Client.GlobalConfiguration.Instance,
                 configuration
             );
-            ApiClient = new ApiClient(Configuration.BasePath);
-            Client = ApiClient;
-            AsynchronousClient = ApiClient;
-            ExceptionFactory = Search.Client.Configuration.DefaultExceptionFactory;
+            this.ApiClient = new Immutable.Search.Client.ApiClient(this.Configuration.BasePath);
+            this.Client = this.ApiClient;
+            this.AsynchronousClient = this.ApiClient;
+            ExceptionFactory = Immutable.Search.Client.Configuration.DefaultExceptionFactory;
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SearchApi" /> class
-        ///     using a Configuration object and client instance.
+        /// Initializes a new instance of the <see cref="SearchApi"/> class
+        /// using a Configuration object and client instance.
         /// </summary>
         /// <param name="client">The client interface for synchronous API access.</param>
         /// <param name="asyncClient">The client interface for asynchronous API access.</param>
         /// <param name="configuration">The configuration object.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public SearchApi(ISynchronousClient client, IAsynchronousClient asyncClient,
-            IReadableConfiguration configuration)
+        public SearchApi(Immutable.Search.Client.ISynchronousClient client, Immutable.Search.Client.IAsynchronousClient asyncClient, Immutable.Search.Client.IReadableConfiguration configuration)
         {
             if (client == null) throw new ArgumentNullException("client");
             if (asyncClient == null) throw new ArgumentNullException("asyncClient");
             if (configuration == null) throw new ArgumentNullException("configuration");
 
-            Client = client;
-            AsynchronousClient = asyncClient;
-            Configuration = configuration;
-            ExceptionFactory = Search.Client.Configuration.DefaultExceptionFactory;
+            this.Client = client;
+            this.AsynchronousClient = asyncClient;
+            this.Configuration = configuration;
+            this.ExceptionFactory = Immutable.Search.Client.Configuration.DefaultExceptionFactory;
         }
 
         /// <summary>
-        ///     Holds the ApiClient if created
-        /// </summary>
-        public ApiClient ApiClient { get; set; }
-
-        /// <summary>
-        ///     The client for accessing this underlying API asynchronously.
-        /// </summary>
-        public IAsynchronousClient AsynchronousClient { get; set; }
-
-        /// <summary>
-        ///     The client for accessing this underlying API synchronously.
-        /// </summary>
-        public ISynchronousClient Client { get; set; }
-
-        /// <summary>
-        ///     Disposes resources if they were created by us
+        /// Disposes resources if they were created by us
         /// </summary>
         public void Dispose()
         {
-            ApiClient?.Dispose();
+            this.ApiClient?.Dispose();
         }
 
         /// <summary>
-        ///     Gets the base path of the API client.
+        /// Holds the ApiClient if created
+        /// </summary>
+        public Immutable.Search.Client.ApiClient ApiClient { get; set; } = null;
+
+        /// <summary>
+        /// The client for accessing this underlying API asynchronously.
+        /// </summary>
+        public Immutable.Search.Client.IAsynchronousClient AsynchronousClient { get; set; }
+
+        /// <summary>
+        /// The client for accessing this underlying API synchronously.
+        /// </summary>
+        public Immutable.Search.Client.ISynchronousClient Client { get; set; }
+
+        /// <summary>
+        /// Gets the base path of the API client.
         /// </summary>
         /// <value>The base path</value>
         public string GetBasePath()
         {
-            return Configuration.BasePath;
+            return this.Configuration.BasePath;
         }
 
         /// <summary>
-        ///     Gets or sets the configuration object
+        /// Gets or sets the configuration object
         /// </summary>
         /// <value>An instance of the Configuration</value>
-        public IReadableConfiguration Configuration { get; set; }
+        public Immutable.Search.Client.IReadableConfiguration Configuration { get; set; }
 
         /// <summary>
-        ///     Provides a factory method hook for the creation of exceptions.
+        /// Provides a factory method hook for the creation of exceptions.
         /// </summary>
-        public ExceptionFactory ExceptionFactory
+        public Immutable.Search.Client.ExceptionFactory ExceptionFactory
         {
             get
             {
                 if (_exceptionFactory != null && _exceptionFactory.GetInvocationList().Length > 1)
+                {
                     throw new InvalidOperationException("Multicast delegate for ExceptionFactory is unsupported.");
+                }
                 return _exceptionFactory;
             }
-            set => _exceptionFactory = value;
+            set { _exceptionFactory = value; }
         }
 
         /// <summary>
-        ///     Backfills or re-indexes a given entity Backfills or re-indexes a given entity
+        /// Backfills or re-indexes a given entity Backfills or re-indexes a given entity
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
@@ -533,55 +425,49 @@ namespace Immutable.Search.Api
         }
 
         /// <summary>
-        ///     Backfills or re-indexes a given entity Backfills or re-indexes a given entity
+        /// Backfills or re-indexes a given entity Backfills or re-indexes a given entity
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="backfillRequest"></param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<object> BackfillWithHttpInfo(string chainName, BackfillRequest backfillRequest)
+        public Immutable.Search.Client.ApiResponse<Object> BackfillWithHttpInfo(string chainName, BackfillRequest backfillRequest)
         {
             // verify the required parameter 'chainName' is set
             if (chainName == null)
-                throw new ApiException(400, "Missing required parameter 'chainName' when calling SearchApi->Backfill");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'chainName' when calling SearchApi->Backfill");
 
             // verify the required parameter 'backfillRequest' is set
             if (backfillRequest == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'backfillRequest' when calling SearchApi->Backfill");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'backfillRequest' when calling SearchApi->Backfill");
 
-            var localVarRequestOptions = new RequestOptions();
+            Immutable.Search.Client.RequestOptions localVarRequestOptions = new Immutable.Search.Client.RequestOptions();
 
-            string[] _contentTypes =
-            {
+            string[] _contentTypes = new string[] {
                 "application/json"
             };
 
             // to determine the Accept header
-            string[] _accepts =
-            {
+            string[] _accepts = new string[] {
                 "application/json"
             };
 
-            var localVarContentType = ClientUtils.SelectHeaderContentType(_contentTypes);
-            if (localVarContentType != null)
-                localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
+            var localVarContentType = Immutable.Search.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
+            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
 
-            var localVarAccept = ClientUtils.SelectHeaderAccept(_accepts);
+            var localVarAccept = Immutable.Search.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.PathParameters.Add("chain_name",
-                ClientUtils.ParameterToString(chainName)); // path parameter
+            localVarRequestOptions.PathParameters.Add("chain_name", Immutable.Search.Client.ClientUtils.ParameterToString(chainName)); // path parameter
             localVarRequestOptions.Data = backfillRequest;
 
 
             // make the HTTP request
-            var localVarResponse = Client.Post<object>("/v1/internal/chains/{chain_name}/backfill",
-                localVarRequestOptions, Configuration);
+            var localVarResponse = this.Client.Post<Object>("/v1/internal/chains/{chain_name}/backfill", localVarRequestOptions, this.Configuration);
 
-            if (ExceptionFactory != null)
+            if (this.ExceptionFactory != null)
             {
-                var _exception = ExceptionFactory("Backfill", localVarResponse);
+                Exception _exception = this.ExceptionFactory("Backfill", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
@@ -589,15 +475,14 @@ namespace Immutable.Search.Api
         }
 
         /// <summary>
-        ///     Backfills or re-indexes a given entity Backfills or re-indexes a given entity
+        /// Backfills or re-indexes a given entity Backfills or re-indexes a given entity
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="backfillRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of void</returns>
-        public async Task BackfillAsync(string chainName, BackfillRequest backfillRequest,
-            CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task BackfillAsync(string chainName, BackfillRequest backfillRequest, System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
             var task = BackfillWithHttpInfoAsync(chainName, backfillRequest, cancellationToken);
 #if UNITY_EDITOR || !UNITY_WEBGL
@@ -608,56 +493,49 @@ namespace Immutable.Search.Api
         }
 
         /// <summary>
-        ///     Backfills or re-indexes a given entity Backfills or re-indexes a given entity
+        /// Backfills or re-indexes a given entity Backfills or re-indexes a given entity
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="backfillRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse</returns>
-        public async Task<ApiResponse<object>> BackfillWithHttpInfoAsync(string chainName,
-            BackfillRequest backfillRequest, CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task<Immutable.Search.Client.ApiResponse<Object>> BackfillWithHttpInfoAsync(string chainName, BackfillRequest backfillRequest, System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
             // verify the required parameter 'chainName' is set
             if (chainName == null)
-                throw new ApiException(400, "Missing required parameter 'chainName' when calling SearchApi->Backfill");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'chainName' when calling SearchApi->Backfill");
 
             // verify the required parameter 'backfillRequest' is set
             if (backfillRequest == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'backfillRequest' when calling SearchApi->Backfill");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'backfillRequest' when calling SearchApi->Backfill");
 
 
-            var localVarRequestOptions = new RequestOptions();
+            Immutable.Search.Client.RequestOptions localVarRequestOptions = new Immutable.Search.Client.RequestOptions();
 
-            string[] _contentTypes =
-            {
+            string[] _contentTypes = new string[] {
                 "application/json"
             };
 
             // to determine the Accept header
-            string[] _accepts =
-            {
+            string[] _accepts = new string[] {
                 "application/json"
             };
 
 
-            var localVarContentType = ClientUtils.SelectHeaderContentType(_contentTypes);
-            if (localVarContentType != null)
-                localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
+            var localVarContentType = Immutable.Search.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
+            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
 
-            var localVarAccept = ClientUtils.SelectHeaderAccept(_accepts);
+            var localVarAccept = Immutable.Search.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.PathParameters.Add("chain_name",
-                ClientUtils.ParameterToString(chainName)); // path parameter
+            localVarRequestOptions.PathParameters.Add("chain_name", Immutable.Search.Client.ClientUtils.ParameterToString(chainName)); // path parameter
             localVarRequestOptions.Data = backfillRequest;
 
 
             // make the HTTP request
 
-            var task = AsynchronousClient.PostAsync<object>("/v1/internal/chains/{chain_name}/backfill",
-                localVarRequestOptions, Configuration, cancellationToken);
+            var task = this.AsynchronousClient.PostAsync<Object>("/v1/internal/chains/{chain_name}/backfill", localVarRequestOptions, this.Configuration, cancellationToken);
 
 #if UNITY_EDITOR || !UNITY_WEBGL
             var localVarResponse = await task.ConfigureAwait(false);
@@ -665,9 +543,9 @@ namespace Immutable.Search.Api
             var localVarResponse = await task;
 #endif
 
-            if (ExceptionFactory != null)
+            if (this.ExceptionFactory != null)
             {
-                var _exception = ExceptionFactory("Backfill", localVarResponse);
+                Exception _exception = this.ExceptionFactory("Backfill", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
@@ -675,91 +553,74 @@ namespace Immutable.Search.Api
         }
 
         /// <summary>
-        ///     Get pricing data for a list of token ids Get pricing data for a list of token ids
+        /// Get pricing data for a list of token ids Get pricing data for a list of token ids
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these token ids are on</param>
         /// <param name="tokenId">List of token ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>QuotesForNFTsResult</returns>
-        public QuotesForNFTsResult QuotesForNFTs(string chainName, string contractAddress, List<string> tokenId,
-            string? pageCursor = default)
+        public QuotesForNFTsResult QuotesForNFTs(string chainName, string contractAddress, List<string> tokenId, string? pageCursor = default(string?))
         {
-            var localVarResponse = QuotesForNFTsWithHttpInfo(chainName, contractAddress, tokenId, pageCursor);
+            Immutable.Search.Client.ApiResponse<QuotesForNFTsResult> localVarResponse = QuotesForNFTsWithHttpInfo(chainName, contractAddress, tokenId, pageCursor);
             return localVarResponse.Data;
         }
 
         /// <summary>
-        ///     Get pricing data for a list of token ids Get pricing data for a list of token ids
+        /// Get pricing data for a list of token ids Get pricing data for a list of token ids
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these token ids are on</param>
         /// <param name="tokenId">List of token ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>ApiResponse of QuotesForNFTsResult</returns>
-        public ApiResponse<QuotesForNFTsResult> QuotesForNFTsWithHttpInfo(string chainName, string contractAddress,
-            List<string> tokenId, string? pageCursor = default)
+        public Immutable.Search.Client.ApiResponse<QuotesForNFTsResult> QuotesForNFTsWithHttpInfo(string chainName, string contractAddress, List<string> tokenId, string? pageCursor = default(string?))
         {
             // verify the required parameter 'chainName' is set
             if (chainName == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'chainName' when calling SearchApi->QuotesForNFTs");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'chainName' when calling SearchApi->QuotesForNFTs");
 
             // verify the required parameter 'contractAddress' is set
             if (contractAddress == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'contractAddress' when calling SearchApi->QuotesForNFTs");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'contractAddress' when calling SearchApi->QuotesForNFTs");
 
             // verify the required parameter 'tokenId' is set
             if (tokenId == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'tokenId' when calling SearchApi->QuotesForNFTs");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'tokenId' when calling SearchApi->QuotesForNFTs");
 
-            var localVarRequestOptions = new RequestOptions();
+            Immutable.Search.Client.RequestOptions localVarRequestOptions = new Immutable.Search.Client.RequestOptions();
 
-            string[] _contentTypes =
-            {
+            string[] _contentTypes = new string[] {
             };
 
             // to determine the Accept header
-            string[] _accepts =
-            {
+            string[] _accepts = new string[] {
                 "application/json"
             };
 
-            var localVarContentType = ClientUtils.SelectHeaderContentType(_contentTypes);
-            if (localVarContentType != null)
-                localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
+            var localVarContentType = Immutable.Search.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
+            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
 
-            var localVarAccept = ClientUtils.SelectHeaderAccept(_accepts);
+            var localVarAccept = Immutable.Search.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.PathParameters.Add("chain_name",
-                ClientUtils.ParameterToString(chainName)); // path parameter
-            localVarRequestOptions.PathParameters.Add("contract_address",
-                ClientUtils.ParameterToString(contractAddress)); // path parameter
-            localVarRequestOptions.QueryParameters.Add(ClientUtils.ParameterToMultiMap("multi", "token_id", tokenId));
+            localVarRequestOptions.PathParameters.Add("chain_name", Immutable.Search.Client.ClientUtils.ParameterToString(chainName)); // path parameter
+            localVarRequestOptions.PathParameters.Add("contract_address", Immutable.Search.Client.ClientUtils.ParameterToString(contractAddress)); // path parameter
+            localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("multi", "token_id", tokenId));
             if (pageCursor != null)
-                localVarRequestOptions.QueryParameters.Add(
-                    ClientUtils.ParameterToMultiMap("", "page_cursor", pageCursor));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "page_cursor", pageCursor));
+            }
 
 
             // make the HTTP request
-            var localVarResponse = Client.Get<QuotesForNFTsResult>(
-                "/experimental/chains/{chain_name}/quotes/{contract_address}/nfts", localVarRequestOptions,
-                Configuration);
+            var localVarResponse = this.Client.Get<QuotesForNFTsResult>("/experimental/chains/{chain_name}/quotes/{contract_address}/nfts", localVarRequestOptions, this.Configuration);
 
-            if (ExceptionFactory != null)
+            if (this.ExceptionFactory != null)
             {
-                var _exception = ExceptionFactory("QuotesForNFTs", localVarResponse);
+                Exception _exception = this.ExceptionFactory("QuotesForNFTs", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
@@ -767,25 +628,20 @@ namespace Immutable.Search.Api
         }
 
         /// <summary>
-        ///     Get pricing data for a list of token ids Get pricing data for a list of token ids
+        /// Get pricing data for a list of token ids Get pricing data for a list of token ids
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these token ids are on</param>
         /// <param name="tokenId">List of token ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of QuotesForNFTsResult</returns>
-        public async Task<QuotesForNFTsResult> QuotesForNFTsAsync(string chainName, string contractAddress,
-            List<string> tokenId, string? pageCursor = default, CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task<QuotesForNFTsResult> QuotesForNFTsAsync(string chainName, string contractAddress, List<string> tokenId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
-            var task = QuotesForNFTsWithHttpInfoAsync(chainName, contractAddress, tokenId, pageCursor,
-                cancellationToken);
+            var task = QuotesForNFTsWithHttpInfoAsync(chainName, contractAddress, tokenId, pageCursor, cancellationToken);
 #if UNITY_EDITOR || !UNITY_WEBGL
-            var localVarResponse = await task.ConfigureAwait(false);
+            Immutable.Search.Client.ApiResponse<QuotesForNFTsResult> localVarResponse = await task.ConfigureAwait(false);
 #else
             Immutable.Search.Client.ApiResponse<QuotesForNFTsResult> localVarResponse = await task;
 #endif
@@ -793,73 +649,59 @@ namespace Immutable.Search.Api
         }
 
         /// <summary>
-        ///     Get pricing data for a list of token ids Get pricing data for a list of token ids
+        /// Get pricing data for a list of token ids Get pricing data for a list of token ids
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these token ids are on</param>
         /// <param name="tokenId">List of token ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (QuotesForNFTsResult)</returns>
-        public async Task<ApiResponse<QuotesForNFTsResult>> QuotesForNFTsWithHttpInfoAsync(string chainName,
-            string contractAddress, List<string> tokenId, string? pageCursor = default,
-            CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task<Immutable.Search.Client.ApiResponse<QuotesForNFTsResult>> QuotesForNFTsWithHttpInfoAsync(string chainName, string contractAddress, List<string> tokenId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
             // verify the required parameter 'chainName' is set
             if (chainName == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'chainName' when calling SearchApi->QuotesForNFTs");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'chainName' when calling SearchApi->QuotesForNFTs");
 
             // verify the required parameter 'contractAddress' is set
             if (contractAddress == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'contractAddress' when calling SearchApi->QuotesForNFTs");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'contractAddress' when calling SearchApi->QuotesForNFTs");
 
             // verify the required parameter 'tokenId' is set
             if (tokenId == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'tokenId' when calling SearchApi->QuotesForNFTs");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'tokenId' when calling SearchApi->QuotesForNFTs");
 
 
-            var localVarRequestOptions = new RequestOptions();
+            Immutable.Search.Client.RequestOptions localVarRequestOptions = new Immutable.Search.Client.RequestOptions();
 
-            string[] _contentTypes =
-            {
+            string[] _contentTypes = new string[] {
             };
 
             // to determine the Accept header
-            string[] _accepts =
-            {
+            string[] _accepts = new string[] {
                 "application/json"
             };
 
 
-            var localVarContentType = ClientUtils.SelectHeaderContentType(_contentTypes);
-            if (localVarContentType != null)
-                localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
+            var localVarContentType = Immutable.Search.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
+            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
 
-            var localVarAccept = ClientUtils.SelectHeaderAccept(_accepts);
+            var localVarAccept = Immutable.Search.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.PathParameters.Add("chain_name",
-                ClientUtils.ParameterToString(chainName)); // path parameter
-            localVarRequestOptions.PathParameters.Add("contract_address",
-                ClientUtils.ParameterToString(contractAddress)); // path parameter
-            localVarRequestOptions.QueryParameters.Add(ClientUtils.ParameterToMultiMap("multi", "token_id", tokenId));
+            localVarRequestOptions.PathParameters.Add("chain_name", Immutable.Search.Client.ClientUtils.ParameterToString(chainName)); // path parameter
+            localVarRequestOptions.PathParameters.Add("contract_address", Immutable.Search.Client.ClientUtils.ParameterToString(contractAddress)); // path parameter
+            localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("multi", "token_id", tokenId));
             if (pageCursor != null)
-                localVarRequestOptions.QueryParameters.Add(
-                    ClientUtils.ParameterToMultiMap("", "page_cursor", pageCursor));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "page_cursor", pageCursor));
+            }
 
 
             // make the HTTP request
 
-            var task = AsynchronousClient.GetAsync<QuotesForNFTsResult>(
-                "/experimental/chains/{chain_name}/quotes/{contract_address}/nfts", localVarRequestOptions,
-                Configuration, cancellationToken);
+            var task = this.AsynchronousClient.GetAsync<QuotesForNFTsResult>("/experimental/chains/{chain_name}/quotes/{contract_address}/nfts", localVarRequestOptions, this.Configuration, cancellationToken);
 
 #if UNITY_EDITOR || !UNITY_WEBGL
             var localVarResponse = await task.ConfigureAwait(false);
@@ -867,9 +709,9 @@ namespace Immutable.Search.Api
             var localVarResponse = await task;
 #endif
 
-            if (ExceptionFactory != null)
+            if (this.ExceptionFactory != null)
             {
-                var _exception = ExceptionFactory("QuotesForNFTs", localVarResponse);
+                Exception _exception = this.ExceptionFactory("QuotesForNFTs", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
@@ -877,91 +719,74 @@ namespace Immutable.Search.Api
         }
 
         /// <summary>
-        ///     Get pricing data for a list of stack ids Get pricing data for a list of stack ids
+        /// Get pricing data for a list of stack ids Get pricing data for a list of stack ids
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these stacks are on</param>
         /// <param name="stackId">List of stack ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>QuotesForStacksResult</returns>
-        public QuotesForStacksResult QuotesForStacks(string chainName, string contractAddress, List<Guid> stackId,
-            string? pageCursor = default)
+        public QuotesForStacksResult QuotesForStacks(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?))
         {
-            var localVarResponse = QuotesForStacksWithHttpInfo(chainName, contractAddress, stackId, pageCursor);
+            Immutable.Search.Client.ApiResponse<QuotesForStacksResult> localVarResponse = QuotesForStacksWithHttpInfo(chainName, contractAddress, stackId, pageCursor);
             return localVarResponse.Data;
         }
 
         /// <summary>
-        ///     Get pricing data for a list of stack ids Get pricing data for a list of stack ids
+        /// Get pricing data for a list of stack ids Get pricing data for a list of stack ids
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these stacks are on</param>
         /// <param name="stackId">List of stack ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>ApiResponse of QuotesForStacksResult</returns>
-        public ApiResponse<QuotesForStacksResult> QuotesForStacksWithHttpInfo(string chainName, string contractAddress,
-            List<Guid> stackId, string? pageCursor = default)
+        public Immutable.Search.Client.ApiResponse<QuotesForStacksResult> QuotesForStacksWithHttpInfo(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?))
         {
             // verify the required parameter 'chainName' is set
             if (chainName == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'chainName' when calling SearchApi->QuotesForStacks");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'chainName' when calling SearchApi->QuotesForStacks");
 
             // verify the required parameter 'contractAddress' is set
             if (contractAddress == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'contractAddress' when calling SearchApi->QuotesForStacks");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'contractAddress' when calling SearchApi->QuotesForStacks");
 
             // verify the required parameter 'stackId' is set
             if (stackId == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'stackId' when calling SearchApi->QuotesForStacks");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'stackId' when calling SearchApi->QuotesForStacks");
 
-            var localVarRequestOptions = new RequestOptions();
+            Immutable.Search.Client.RequestOptions localVarRequestOptions = new Immutable.Search.Client.RequestOptions();
 
-            string[] _contentTypes =
-            {
+            string[] _contentTypes = new string[] {
             };
 
             // to determine the Accept header
-            string[] _accepts =
-            {
+            string[] _accepts = new string[] {
                 "application/json"
             };
 
-            var localVarContentType = ClientUtils.SelectHeaderContentType(_contentTypes);
-            if (localVarContentType != null)
-                localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
+            var localVarContentType = Immutable.Search.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
+            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
 
-            var localVarAccept = ClientUtils.SelectHeaderAccept(_accepts);
+            var localVarAccept = Immutable.Search.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.PathParameters.Add("chain_name",
-                ClientUtils.ParameterToString(chainName)); // path parameter
-            localVarRequestOptions.PathParameters.Add("contract_address",
-                ClientUtils.ParameterToString(contractAddress)); // path parameter
-            localVarRequestOptions.QueryParameters.Add(ClientUtils.ParameterToMultiMap("multi", "stack_id", stackId));
+            localVarRequestOptions.PathParameters.Add("chain_name", Immutable.Search.Client.ClientUtils.ParameterToString(chainName)); // path parameter
+            localVarRequestOptions.PathParameters.Add("contract_address", Immutable.Search.Client.ClientUtils.ParameterToString(contractAddress)); // path parameter
+            localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("multi", "stack_id", stackId));
             if (pageCursor != null)
-                localVarRequestOptions.QueryParameters.Add(
-                    ClientUtils.ParameterToMultiMap("", "page_cursor", pageCursor));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "page_cursor", pageCursor));
+            }
 
 
             // make the HTTP request
-            var localVarResponse = Client.Get<QuotesForStacksResult>(
-                "/experimental/chains/{chain_name}/quotes/{contract_address}/stacks", localVarRequestOptions,
-                Configuration);
+            var localVarResponse = this.Client.Get<QuotesForStacksResult>("/experimental/chains/{chain_name}/quotes/{contract_address}/stacks", localVarRequestOptions, this.Configuration);
 
-            if (ExceptionFactory != null)
+            if (this.ExceptionFactory != null)
             {
-                var _exception = ExceptionFactory("QuotesForStacks", localVarResponse);
+                Exception _exception = this.ExceptionFactory("QuotesForStacks", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
@@ -969,25 +794,20 @@ namespace Immutable.Search.Api
         }
 
         /// <summary>
-        ///     Get pricing data for a list of stack ids Get pricing data for a list of stack ids
+        /// Get pricing data for a list of stack ids Get pricing data for a list of stack ids
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these stacks are on</param>
         /// <param name="stackId">List of stack ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of QuotesForStacksResult</returns>
-        public async Task<QuotesForStacksResult> QuotesForStacksAsync(string chainName, string contractAddress,
-            List<Guid> stackId, string? pageCursor = default, CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task<QuotesForStacksResult> QuotesForStacksAsync(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
-            var task = QuotesForStacksWithHttpInfoAsync(chainName, contractAddress, stackId, pageCursor,
-                cancellationToken);
+            var task = QuotesForStacksWithHttpInfoAsync(chainName, contractAddress, stackId, pageCursor, cancellationToken);
 #if UNITY_EDITOR || !UNITY_WEBGL
-            var localVarResponse = await task.ConfigureAwait(false);
+            Immutable.Search.Client.ApiResponse<QuotesForStacksResult> localVarResponse = await task.ConfigureAwait(false);
 #else
             Immutable.Search.Client.ApiResponse<QuotesForStacksResult> localVarResponse = await task;
 #endif
@@ -995,73 +815,59 @@ namespace Immutable.Search.Api
         }
 
         /// <summary>
-        ///     Get pricing data for a list of stack ids Get pricing data for a list of stack ids
+        /// Get pricing data for a list of stack ids Get pricing data for a list of stack ids
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">Contract address for collection that these stacks are on</param>
         /// <param name="stackId">List of stack ids to get pricing data for</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (QuotesForStacksResult)</returns>
-        public async Task<ApiResponse<QuotesForStacksResult>> QuotesForStacksWithHttpInfoAsync(string chainName,
-            string contractAddress, List<Guid> stackId, string? pageCursor = default,
-            CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task<Immutable.Search.Client.ApiResponse<QuotesForStacksResult>> QuotesForStacksWithHttpInfoAsync(string chainName, string contractAddress, List<Guid> stackId, string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
             // verify the required parameter 'chainName' is set
             if (chainName == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'chainName' when calling SearchApi->QuotesForStacks");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'chainName' when calling SearchApi->QuotesForStacks");
 
             // verify the required parameter 'contractAddress' is set
             if (contractAddress == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'contractAddress' when calling SearchApi->QuotesForStacks");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'contractAddress' when calling SearchApi->QuotesForStacks");
 
             // verify the required parameter 'stackId' is set
             if (stackId == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'stackId' when calling SearchApi->QuotesForStacks");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'stackId' when calling SearchApi->QuotesForStacks");
 
 
-            var localVarRequestOptions = new RequestOptions();
+            Immutable.Search.Client.RequestOptions localVarRequestOptions = new Immutable.Search.Client.RequestOptions();
 
-            string[] _contentTypes =
-            {
+            string[] _contentTypes = new string[] {
             };
 
             // to determine the Accept header
-            string[] _accepts =
-            {
+            string[] _accepts = new string[] {
                 "application/json"
             };
 
 
-            var localVarContentType = ClientUtils.SelectHeaderContentType(_contentTypes);
-            if (localVarContentType != null)
-                localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
+            var localVarContentType = Immutable.Search.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
+            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
 
-            var localVarAccept = ClientUtils.SelectHeaderAccept(_accepts);
+            var localVarAccept = Immutable.Search.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.PathParameters.Add("chain_name",
-                ClientUtils.ParameterToString(chainName)); // path parameter
-            localVarRequestOptions.PathParameters.Add("contract_address",
-                ClientUtils.ParameterToString(contractAddress)); // path parameter
-            localVarRequestOptions.QueryParameters.Add(ClientUtils.ParameterToMultiMap("multi", "stack_id", stackId));
+            localVarRequestOptions.PathParameters.Add("chain_name", Immutable.Search.Client.ClientUtils.ParameterToString(chainName)); // path parameter
+            localVarRequestOptions.PathParameters.Add("contract_address", Immutable.Search.Client.ClientUtils.ParameterToString(contractAddress)); // path parameter
+            localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("multi", "stack_id", stackId));
             if (pageCursor != null)
-                localVarRequestOptions.QueryParameters.Add(
-                    ClientUtils.ParameterToMultiMap("", "page_cursor", pageCursor));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "page_cursor", pageCursor));
+            }
 
 
             // make the HTTP request
 
-            var task = AsynchronousClient.GetAsync<QuotesForStacksResult>(
-                "/experimental/chains/{chain_name}/quotes/{contract_address}/stacks", localVarRequestOptions,
-                Configuration, cancellationToken);
+            var task = this.AsynchronousClient.GetAsync<QuotesForStacksResult>("/experimental/chains/{chain_name}/quotes/{contract_address}/stacks", localVarRequestOptions, this.Configuration, cancellationToken);
 
 #if UNITY_EDITOR || !UNITY_WEBGL
             var localVarResponse = await task.ConfigureAwait(false);
@@ -1069,9 +875,9 @@ namespace Immutable.Search.Api
             var localVarResponse = await task;
 #endif
 
-            if (ExceptionFactory != null)
+            if (this.ExceptionFactory != null)
             {
-                var _exception = ExceptionFactory("QuotesForStacks", localVarResponse);
+                Exception _exception = this.ExceptionFactory("QuotesForStacks", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
@@ -1079,121 +885,97 @@ namespace Immutable.Search.Api
         }
 
         /// <summary>
-        ///     Search NFT stacks Search NFT stacks
+        /// Search NFT stacks Search NFT stacks
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
-        /// <param name="onlyIncludeOwnerListings">
-        ///     Whether to the listings should include only the owner created listings
-        ///     (optional)
-        /// </param>
-        /// <param name="trait">
-        ///     JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\
-        ///     &quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}}))
-        ///     (optional)
-        /// </param>
+        /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>SearchStacksResult</returns>
-        public SearchStacksResult SearchStacks(string chainName, List<string> contractAddress,
-            string? accountAddress = default, bool? onlyIncludeOwnerListings = default, string? trait = default,
-            string? keyword = default, int? pageSize = default, string? pageCursor = default)
+        public SearchStacksResult SearchStacks(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?))
         {
-            var localVarResponse = SearchStacksWithHttpInfo(chainName, contractAddress, accountAddress,
-                onlyIncludeOwnerListings, trait, keyword, pageSize, pageCursor);
+            Immutable.Search.Client.ApiResponse<SearchStacksResult> localVarResponse = SearchStacksWithHttpInfo(chainName, contractAddress, accountAddress, onlyIncludeOwnerListings, trait, keyword, pageSize, pageCursor);
             return localVarResponse.Data;
         }
 
         /// <summary>
-        ///     Search NFT stacks Search NFT stacks
+        /// Search NFT stacks Search NFT stacks
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
-        /// <param name="onlyIncludeOwnerListings">
-        ///     Whether to the listings should include only the owner created listings
-        ///     (optional)
-        /// </param>
-        /// <param name="trait">
-        ///     JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\
-        ///     &quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}}))
-        ///     (optional)
-        /// </param>
+        /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <returns>ApiResponse of SearchStacksResult</returns>
-        public ApiResponse<SearchStacksResult> SearchStacksWithHttpInfo(string chainName, List<string> contractAddress,
-            string? accountAddress = default, bool? onlyIncludeOwnerListings = default, string? trait = default,
-            string? keyword = default, int? pageSize = default, string? pageCursor = default)
+        public Immutable.Search.Client.ApiResponse<SearchStacksResult> SearchStacksWithHttpInfo(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?))
         {
             // verify the required parameter 'chainName' is set
             if (chainName == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'chainName' when calling SearchApi->SearchStacks");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'chainName' when calling SearchApi->SearchStacks");
 
             // verify the required parameter 'contractAddress' is set
             if (contractAddress == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'contractAddress' when calling SearchApi->SearchStacks");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'contractAddress' when calling SearchApi->SearchStacks");
 
-            var localVarRequestOptions = new RequestOptions();
+            Immutable.Search.Client.RequestOptions localVarRequestOptions = new Immutable.Search.Client.RequestOptions();
 
-            string[] _contentTypes =
-            {
+            string[] _contentTypes = new string[] {
             };
 
             // to determine the Accept header
-            string[] _accepts =
-            {
+            string[] _accepts = new string[] {
                 "application/json"
             };
 
-            var localVarContentType = ClientUtils.SelectHeaderContentType(_contentTypes);
-            if (localVarContentType != null)
-                localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
+            var localVarContentType = Immutable.Search.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
+            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
 
-            var localVarAccept = ClientUtils.SelectHeaderAccept(_accepts);
+            var localVarAccept = Immutable.Search.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.PathParameters.Add("chain_name",
-                ClientUtils.ParameterToString(chainName)); // path parameter
-            localVarRequestOptions.QueryParameters.Add(
-                ClientUtils.ParameterToMultiMap("multi", "contract_address", contractAddress));
+            localVarRequestOptions.PathParameters.Add("chain_name", Immutable.Search.Client.ClientUtils.ParameterToString(chainName)); // path parameter
+            localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("multi", "contract_address", contractAddress));
             if (accountAddress != null)
-                localVarRequestOptions.QueryParameters.Add(
-                    ClientUtils.ParameterToMultiMap("", "account_address", accountAddress));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "account_address", accountAddress));
+            }
             if (onlyIncludeOwnerListings != null)
-                localVarRequestOptions.QueryParameters.Add(
-                    ClientUtils.ParameterToMultiMap("", "only_include_owner_listings", onlyIncludeOwnerListings));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "only_include_owner_listings", onlyIncludeOwnerListings));
+            }
             if (trait != null)
-                localVarRequestOptions.QueryParameters.Add(ClientUtils.ParameterToMultiMap("", "trait", trait));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "trait", trait));
+            }
             if (keyword != null)
-                localVarRequestOptions.QueryParameters.Add(ClientUtils.ParameterToMultiMap("", "keyword", keyword));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "keyword", keyword));
+            }
             if (pageSize != null)
-                localVarRequestOptions.QueryParameters.Add(ClientUtils.ParameterToMultiMap("", "page_size", pageSize));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "page_size", pageSize));
+            }
             if (pageCursor != null)
-                localVarRequestOptions.QueryParameters.Add(
-                    ClientUtils.ParameterToMultiMap("", "page_cursor", pageCursor));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "page_cursor", pageCursor));
+            }
 
 
             // make the HTTP request
-            var localVarResponse = Client.Get<SearchStacksResult>("/experimental/chains/{chain_name}/search/stacks",
-                localVarRequestOptions, Configuration);
+            var localVarResponse = this.Client.Get<SearchStacksResult>("/experimental/chains/{chain_name}/search/stacks", localVarRequestOptions, this.Configuration);
 
-            if (ExceptionFactory != null)
+            if (this.ExceptionFactory != null)
             {
-                var _exception = ExceptionFactory("SearchStacks", localVarResponse);
+                Exception _exception = this.ExceptionFactory("SearchStacks", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
@@ -1201,38 +983,24 @@ namespace Immutable.Search.Api
         }
 
         /// <summary>
-        ///     Search NFT stacks Search NFT stacks
+        /// Search NFT stacks Search NFT stacks
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
-        /// <param name="onlyIncludeOwnerListings">
-        ///     Whether to the listings should include only the owner created listings
-        ///     (optional)
-        /// </param>
-        /// <param name="trait">
-        ///     JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\
-        ///     &quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}}))
-        ///     (optional)
-        /// </param>
+        /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of SearchStacksResult</returns>
-        public async Task<SearchStacksResult> SearchStacksAsync(string chainName, List<string> contractAddress,
-            string? accountAddress = default, bool? onlyIncludeOwnerListings = default, string? trait = default,
-            string? keyword = default, int? pageSize = default, string? pageCursor = default,
-            CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task<SearchStacksResult> SearchStacksAsync(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
-            var task = SearchStacksWithHttpInfoAsync(chainName, contractAddress, accountAddress,
-                onlyIncludeOwnerListings, trait, keyword, pageSize, pageCursor, cancellationToken);
+            var task = SearchStacksWithHttpInfoAsync(chainName, contractAddress, accountAddress, onlyIncludeOwnerListings, trait, keyword, pageSize, pageCursor, cancellationToken);
 #if UNITY_EDITOR || !UNITY_WEBGL
-            var localVarResponse = await task.ConfigureAwait(false);
+            Immutable.Search.Client.ApiResponse<SearchStacksResult> localVarResponse = await task.ConfigureAwait(false);
 #else
             Immutable.Search.Client.ApiResponse<SearchStacksResult> localVarResponse = await task;
 #endif
@@ -1240,91 +1008,78 @@ namespace Immutable.Search.Api
         }
 
         /// <summary>
-        ///     Search NFT stacks Search NFT stacks
+        /// Search NFT stacks Search NFT stacks
         /// </summary>
         /// <exception cref="Immutable.Search.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="chainName">The name of chain</param>
         /// <param name="contractAddress">List of contract addresses to filter by</param>
         /// <param name="accountAddress">Account address to filter by (optional)</param>
-        /// <param name="onlyIncludeOwnerListings">
-        ///     Whether to the listings should include only the owner created listings
-        ///     (optional)
-        /// </param>
-        /// <param name="trait">
-        ///     JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\
-        ///     &quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}}))
-        ///     (optional)
-        /// </param>
+        /// <param name="onlyIncludeOwnerListings">Whether to the listings should include only the owner created listings (optional)</param>
+        /// <param name="trait">JSON encoded traits to filter by. e.g. encodeURIComponent(JSON.stringify({\&quot;rarity\&quot;: {\&quot;values\&quot;: [\&quot;common\&quot;, \&quot;rare\&quot;], \&quot;condition\&quot;: \&quot;eq\&quot;}})) (optional)</param>
         /// <param name="keyword">Keyword to search NFT name and description. Alphanumeric characters only. (optional)</param>
         /// <param name="pageSize">Number of results to return per page (optional, default to 100)</param>
-        /// <param name="pageCursor">
-        ///     Encoded page cursor to retrieve previous or next page. Use the value returned in the response.
-        ///     (optional)
-        /// </param>
+        /// <param name="pageCursor">Encoded page cursor to retrieve previous or next page. Use the value returned in the response. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (SearchStacksResult)</returns>
-        public async Task<ApiResponse<SearchStacksResult>> SearchStacksWithHttpInfoAsync(string chainName,
-            List<string> contractAddress, string? accountAddress = default, bool? onlyIncludeOwnerListings = default,
-            string? trait = default, string? keyword = default, int? pageSize = default, string? pageCursor = default,
-            CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task<Immutable.Search.Client.ApiResponse<SearchStacksResult>> SearchStacksWithHttpInfoAsync(string chainName, List<string> contractAddress, string? accountAddress = default(string?), bool? onlyIncludeOwnerListings = default(bool?), string? trait = default(string?), string? keyword = default(string?), int? pageSize = default(int?), string? pageCursor = default(string?), System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
         {
             // verify the required parameter 'chainName' is set
             if (chainName == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'chainName' when calling SearchApi->SearchStacks");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'chainName' when calling SearchApi->SearchStacks");
 
             // verify the required parameter 'contractAddress' is set
             if (contractAddress == null)
-                throw new ApiException(400,
-                    "Missing required parameter 'contractAddress' when calling SearchApi->SearchStacks");
+                throw new Immutable.Search.Client.ApiException(400, "Missing required parameter 'contractAddress' when calling SearchApi->SearchStacks");
 
 
-            var localVarRequestOptions = new RequestOptions();
+            Immutable.Search.Client.RequestOptions localVarRequestOptions = new Immutable.Search.Client.RequestOptions();
 
-            string[] _contentTypes =
-            {
+            string[] _contentTypes = new string[] {
             };
 
             // to determine the Accept header
-            string[] _accepts =
-            {
+            string[] _accepts = new string[] {
                 "application/json"
             };
 
 
-            var localVarContentType = ClientUtils.SelectHeaderContentType(_contentTypes);
-            if (localVarContentType != null)
-                localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
+            var localVarContentType = Immutable.Search.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
+            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
 
-            var localVarAccept = ClientUtils.SelectHeaderAccept(_accepts);
+            var localVarAccept = Immutable.Search.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
-            localVarRequestOptions.PathParameters.Add("chain_name",
-                ClientUtils.ParameterToString(chainName)); // path parameter
-            localVarRequestOptions.QueryParameters.Add(
-                ClientUtils.ParameterToMultiMap("multi", "contract_address", contractAddress));
+            localVarRequestOptions.PathParameters.Add("chain_name", Immutable.Search.Client.ClientUtils.ParameterToString(chainName)); // path parameter
+            localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("multi", "contract_address", contractAddress));
             if (accountAddress != null)
-                localVarRequestOptions.QueryParameters.Add(
-                    ClientUtils.ParameterToMultiMap("", "account_address", accountAddress));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "account_address", accountAddress));
+            }
             if (onlyIncludeOwnerListings != null)
-                localVarRequestOptions.QueryParameters.Add(
-                    ClientUtils.ParameterToMultiMap("", "only_include_owner_listings", onlyIncludeOwnerListings));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "only_include_owner_listings", onlyIncludeOwnerListings));
+            }
             if (trait != null)
-                localVarRequestOptions.QueryParameters.Add(ClientUtils.ParameterToMultiMap("", "trait", trait));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "trait", trait));
+            }
             if (keyword != null)
-                localVarRequestOptions.QueryParameters.Add(ClientUtils.ParameterToMultiMap("", "keyword", keyword));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "keyword", keyword));
+            }
             if (pageSize != null)
-                localVarRequestOptions.QueryParameters.Add(ClientUtils.ParameterToMultiMap("", "page_size", pageSize));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "page_size", pageSize));
+            }
             if (pageCursor != null)
-                localVarRequestOptions.QueryParameters.Add(
-                    ClientUtils.ParameterToMultiMap("", "page_cursor", pageCursor));
+            {
+                localVarRequestOptions.QueryParameters.Add(Immutable.Search.Client.ClientUtils.ParameterToMultiMap("", "page_cursor", pageCursor));
+            }
 
 
             // make the HTTP request
 
-            var task = AsynchronousClient.GetAsync<SearchStacksResult>(
-                "/experimental/chains/{chain_name}/search/stacks", localVarRequestOptions, Configuration,
-                cancellationToken);
+            var task = this.AsynchronousClient.GetAsync<SearchStacksResult>("/experimental/chains/{chain_name}/search/stacks", localVarRequestOptions, this.Configuration, cancellationToken);
 
 #if UNITY_EDITOR || !UNITY_WEBGL
             var localVarResponse = await task.ConfigureAwait(false);
@@ -1332,13 +1087,14 @@ namespace Immutable.Search.Api
             var localVarResponse = await task;
 #endif
 
-            if (ExceptionFactory != null)
+            if (this.ExceptionFactory != null)
             {
-                var _exception = ExceptionFactory("SearchStacks", localVarResponse);
+                Exception _exception = this.ExceptionFactory("SearchStacks", localVarResponse);
                 if (_exception != null) throw _exception;
             }
 
             return localVarResponse;
         }
+
     }
 }

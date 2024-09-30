@@ -10,89 +10,97 @@
 
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    ///     NFTMetadataAttribute
+    /// NFTMetadataAttribute
     /// </summary>
     [DataContract(Name = "NFTMetadataAttribute")]
-    public class NFTMetadataAttribute
+    public partial class NFTMetadataAttribute
     {
         /// <summary>
-        ///     Display type for this attribute
+        /// Display type for this attribute
         /// </summary>
         /// <value>Display type for this attribute</value>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum DisplayTypeEnum
         {
             /// <summary>
-            ///     Enum Number for value: number
+            /// Enum Number for value: number
             /// </summary>
-            [EnumMember(Value = "number")] Number = 1,
+            [EnumMember(Value = "number")]
+            Number = 1,
 
             /// <summary>
-            ///     Enum BoostPercentage for value: boost_percentage
+            /// Enum BoostPercentage for value: boost_percentage
             /// </summary>
             [EnumMember(Value = "boost_percentage")]
             BoostPercentage = 2,
 
             /// <summary>
-            ///     Enum BoostNumber for value: boost_number
+            /// Enum BoostNumber for value: boost_number
             /// </summary>
-            [EnumMember(Value = "boost_number")] BoostNumber = 3,
+            [EnumMember(Value = "boost_number")]
+            BoostNumber = 3,
 
             /// <summary>
-            ///     Enum Date for value: date
+            /// Enum Date for value: date
             /// </summary>
-            [EnumMember(Value = "date")] Date = 4
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="NFTMetadataAttribute" /> class.
-        /// </summary>
-        [JsonConstructorAttribute]
-        protected NFTMetadataAttribute()
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="NFTMetadataAttribute" /> class.
-        /// </summary>
-        /// <param name="displayType">Display type for this attribute.</param>
-        /// <param name="traitType">The metadata trait type (required).</param>
-        /// <param name="value">value (required).</param>
-        public NFTMetadataAttribute(DisplayTypeEnum? displayType = default, string traitType = default,
-            NFTMetadataAttributeValue value = default)
-        {
-            // to ensure "traitType" is required (not null)
-            if (traitType == null)
-                throw new ArgumentNullException(
-                    "traitType is a required property for NFTMetadataAttribute and cannot be null");
-            TraitType = traitType;
-            // to ensure "value" is required (not null)
-            if (value == null)
-                throw new ArgumentNullException(
-                    "value is a required property for NFTMetadataAttribute and cannot be null");
-            Value = value;
-            DisplayType = displayType;
+            [EnumMember(Value = "date")]
+            Date = 4
         }
 
 
         /// <summary>
-        ///     Display type for this attribute
+        /// Display type for this attribute
         /// </summary>
         /// <value>Display type for this attribute</value>
         /// <example>number</example>
         [DataMember(Name = "display_type", EmitDefaultValue = true)]
         public DisplayTypeEnum? DisplayType { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NFTMetadataAttribute" /> class.
+        /// </summary>
+        [JsonConstructorAttribute]
+        protected NFTMetadataAttribute() { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NFTMetadataAttribute" /> class.
+        /// </summary>
+        /// <param name="displayType">Display type for this attribute.</param>
+        /// <param name="traitType">The metadata trait type (required).</param>
+        /// <param name="value">value (required).</param>
+        public NFTMetadataAttribute(DisplayTypeEnum? displayType = default(DisplayTypeEnum?), string traitType = default(string), NFTMetadataAttributeValue value = default(NFTMetadataAttributeValue))
+        {
+            // to ensure "traitType" is required (not null)
+            if (traitType == null)
+            {
+                throw new ArgumentNullException("traitType is a required property for NFTMetadataAttribute and cannot be null");
+            }
+            this.TraitType = traitType;
+            // to ensure "value" is required (not null)
+            if (value == null)
+            {
+                throw new ArgumentNullException("value is a required property for NFTMetadataAttribute and cannot be null");
+            }
+            this.Value = value;
+            this.DisplayType = displayType;
+        }
 
         /// <summary>
-        ///     The metadata trait type
+        /// The metadata trait type
         /// </summary>
         /// <value>The metadata trait type</value>
         /// <example>Aqua Power</example>
@@ -100,18 +108,18 @@ namespace Immutable.Search.Model
         public string TraitType { get; set; }
 
         /// <summary>
-        ///     Gets or Sets Value
+        /// Gets or Sets Value
         /// </summary>
         [DataMember(Name = "value", IsRequired = true, EmitDefaultValue = true)]
         public NFTMetadataAttributeValue Value { get; set; }
 
         /// <summary>
-        ///     Returns the string presentation of the object
+        /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.Append("class NFTMetadataAttribute {\n");
             sb.Append("  DisplayType: ").Append(DisplayType).Append("\n");
             sb.Append("  TraitType: ").Append(TraitType).Append("\n");
@@ -121,12 +129,14 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        ///     Returns the JSON string presentation of the object
+        /// Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
         }
+
     }
+
 }

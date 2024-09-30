@@ -10,44 +10,55 @@
 
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    ///     The chain details
+    /// The chain details
     /// </summary>
     [DataContract(Name = "Chain")]
-    public class Chain
+    public partial class Chain
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Chain" /> class.
+        /// Initializes a new instance of the <see cref="Chain" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected Chain()
-        {
-        }
-
+        protected Chain() { }
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Chain" /> class.
+        /// Initializes a new instance of the <see cref="Chain" /> class.
         /// </summary>
         /// <param name="id">The id of chain (required).</param>
         /// <param name="name">The name of chain (required).</param>
-        public Chain(string id = default, string name = default)
+        public Chain(string id = default(string), string name = default(string))
         {
             // to ensure "id" is required (not null)
-            if (id == null) throw new ArgumentNullException("id is a required property for Chain and cannot be null");
-            Id = id;
+            if (id == null)
+            {
+                throw new ArgumentNullException("id is a required property for Chain and cannot be null");
+            }
+            this.Id = id;
             // to ensure "name" is required (not null)
             if (name == null)
+            {
                 throw new ArgumentNullException("name is a required property for Chain and cannot be null");
-            Name = name;
+            }
+            this.Name = name;
         }
 
         /// <summary>
-        ///     The id of chain
+        /// The id of chain
         /// </summary>
         /// <value>The id of chain</value>
         /// <example>eip155:13372</example>
@@ -55,7 +66,7 @@ namespace Immutable.Search.Model
         public string Id { get; set; }
 
         /// <summary>
-        ///     The name of chain
+        /// The name of chain
         /// </summary>
         /// <value>The name of chain</value>
         /// <example>imtbl-zkevm-testnet</example>
@@ -63,12 +74,12 @@ namespace Immutable.Search.Model
         public string Name { get; set; }
 
         /// <summary>
-        ///     Returns the string presentation of the object
+        /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.Append("class Chain {\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
@@ -77,12 +88,14 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        ///     Returns the JSON string presentation of the object
+        /// Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
         }
+
     }
+
 }

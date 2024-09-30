@@ -18,16 +18,16 @@ namespace Immutable.Search.Client
     // of the response data.
     public class UnexpectedResponseException : Exception
     {
+        public int ErrorCode { get; private set; }
+
         // NOTE: Cannot keep reference to the request since it will be disposed.
-        public UnexpectedResponseException(UnityWebRequest request, Type type, string extra = "")
+        public UnexpectedResponseException(UnityWebRequest request, System.Type type, string extra = "")
             : base(CreateMessage(request, type, extra))
         {
             ErrorCode = (int)request.responseCode;
         }
 
-        public int ErrorCode { get; private set; }
-
-        private static string CreateMessage(UnityWebRequest request, Type type, string extra)
+        private static string CreateMessage(UnityWebRequest request, System.Type type, string extra)
         {
             return $"httpcode={request.responseCode}, expected {type.Name} but got data: {extra}";
         }
