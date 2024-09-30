@@ -1856,7 +1856,7 @@ MonoBehaviour:
   m_AssetObj: {fileID: 9215591978314449373}
   m_ListParent: {fileID: 3995018089020746221}
   m_ScrollView: {fileID: 2174789502373950655}
-  m_AddFundsEvent: {fileID: 11400000, guid: 591ba84ab7bb040b188c601b81948faf, type: 2}
+  m_AddFunds: {fileID: 0}
 --- !u!1 &9098808456760454047
 GameObject:
   m_ObjectHideFlags: 0
