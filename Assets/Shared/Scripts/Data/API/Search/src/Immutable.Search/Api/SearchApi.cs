@@ -311,7 +311,7 @@ namespace Immutable.Search.Api
                 new Immutable.Search.Client.Configuration { BasePath = basePath }
             );
             this.ApiClient = new Immutable.Search.Client.ApiClient(this.Configuration.BasePath);
-            this.Client = this.ApiClient;
+            this.Client =  this.ApiClient;
             this.AsynchronousClient = this.ApiClient;
             this.ExceptionFactory = Immutable.Search.Client.Configuration.DefaultExceptionFactory;
         }

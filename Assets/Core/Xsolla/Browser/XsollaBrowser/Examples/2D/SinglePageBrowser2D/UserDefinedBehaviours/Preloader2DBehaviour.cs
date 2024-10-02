@@ -4,76 +4,76 @@ using UnityEngine;
 
 namespace Xsolla.Core.Browser
 {
-	internal class Preloader2DBehaviour : MonoBehaviour
-	{
-		private int lastProgress;
-		private object progressLocker;
-		private GameObject preloaderObject;
-		private XsollaBrowser xsollaBrowser;
-		private GameObject prefab;
+    internal class Preloader2DBehaviour : MonoBehaviour
+    {
+        private int lastProgress;
+        private GameObject prefab;
+        private GameObject preloaderObject;
+        private object progressLocker;
+        private XsollaBrowser xsollaBrowser;
 
-		private void Awake()
-		{
-			progressLocker = new object();
-			lastProgress = 0;
+        private void Awake()
+        {
+            progressLocker = new object();
+            lastProgress = 0;
 
-			xsollaBrowser = GetComponent<XsollaBrowser>();
-			xsollaBrowser.FetchingBrowserEvent += OnBrowserFetchingEvent;
+            xsollaBrowser = GetComponent<XsollaBrowser>();
+            xsollaBrowser.FetchingBrowserEvent += OnBrowserFetchingEvent;
 
-			StartCoroutine(PreloaderInstantiateCoroutine());
-		}
+            StartCoroutine(PreloaderInstantiateCoroutine());
+        }
 
-		private void OnDestroy()
-		{
-			xsollaBrowser.FetchingBrowserEvent -= OnBrowserFetchingEvent;
-			StopAllCoroutines();
+        private void OnDestroy()
+        {
+            xsollaBrowser.FetchingBrowserEvent -= OnBrowserFetchingEvent;
+            StopAllCoroutines();
 
-			if (preloaderObject)
-			{
-				Destroy(preloaderObject);
-				preloaderObject = null;
-			}
+            if (preloaderObject)
+            {
+                Destroy(preloaderObject);
+                preloaderObject = null;
+            }
 
-			progressLocker = null;
-		}
+            progressLocker = null;
+        }
 
-		public void SetPrefab(GameObject obj)
-		{
-			prefab = obj;
-		}
+        public void SetPrefab(GameObject obj)
+        {
+            prefab = obj;
+        }
 
-		private void OnBrowserFetchingEvent(int progress)
-		{
-			lock (progressLocker)
-			{
-				if (lastProgress >= progress)
-					return;
+        private void OnBrowserFetchingEvent(int progress)
+        {
+            lock (progressLocker)
+            {
+                if (lastProgress >= progress)
+                    return;
 
-				XDebug.Log($"Update[%]: {lastProgress} => {progress}");
-				lastProgress = progress;
+                XDebug.Log($"Update[%]: {lastProgress} => {progress}");
+                lastProgress = progress;
 
-				StartCoroutine(PreloaderCoroutine(progress));
-			}
-		}
+                StartCoroutine(PreloaderCoroutine(progress));
+            }
+        }
 
-		private IEnumerator PreloaderCoroutine(int progress)
-		{
-			yield return new WaitForEndOfFrame();
+        private IEnumerator PreloaderCoroutine(int progress)
+        {
+            yield return new WaitForEndOfFrame();
 
-			if (preloaderObject == null)
-				yield break;
+            if (preloaderObject == null)
+                yield break;
 
-			if (progress < 99)
-				preloaderObject.GetComponent<PreloaderScript>().SetPercent((int) progress);
-			else
-				preloaderObject.GetComponent<PreloaderScript>().SetText(string.Empty);
-		}
+            if (progress < 99)
+                preloaderObject.GetComponent<PreloaderScript>().SetPercent(progress);
+            else
+                preloaderObject.GetComponent<PreloaderScript>().SetText(string.Empty);
+        }
 
-		private IEnumerator PreloaderInstantiateCoroutine()
-		{
-			yield return new WaitWhile(() => prefab == null);
-			preloaderObject = Instantiate(prefab, transform);
-		}
-	}
+        private IEnumerator PreloaderInstantiateCoroutine()
+        {
+            yield return new WaitWhile(() => prefab == null);
+            preloaderObject = Instantiate(prefab, transform);
+        }
+    }
 }
 #endif

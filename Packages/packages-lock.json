@@ -14,17 +14,25 @@
       "dependencies": {
         "com.cysharp.unitask": "2.3.3"
       },
-      "hash": "975f9617a0319383a6195c68e7827c9cd99f0090"
+      "hash": "01fdea8065a855144ab98514d95f70e8d9a2f74e"
     },
-    "com.immutable.passport": {
-      "version": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Passport#v1.26.0",
+    "com.immutable.orderbook": {
+      "version": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Orderbook",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.2.0",
         "com.cysharp.unitask": "2.3.3"
       },
-      "hash": "fa82619bfc27de7f0da1fe70fbcfae182bae0e4f"
+      "hash": "79203ec6a000ded00b84360e4f7ecfdc58d9f42e"
+    },
+    "com.immutable.passport": {
+      "version": "file:/Users/natalie/Development/unity-immutable-sdk/src/Packages/Passport",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.0",
+        "com.cysharp.unitask": "2.3.3"
+      }
     },
     "com.nobi.roundedcorners": {
       "version": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",

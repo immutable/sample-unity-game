@@ -112,7 +112,7 @@ namespace HyperCasual.Runner
             CraftState = CraftSkinState.Crafting;
 
             // Burn tokens and mint a new skin i.e. crafting a skin
-            TransactionReceiptResponse response = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest()
+            var response = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
             {
                 to = Contract.TOKEN, // Immutable Runner Token contract address
                 data = "0x1e957f1e", // Call craftSkin() in the contract

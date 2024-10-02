@@ -1,16 +1,15 @@
-using System;
-using Immutable.Passport.Model;
-
 namespace HyperCasual.Runner
 {
     public static class Config
     {
         // public const string SERVER_URL = "https://sample-passport-unity-game-api.dev.immutable.com/fox";
         public const string SERVER_URL = "http://localhost:6060";
+
         public const string SDK_API = "https://api.sandbox.immutable.com/v1/ts-sdk/v1";
+
         // public const string CLIENT_ID = "ZJL7JvetcDFBNDlgRs5oJoxuAUUl6uQj";
         public const string CLIENT_ID = "2Ng38UmEg0Morz1xOQLtsDs72Wx8uyGL"; // Devnet
-                                                                            // public const string CLIENT_ID = "UnB98ngnXIZIEJWGJOjVe1BpCx5ix7qc"; // WebGL
+        // public const string CLIENT_ID = "UnB98ngnXIZIEJWGJOjVe1BpCx5ix7qc"; // WebGL
 
         public const string ENVIRONMENT = "dev";
 
@@ -22,7 +21,8 @@ namespace HyperCasual.Runner
         private static readonly Uri uri = new Uri(url);
         private static readonly string scheme = uri.Scheme;
         private static readonly string hostWithPort = uri.IsDefaultPort ? uri.Host : $"{uri.Host}:{uri.Port}";
-        private static readonly string fullPath = uri.AbsolutePath.EndsWith("/") ? uri.AbsolutePath : uri.AbsolutePath.Substring(0, uri.AbsolutePath.LastIndexOf('/') + 1);
+        private static readonly string fullPath =
+ uri.AbsolutePath.EndsWith("/") ? uri.AbsolutePath : uri.AbsolutePath.Substring(0, uri.AbsolutePath.LastIndexOf('/') + 1);
 
         public static readonly string REDIRECT_URI = $"{scheme}://{hostWithPort}{fullPath}callback.html";
         public static readonly string LOGOUT_REIDIRECT_URI = $"{scheme}://{hostWithPort}{fullPath}logout.html";

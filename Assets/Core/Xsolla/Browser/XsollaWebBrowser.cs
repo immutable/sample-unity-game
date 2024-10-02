@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 #if UNITY_WEBGL || UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-using System.Runtime.InteropServices;
 #endif
 
 namespace Xsolla.Core
@@ -17,23 +15,23 @@ namespace Xsolla.Core
 #if !(UNITY_EDITOR || UNITY_STANDALONE)
                 return null;
 #else
-				if (_inAppBrowser == null)
-				{
-					var prefab = Resources.Load<GameObject>(Constants.WEB_BROWSER_RESOURCE_PATH);
-					if (prefab == null)
-					{
-						XDebug.LogError("Prefab InAppBrowser not found in Resources folder.");
-					}
-					else
-					{
-						var go = Instantiate(prefab);
-						go.name = "XsollaWebBrowser";
-						DontDestroyOnLoad(go);
-						_inAppBrowser = go.GetComponent<IInAppBrowser>();
-					}
-				}
+                if (_inAppBrowser == null)
+                {
+                    var prefab = Resources.Load<GameObject>(Constants.WEB_BROWSER_RESOURCE_PATH);
+                    if (prefab == null)
+                    {
+                        XDebug.LogError("Prefab InAppBrowser not found in Resources folder.");
+                    }
+                    else
+                    {
+                        var go = Instantiate(prefab);
+                        go.name = "XsollaWebBrowser";
+                        DontDestroyOnLoad(go);
+                        _inAppBrowser = go.GetComponent<IInAppBrowser>();
+                    }
+                }
 
-				return _inAppBrowser;
+                return _inAppBrowser;
 #endif
             }
         }
@@ -42,13 +40,15 @@ namespace Xsolla.Core
         {
             XDebug.Log($"WebBrowser. Open url: {url}");
 #if UNITY_EDITOR || UNITY_STANDALONE
-			if (InAppBrowser != null && !forcePlatformBrowser)
-			{
-				InAppBrowser.Open(url);
-				InAppBrowser.AddInitHandler(() => InAppBrowser.UpdateSize(450, 760));
-			}
-			else
-				Application.OpenURL(url);
+            if (InAppBrowser != null && !forcePlatformBrowser)
+            {
+                InAppBrowser.Open(url);
+                InAppBrowser.AddInitHandler(() => InAppBrowser.UpdateSize(450, 760));
+            }
+            else
+            {
+                Application.OpenURL(url);
+            }
 #elif UNITY_WEBGL
 #pragma warning disable 0618
 			Application.ExternalEval($"window.open(\"{url}\",\"_blank\")");

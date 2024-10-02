@@ -9,10 +9,7 @@ namespace Xsolla.Core.Browser
 
         private void Start()
         {
-            if (CloseButton != null)
-            {
-                CloseButton.onClick.AddListener(() => Destroy(gameObject, 0.01f));
-            }
+            if (CloseButton != null) CloseButton.onClick.AddListener(() => Destroy(gameObject, 0.01f));
         }
     }
 }

@@ -6,13 +6,13 @@ using System.Net.Http;
 using System.Numerics;
 using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
+using Immutable.Orderbook.Api;
+using Immutable.Orderbook.Client;
+using Immutable.Orderbook.Model;
 using Immutable.Passport;
 using Immutable.Passport.Model;
 using Immutable.Search.Api;
 using Immutable.Search.Model;
-using Immutable.Ts.Api;
-using Immutable.Ts.Client;
-using Immutable.Ts.Model;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
@@ -64,7 +64,7 @@ namespace HyperCasual.Runner
         private readonly List<AttributeView> m_Attributes = new();
 
         private readonly SearchApi m_SearchApi;
-        private readonly DefaultApi m_TsApi;
+        private readonly OrderbookApi m_TsApi;
         private AssetModel m_Asset;
         private OldListing m_Listing;
 
@@ -72,7 +72,7 @@ namespace HyperCasual.Runner
         {
             var tsConfig = new Configuration();
             tsConfig.BasePath = Config.BASE_URL;
-            m_TsApi = new DefaultApi(tsConfig);
+            m_TsApi = new OrderbookApi(tsConfig);
 
             var searchConfig = new Immutable.Search.Client.Configuration();
             searchConfig.BasePath = Config.BASE_URL;
@@ -319,7 +319,7 @@ namespace HyperCasual.Runner
             return null;
         }
 
-        private async UniTask<V1TsSdkOrderbookPrepareListingPost200Response> PrepareListing(
+        private async UniTask<PrepareListing200Response> PrepareListing(
             string nftTokenAddress, string tokenId, string price, string erc20TokenAddress)
         {
             // Define the NFT to sell, using its contract address and token ID
@@ -329,17 +329,16 @@ namespace HyperCasual.Runner
             var buy = new ERC20Item(price, erc20TokenAddress);
 
             // Call the Orderbook function to prepare the listing for sale
-            return await m_TsApi.V1TsSdkOrderbookPrepareListingPostAsync(
-                new V1TsSdkOrderbookPrepareListingPostRequest
+            return await m_TsApi.PrepareListingAsync(
+                new PrepareListingRequest
                 (
                     makerAddress: SaveManager.Instance.WalletAddress,
-                    sell: new V1TsSdkOrderbookPrepareListingPostRequestSell(nft),
-                    buy: new V1TsSdkOrderbookPrepareListingPostRequestBuy(buy)
+                    sell: new PrepareListingRequestSell(nft),
+                    buy: new PrepareListingRequestBuy(buy)
                 ));
         }
 
-        private async UniTask SignAndSubmitApproval(
-            V1TsSdkOrderbookPrepareListingPost200Response prepareListingResponse)
+        private async UniTask SignAndSubmitApproval(PrepareListing200Response prepareListingResponse)
         {
             var transactionAction = prepareListingResponse.Actions.FirstOrDefault(action =>
                 ReferenceEquals(action.ActualInstance, typeof(TransactionAction)));
@@ -359,7 +358,7 @@ namespace HyperCasual.Runner
             }
         }
 
-        private async UniTask<string> SignListing(V1TsSdkOrderbookPrepareListingPost200Response prepareListingResponse)
+        private async UniTask<string> SignListing(PrepareListing200Response prepareListingResponse)
         {
             var signableAction =
                 prepareListingResponse.Actions.FirstOrDefault(action => action.GetSignableAction() != null);
@@ -369,8 +368,8 @@ namespace HyperCasual.Runner
             var message = signableAction.GetSignableAction().Message;
 
             // Use Unity Passport package to sign typed data function to sign the listing payload
-            return "";//await Passport.Instance.ZkEvmSignTypedDataV4(
-                      //JsonConvert.SerializeObject(message, Formatting.Indented));
+            return await Passport.Instance.ZkEvmSignTypedDataV4(
+                      JsonConvert.SerializeObject(message, Formatting.Indented));
         }
 
         /// <summary>
@@ -382,14 +381,14 @@ namespace HyperCasual.Runner
         {
             try
             {
-                V1TsSdkOrderbookPrepareListingPost200Response prepareListingResponse =
+                PrepareListing200Response prepareListingResponse =
                     await PrepareListing(Contract.SKIN, m_Asset.token_id, $"{price}", Contract.TOKEN);
 
                 await SignAndSubmitApproval(prepareListingResponse);
 
-                string signature = await SignListing(prepareListingResponse);
+                var signature = await SignListing(prepareListingResponse);
 
-                string listingId = await ListAsset(signature, prepareListingResponse);
+                var listingId = await ListAsset(signature, prepareListingResponse);
                 Debug.Log($"Listing ID: {listingId}");
 
                 await ConfirmListingStatus(listingId, "ACTIVE");
@@ -412,10 +411,10 @@ namespace HyperCasual.Runner
         /// <param name="signature">The signature for the listing.</param>
         /// <param name="preparedListing">The prepared listing data.</param>
         private async UniTask<string> ListAsset(string signature,
-            V1TsSdkOrderbookPrepareListingPost200Response preparedListing)
+            PrepareListing200Response preparedListing)
         {
-            var createListingResponse = await m_TsApi.V1TsSdkOrderbookCreateListingPostAsync(
-                new V1TsSdkOrderbookCreateListingPostRequest
+            var createListingResponse = await m_TsApi.CreateListingAsync(
+                new CreateListingRequest
                 (
                     new List<FeeValue>(),
                     preparedListing.OrderComponents,
@@ -438,10 +437,10 @@ namespace HyperCasual.Runner
 
             try
             {
-                var request = new V1TsSdkOrderbookCancelOrdersOnChainPostRequest(
+                var request = new CancelOrdersOnChainRequest(
                     accountAddress: SaveManager.Instance.WalletAddress,
                     orderIds: new List<string> { m_Listing.id });
-                var response = await m_TsApi.V1TsSdkOrderbookCancelOrdersOnChainPostAsync(request);
+                var response = await m_TsApi.CancelOrdersOnChainAsync(request);
 
                 if (response?.CancellationAction.PopulatedTransactions.To != null)
                 {

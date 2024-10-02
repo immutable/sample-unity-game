@@ -4,6 +4,9 @@ namespace Xsolla.Core
 {
     public interface IInAppBrowser
     {
+        bool IsOpened { get; }
+
+        bool IsFullScreen { get; }
         event Action OpenEvent;
 
         event Action<BrowserCloseInfo> CloseEvent;
@@ -13,10 +16,6 @@ namespace Xsolla.Core
         event Action<string, Action> AlertDialogEvent;
 
         event Action<string, Action, Action> ConfirmDialogEvent;
-
-        bool IsOpened { get; }
-
-        bool IsFullScreen { get; }
 
         void Open(string url);
 

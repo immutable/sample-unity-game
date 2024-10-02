@@ -4,12 +4,12 @@ using System.Linq;
 using System.Numerics;
 using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
+using Immutable.Orderbook.Api;
+using Immutable.Orderbook.Client;
+using Immutable.Orderbook.Model;
 using Immutable.Passport;
 using Immutable.Passport.Model;
 using Immutable.Search.Model;
-using Immutable.Ts.Api;
-using Immutable.Ts.Client;
-using Immutable.Ts.Model;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
@@ -36,7 +36,7 @@ namespace HyperCasual.Runner
         private readonly List<AttributeView> m_AttributeViews = new();
         private readonly List<ListingObject> m_ListingViews = new();
 
-        private readonly DefaultApi m_TsApi;
+        private readonly OrderbookApi m_TsApi;
         private Listing m_Listing;
 
         private StackBundle m_Order;
@@ -45,7 +45,7 @@ namespace HyperCasual.Runner
         {
             var tsConfig = new Configuration();
             tsConfig.BasePath = Config.BASE_URL;
-            m_TsApi = new DefaultApi(tsConfig);
+            m_TsApi = new OrderbookApi(tsConfig);
         }
 
         private async void OnEnable()
@@ -177,16 +177,16 @@ namespace HyperCasual.Runner
             try
             {
                 var fees = listing.PriceDetails.Fees
-                    .Select(fee => new V1TsSdkOrderbookFulfillOrderPostRequestTakerFeesInner
+                    .Select(fee => new FulfillOrderRequestTakerFeesInner
                     (
                         fee.Amount,
                         fee.RecipientAddress
                     )).ToList();
-                var request = new V1TsSdkOrderbookFulfillOrderPostRequest(
+                var request = new FulfillOrderRequest(
                     takerAddress: SaveManager.Instance.WalletAddress,
                     listingId: listing.ListingId,
                     takerFees: fees);
-                var createListingResponse = await m_TsApi.V1TsSdkOrderbookFulfillOrderPostAsync(request);
+                var createListingResponse = await m_TsApi.FulfillOrderAsync(request);
 
                 if (createListingResponse.Actions.Count > 0)
                 {

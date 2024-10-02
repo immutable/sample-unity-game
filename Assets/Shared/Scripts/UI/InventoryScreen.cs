@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
 using Immutable.Passport;
 using UnityEngine;
+using Xsolla.Core;
 using TMPro;
 using Immutable.Search.Client;
 using Immutable.Search.Model;
@@ -23,7 +24,7 @@ namespace HyperCasual.Runner
         [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private AssetListObject m_AssetObj;
         [SerializeField] private Transform m_ListParent;
-        [SerializeField] private InfiniteScrollView m_ScrollView;
+        [SerializeField] private InfiniteScrollGridView m_ScrollView;
         [SerializeField] private AddFunds m_AddFunds;
         private readonly List<AssetModel> m_Assets = new();
 
@@ -103,6 +104,7 @@ namespace HyperCasual.Runner
             if (assets != null && assets.Count > 0)
             {
                 m_Assets.AddRange(assets);
+                Debug.Log($"m_Assets.Count: {m_Assets.Count}");
                 m_ScrollView.TotalItemCount = m_Assets.Count;
             }
 
@@ -191,7 +193,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        ///  handles the add funds button click
+        ///     handles the add funds button click
         /// </summary>
         private void OnAddFundsButtonClick()
         {
