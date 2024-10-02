@@ -26,13 +26,14 @@
       "hash": "79203ec6a000ded00b84360e4f7ecfdc58d9f42e"
     },
     "com.immutable.passport": {
-      "version": "file:/Users/natalie/Development/unity-immutable-sdk/src/Packages/Passport",
+      "version": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Passport",
       "depth": 0,
-      "source": "local",
+      "source": "git",
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.2.0",
         "com.cysharp.unitask": "2.3.3"
-      }
+      },
+      "hash": "01fdea8065a855144ab98514d95f70e8d9a2f74e"
     },
     "com.nobi.roundedcorners": {
       "version": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",
