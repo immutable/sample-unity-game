@@ -150,10 +150,10 @@ namespace Xsolla.Core.Browser
 #endif
         }
 
-		private string GetBrowserPath()
-		{
-			return Application.persistentDataPath;
-		}
+        private string GetBrowserPath()
+        {
+            return Application.persistentDataPath;
+        }
 
         private void DestroyPreloader()
         {

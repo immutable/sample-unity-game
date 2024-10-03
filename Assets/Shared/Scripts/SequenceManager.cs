@@ -33,6 +33,7 @@ namespace HyperCasual.Gameplay
         [SerializeField] private AbstractGameEvent m_CollectEvent;
         [SerializeField] private AbstractGameEvent m_InventoryEvent;
         [SerializeField] private AbstractGameEvent m_MarketplaceEvent;
+        [SerializeField] private AbstractGameEvent m_ShopEvent;
 
         [Header("Other")]
         [SerializeField]
@@ -46,6 +47,7 @@ namespace HyperCasual.Gameplay
         private IState m_LevelSelectState;
         private IState m_MainMenuState;
         private IState m_MarketplaceState;
+        private IState m_ShopState;
 
         private SceneController m_SceneController;
         private IState m_SplashScreenState;
@@ -80,6 +82,7 @@ namespace HyperCasual.Gameplay
             m_MainMenuState = new State(OnMainMenuDisplayed);
             m_InventoryState = new State(OnInventoryDisplayed);
             m_MarketplaceState = new State(OnMarketplaceDisplayed);
+            m_ShopState = new State(OnShopDisplayed);
             m_LevelSelectState = new State(OnLevelSelectionDisplayed);
 
             //Connect the states
@@ -88,9 +91,11 @@ namespace HyperCasual.Gameplay
             m_MainMenuState.AddLink(new EventLink(m_ContinueEvent, m_LevelSelectState));
             m_MainMenuState.AddLink(new EventLink(m_InventoryEvent, m_InventoryState));
             m_MainMenuState.AddLink(new EventLink(m_MarketplaceEvent, m_MarketplaceState));
+            m_MainMenuState.AddLink(new EventLink(m_ShopEvent, m_ShopState));
             m_LevelSelectState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
             m_InventoryState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
             m_MarketplaceState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
+            m_ShopState.AddLink(new EventLink(m_BackEvent, m_MainMenuState));
         }
 
         private void CreateLevelSequences()
@@ -118,8 +123,7 @@ namespace HyperCasual.Gameplay
             var mintState = new PauseState(ShowUI<MintScreen>);
             var unlockedSkinState = new PauseState(ShowUI<UnlockedSkinScreen>);
             var collectedSkinState = new PauseState(ShowUI<CollectedSkinScreen>);
-            lastState?.AddLink(new EventLink(m_SetupWalletEvent, setupWalletState
-            ));
+            lastState?.AddLink(new EventLink(m_SetupWalletEvent, setupWalletState));
             lastState?.AddLink(new EventLink(m_UnlockedSkinEvent, unlockedSkinState));
             setupWalletState.AddLink(new EventLink(m_MintEvent, mintState));
             setupWalletState.AddLink(new EventLink(m_ContinueEvent, unloadLastScene));
@@ -225,6 +229,13 @@ namespace HyperCasual.Gameplay
         private void OnMarketplaceDisplayed()
         {
             ShowUI<MarketplaceScreen>();
+            AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
+        }
+
+        private void OnShopDisplayed()
+        {
+            Debug.Log("OnShopDisplayed");
+            ShowUI<ShopScreen>();
             AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
         }
 

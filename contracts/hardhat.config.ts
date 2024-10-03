@@ -25,6 +25,10 @@ const config: HardhatUserConfig = {
       url: 'https://rpc.immutable.com',
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     },
+    immutableZkevmDevnet: {
+      url: 'https://rpc.dev.immutable.com',
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+    },
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
@@ -45,6 +49,14 @@ const config: HardhatUserConfig = {
           browserURL: 'https://explorer.immutable.com',
         },
       },
+      {
+        network: 'immutableZkevmDevnet',
+        chainId: 15003,
+        urls: {
+          apiURL: 'https://explorer.dev.immutable.com/api',
+          browserURL: 'https://explorer.dev.immutable.com',
+        },
+      }
     ],
   },
   sourcify: {

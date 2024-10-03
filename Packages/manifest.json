@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2.3.3",
-    "com.immutable.passport": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Passport",
-    "com.immutable.orderbook": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Orderbook",
     "com.immutable.marketplace": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Marketplace",
+    "com.immutable.orderbook": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Orderbook",
+    "com.immutable.passport": "file:/Users/natalie/Development/unity-immutable-sdk/src/Packages/Passport",
     "com.nobi.roundedcorners": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",
     "com.unity.collab-proxy": "2.0.4",
     "com.unity.ide.rider": "3.0.31",
@@ -57,6 +57,13 @@
       "url": "https://registry.npmjs.org/",
       "scopes": [
         "com.unity.uiextensions"
+      ]
+    },
+    {
+      "name": "package.openupm.com",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.nethereum.unity"
       ]
     }
   ]

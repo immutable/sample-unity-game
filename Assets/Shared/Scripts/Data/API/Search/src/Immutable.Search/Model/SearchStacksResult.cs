@@ -10,73 +10,66 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    /// Search stacks result
+    ///     Search stacks result
     /// </summary>
     [DataContract(Name = "SearchStacksResult")]
-    public partial class SearchStacksResult
+    public class SearchStacksResult
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SearchStacksResult" /> class.
+        ///     Initializes a new instance of the <see cref="SearchStacksResult" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected SearchStacksResult() { }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SearchStacksResult" /> class.
-        /// </summary>
-        /// <param name="result">List of stack bundles (required).</param>
-        /// <param name="page">page (required).</param>
-        public SearchStacksResult(List<StackBundle> result = default(List<StackBundle>), Page page = default(Page))
+        protected SearchStacksResult()
         {
-            // to ensure "result" is required (not null)
-            if (result == null)
-            {
-                throw new ArgumentNullException("result is a required property for SearchStacksResult and cannot be null");
-            }
-            this.Result = result;
-            // to ensure "page" is required (not null)
-            if (page == null)
-            {
-                throw new ArgumentNullException("page is a required property for SearchStacksResult and cannot be null");
-            }
-            this.Page = page;
         }
 
         /// <summary>
-        /// List of stack bundles
+        ///     Initializes a new instance of the <see cref="SearchStacksResult" /> class.
+        /// </summary>
+        /// <param name="result">List of stack bundles (required).</param>
+        /// <param name="page">page (required).</param>
+        public SearchStacksResult(List<StackBundle> result = default, Page page = default)
+        {
+            // to ensure "result" is required (not null)
+            if (result == null)
+                throw new ArgumentNullException(
+                    "result is a required property for SearchStacksResult and cannot be null");
+            Result = result;
+            // to ensure "page" is required (not null)
+            if (page == null)
+                throw new ArgumentNullException(
+                    "page is a required property for SearchStacksResult and cannot be null");
+            Page = page;
+        }
+
+        /// <summary>
+        ///     List of stack bundles
         /// </summary>
         /// <value>List of stack bundles</value>
         [DataMember(Name = "result", IsRequired = true, EmitDefaultValue = true)]
         public List<StackBundle> Result { get; set; }
 
         /// <summary>
-        /// Gets or Sets Page
+        ///     Gets or Sets Page
         /// </summary>
         [DataMember(Name = "page", IsRequired = true, EmitDefaultValue = true)]
         public Page Page { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class SearchStacksResult {\n");
             sb.Append("  Result: ").Append(Result).Append("\n");
             sb.Append("  Page: ").Append(Page).Append("\n");
@@ -85,14 +78,12 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

@@ -9,21 +9,20 @@
  */
 
 
-using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    ///  Abstract base class for oneOf, anyOf schemas in the OpenAPI specification
+    ///     Abstract base class for oneOf, anyOf schemas in the OpenAPI specification
     /// </summary>
-    public abstract partial class AbstractOpenAPISchema
+    public abstract class AbstractOpenAPISchema
     {
         /// <summary>
-        ///  Custom JSON serializer
+        ///     Custom JSON serializer
         /// </summary>
-        static public readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        public static readonly JsonSerializerSettings SerializerSettings = new()
         {
             // OpenAPI generated types generally hide default constructors.
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
@@ -38,9 +37,9 @@ namespace Immutable.Search.Model
         };
 
         /// <summary>
-        ///  Custom JSON serializer for objects with additional properties
+        ///     Custom JSON serializer for objects with additional properties
         /// </summary>
-        static public readonly JsonSerializerSettings AdditionalPropertiesSerializerSettings = new JsonSerializerSettings
+        public static readonly JsonSerializerSettings AdditionalPropertiesSerializerSettings = new()
         {
             // OpenAPI generated types generally hide default constructors.
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
@@ -55,22 +54,22 @@ namespace Immutable.Search.Model
         };
 
         /// <summary>
-        /// Gets or Sets the actual instance
+        ///     Gets or Sets the actual instance
         /// </summary>
-        public abstract Object ActualInstance { get; set; }
+        public abstract object ActualInstance { get; set; }
 
         /// <summary>
-        /// Gets or Sets IsNullable to indicate whether the instance is nullable
+        ///     Gets or Sets IsNullable to indicate whether the instance is nullable
         /// </summary>
         public bool IsNullable { get; protected set; }
 
         /// <summary>
-        /// Gets or Sets the schema type, which can be either `oneOf` or `anyOf`
+        ///     Gets or Sets the schema type, which can be either `oneOf` or `anyOf`
         /// </summary>
         public string SchemaType { get; protected set; }
 
         /// <summary>
-        /// Converts the instance into JSON string.
+        ///     Converts the instance into JSON string.
         /// </summary>
         public abstract string ToJson();
     }

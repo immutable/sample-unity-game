@@ -42,26 +42,35 @@ namespace HyperCasual.Runner
         /// </summary>
         private async void UpdateData()
         {
-            if (m_Asset != null)
-            {
-                m_NameText.text = $"{m_Asset.name} #{m_Asset.token_id}";
-                m_AmountText.text = "-";
-                m_Image.LoadUrl(m_Asset.image);
+            if (m_Asset == null) return;
 
-                OldListing listing = await GetActiveListingId();
-                if (listing != null)
-                {
-                    var amount = listing.buy[0].amount;
-                    var quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
-                    m_AmountText.text = $"{quantity} IMR";
-                }
-                else
-                {
-                    m_AmountText.text = "Not listed";
-                }
+            m_NameText.text = m_Asset.contract_type switch
+            {
+                "ERC721" => $"{m_Asset.name} #{m_Asset.token_id}",
+                "ERC1155" => $"{m_Asset.name} x{m_Asset.balance}",
+                _ => m_NameText.text
+            };
+
+            m_AmountText.gameObject.SetActive(m_Asset.contract_type == "ERC721");
+            m_AmountText.text = "-";
+
+            OldListing listing = await GetActiveListingId();
+            if (listing != null)
+            {
+                var amount = listing.buy[0].amount;
+                var quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
+                m_AmountText.text = $"{quantity} IMR";
             }
+            else
+            {
+                m_AmountText.text = "Not listed";
+            }
+
+#pragma warning disable CS4014
+            m_Image.LoadUrl(m_Asset.image);
+#pragma warning restore CS4014
         }
-        
+
         // TODO to remove
         private async UniTask<OldListing> GetActiveListingId()
         {
@@ -69,7 +78,7 @@ namespace HyperCasual.Runner
             {
                 using var client = new HttpClient();
                 var url =
-                    $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/orders/listings?sell_item_contract_address={Contract.SKIN}&sell_item_token_id={m_Asset.token_id}&status=ACTIVE";
+                    $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/orders/listings?sell_item_contract_address={m_Asset.contract_address}&sell_item_token_id={m_Asset.token_id}&status=ACTIVE";
                 Debug.Log($"GetActiveListingId URL: {url}");
 
                 var response = await client.GetAsync(url);

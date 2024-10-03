@@ -6,7 +6,7 @@ import express, {
 } from 'express';
 import cors from 'cors';
 import http from 'http';
-import { providers, Wallet, Contract, utils } from 'ethers';
+import { providers, Wallet, Contract, utils, BigNumber } from 'ethers';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 
@@ -25,6 +25,7 @@ const zkEvmProvider = new providers.JsonRpcProvider(`https://rpc.dev.immutable.c
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
 const tokenContractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
 const skinColourContractAddress = process.env.SKIN_CONTRACT_ADDRESS_COLOUR;
+const packContractAddress = process.env.PACK_CONTRACT_ADDRESS;
 // Private key of wallet with minter role
 const privateKey = process.env.PRIVATE_KEY;
 
@@ -154,6 +155,126 @@ router.get('/balance', async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
     return res.status(400).json({ message: 'Failed to mint to user' });
+  }
+},
+);
+
+// Packs
+const galacticShieldId = 1;
+const clearSkiesId = 2;
+router.get('/packs', async (req: Request, res: Response) => {
+  try {
+    if (packContractAddress) {
+      const packs = [
+        {
+          name: 'Galactic Shield Pack',
+          description: 'Gain immunity to obstacles with Galactic Shields. Move through anything in your way.',
+          items: [
+            {
+              id: galacticShieldId,
+              name: "Galactic Shield",
+              amount: 5,
+              image: 'https://cyan-electric-peafowl-878.mypinata.cloud/ipfs/QmSA7X4Jxq2k8oTAricFrYrTrgXajLBLKvVoSfZoM6z4pF',
+            }
+          ],
+          collection: packContractAddress,
+          image: 'https://cyan-electric-peafowl-878.mypinata.cloud/ipfs/QmSA7X4Jxq2k8oTAricFrYrTrgXajLBLKvVoSfZoM6z4pF',
+          price: '10000000000000000000',
+          function: '0x64f54bf2',
+        },
+        {
+          name: 'Clear Skies Pack',
+          description: 'Remove cosmic hazards like meteor showers and clear your path for a smooth run.',
+          items: [
+            {
+              id: clearSkiesId,
+              name: "Clear Skies",
+              amount: 5,
+              image: 'https://cyan-electric-peafowl-878.mypinata.cloud/ipfs/QmQe7mvDqKiTj6kZqjWzHto64kY64pub9KbxRcYSx3gtHm',
+            }
+          ],
+          collection: packContractAddress,
+          image: 'https://cyan-electric-peafowl-878.mypinata.cloud/ipfs/QmQe7mvDqKiTj6kZqjWzHto64kY64pub9KbxRcYSx3gtHm',
+          price: '8000000000000000000',
+          function: '0xd69c42be',
+        },
+        {
+          name: 'Navigator’s Combo Pack',
+          description: 'Get both Galactic Shields and Clear Skies to manage obstacles your way.',
+          items: [
+            {
+              id: galacticShieldId,
+              name: "Galactic Shield",
+              amount: 3,
+              image: 'https://cyan-electric-peafowl-878.mypinata.cloud/ipfs/QmSA7X4Jxq2k8oTAricFrYrTrgXajLBLKvVoSfZoM6z4pF',
+            },
+            {
+              id: clearSkiesId,
+              name: "Clear Skies",
+              amount: 3,
+              image: 'https://cyan-electric-peafowl-878.mypinata.cloud/ipfs/QmQe7mvDqKiTj6kZqjWzHto64kY64pub9KbxRcYSx3gtHm',
+            }
+          ],
+          collection: packContractAddress,
+          image: 'https://cyan-electric-peafowl-878.mypinata.cloud/ipfs/QmfPRGUwQ8XisoJR42HwkTYmeUid7vDcPDrMRetwhvZY31',
+          price: '9000000000000000000',
+          function: '0x9c1af459',
+        }
+      ];
+
+      return res.status(200).json({
+        result: packs
+      });
+    } else {
+      return res.status(500).json({});
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: 'Failed to mint to user' });
+  }
+},
+);
+
+// Approve pack contract to spend token
+router.post('/pack/checkApprovalRequired', async (req: Request, res: Response) => {
+  try {
+    if (tokenContractAddress && packContractAddress && privateKey) {
+      let address: string = req.body.address ?? null;
+      let amount: string = req.body.amount ?? null;
+
+      // Call allowance
+      const abi = [
+        'function allowance(address owner, address spender) view returns (uint256)',
+        'function approve(address spender, uint256 amount)',
+      ];
+
+      const tokenContract = new Contract(tokenContractAddress, abi, zkEvmProvider);
+      const approvedAmount = await tokenContract.allowance(address, packContractAddress);
+      const approvedAmountDecimal = approvedAmount.toString();
+      console.log(`approvedAmount: ${approvedAmount}`);
+
+      if (BigNumber.from(approvedAmountDecimal).lt(BigNumber.from(amount))) {
+        console.log('The approved amount is less than the requested amount.');
+        let iface = new utils.Interface(abi);
+        let encodedData = iface.encodeFunctionData("approve", [packContractAddress, amount]);
+        console.log(`encodedData: ${encodedData}`);
+
+        return res.status(200).json({
+          to: tokenContractAddress,
+          data: encodedData,
+          amount: 0,
+        });
+      } else {
+        console.log('The approved amount is sufficient.');
+        return res.status(200).json({});
+      }
+    } else {
+      return res.status(500).json({});
+    }
+
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: 'Failed to encode' });
   }
 },
 );

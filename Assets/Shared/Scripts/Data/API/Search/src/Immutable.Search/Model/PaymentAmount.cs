@@ -10,55 +10,49 @@
 
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    /// Amount details
+    ///     Amount details
     /// </summary>
     [DataContract(Name = "PaymentAmount")]
-    public partial class PaymentAmount
+    public class PaymentAmount
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PaymentAmount" /> class.
+        ///     Initializes a new instance of the <see cref="PaymentAmount" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected PaymentAmount() { }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PaymentAmount" /> class.
-        /// </summary>
-        /// <param name="value">The token amount value. This value is provided in the smallest unit of the token (e.g. wei for ETH) (required).</param>
-        /// <param name="valueInEth">The token amount value in ETH (required).</param>
-        public PaymentAmount(string value = default(string), string valueInEth = default(string))
+        protected PaymentAmount()
         {
-            // to ensure "value" is required (not null)
-            if (value == null)
-            {
-                throw new ArgumentNullException("value is a required property for PaymentAmount and cannot be null");
-            }
-            this.Value = value;
-            // to ensure "valueInEth" is required (not null)
-            if (valueInEth == null)
-            {
-                throw new ArgumentNullException("valueInEth is a required property for PaymentAmount and cannot be null");
-            }
-            this.ValueInEth = valueInEth;
         }
 
         /// <summary>
-        /// The token amount value. This value is provided in the smallest unit of the token (e.g. wei for ETH)
+        ///     Initializes a new instance of the <see cref="PaymentAmount" /> class.
+        /// </summary>
+        /// <param name="value">
+        ///     The token amount value. This value is provided in the smallest unit of the token (e.g. wei for ETH)
+        ///     (required).
+        /// </param>
+        /// <param name="valueInEth">The token amount value in ETH (required).</param>
+        public PaymentAmount(string value = default, string valueInEth = default)
+        {
+            // to ensure "value" is required (not null)
+            if (value == null)
+                throw new ArgumentNullException("value is a required property for PaymentAmount and cannot be null");
+            Value = value;
+            // to ensure "valueInEth" is required (not null)
+            if (valueInEth == null)
+                throw new ArgumentNullException(
+                    "valueInEth is a required property for PaymentAmount and cannot be null");
+            ValueInEth = valueInEth;
+        }
+
+        /// <summary>
+        ///     The token amount value. This value is provided in the smallest unit of the token (e.g. wei for ETH)
         /// </summary>
         /// <value>The token amount value. This value is provided in the smallest unit of the token (e.g. wei for ETH)</value>
         /// <example>9750000000000000000</example>
@@ -66,7 +60,7 @@ namespace Immutable.Search.Model
         public string Value { get; set; }
 
         /// <summary>
-        /// The token amount value in ETH
+        ///     The token amount value in ETH
         /// </summary>
         /// <value>The token amount value in ETH</value>
         /// <example>9750000000000000000</example>
@@ -74,12 +68,12 @@ namespace Immutable.Search.Model
         public string ValueInEth { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class PaymentAmount {\n");
             sb.Append("  Value: ").Append(Value).Append("\n");
             sb.Append("  ValueInEth: ").Append(ValueInEth).Append("\n");
@@ -88,14 +82,12 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

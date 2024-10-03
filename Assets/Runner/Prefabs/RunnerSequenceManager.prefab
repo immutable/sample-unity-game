@@ -104,11 +104,8 @@ MonoBehaviour:
     type: 2}
   m_CollectEvent: {fileID: 11400000, guid: 41d60f82abf3d419a89a11f3bcb331e7, type: 2}
   m_InventoryEvent: {fileID: 11400000, guid: 96549880d681047edbcb5184d444f3b7, type: 2}
-  m_AssetItemClickedEvent: {fileID: 11400000, guid: f048cc708346f423a83e49a2d108bdc1,
-    type: 2}
   m_MarketplaceEvent: {fileID: 11400000, guid: fb141ccb8e1754b60aaff66fb5f8f7e1, type: 2}
-  m_OrderItemClickedEvent: {fileID: 11400000, guid: 718d4a4f55355485eaba0ab4b114dc6a,
-    type: 2}
+  m_ShopEvent: {fileID: 11400000, guid: b906d9445f68f43fbbef2869fa28bb43, type: 2}
   m_SplashDelay: 1
 --- !u!114 &3832517329008096586
 MonoBehaviour:

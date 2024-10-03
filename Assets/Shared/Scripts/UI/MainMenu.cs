@@ -25,6 +25,10 @@ namespace HyperCasual.Runner
 
         [SerializeField] private AbstractGameEvent m_MarketplaceButtonEvent;
 
+        [SerializeField] private HyperCasualButton m_ShopButton;
+
+        [SerializeField] private AbstractGameEvent m_ShopButtonEvent;
+
         [SerializeField] private TextMeshProUGUI m_Email;
 
         [SerializeField] private HyperCasualButton m_LogoutButton;
@@ -50,6 +54,9 @@ namespace HyperCasual.Runner
             // Set listener to 'Marketplace' button
             m_MarketplaceButton.RemoveListener(OnMarketplaceButtonClick);
             m_MarketplaceButton.AddListener(OnMarketplaceButtonClick);
+            // Set listener to 'Shop' button
+            m_ShopButton.RemoveListener(OnShopButtonClick);
+            m_ShopButton.AddListener(OnShopButtonClick);
 
             // Initialise Passport
             Passport.LogLevel = LogLevel.Debug;
@@ -84,6 +91,7 @@ namespace HyperCasual.Runner
             ShowLogoutButton(SaveManager.Instance.IsLoggedIn);
             ShowInventoryButton(SaveManager.Instance.IsLoggedIn);
             ShowMarketplaceButton(SaveManager.Instance.IsLoggedIn);
+            ShowShopButton(SaveManager.Instance.IsLoggedIn);
         }
 
         private async UniTask GetPlayersEmail()
@@ -175,6 +183,11 @@ namespace HyperCasual.Runner
             m_MarketplaceButton.gameObject.SetActive(show);
         }
 
+        private void ShowShopButton(bool show)
+        {
+            m_ShopButton.gameObject.SetActive(show);
+        }
+
         public void OnInventoryButtonClick()
         {
             m_InventoryButtonEvent.Raise();
@@ -184,6 +197,12 @@ namespace HyperCasual.Runner
         public void OnMarketplaceButtonClick()
         {
             m_MarketplaceButtonEvent.Raise();
+            AudioManager.Instance.PlayEffect(SoundID.ButtonSound);
+        }
+
+        public void OnShopButtonClick()
+        {
+            m_ShopButtonEvent.Raise();
             AudioManager.Instance.PlayEffect(SoundID.ButtonSound);
         }
     }

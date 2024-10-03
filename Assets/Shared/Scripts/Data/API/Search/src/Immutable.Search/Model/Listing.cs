@@ -10,76 +10,61 @@
 
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    /// Listing
+    ///     Listing
     /// </summary>
     [DataContract(Name = "Listing")]
-    public partial class Listing
+    public class Listing
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Listing" /> class.
+        ///     Initializes a new instance of the <see cref="Listing" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected Listing() { }
+        protected Listing()
+        {
+        }
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="Listing" /> class.
+        ///     Initializes a new instance of the <see cref="Listing" /> class.
         /// </summary>
         /// <param name="listingId">Global Order identifier (required).</param>
         /// <param name="priceDetails">priceDetails (required).</param>
         /// <param name="tokenId">Token ID (required).</param>
         /// <param name="creator">ETH Address of listing creator (required).</param>
         /// <param name="amount">Amount of token included in the listing (required).</param>
-        public Listing(string listingId = default(string), PriceDetails priceDetails = default(PriceDetails), string tokenId = default(string), string creator = default(string), string amount = default(string))
+        public Listing(string listingId = default, PriceDetails priceDetails = default, string tokenId = default,
+            string creator = default, string amount = default)
         {
             // to ensure "listingId" is required (not null)
             if (listingId == null)
-            {
                 throw new ArgumentNullException("listingId is a required property for Listing and cannot be null");
-            }
-            this.ListingId = listingId;
+            ListingId = listingId;
             // to ensure "priceDetails" is required (not null)
             if (priceDetails == null)
-            {
                 throw new ArgumentNullException("priceDetails is a required property for Listing and cannot be null");
-            }
-            this.PriceDetails = priceDetails;
+            PriceDetails = priceDetails;
             // to ensure "tokenId" is required (not null)
             if (tokenId == null)
-            {
                 throw new ArgumentNullException("tokenId is a required property for Listing and cannot be null");
-            }
-            this.TokenId = tokenId;
+            TokenId = tokenId;
             // to ensure "creator" is required (not null)
             if (creator == null)
-            {
                 throw new ArgumentNullException("creator is a required property for Listing and cannot be null");
-            }
-            this.Creator = creator;
+            Creator = creator;
             // to ensure "amount" is required (not null)
             if (amount == null)
-            {
                 throw new ArgumentNullException("amount is a required property for Listing and cannot be null");
-            }
-            this.Amount = amount;
+            Amount = amount;
         }
 
         /// <summary>
-        /// Global Order identifier
+        ///     Global Order identifier
         /// </summary>
         /// <value>Global Order identifier</value>
         /// <example>018792C9-4AD7-8EC4-4038-9E05C598534A</example>
@@ -87,13 +72,13 @@ namespace Immutable.Search.Model
         public string ListingId { get; set; }
 
         /// <summary>
-        /// Gets or Sets PriceDetails
+        ///     Gets or Sets PriceDetails
         /// </summary>
         [DataMember(Name = "price_details", IsRequired = true, EmitDefaultValue = true)]
         public PriceDetails PriceDetails { get; set; }
 
         /// <summary>
-        /// Token ID
+        ///     Token ID
         /// </summary>
         /// <value>Token ID</value>
         /// <example>1</example>
@@ -101,7 +86,7 @@ namespace Immutable.Search.Model
         public string TokenId { get; set; }
 
         /// <summary>
-        /// ETH Address of listing creator
+        ///     ETH Address of listing creator
         /// </summary>
         /// <value>ETH Address of listing creator</value>
         /// <example>1334120697966828340666039427861105342297873844179</example>
@@ -109,7 +94,7 @@ namespace Immutable.Search.Model
         public string Creator { get; set; }
 
         /// <summary>
-        /// Amount of token included in the listing
+        ///     Amount of token included in the listing
         /// </summary>
         /// <value>Amount of token included in the listing</value>
         /// <example>1</example>
@@ -117,12 +102,12 @@ namespace Immutable.Search.Model
         public string Amount { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class Listing {\n");
             sb.Append("  ListingId: ").Append(ListingId).Append("\n");
             sb.Append("  PriceDetails: ").Append(PriceDetails).Append("\n");
@@ -134,14 +119,12 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

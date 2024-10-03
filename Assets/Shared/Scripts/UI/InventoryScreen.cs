@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
@@ -18,14 +19,26 @@ namespace HyperCasual.Runner
     /// </summary>
     public class InventoryScreen : View
     {
+        public enum AssetType
+        {
+            Skin,
+            Powerups
+        }
+
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private HyperCasualButton m_AddButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
         [SerializeField] private BalanceObject m_Balance;
+
+        [SerializeField] private TMP_Dropdown m_TypeDropdown;
+
         [SerializeField] private AssetListObject m_AssetObj;
         [SerializeField] private Transform m_ListParent;
         [SerializeField] private InfiniteScrollGridView m_ScrollView;
         [SerializeField] private AddFunds m_AddFunds;
+
+        private AssetType m_Type = AssetType.Skin;
+
         private readonly List<AssetModel> m_Assets = new();
 
         // Pagination
@@ -46,15 +59,33 @@ namespace HyperCasual.Runner
             m_AddButton.RemoveListener(OnAddFundsButtonClick);
             m_AddButton.AddListener(OnAddFundsButtonClick);
 
-            if (Passport.Instance != null)
-            {
-                // Setup infinite scroll view and load assets
-                m_ScrollView.OnCreateItemView += OnCreateItemView;
-                if (m_Assets.Count == 0) LoadAssets();
+            // Setup infinite scroll view and load assets
+            m_ScrollView.OnCreateItemView += OnCreateItemView;
+            if (m_Assets.Count == 0) LoadAssets();
 
-                // Gets the player's balance
-                m_Balance.UpdateBalance();
-            }
+            m_Balance.UpdateBalance();
+
+            SetupFilters();
+        }
+
+        /// <summary>
+        ///     Configures the dropdown filters
+        /// </summary>
+        private void SetupFilters()
+        {
+            var types = Enum.GetNames(typeof(AssetType)).ToList();
+
+            m_TypeDropdown.ClearOptions();
+            m_TypeDropdown.AddOptions(types);
+            m_TypeDropdown.value = 0;
+
+            m_TypeDropdown.onValueChanged.AddListener(delegate
+            {
+                Reset();
+                int selectedIndex = m_TypeDropdown.value;
+                m_Type = (AssetType)Enum.GetValues(typeof(AssetType)).GetValue(selectedIndex);
+                LoadAssets();
+            });
         }
 
         /// <summary>
@@ -78,7 +109,7 @@ namespace HyperCasual.Runner
                     {
                         var view = UIManager.Instance.GetView<AssetDetailsView>();
                         UIManager.Instance.Show(view);
-                        view.Initialise(asset);
+                        view.Initialise(m_Type, asset);
                     };
                 }
             }
@@ -104,7 +135,6 @@ namespace HyperCasual.Runner
             if (assets != null && assets.Count > 0)
             {
                 m_Assets.AddRange(assets);
-                Debug.Log($"m_Assets.Count: {m_Assets.Count}");
                 m_ScrollView.TotalItemCount = m_Assets.Count;
             }
 
@@ -128,8 +158,14 @@ namespace HyperCasual.Runner
                     return assets;
                 }
 
+                var contractAddress = m_Type switch
+                {
+                    AssetType.Skin => Contract.SKIN,
+                    AssetType.Powerups => Contract.PACK,
+                    _ => Contract.SKIN
+                };
                 var url =
-                    $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/accounts/{address}/nfts?contract_address={Contract.SKIN}&page_size={Config.PAGE_SIZE}";
+                    $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/accounts/{address}/nfts?contract_address={contractAddress}&page_size={Config.PAGE_SIZE}";
 
                 // Pagination
                 if (!string.IsNullOrEmpty(m_Page?.next_cursor))
@@ -178,6 +214,17 @@ namespace HyperCasual.Runner
         /// </summary>
         private void OnBackButtonClick()
         {
+            Reset();
+
+            // Trigger back button event
+            m_BackEvent.Raise();
+        }
+
+        private void Reset()
+        {
+            // Reset default contract
+            m_Type = AssetType.Skin;
+
             // Clear the asset list
             m_Assets.Clear();
 
@@ -187,9 +234,6 @@ namespace HyperCasual.Runner
             // Reset the InfiniteScrollView
             m_ScrollView.TotalItemCount = 0;
             m_ScrollView.Clear();
-
-            // Trigger back button event
-            m_BackEvent.Raise();
         }
 
         /// <summary>

@@ -23,8 +23,8 @@ contract RunnerToken is ERC20, ERC20Burnable, MintingAccessControl {
         // Save the Immutable Runner Skin contract address
         _skinContract = ImmutableERC721(skinContractAddr);
 
-        // Uncomment the line below to grant minter role to contract deployer
-        // _grantRole(MINTER_ROLE, msg.sender);
+        // Grant minter role to contract deployer
+        _grantRole(MINTER_ROLE, msg.sender);
     }
 
     // Mints the number of tokens specified

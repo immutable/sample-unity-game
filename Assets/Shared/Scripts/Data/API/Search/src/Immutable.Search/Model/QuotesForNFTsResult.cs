@@ -10,73 +10,66 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using OpenAPIDateConverter = Immutable.Search.Client.OpenAPIDateConverter;
 
 namespace Immutable.Search.Model
 {
     /// <summary>
-    /// Quotes for NFTs result
+    ///     Quotes for NFTs result
     /// </summary>
     [DataContract(Name = "QuotesForNFTsResult")]
-    public partial class QuotesForNFTsResult
+    public class QuotesForNFTsResult
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="QuotesForNFTsResult" /> class.
+        ///     Initializes a new instance of the <see cref="QuotesForNFTsResult" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected QuotesForNFTsResult() { }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QuotesForNFTsResult" /> class.
-        /// </summary>
-        /// <param name="result">List of quotes (required).</param>
-        /// <param name="page">page (required).</param>
-        public QuotesForNFTsResult(List<NFTQuoteResult> result = default(List<NFTQuoteResult>), Page page = default(Page))
+        protected QuotesForNFTsResult()
         {
-            // to ensure "result" is required (not null)
-            if (result == null)
-            {
-                throw new ArgumentNullException("result is a required property for QuotesForNFTsResult and cannot be null");
-            }
-            this.Result = result;
-            // to ensure "page" is required (not null)
-            if (page == null)
-            {
-                throw new ArgumentNullException("page is a required property for QuotesForNFTsResult and cannot be null");
-            }
-            this.Page = page;
         }
 
         /// <summary>
-        /// List of quotes
+        ///     Initializes a new instance of the <see cref="QuotesForNFTsResult" /> class.
+        /// </summary>
+        /// <param name="result">List of quotes (required).</param>
+        /// <param name="page">page (required).</param>
+        public QuotesForNFTsResult(List<NFTQuoteResult> result = default, Page page = default)
+        {
+            // to ensure "result" is required (not null)
+            if (result == null)
+                throw new ArgumentNullException(
+                    "result is a required property for QuotesForNFTsResult and cannot be null");
+            Result = result;
+            // to ensure "page" is required (not null)
+            if (page == null)
+                throw new ArgumentNullException(
+                    "page is a required property for QuotesForNFTsResult and cannot be null");
+            Page = page;
+        }
+
+        /// <summary>
+        ///     List of quotes
         /// </summary>
         /// <value>List of quotes</value>
         [DataMember(Name = "result", IsRequired = true, EmitDefaultValue = true)]
         public List<NFTQuoteResult> Result { get; set; }
 
         /// <summary>
-        /// Gets or Sets Page
+        ///     Gets or Sets Page
         /// </summary>
         [DataMember(Name = "page", IsRequired = true, EmitDefaultValue = true)]
         public Page Page { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        ///     Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("class QuotesForNFTsResult {\n");
             sb.Append("  Result: ").Append(Result).Append("\n");
             sb.Append("  Page: ").Append(Page).Append("\n");
@@ -85,14 +78,12 @@ namespace Immutable.Search.Model
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        ///     Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public virtual string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
-
 }

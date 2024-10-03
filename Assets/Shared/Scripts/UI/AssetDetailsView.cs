@@ -24,40 +24,33 @@ namespace HyperCasual.Runner
     {
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private BalanceObject m_Balance;
+
         [SerializeField] private ImageUrlObject m_Image;
         [SerializeField] private TextMeshProUGUI m_NameText;
-
-        [SerializeField] private TextMeshProUGUI m_AmountText;
+        [SerializeField] private TextMeshProUGUI m_DescriptionText;
 
         // Market
+        [SerializeField] private GameObject m_MarketContainer;
         [SerializeField] private TextMeshProUGUI m_FloorPriceText;
 
         [SerializeField] private TextMeshProUGUI m_LastTradePriceText;
 
         // Details
         [SerializeField] private TextMeshProUGUI m_TokenIdText;
-
         [SerializeField] private TextMeshProUGUI m_CollectionText;
+        [SerializeField] private TextMeshProUGUI m_ContractTypeText;
 
         // Attributes
+        [SerializeField] private GameObject m_AttributesContainer;
         [SerializeField] private Transform m_AttributesListParent;
-
         [SerializeField] private AttributeView m_AttributeObj;
 
-        // Actions
+        // Listing
+        [SerializeField] private GameObject m_ListingContainer;
+        [SerializeField] private TextMeshProUGUI m_AmountText;
         [SerializeField] private HyperCasualButton m_SellButton;
         [SerializeField] private HyperCasualButton m_CancelButton;
         [SerializeField] private GameObject m_Progress;
-
-        // Not listed
-        [SerializeField] private GameObject m_EmptyNotListed;
-        [SerializeField] private Transform m_NotListedParent;
-        [SerializeField] private AssetNotListedObject m_NotListedObj;
-
-        // Listings
-        [SerializeField] private GameObject m_EmptyListing;
-        [SerializeField] private Transform m_ListingParent;
-        [SerializeField] private AssetListingObject m_ListingObj;
 
         [SerializeField] private CustomDialog m_CustomDialog;
 
@@ -65,8 +58,10 @@ namespace HyperCasual.Runner
 
         private readonly SearchApi m_SearchApi;
         private readonly OrderbookApi m_TsApi;
+
+        private InventoryScreen.AssetType m_Type;
         private AssetModel m_Asset;
-        private OldListing m_Listing;
+        private OldListing? m_Listing;
 
         public AssetDetailsView()
         {
@@ -82,8 +77,6 @@ namespace HyperCasual.Runner
         private void OnEnable()
         {
             m_AttributeObj.gameObject.SetActive(false); // Disable the template attribute object
-            m_NotListedObj.gameObject.SetActive(false); // Hide not listed template object
-            m_ListingObj.gameObject.SetActive(false); // Hide listing template object
 
             m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
@@ -102,8 +95,10 @@ namespace HyperCasual.Runner
         private void OnDisable()
         {
             m_NameText.text = "";
+            m_DescriptionText.text = "";
             m_TokenIdText.text = "";
             m_CollectionText.text = "";
+            m_ContractTypeText.text = "";
             m_AmountText.text = "";
             m_FloorPriceText.text = "";
             m_LastTradePriceText.text = "";
@@ -116,60 +111,81 @@ namespace HyperCasual.Runner
         ///     Initialises the UI based on the asset.
         /// </summary>
         /// <param name="asset">The asset to display.</param>
-        public async void Initialise(AssetModel asset)
+        public async void Initialise(InventoryScreen.AssetType assetType, AssetModel asset)
         {
+            m_Type = assetType;
             m_Asset = asset;
 
-            m_NameText.text = m_Asset.name;
+            m_NameText.text = m_Asset.contract_type switch
+            {
+                "ERC721" => $"{m_Asset.name} #{m_Asset.token_id}",
+                "ERC1155" => $"{m_Asset.name} x{m_Asset.balance}",
+                _ => m_NameText.text
+            };
+
+            m_DescriptionText.text = m_Asset.description;
+            m_DescriptionText.gameObject.SetActive(!string.IsNullOrEmpty(m_Asset.description));
+
             m_TokenIdText.text = $"Token ID: {m_Asset.token_id}";
             m_CollectionText.text = $"Collection: {m_Asset.contract_address}";
-            m_AmountText.text = "-";
-            m_FloorPriceText.text = "Floor price: -";
-            m_LastTradePriceText.text = "Last trade price: -";
+            m_ContractTypeText.text = $"Contract type: {m_Asset.contract_type}";
 
             // Clear existing attributes
             ClearAttributes();
 
-            // Populate attributes
-            foreach (var a in m_Asset.attributes)
-            {
-                NFTMetadataAttribute attribute = new(traitType: a.trait_type,
-                    value: new NFTMetadataAttributeValue(a.value));
-                var newAttribute = Instantiate(m_AttributeObj, m_AttributesListParent);
-                newAttribute.gameObject.SetActive(true);
-                newAttribute.Initialise(attribute);
-                m_Attributes.Add(newAttribute);
-            }
-
             // Download and display the image
             m_Image.LoadUrl(m_Asset.image);
 
-            // Check if asset is listed
-            m_Listing = await GetActiveListingId();
-            m_SellButton.gameObject.SetActive(m_Listing == null);
-            m_CancelButton.gameObject.SetActive(m_Listing != null);
-
-            // Price if it's listed
-            if (m_Listing != null)
+            switch (m_Type)
             {
-                var amount = m_Listing.buy[0].amount;
-                var quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
-                m_AmountText.text = $"{quantity} IMR";
-            }
-            else
-            {
-                m_AmountText.text = "Not listed";
+                case InventoryScreen.AssetType.Skin:
+                    // Populate attributes
+                    foreach (var a in m_Asset.attributes)
+                    {
+                        NFTMetadataAttribute attribute = new(traitType: a.trait_type,
+                            value: new NFTMetadataAttributeValue(a.value));
+                        var newAttribute = Instantiate(m_AttributeObj, m_AttributesListParent);
+                        newAttribute.gameObject.SetActive(true);
+                        newAttribute.Initialise(attribute);
+                        m_Attributes.Add(newAttribute);
+                    }
+
+                    // Check if asset is listed
+                    m_Listing = await GetActiveListingId();
+                    m_SellButton.gameObject.SetActive(m_Listing == null);
+                    m_CancelButton.gameObject.SetActive(m_Listing != null);
+
+                    // Price if it's listed
+                    m_AmountText.text = "-";
+                    if (m_Listing != null)
+                    {
+                        var amount = m_Listing.buy[0].amount;
+                        var quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
+                        m_AmountText.text = $"{quantity} IMR";
+                    }
+                    else
+                    {
+                        m_AmountText.text = "Not listed";
+                    }
+
+                    m_FloorPriceText.text = "Floor price: -";
+                    m_LastTradePriceText.text = "Last trade price: -";
+                    GetMarketData();
+                    break;
+                case InventoryScreen.AssetType.Powerups:
+                    break;
             }
 
-            // Get market data
-            GetMarketData();
+            m_ListingContainer.SetActive(m_Type == InventoryScreen.AssetType.Skin);
+            m_AttributesContainer.SetActive(m_Type == InventoryScreen.AssetType.Skin);
+            m_MarketContainer.SetActive(m_Type == InventoryScreen.AssetType.Skin);
         }
 
         private async void GetMarketData()
         {
             try
             {
-                var response = await m_SearchApi.QuotesForStacksAsync(Config.CHAIN_NAME, Contract.SKIN,
+                var response = await m_SearchApi.QuotesForStacksAsync(Config.CHAIN_NAME, m_Asset.contract_address,
                     new List<Guid> { Guid.Parse(m_Asset.metadata_id) });
                 if (response.Result.Count > 0)
                 {
@@ -218,7 +234,7 @@ namespace HyperCasual.Runner
             {
                 using var client = new HttpClient();
                 var url =
-                    $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/orders/listings?sell_item_contract_address={Contract.SKIN}&sell_item_token_id={m_Asset.token_id}&status=ACTIVE";
+                    $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/orders/listings?sell_item_contract_address={m_Asset.contract_address}&sell_item_token_id={m_Asset.token_id}&status=ACTIVE";
                 Debug.Log($"GetActiveListingId URL: {url}");
 
                 var response = await client.GetAsync(url);
@@ -368,8 +384,8 @@ namespace HyperCasual.Runner
             var message = signableAction.GetSignableAction().Message;
 
             // Use Unity Passport package to sign typed data function to sign the listing payload
-            return "";//await Passport.Instance.ZkEvmSignTypedDataV4(
-                      //JsonConvert.SerializeObject(message, Formatting.Indented));
+            return await Passport.Instance.ZkEvmSignTypedDataV4(
+                      JsonConvert.SerializeObject(message, Formatting.Indented));
         }
 
         /// <summary>
@@ -382,7 +398,7 @@ namespace HyperCasual.Runner
             try
             {
                 PrepareListing200Response prepareListingResponse =
-                    await PrepareListing(Contract.SKIN, m_Asset.token_id, $"{price}", Contract.TOKEN);
+                    await PrepareListing(m_Asset.contract_address, m_Asset.token_id, $"{price}", Contract.TOKEN);
 
                 await SignAndSubmitApproval(prepareListingResponse);
 

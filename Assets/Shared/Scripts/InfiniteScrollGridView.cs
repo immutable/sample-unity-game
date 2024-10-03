@@ -24,8 +24,6 @@ namespace HyperCasual.Runner
             }
         }
 
-        public event Action<int, GameObject> OnCreateItemView; // Event for item setup
-
         private void Awake()
         {
             if (!m_IsInitialised) InitializeScrollView();
@@ -35,6 +33,8 @@ namespace HyperCasual.Runner
         {
             if (!m_IsInitialised) InitializeScrollView();
         }
+
+        public event Action<int, GameObject> OnCreateItemView; // Event for item setup
 
         private void InitializeScrollView()
         {
@@ -54,12 +54,10 @@ namespace HyperCasual.Runner
             if (m_ItemCount <= 0) return;
 
             var visibleItemCount = m_VisibleItems.Count;
-            var additionalItemCount = Mathf.Min(10, m_ItemCount - visibleItemCount); // Load more in batches of 10 or whatever is left
+            var additionalItemCount =
+                Mathf.Min(10, m_ItemCount - visibleItemCount); // Load more in batches of 10 or whatever is left
 
-            for (var i = 0; i < additionalItemCount; i++)
-            {
-                CreateItem(visibleItemCount + i);
-            }
+            for (var i = 0; i < additionalItemCount; i++) CreateItem(visibleItemCount + i);
         }
 
         private void CreateItem(int index)

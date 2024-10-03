@@ -7,5 +7,6 @@ namespace HyperCasual.Runner
     {
         public string to;
         public string data;
+        public string amount;
     }
 }
