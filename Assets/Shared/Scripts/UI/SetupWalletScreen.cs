@@ -55,9 +55,15 @@ namespace HyperCasual.Runner
                 ShowSuccess(false);
 
                 // Set up provider
-                await Passport.Instance.ConnectEvm();
-                // Set up wallet (includes creating a wallet for new players)
-                await Passport.Instance.ZkEvmRequestAccounts();
+                await Passport.Instance.ConnectImx();
+
+                Debug.Log("Checking if wallet is registered offchain...");
+                bool isRegistered = await Passport.Instance.IsRegisteredOffchain();
+                if (!isRegistered)
+                {
+                    Debug.Log("Registering wallet offchain...");
+                    await Passport.Instance.RegisterOffchain();
+                }
 
                 m_Title.text = "Your wallet has been successfully set up!";
                 ShowLoading(false);
@@ -66,8 +72,8 @@ namespace HyperCasual.Runner
             }
             catch (Exception ex)
             {
-                // Failed to set up wallet, let the player try again
-                Debug.Log($"Failed to set up wallet: {ex.Message}");
+                // Failed to create wallet, let the player try again
+                Debug.Log($"Failed to create wallet: {ex.Message}");
                 ShowLoading(false);
                 ShowError(true);
                 ShowSuccess(false);

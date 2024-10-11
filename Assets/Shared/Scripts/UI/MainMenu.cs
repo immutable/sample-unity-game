@@ -40,14 +40,7 @@ namespace HyperCasual.Runner
             // Initialise Passport
             string clientId = "YOUR_IMMUTABLE_CLIENT_ID";
             string environment = Immutable.Passport.Model.Environment.SANDBOX;
-            string redirectUri = null;
-            string logoutUri = null;
-
-#if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
-            redirectUri = "immutablerunner://callback";
-            logoutUri = "immutablerunner://logout";
-#endif
-            passport = await Passport.Init(clientId, environment, redirectUri, logoutUri);
+            passport = await Passport.Init(clientId, environment);
 
             // Check if the player is supposed to be logged in and if there are credentials saved
             if (SaveManager.Instance.IsLoggedIn && await Passport.Instance.HasCredentialsSaved())
@@ -56,20 +49,20 @@ namespace HyperCasual.Runner
                 bool success = await Passport.Instance.Login(useCachedSession: true);
                 // Update the login flag
                 SaveManager.Instance.IsLoggedIn = success;
+
                 // Set up wallet if successful
                 if (success)
                 {
-                    await Passport.Instance.ConnectEvm();
-                    await Passport.Instance.ZkEvmRequestAccounts();
+                    await Passport.Instance.ConnectImx();
                 }
-            }
-            else
-            {
+            } else {
                 // No saved credentials to re-login the player, reset the login flag
                 SaveManager.Instance.IsLoggedIn = false;
             }
 
             ShowLoading(false);
+            ShowStartButton(true);
+
             // Show the logout button if the player is logged in
             ShowLogoutButton(SaveManager.Instance.IsLoggedIn);
         }

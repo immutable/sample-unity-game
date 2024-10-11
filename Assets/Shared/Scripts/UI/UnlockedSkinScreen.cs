@@ -133,22 +133,24 @@ namespace HyperCasual.Runner
 
         private async void Craft()
         {
-            m_CraftState = CraftSkinState.Crafting;
-
-            // Burn tokens and mint a new skin i.e. crafting a skin
-            const string runnerTokenContractAddress = "0xd14983206B7f2348b976878cCF097E55E1461977";
-
             try {
-                TransactionReceiptResponse response = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest()
+                m_CraftState = CraftSkinState.Crafting;
+
+                // burn
+                Asset[] assets = await GetAssets();
+                if (assets.Length == 0)
                 {
-                    to = runnerTokenContractAddress, // Immutable Runner Token contract address
-                    data = "0x1e957f1e", // Call craftSkin() in the contract
-                    value = "0"
-                });
-                Debug.Log($"Craft transaction hash: {response.transactionHash}");
+                    Debug.Log("No assets to burn");
+                    m_CraftState = CraftSkinState.Failed;
+                    return;
+                }
 
-                m_CraftState = response.status != "1" ? CraftSkinState.Failed : CraftSkinState.Crafted;
+                CreateTransferResponseV1 transferResult = await Passport.Instance.ImxTransfer(
+                    new UnsignedTransferRequest("ERC721", "1", "0x0000000000000000000000000000000000000000", assets[0].token_id, assets[0].token_address)
+                );
+                Debug.Log($"Transfer(id={transferResult.transfer_id} receiver={transferResult.receiver} status={transferResult.status})");
 
+                m_CraftState = CraftSkinState.Crafted;
 
                 // If successfully crafted skin and this screen is visible, go to collect skin screen
                 // otherwise it will be picked in the OnEnable function above when this screen reappears
@@ -160,6 +162,30 @@ namespace HyperCasual.Runner
                 Debug.Log($"Failed to craft skin: {ex.Message}");
                 m_CraftState = CraftSkinState.Failed;
             }
+        }
+
+        private async UniTask<Asset[]> GetAssets()
+        {
+            const string collection = "0xcf77af96b269169f149b3c23230e103bda67fd0c";
+            string address = await Passport.Instance.GetAddress();
+            Debug.Log($"Wallet address: {address}");
+
+            if (address != null)
+            {
+                using var client = new HttpClient();
+                string url = $"https://api.sandbox.x.immutable.com/v1/assets?user={address}&collection={collection}&status=imx";
+                using var req = new HttpRequestMessage(HttpMethod.Get, url);
+                using var res = await client.SendAsync(req);
+
+                // Parse JSON and extract token_id
+                string content = await res.Content.ReadAsStringAsync();
+                Debug.Log($"Get Assets response: {content}");
+
+                GetAssetsResponse body = JsonUtility.FromJson<GetAssetsResponse>(content);
+                Debug.Log($"Get Assets result: {body.result.Length}");
+                return body.result;
+            }
+            return null;
         }
 
         private void CollectSkin()
