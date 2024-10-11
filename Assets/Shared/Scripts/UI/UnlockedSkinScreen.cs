@@ -5,9 +5,27 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Immutable.Passport;
 using Immutable.Passport.Model;
+
+
+[Serializable]
+public class GetAssetsResponse
+{
+    public Asset[] result;
+}
+
+[Serializable]
+public class Asset
+{
+    public string id;
+    public string token_id;
+    public string token_address;
+}
 
 namespace HyperCasual.Runner
 {
@@ -47,7 +65,7 @@ namespace HyperCasual.Runner
             get => m_CraftState;
             set
             {
-                CraftState = value;
+                m_CraftState = value;
                 switch (m_CraftState)
                 {
                     case CraftSkinState.Crafting:
@@ -115,30 +133,32 @@ namespace HyperCasual.Runner
 
         private async void Craft()
         {
-            CraftState = CraftSkinState.Crafting;
+            m_CraftState = CraftSkinState.Crafting;
 
             // Burn tokens and mint a new skin i.e. crafting a skin
-            TransactionReceiptResponse response = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest()
-            {
-                to = "YOUR_IMMUTABLE_RUNNER_TOKEN_CONTRACT_ADDRESS", // Immutable Runner Token contract address
-                data = "0x1e957f1e", // Call craftSkin() in the contract
-                value = "0"
-            });
-            Debug.Log($"Craft transaction hash: {response.transactionHash}");
+            const string runnerTokenContractAddress = "0xd14983206B7f2348b976878cCF097E55E1461977";
 
-            if (response.status != "1")
-            {
+            try {
+                TransactionReceiptResponse response = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest()
+                {
+                    to = runnerTokenContractAddress, // Immutable Runner Token contract address
+                    data = "0x1e957f1e", // Call craftSkin() in the contract
+                    value = "0"
+                });
+                Debug.Log($"Craft transaction hash: {response.transactionHash}");
+
+                m_CraftState = response.status != "1" ? CraftSkinState.Failed : CraftSkinState.Crafted;
+
+
+                // If successfully crafted skin and this screen is visible, go to collect skin screen
+                // otherwise it will be picked in the OnEnable function above when this screen reappears
+                if (m_CraftState == CraftSkinState.Crafted && gameObject.active)
+                {
+                    CollectSkin();
+                }
+            } catch (Exception ex) {
+                Debug.Log($"Failed to craft skin: {ex.Message}");
                 m_CraftState = CraftSkinState.Failed;
-                return;
-            }
-
-            CraftState = CraftSkinState.Crafted;
-
-            // If successfully crafted skin and this screen is visible, go to collect skin screen
-            // otherwise it will be picked in the OnEnable function above when this screen reappears
-            if (m_CraftState == CraftSkinState.Crafted && gameObject.active)
-            {
-                CollectSkin();
             }
         }
 
@@ -150,9 +170,9 @@ namespace HyperCasual.Runner
 
         private void OnCraftButtonClicked()
         {
-            m_NextLevelEvent.Raise();
             // Craft in the background, while the player plays the next level
             Craft();
+            // m_NextLevelEvent.Raise();
         }
 
         private void OnTryAgainButtonClicked()

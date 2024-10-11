@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const http_1 = __importDefault(require("http"));
 const ethers_1 = require("ethers");
+const providers_1 = require("@ethersproject/providers");
 const morgan_1 = __importDefault(require("morgan"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -16,7 +17,7 @@ app.use(express_1.default.urlencoded({ extended: false })); // Parse request
 app.use(express_1.default.json()); // Handle JSON
 app.use((0, cors_1.default)()); // Enable CORS
 const router = express_1.default.Router();
-const zkEvmProvider = new ethers_1.JsonRpcProvider('https://rpc.testnet.immutable.com');
+const zkEvmProvider = new providers_1.JsonRpcProvider('https://rpc.testnet.immutable.com');
 // Contract addresses
 const foxContractAddress = process.env.FOX_CONTRACT_ADDRESS;
 const tokenContractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
@@ -29,12 +30,13 @@ const gasOverrides = {
 };
 // Mint Immutable Runner Fox
 router.post('/mint/fox', async (req, res) => {
+    console.log(req.body);
     try {
         if (foxContractAddress && privateKey) {
             // Get the address to mint the fox to
             let to = req.body.to ?? null;
             // Get the quantity to mint if specified, default is one
-            let quantity = parseInt(req.body.quantity ?? "1");
+            let quantity = parseInt(req.body.quantity ?? '1');
             // Connect to wallet with minter role
             const signer = new ethers_1.Wallet(privateKey).connect(zkEvmProvider);
             // Specify the function to call
@@ -44,25 +46,29 @@ router.post('/mint/fox', async (req, res) => {
             // Mints the number of tokens specified
             const tx = await contract.mintByQuantity(to, quantity, gasOverrides);
             await tx.wait();
-            return res.status(200).json({});
+            res.writeHead(200);
+            res.end(JSON.stringify({ message: "Minted foxes" }));
         }
         else {
-            return res.status(500).json({});
+            res.writeHead(400);
+            res.end(JSON.stringify({ message: "Failed to mint" }));
         }
     }
     catch (error) {
         console.log(error);
-        return res.status(400).json({ message: "Failed to mint to user" });
+        res.writeHead(500);
+        res.end(JSON.stringify({ message: error }));
     }
 });
 // Mint Immutable Runner Token
 router.post('/mint/token', async (req, res) => {
+    console.log(req.body);
     try {
         if (tokenContractAddress && privateKey) {
             // Get the address to mint the token to
             let to = req.body.to ?? null;
             // Get the quantity to mint if specified, default is one
-            let quantity = BigInt(req.body.quantity ?? "1");
+            let quantity = BigInt(req.body.quantity ?? '1');
             // Connect to wallet with minter role
             const signer = new ethers_1.Wallet(privateKey).connect(zkEvmProvider);
             // Specify the function to call
@@ -72,16 +78,19 @@ router.post('/mint/token', async (req, res) => {
             // Mints the number of tokens specified
             const tx = await contract.mint(to, quantity, gasOverrides);
             await tx.wait();
-            return res.status(200).json({});
+            res.writeHead(200);
+            res.end(JSON.stringify({ message: "Minted ERC20 tokens" }));
         }
         else {
-            return res.status(500).json({});
+            res.writeHead(400);
+            res.end(JSON.stringify({ message: "Failed to mint ERC20 tokens" }));
         }
     }
     catch (error) {
         console.log(error);
-        return res.status(400).json({ message: "Failed to mint to user" });
+        res.writeHead(500);
+        res.end(JSON.stringify({ message: error }));
     }
 });
 app.use('/', router);
-http_1.default.createServer(app).listen(3000, () => console.log(`Listening on port 3000`));
+http_1.default.createServer(app).listen(3000, () => console.log('Listening on port 3000'));
