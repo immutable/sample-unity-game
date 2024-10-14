@@ -132,11 +132,7 @@ namespace HyperCasual.Runner
                 ShowLoading(true);
 
                 // Log into Passport
-#if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
-                await Passport.Instance.LoginPKCE();
-#else
                 await Passport.Instance.Login();
-#endif
 
                 // Successfully logged in
                 // Save a persistent flag in the game that the player is logged in

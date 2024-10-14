@@ -88,11 +88,7 @@ namespace HyperCasual.Runner
                 ShowLoading(true);
 
                 // Logout
-#if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
-                await passport.LogoutPKCE();
-#else
                 await passport.Logout();
-#endif
 
                 // Reset the login flag
                 SaveManager.Instance.IsLoggedIn = false;
