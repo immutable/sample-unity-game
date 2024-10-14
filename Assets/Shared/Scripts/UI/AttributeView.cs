@@ -1,4 +1,4 @@
-using Immutable.Search.Model;
+using Immutable.Api.Model;
 using TMPro;
 using UnityEngine;
 

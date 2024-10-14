@@ -1,0 +1,7 @@
+{
+    "name": "Immutable.Api",
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ]
+}

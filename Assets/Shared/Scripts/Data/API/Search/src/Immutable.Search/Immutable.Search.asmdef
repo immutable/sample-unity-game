@@ -1,7 +1,0 @@
-{
-  "name": "Immutable.Search",
-  "overrideReferences": true,
-  "precompiledReferences": [
-    "Newtonsoft.Json.dll"
-  ]
-}
