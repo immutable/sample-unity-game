@@ -5,6 +5,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+using Immutable.Passport;
+using Cysharp.Threading.Tasks;
+using System.Numerics;
+using System.Net.Http;
 
 namespace HyperCasual.Runner
 {
@@ -102,13 +106,13 @@ namespace HyperCasual.Runner
             }
         }
 
-        public void OnEnable()
+        public async void OnEnable()
         {
             // Set listener to 'Next' button
             m_NextButton.RemoveListener(OnNextButtonClicked);
             m_NextButton.AddListener(OnNextButtonClicked);
 
-            // Set listener to "Continue with Passport" button  
+            // Set listener to "Continue with Passport" button
             m_ContinuePassportButton.RemoveListener(OnContinueWithPassportButtonClicked);
             m_ContinuePassportButton.AddListener(OnContinueWithPassportButtonClicked);
 
@@ -116,20 +120,128 @@ namespace HyperCasual.Runner
             m_TryAgainButton.RemoveListener(OnTryAgainButtonClicked);
             m_TryAgainButton.AddListener(OnTryAgainButtonClicked);
 
-            ShowNextButton(true);
+            ShowError(false);
+            ShowLoading(false);
+
+            // If player is logged into Passport mint coins to player
+            if (SaveManager.Instance.IsLoggedIn)
+            {
+                // Mint collected coins to player
+                await MintCoins();
+            }
+            else
+            {
+                // Show 'Next' button if player is already logged into Passport
+                ShowNextButton(SaveManager.Instance.IsLoggedIn);
+                // Show "Continue with Passport" button if the player is not logged into Passport
+                ShowContinueWithPassportButton(!SaveManager.Instance.IsLoggedIn);
+            }
         }
 
-        private void OnContinueWithPassportButtonClicked()
+        /// <summary>
+        /// Mints collected coins (i.e. Immutable Runner Token) to the player's wallet
+        /// </summary>
+        private async UniTask MintCoins()
         {
+            // This function is similar to MintCoins() in MintScreen.cs. Consider refactoring duplicate code in production.
+            Debug.Log("Minting coins...");
+            bool success = false;
+
+            // Show loading
+            ShowLoading(true);
+            ShowNextButton(false);
+            ShowError(false);
+
+            try
+            {
+                // Don't mint any coins if player did not collect any
+                if (m_CoinCount == 0)
+                {
+                    success = true;
+                }
+                else
+                {
+                    // Get the player's wallet address to mint the coins to
+                    List<string> accounts = await Passport.Instance.ZkEvmRequestAccounts();
+                    string address = accounts[0];
+                    if (address != null)
+                    {
+                        // Calculate the quantity to mint
+                        // Need to take into account Immutable Runner Token decimal value i.e. 18
+                        BigInteger quantity = BigInteger.Multiply(new BigInteger(m_CoinCount), BigInteger.Pow(10, 18));
+                        Debug.Log($"Quantity: {quantity}");
+                        var nvc = new List<KeyValuePair<string, string>>
+                    {
+                        // Set 'to' to the player's wallet address
+                        new KeyValuePair<string, string>("to", address),
+                        // Set 'quanity' to the number of coins collected
+                        new KeyValuePair<string, string>("quantity", quantity.ToString())
+                    };
+                        using var client = new HttpClient();
+                        string url = $"http://localhost:3000/mint/token"; // Endpoint to mint token
+                        using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
+                        using var res = await client.SendAsync(req);
+                        success = res.IsSuccessStatusCode;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Failed to mint coins: {ex.Message}");
+            }
+
+            ShowLoading(false);
+            ShowNextButton(success);
+            ShowError(!success);
         }
 
-        private void OnTryAgainButtonClicked()
+        private async void OnContinueWithPassportButtonClicked()
         {
+            try
+            {
+                // Show loading
+                ShowContinueWithPassportButton(false);
+                ShowLoading(true);
+
+                // Log into Passport
+                await Passport.Instance.Login();
+
+                // Successfully logged in
+                // Save a persistent flag in the game that the player is logged in
+                SaveManager.Instance.IsLoggedIn = true;
+                // Show 'Next' button
+                ShowNextButton(true);
+                ShowLoading(false);
+                // Take the player to the Setup Wallet screen
+                m_SetupWalletEvent.Raise();
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Failed to log into Passport: {ex.Message}");
+                // Show Continue with Passport button again
+                ShowContinueWithPassportButton(true);
+                ShowLoading(false);
+            }
+        }
+
+        private async void OnTryAgainButtonClicked()
+        {
+            await MintCoins();
         }
 
         private void OnNextButtonClicked()
         {
-            m_NextLevelEvent.Raise();
+            // Check if the player is already using a new skin
+            if (!SaveManager.Instance.UseNewSkin)
+            {
+                // Player is not using a new skin, take player to Unlocked Skin screen
+                m_UnlockedSkinEvent.Raise();
+            }
+            else
+            {
+                // Player is already using a new skin, take player to the next level
+                m_NextLevelEvent.Raise();
+            }
         }
 
         private void ShowCompletedContainer(bool show)
