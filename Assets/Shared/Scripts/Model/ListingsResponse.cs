@@ -6,13 +6,12 @@ namespace HyperCasual.Runner
     [Serializable]
     public class ListingResponse
     {
-        public OldListing result;
+        public ListingResult result;
     }
 
     [Serializable]
-    public class OldListing
+    public class ListingResult
     {
-        public string id;
         public ListingStatus status;
     }
 

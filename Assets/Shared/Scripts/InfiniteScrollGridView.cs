@@ -26,17 +26,17 @@ namespace HyperCasual.Runner
 
         private void Awake()
         {
-            if (!m_IsInitialised) InitializeScrollView();
+            if (!m_IsInitialised) InitialiseScrollView();
         }
 
         private void Start()
         {
-            if (!m_IsInitialised) InitializeScrollView();
+            if (!m_IsInitialised) InitialiseScrollView();
         }
 
         public event Action<int, GameObject> OnCreateItemView; // Event for item setup
 
-        private void InitializeScrollView()
+        private void InitialiseScrollView()
         {
             m_IsInitialised = true;
             m_ScrollRect.onValueChanged.AddListener(OnScroll);

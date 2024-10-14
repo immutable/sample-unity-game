@@ -23,82 +23,55 @@ namespace HyperCasual.Runner
 
         private static readonly List<string> s_Speeds = new() { "All", "Slow", "Medium", "Fast" };
 
-        // Back button and its event
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
-
-        // Player's balance display
         [SerializeField] private BalanceObject m_Balance;
-
-        // Dropdown filters for colours and speeds
         [SerializeField] private TMP_Dropdown m_ColoursDropdown;
         [SerializeField] private TMP_Dropdown m_SpeedDropdown;
-
-        // Infinite scrolling list of stacks
         [SerializeField] private InfiniteScrollGridView m_ScrollView;
-
-        // Template for displaying a stack
         [SerializeField] private MarketplaceListObject m_StackObj;
 
-        private StacksApi m_StacksApi;
-
-        // List to store the loaded stacks
+        private StacksApi m_StacksApi = new StacksApi(new Configuration { BasePath = Config.BASE_URL });
         private readonly List<StackBundle> m_Stacks = new();
-
-        // Pagination and loading state
         private bool m_IsLoadingMore;
         private Page m_Page;
 
-        public MarketplaceScreen()
-        {
-            var config = new Configuration { BasePath = Config.BASE_URL };
-            m_StacksApi = new StacksApi(config);
-        }
-
         /// <summary>
-        ///     Resets the marketplace view, clearing the current stacks and resetting pagination.
+        /// Resets the marketplace view, clearing the current stacks and resetting pagination.
         /// </summary>
         private void Reset()
         {
             m_Stacks.Clear();
             m_Page = null;
-
-            // Reset the scroll view
             m_ScrollView.TotalItemCount = 0;
             m_ScrollView.Clear();
         }
 
         /// <summary>
-        ///     Sets up the marketplace screen and loads initial stacks.
+        /// Sets up the marketplace screen and loads initial stacks.
         /// </summary>
         private void OnEnable()
         {
-            // Hide the stack template
             m_StackObj.gameObject.SetActive(false);
 
-            // Attach back button listener
             m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
 
             if (Passport.Instance == null) return;
 
-            // Set up the infinite scroll view and load stacks
             m_ScrollView.OnCreateItemView += OnCreateItemView;
             if (m_Stacks.Count == 0) LoadStacks();
 
-            // Initialise dropdown filters
-            SetupFilters();
+            ConfigureFilters();
 
-            // Update player's balance
             m_Balance.UpdateBalance();
         }
 
         /// <summary>
-        ///     Configures the dropdown filters for colours and speeds.
+        /// Configures the dropdown filters for colours and speeds.
         /// </summary>
-        private void SetupFilters()
+        private void ConfigureFilters()
         {
-            // Set up colour dropdown
             m_ColoursDropdown.ClearOptions();
             m_ColoursDropdown.AddOptions(s_Colours);
             m_ColoursDropdown.value = 0; // Default to "All"
@@ -108,7 +81,6 @@ namespace HyperCasual.Runner
                 LoadStacks();
             });
 
-            // Set up speed dropdown
             m_SpeedDropdown.ClearOptions();
             m_SpeedDropdown.AddOptions(s_Speeds);
             m_SpeedDropdown.value = 0; // Default to "All"
@@ -120,21 +92,19 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        ///     Configures each item view in the stack list.
+        /// Configures each item view in the stack list.
         /// </summary>
         /// <param name="index">Index of the item in the stack list.</param>
-        /// <param name="item">GameObject representing the item view.</param>
+        /// <param name="item">The game object representing the item view.</param>
         private void OnCreateItemView(int index, GameObject item)
         {
             if (index < m_Stacks.Count)
             {
                 var stack = m_Stacks[index];
 
-                // Initialise the item view with the stack data
                 var itemComponent = item.GetComponent<MarketplaceListObject>();
                 itemComponent.Initialise(stack);
 
-                // Set up click handling for the item
                 var clickable = item.GetComponent<ClickableView>();
                 if (clickable != null)
                 {
@@ -148,12 +118,11 @@ namespace HyperCasual.Runner
                 }
             }
 
-            // Load more stacks if nearing the end of the list
             if (index >= m_Stacks.Count - 8 && !m_IsLoadingMore) LoadStacks();
         }
 
         /// <summary>
-        ///     Loads stacks and adds them to the scroll view.
+        /// Loads stacks and adds them to the scroll view.
         /// </summary>
         private async void LoadStacks()
         {
@@ -161,7 +130,6 @@ namespace HyperCasual.Runner
 
             m_IsLoadingMore = true;
 
-            // Fetch the next set of stacks
             var stacks = await GetStacks();
             if (stacks != null && stacks.Count > 0)
             {
@@ -173,14 +141,12 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        ///     Fetches the list of stacks from the API.
+        /// Fetches the list of stacks from the API.
         /// </summary>
-        /// <returns>List of StackBundle objects representing the stacks.</returns>
+        /// <returns>List of stacks.</returns>
         private async UniTask<List<StackBundle>> GetStacks()
         {
             Debug.Log("Fetching stacks...");
-
-            var stacks = new List<StackBundle>();
 
             try
             {
@@ -188,7 +154,7 @@ namespace HyperCasual.Runner
                 if (m_Page != null && string.IsNullOrEmpty(nextCursor))
                 {
                     Debug.Log("No more assets to load");
-                    return stacks;
+                    return new List<StackBundle>();
                 }
 
                 // Filter based on dropdown selections
@@ -214,7 +180,7 @@ namespace HyperCasual.Runner
                     new List<string> { Contract.SKIN },
                     trait: trait,
                     onlyIfHasActiveListings: true,
-                    pageSize: Config.PAGE_SIZE, 
+                    pageSize: Config.PAGE_SIZE,
                     pageCursor: nextCursor);
 
                 m_Page = result.Page;
@@ -230,7 +196,7 @@ namespace HyperCasual.Runner
                 Debug.LogError($"Error fetching stacks: {ex.Message}");
             }
 
-            return stacks;
+            return new List<StackBundle>();
         }
 
         /// <summary>
