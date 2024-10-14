@@ -5,9 +5,27 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Immutable.Passport;
 using Immutable.Passport.Model;
+
+
+[Serializable]
+public class GetAssetsResponse
+{
+    public Asset[] result;
+}
+
+[Serializable]
+public class Asset
+{
+    public string id;
+    public string token_id;
+    public string token_address;
+}
 
 namespace HyperCasual.Runner
 {
@@ -47,7 +65,7 @@ namespace HyperCasual.Runner
             get => m_CraftState;
             set
             {
-                CraftState = value;
+                m_CraftState = value;
                 switch (m_CraftState)
                 {
                     case CraftSkinState.Crafting:
@@ -115,31 +133,59 @@ namespace HyperCasual.Runner
 
         private async void Craft()
         {
-            CraftState = CraftSkinState.Crafting;
+            try {
+                m_CraftState = CraftSkinState.Crafting;
 
-            // Burn tokens and mint a new skin i.e. crafting a skin
-            TransactionReceiptResponse response = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest()
-            {
-                to = "YOUR_IMMUTABLE_RUNNER_TOKEN_CONTRACT_ADDRESS", // Immutable Runner Token contract address
-                data = "0x1e957f1e", // Call craftSkin() in the contract
-                value = "0"
-            });
-            Debug.Log($"Craft transaction hash: {response.transactionHash}");
+                // burn
+                Asset[] assets = await GetAssets();
+                if (assets.Length == 0)
+                {
+                    Debug.Log("No assets to burn");
+                    m_CraftState = CraftSkinState.Failed;
+                    return;
+                }
 
-            if (response.status != "1")
-            {
+                CreateTransferResponseV1 transferResult = await Passport.Instance.ImxTransfer(
+                    new UnsignedTransferRequest("ERC721", "1", "0x0000000000000000000000000000000000000000", assets[0].token_id, assets[0].token_address)
+                );
+                Debug.Log($"Transfer(id={transferResult.transfer_id} receiver={transferResult.receiver} status={transferResult.status})");
+
+                m_CraftState = CraftSkinState.Crafted;
+
+                // If successfully crafted skin and this screen is visible, go to collect skin screen
+                // otherwise it will be picked in the OnEnable function above when this screen reappears
+                if (m_CraftState == CraftSkinState.Crafted && gameObject.active)
+                {
+                    CollectSkin();
+                }
+            } catch (Exception ex) {
+                Debug.Log($"Failed to craft skin: {ex.Message}");
                 m_CraftState = CraftSkinState.Failed;
-                return;
             }
+        }
 
-            CraftState = CraftSkinState.Crafted;
+        private async UniTask<Asset[]> GetAssets()
+        {
+            const string collection = "0xcf77af96b269169f149b3c23230e103bda67fd0c";
+            string address = await Passport.Instance.GetAddress();
+            Debug.Log($"Wallet address: {address}");
 
-            // If successfully crafted skin and this screen is visible, go to collect skin screen
-            // otherwise it will be picked in the OnEnable function above when this screen reappears
-            if (m_CraftState == CraftSkinState.Crafted && gameObject.active)
+            if (address != null)
             {
-                CollectSkin();
+                using var client = new HttpClient();
+                string url = $"https://api.sandbox.x.immutable.com/v1/assets?user={address}&collection={collection}&status=imx";
+                using var req = new HttpRequestMessage(HttpMethod.Get, url);
+                using var res = await client.SendAsync(req);
+
+                // Parse JSON and extract token_id
+                string content = await res.Content.ReadAsStringAsync();
+                Debug.Log($"Get Assets response: {content}");
+
+                GetAssetsResponse body = JsonUtility.FromJson<GetAssetsResponse>(content);
+                Debug.Log($"Get Assets result: {body.result.Length}");
+                return body.result;
             }
+            return null;
         }
 
         private void CollectSkin()
@@ -150,9 +196,9 @@ namespace HyperCasual.Runner
 
         private void OnCraftButtonClicked()
         {
-            m_NextLevelEvent.Raise();
             // Craft in the background, while the player plays the next level
             Craft();
+            // m_NextLevelEvent.Raise();
         }
 
         private void OnTryAgainButtonClicked()
