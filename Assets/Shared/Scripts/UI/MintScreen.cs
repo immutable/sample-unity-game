@@ -134,6 +134,10 @@ namespace HyperCasual.Runner
                     string url = $"http://localhost:3000/mint/fox"; // Endpoint to mint fox
                     using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
                     using var res = await client.SendAsync(req);
+
+                    string content = await res.Content.ReadAsStringAsync();
+                    Debug.Log($"Mint fox response: {content}");
+
                     return res.IsSuccessStatusCode;
                 }
 
@@ -168,17 +172,20 @@ namespace HyperCasual.Runner
                     // Need to take into account Immutable Runner Token decimal value i.e. 18
                     BigInteger quantity = BigInteger.Multiply(new BigInteger(coinsCollected), BigInteger.Pow(10, 18));
                     Debug.Log($"Quantity: {quantity}");
-                    var nvc = new List<KeyValuePair<string, string>>
-                {
-                    // Set 'to' to the player's wallet address
-                    new KeyValuePair<string, string>("to", address),
-                    // Set 'quanity' to the number of coins collected
-                    new KeyValuePair<string, string>("quantity", quantity.ToString())
-                };
+                    var nvc = new List<KeyValuePair<string, string>> {
+                        // Set 'to' to the player's wallet address
+                        new KeyValuePair<string, string>("to", address),
+                        // Set 'quanity' to the number of coins collected
+                        new KeyValuePair<string, string>("quantity", quantity.ToString())
+                    };
                     using var client = new HttpClient();
                     string url = $"http://localhost:3000/mint/token"; // Endpoint to mint token
                     using var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
                     using var res = await client.SendAsync(req);
+
+                    string content = await res.Content.ReadAsStringAsync();
+                    Debug.Log($"Mint tokens response: {content}");
+
                     return res.IsSuccessStatusCode;
                 }
 

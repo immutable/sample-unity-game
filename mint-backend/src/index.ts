@@ -6,7 +6,8 @@ import express, {
 } from 'express';
 import cors from 'cors';
 import http from 'http';
-import { JsonRpcProvider, Wallet, Contract } from 'ethers';
+import { Wallet, Contract } from 'ethers';
+import { JsonRpcProvider } from '@ethersproject/providers';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 
@@ -35,6 +36,7 @@ const gasOverrides = {
 
 // Mint Immutable Runner Fox
 router.post('/mint/fox', async (req: Request, res: Response) => {
+  console.log(req.body);
   try {
     if (foxContractAddress && privateKey) {
       // Get the address to mint the fox to
@@ -54,20 +56,22 @@ router.post('/mint/fox', async (req: Request, res: Response) => {
       const tx = await contract.mintByQuantity(to, quantity, gasOverrides);
       await tx.wait();
 
-      return res.status(200).json({});
+      res.writeHead(200);
+      res.end(JSON.stringify({ message: "Minted foxes" }));
     } else {
-      return res.status(500).json({});
+      res.writeHead(400);
+      res.end(JSON.stringify({ message: "Failed to mint" }));
     }
-
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: 'Failed to mint to user' });
+    res.writeHead(500);
+    res.end(JSON.stringify({ message: error }));
   }
-},
-);
+});
 
 // Mint Immutable Runner Token
 router.post('/mint/token', async (req: Request, res: Response) => {
+  console.log(req.body);
   try {
     if (tokenContractAddress && privateKey) {
       // Get the address to mint the token to
@@ -87,17 +91,18 @@ router.post('/mint/token', async (req: Request, res: Response) => {
       const tx = await contract.mint(to, quantity, gasOverrides);
       await tx.wait();
 
-      return res.status(200).json({});
+      res.writeHead(200);
+      res.end(JSON.stringify({ message: "Minted ERC20 tokens" }));
     } else {
-      return res.status(500).json({});
+      res.writeHead(400);
+      res.end(JSON.stringify({ message: "Failed to mint ERC20 tokens" }));
     }
-
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: 'Failed to mint to user' });
+    res.writeHead(500);
+    res.end(JSON.stringify({ message: error }));
   }
-},
-);
+});
 
 app.use('/', router);
 

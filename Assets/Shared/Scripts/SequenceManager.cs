@@ -5,9 +5,6 @@ using HyperCasual.Core;
 using HyperCasual.Runner;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System;
-using System.Collections;
-using UnityEngine;
 
 namespace HyperCasual.Gameplay
 {
