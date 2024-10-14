@@ -5,8 +5,6 @@ namespace HyperCasual.Runner
         // public const string SERVER_URL = "https://sample-passport-unity-game-api.dev.immutable.com/fox";
         public const string SERVER_URL = "http://localhost:6060";
 
-        public const string SDK_API = "https://api.sandbox.immutable.com/v1/ts-sdk/v1";
-
         // public const string CLIENT_ID = "ZJL7JvetcDFBNDlgRs5oJoxuAUUl6uQj";
         public const string CLIENT_ID = "2Ng38UmEg0Morz1xOQLtsDs72Wx8uyGL"; // Devnet
         // public const string CLIENT_ID = "UnB98ngnXIZIEJWGJOjVe1BpCx5ix7qc"; // WebGL
@@ -33,7 +31,7 @@ namespace HyperCasual.Runner
 
         public const string CHAIN_NAME = "imtbl-zkevm-devnet";
         public const string BASE_URL = "https://api.dev.immutable.com";
-        public const int PAGE_SIZE = 10;
+        public const int PAGE_SIZE = 20;
     }
 
     public static class Contract

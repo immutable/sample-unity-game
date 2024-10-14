@@ -133,6 +133,38 @@ router.post('/mint/skin', async (req: Request, res: Response) => {
 },
 );
 
+router.post('/refresh', async (req: Request, res: Response) => {
+  try {
+    if (skinColourContractAddress && privateKey) {
+      // Get the address to mint the token to
+      const to: string = req.body.to ?? null;
+      // Get the quantity to mint if specified, default is one
+      const tokenId = BigInt(req.body.tokenId ?? '1');
+
+      // Connect to wallet with minter role
+      const signer = new Wallet(privateKey).connect(zkEvmProvider);
+
+      // Specify the function to call
+      const abi = ['function mint(address to, uint256 tokenId)'];
+      // Connect contract to the signer
+      const contract = new Contract(skinColourContractAddress, abi, signer);
+
+      // Mints the number of tokens specified
+      const tx = await contract.mint(to, tokenId, gasOverrides);
+      await tx.wait();
+
+      return res.status(200).json({});
+    } else {
+      return res.status(500).json({});
+    }
+
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: 'Failed to mint to user' });
+  }
+},
+);
+
 // In-game ERC20 balance
 router.get('/balance', async (req: Request, res: Response) => {
   try {
