@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Immutable.Passport;
 
 namespace HyperCasual.Runner
 {
@@ -44,7 +45,7 @@ namespace HyperCasual.Runner
             SetupWallet();
         }
 
-        private void SetupWallet()
+        private async void SetupWallet()
         {
             try
             {
@@ -53,7 +54,16 @@ namespace HyperCasual.Runner
                 ShowError(false);
                 ShowSuccess(false);
 
-                // Set up wallet
+                // Set up provider
+                await Passport.Instance.ConnectImx();
+
+                Debug.Log("Checking if wallet is registered offchain...");
+                bool isRegistered = await Passport.Instance.IsRegisteredOffchain();
+                if (!isRegistered)
+                {
+                    Debug.Log("Registering wallet offchain...");
+                    await Passport.Instance.RegisterOffchain();
+                }
 
                 m_Title.text = "Your wallet has been successfully set up!";
                 ShowLoading(false);
@@ -72,7 +82,7 @@ namespace HyperCasual.Runner
 
         private void OnNextButtonClicked()
         {
-            m_NextEvent.Raise();
+            m_MintEvent.Raise();
         }
 
         private void ShowNextButton(bool show)

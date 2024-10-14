@@ -4,6 +4,7 @@ using HyperCasual.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Immutable.Passport;
 
 namespace HyperCasual.Runner
 {
@@ -23,7 +24,9 @@ namespace HyperCasual.Runner
         [SerializeField]
         GameObject m_Loading;
 
-        void OnEnable()
+        Passport passport;
+
+        async void OnEnable()
         {
             ShowLoading(true);
 
@@ -34,8 +37,34 @@ namespace HyperCasual.Runner
             m_LogoutButton.RemoveListener(OnLogoutButtonClick);
             m_LogoutButton.AddListener(OnLogoutButtonClick);
 
+            // Initialise Passport
+            string clientId = "YOUR_IMMUTABLE_CLIENT_ID";
+            string environment = Immutable.Passport.Model.Environment.SANDBOX;
+            passport = await Passport.Init(clientId, environment);
+
+            // Check if the player is supposed to be logged in and if there are credentials saved
+            if (SaveManager.Instance.IsLoggedIn && await Passport.Instance.HasCredentialsSaved())
+            {
+                // Try to log in using saved credentials
+                bool success = await Passport.Instance.Login(useCachedSession: true);
+                // Update the login flag
+                SaveManager.Instance.IsLoggedIn = success;
+
+                // Set up wallet if successful
+                if (success)
+                {
+                    await Passport.Instance.ConnectImx();
+                }
+            } else {
+                // No saved credentials to re-login the player, reset the login flag
+                SaveManager.Instance.IsLoggedIn = false;
+            }
+
             ShowLoading(false);
             ShowStartButton(true);
+
+            // Show the logout button if the player is logged in
+            ShowLogoutButton(SaveManager.Instance.IsLoggedIn);
         }
 
         void OnDisable()
@@ -49,7 +78,7 @@ namespace HyperCasual.Runner
             AudioManager.Instance.PlayEffect(SoundID.ButtonSound);
         }
 
-        void OnLogoutButtonClick()
+        async void OnLogoutButtonClick()
         {
             try
             {
@@ -59,6 +88,7 @@ namespace HyperCasual.Runner
                 ShowLoading(true);
 
                 // Logout
+                await passport.Logout();
 
                 // Reset the login flag
                 SaveManager.Instance.IsLoggedIn = false;
