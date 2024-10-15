@@ -271,8 +271,8 @@ router.get('/packs', async (req: Request, res: Response) => {
 router.post('/pack/checkApprovalRequired', async (req: Request, res: Response) => {
   try {
     if (tokenContractAddress && packContractAddress && privateKey) {
-      let address: string = req.body.address ?? null;
-      let amount: string = req.body.amount ?? null;
+      const address: string = req.body.address ?? null;
+      const amount: string = req.body.amount ?? null;
 
       // Call allowance
       const abi = [
@@ -287,8 +287,8 @@ router.post('/pack/checkApprovalRequired', async (req: Request, res: Response) =
 
       if (BigNumber.from(approvedAmountDecimal).lt(BigNumber.from(amount))) {
         console.log('The approved amount is less than the requested amount.');
-        let iface = new utils.Interface(abi);
-        let encodedData = iface.encodeFunctionData("approve", [packContractAddress, amount]);
+        const iface = new utils.Interface(abi);
+        const encodedData = iface.encodeFunctionData("approve", [packContractAddress, amount]);
         console.log(`encodedData: ${encodedData}`);
 
         return res.status(200).json({

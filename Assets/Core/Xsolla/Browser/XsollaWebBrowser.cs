@@ -1,3 +1,5 @@
+using System;
+using System.Runtime.InteropServices;
 using UnityEngine;
 #if UNITY_WEBGL || UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
 #endif

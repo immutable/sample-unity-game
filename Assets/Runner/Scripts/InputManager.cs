@@ -48,9 +48,9 @@ namespace HyperCasual.Runner
                 m_HasInput = false;
             }
 #else
-            if (Touch.activeTouches.Count > 0)
+            if (UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches.Count > 0)
             {
-                m_InputPosition = Touch.activeTouches[0].screenPosition;
+                m_InputPosition = UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches[0].screenPosition;
 
                 if (!m_HasInput)
                 {

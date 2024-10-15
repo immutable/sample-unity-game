@@ -1,3 +1,6 @@
+using System;
+using UnityEngine;
+
 namespace HyperCasual.Runner
 {
     public static class Config

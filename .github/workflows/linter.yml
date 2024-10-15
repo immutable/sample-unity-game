@@ -53,7 +53,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: true
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FILTER_REGEX_EXCLUDE: (.*Assets/Plugins/Android/mainTemplate.gradle|.*Assets/Shared/Scripts/Data)
+          FILTER_REGEX_EXCLUDE: (.*Assets/Plugins/Android/mainTemplate.gradle|.*Assets/Shared/Scripts/Data|.*.github/workflows)
           VALIDATE_MARKDOWN: false
           VALIDATE_GITLEAKS: false
           VALIDATE_JSCPD: false

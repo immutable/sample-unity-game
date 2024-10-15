@@ -56,7 +56,7 @@ const config: HardhatUserConfig = {
           apiURL: 'https://explorer.dev.immutable.com/api',
           browserURL: 'https://explorer.dev.immutable.com',
         },
-      }
+      },
     ],
   },
   sourcify: {

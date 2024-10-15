@@ -4589,9 +4589,9 @@ seaport-types@^0.0.1:
   resolved "https://registry.yarnpkg.com/seaport-types/-/seaport-types-0.0.1.tgz#e2a32fe8641853d7dadb1b0232d911d88ccc3f1a"
   integrity sha512-m7MLa7sq3YPwojxXiVvoX1PM9iNVtQIn7AdEtBnKTwgxPfGRWUlbs/oMgetpjT/ZYTmv3X5/BghOcstWYvKqRA==
 
-"seaport@git+https://github.com/immutable/seaport.git#1.5.0+im.1.3":
+"seaport@https://github.com/immutable/seaport.git#1.5.0+im.1.3":
   version "1.5.0"
-  resolved "git+https://github.com/immutable/seaport.git#ae061dc008105dd8d05937df9ad9a676f878cbf9"
+  resolved "https://github.com/immutable/seaport.git#ae061dc008105dd8d05937df9ad9a676f878cbf9"
   dependencies:
     "@nomicfoundation/hardhat-network-helpers" "^1.0.7"
     "@openzeppelin/contracts" "^4.9.2"
