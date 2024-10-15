@@ -45,17 +45,17 @@ namespace HyperCasual.Runner
         /// A <see cref="UniTask{String}"/> that returns the listing ID if the sale is successfully created.
         /// </returns>
         public async UniTask<string> CreateListing(
-            string contractAddress, string contractType, string tokenId, 
+            string contractAddress, string contractType, string tokenId,
             string price, string amountToSell, bool confirmListing = true)
         {
             try
             {
                 var listingData = await PrepareListing(contractAddress, contractType, tokenId, price, amountToSell);
-                
+
                 await SignAndSubmitApproval(listingData);
 
                 var signature = await SignListing(listingData);
-                
+
                 var listingId = await ListAsset(signature, listingData);
 
                 if (confirmListing)
@@ -74,7 +74,7 @@ namespace HyperCasual.Runner
         /// Prepares a listing for the specified NFT and purchase details.
         /// </summary>
         private async UniTask<PrepareListing200Response> PrepareListing(
-            string contractAddress, string contractType, string tokenId, 
+            string contractAddress, string contractType, string tokenId,
             string price, string amountToSell)
         {
             var sellRequest = CreateSellRequest(contractType, contractAddress, tokenId, amountToSell);
@@ -196,7 +196,7 @@ namespace HyperCasual.Runner
                 throw;
             }
         }
-        
+
         /// <summary>
         /// Confirms the listing status by polling until it matches the desired status or times out.
         /// </summary>
@@ -210,8 +210,8 @@ namespace HyperCasual.Runner
                     return listingResponse.result?.status.name == desiredStatus;
                 });
 
-            Debug.Log(isConfirmed 
-                ? $"Listing {listingId} is {desiredStatus.ToLower()}." 
+            Debug.Log(isConfirmed
+                ? $"Listing {listingId} is {desiredStatus.ToLower()}."
                 : $"Failed to confirm listing status: {desiredStatus.ToLower()}.");
         }
 

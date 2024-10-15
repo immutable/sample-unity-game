@@ -86,7 +86,7 @@ namespace HyperCasual.Runner
         public async void Initialise(NFTBundle asset)
         {
             m_Asset = asset;
-            
+
             var nft = asset.NftWithStack;
 
             m_NameText.text = nft.ContractType.ToUpper() switch
@@ -102,14 +102,14 @@ namespace HyperCasual.Runner
             m_TokenIdText.text = $"Token ID: {nft.TokenId}";
             m_CollectionText.text = $"Collection: {nft.ContractAddress}";
             m_ContractTypeText.text = $"Contract type: {nft.ContractType.ToUpper()}";
-            
+
             ClearAttributes();
             AddAttributes(asset.NftWithStack.Attributes);
-            
+
             SetListingState();
-            
+
             DisplayMarketData();
-            
+
             await LoadAssetImage();
         }
 
@@ -152,7 +152,7 @@ namespace HyperCasual.Runner
 
             var listing = m_Asset!.Listings[0];
             var amount = BigInteger.Parse(listing.PriceDetails.Amount.Value);
-            var quantity = (decimal)amount / (decimal) BigInteger.Pow(10, 18);
+            var quantity = (decimal)amount / (decimal)BigInteger.Pow(10, 18);
 
             m_AmountText.text = m_Asset!.NftWithStack.ContractType.ToUpper() switch
             {
@@ -182,7 +182,7 @@ namespace HyperCasual.Runner
         /// Converts a raw token value to decimal.
         /// </summary>
         private static decimal GetQuantity(string value) =>
-            (decimal)BigInteger.Parse(value) / (decimal )BigInteger.Pow(10, 18);
+            (decimal)BigInteger.Parse(value) / (decimal)BigInteger.Pow(10, 18);
 
         /// <summary>
         /// Loads the asset image asynchronously.
@@ -196,7 +196,7 @@ namespace HyperCasual.Runner
         private async void OnSellButtonClicked()
         {
             if (m_Asset == null) return;
-            
+
             var (confirmedPrice, price) = await m_CustomDialog.ShowDialog(
                 $"List {m_Asset.NftWithStack.Name} for sale",
                 "Enter your price below (in IMR):",
@@ -206,10 +206,10 @@ namespace HyperCasual.Runner
             );
 
             if (!confirmedPrice) return;
-            
+
             var normalisedPrice = Math.Floor(decimal.Parse(price) * (decimal)BigInteger.Pow(10, 18));
             var amountToSell = "1";
-            
+
             if (m_Asset.NftWithStack.ContractType.ToUpper() == ERC1155Item.TypeEnum.ERC1155.ToString())
             {
                 var (confirmedAmount, amount) = await m_CustomDialog.ShowDialog(
@@ -223,7 +223,7 @@ namespace HyperCasual.Runner
                 if (!confirmedAmount) return;
                 amountToSell = amount;
             }
-            
+
             m_SellButton.gameObject.SetActive(false);
             m_Progress.gameObject.SetActive(true);
 
@@ -241,15 +241,15 @@ namespace HyperCasual.Runner
 
                 m_SellButton.gameObject.SetActive(m_ListingId == null);
                 m_CancelButton.gameObject.SetActive(m_ListingId != null);
-                
-                m_AmountText.text = m_ListingId == null ? "Not listed" : 
+
+                m_AmountText.text = m_ListingId == null ? "Not listed" :
                     m_Asset!.NftWithStack.ContractType.ToUpper() switch
                     {
                         "ERC721" => $"{price} IMR",
                         "ERC1155" => $"{amountToSell} for {price} IMR",
                         _ => m_AmountText.text
                     };
-                
+
                 m_Progress.gameObject.SetActive(false);
             }
             catch (Exception ex)
@@ -265,14 +265,14 @@ namespace HyperCasual.Runner
         private async void OnCancelButtonClicked()
         {
             if (m_ListingId == null) return;
-            
+
             m_CancelButton.gameObject.SetActive(false);
             m_Progress.gameObject.SetActive(true);
 
             try
             {
                 await OrderbookManager.Instance.CancelListing(m_ListingId);
-                
+
                 m_SellButton.gameObject.SetActive(true);
                 m_Progress.gameObject.SetActive(false);
                 m_AmountText.text = "Not listed";
@@ -283,7 +283,7 @@ namespace HyperCasual.Runner
                 await HandleError(ex, "Failed to cancel listing");
             }
         }
-        
+
         private async UniTask HandleError(Exception ex, string errorMessage)
         {
             Debug.LogException(ex);
@@ -298,7 +298,7 @@ namespace HyperCasual.Runner
             foreach (var attribute in m_Attributes) Destroy(attribute.gameObject);
             m_Attributes.Clear();
         }
-        
+
         private void OnDisable()
         {
             ResetUI();

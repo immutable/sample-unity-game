@@ -214,7 +214,7 @@ namespace HyperCasual.Runner
                     new List<string> { Contract.SKIN },
                     trait: trait,
                     onlyIfHasActiveListings: true,
-                    pageSize: Config.PAGE_SIZE, 
+                    pageSize: Config.PAGE_SIZE,
                     pageCursor: nextCursor);
 
                 m_Page = result.Page;
