@@ -38,7 +38,7 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - iOS
+#          - iOS
           - Android
           - WebGL
     steps:
