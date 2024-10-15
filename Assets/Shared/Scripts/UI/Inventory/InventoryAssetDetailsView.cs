@@ -1,9 +1,12 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
+using Immutable.Api.Api;
+using Immutable.Api.Client;
 using Immutable.Api.Model;
 using TMPro;
 using UnityEngine;
@@ -14,30 +17,24 @@ namespace HyperCasual.Runner
     {
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private BalanceObject m_Balance;
-
         [SerializeField] private ImageUrlObject m_Image;
         [SerializeField] private TextMeshProUGUI m_NameText;
         [SerializeField] private TextMeshProUGUI m_DescriptionText;
-
         [SerializeField] private TextMeshProUGUI m_FloorPriceText;
         [SerializeField] private TextMeshProUGUI m_LastTradePriceText;
-
         [SerializeField] private TextMeshProUGUI m_TokenIdText;
         [SerializeField] private TextMeshProUGUI m_CollectionText;
         [SerializeField] private TextMeshProUGUI m_ContractTypeText;
-
         [SerializeField] private Transform m_AttributesListParent;
         [SerializeField] private AttributeView m_AttributeObj;
-
         [SerializeField] private TextMeshProUGUI m_AmountText;
         [SerializeField] private HyperCasualButton m_SellButton;
         [SerializeField] private HyperCasualButton m_CancelButton;
         [SerializeField] private GameObject m_Progress;
-
         [SerializeField] private CustomDialog m_CustomDialog;
 
+        private StacksApi m_StacksApi = new(new Configuration { BasePath = Config.BASE_URL });
         private readonly List<AttributeView> m_Attributes = new();
-
         private NFTBundle? m_Asset;
         private string? m_ListingId;
 
@@ -65,21 +62,6 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Resets UI elements to their default states.
-        /// </summary>
-        private void ResetUI()
-        {
-            m_NameText.text = "";
-            m_DescriptionText.text = "";
-            m_TokenIdText.text = "";
-            m_CollectionText.text = "";
-            m_ContractTypeText.text = "";
-            m_AmountText.text = "";
-            m_FloorPriceText.text = "";
-            m_LastTradePriceText.text = "";
-        }
-
-        /// <summary>
         /// Initialises the asset details view based on the provided asset.
         /// </summary>
         /// <param name="asset">The NFT asset to display.</param>
@@ -89,6 +71,7 @@ namespace HyperCasual.Runner
 
             var nft = asset.NftWithStack;
 
+            // Name
             m_NameText.text = nft.ContractType.ToUpper() switch
             {
                 "ERC721" => $"{nft.Name} #{nft.TokenId}",
@@ -96,77 +79,29 @@ namespace HyperCasual.Runner
                 _ => nft.Name
             };
 
+            // Description
             m_DescriptionText.text = nft.Description;
             m_DescriptionText.gameObject.SetActive(!string.IsNullOrEmpty(nft.Description));
 
+            // Details
             m_TokenIdText.text = $"Token ID: {nft.TokenId}";
             m_CollectionText.text = $"Collection: {nft.ContractAddress}";
             m_ContractTypeText.text = $"Contract type: {nft.ContractType.ToUpper()}";
 
+            // Attributes
             ClearAttributes();
-            AddAttributes(asset.NftWithStack.Attributes);
-
-            SetListingState();
-
-            DisplayMarketData();
-
-            await LoadAssetImage();
-        }
-
-        /// <summary>
-        /// Adds attributes from the asset to the UI.
-        /// </summary>
-        private void AddAttributes(IEnumerable<NFTMetadataAttribute>? attributes)
-        {
-            foreach (var attribute in attributes ?? Array.Empty<NFTMetadataAttribute>())
+            var attributes = asset.NftWithStack.Attributes ?? new List<NFTMetadataAttribute>();
+            foreach (var attribute in attributes)
             {
                 var attributeView = Instantiate(m_AttributeObj, m_AttributesListParent);
                 attributeView.gameObject.SetActive(true);
                 attributeView.Initialise(attribute);
                 m_Attributes.Add(attributeView);
             }
-        }
 
-        /// <summary>
-        /// Sets the listing state based on the asset's listing data.
-        /// </summary>
-        private void SetListingState()
-        {
-            m_ListingId = m_Asset!.Listings.Count > 0 ? m_Asset.Listings[0].ListingId : null;
-            m_SellButton.gameObject.SetActive(m_ListingId == null);
-            m_CancelButton.gameObject.SetActive(m_ListingId != null);
+            UpdateListingStateAndPrice();
 
-            SetListingPrice();
-        }
-
-        /// <summary>
-        /// Sets the listing price text based on the asset's contract type.
-        /// </summary>
-        private void SetListingPrice()
-        {
-            if (m_ListingId == null)
-            {
-                m_AmountText.text = "Not listed";
-                return;
-            }
-
-            var listing = m_Asset!.Listings[0];
-            var amount = BigInteger.Parse(listing.PriceDetails.Amount.Value);
-            var quantity = (decimal)amount / (decimal)BigInteger.Pow(10, 18);
-
-            m_AmountText.text = m_Asset!.NftWithStack.ContractType.ToUpper() switch
-            {
-                "ERC721" => $"{quantity} IMR",
-                "ERC1155" => $"{listing.Amount} for {quantity} IMR",
-                _ => m_AmountText.text
-            };
-        }
-
-        /// <summary>
-        /// Displays market data such as floor and last trade prices.
-        /// </summary>
-        private void DisplayMarketData()
-        {
+            // Market data
             var floorListing = m_Asset!.Market?.FloorListing;
             m_FloorPriceText.text = floorListing != null
                 ? $"Floor price: {GetQuantity(floorListing.PriceDetails.Amount.Value)} IMR"
@@ -176,6 +111,39 @@ namespace HyperCasual.Runner
             m_LastTradePriceText.text = lastTrade != null
                 ? $"Last trade price: {GetQuantity(lastTrade.Amount.Value)} IMR"
                 : "Last trade price: N/A";
+
+            await LoadAssetImage();
+        }
+
+        /// <summary>
+        /// Updates the listing state and sets the listing price based on the asset's listing data.
+        /// </summary>
+        private void UpdateListingStateAndPrice()
+        {
+            // Determine the listing ID based on the asset's listings
+            m_ListingId = m_Asset!.Listings.Count > 0 ? m_Asset.Listings[0].ListingId : null;
+
+            // Set the visibility of the sell and cancel buttons
+            m_SellButton.gameObject.SetActive(m_ListingId == null);
+            m_CancelButton.gameObject.SetActive(m_ListingId != null);
+
+            // Update the listing price text
+            if (m_ListingId == null)
+            {
+                m_AmountText.text = "Not listed";
+                return;
+            }
+
+            var listing = m_Asset.Listings[0];
+            var quantity = GetQuantity(listing.PriceDetails.Amount.Value);
+
+            // Set the amount text based on the contract type
+            m_AmountText.text = m_Asset.NftWithStack.ContractType.ToUpper() switch
+            {
+                "ERC721" => $"{quantity} IMR",
+                "ERC1155" => $"{listing.Amount} for {quantity} IMR",
+                _ => m_AmountText.text
+            };
         }
 
         /// <summary>
@@ -189,6 +157,38 @@ namespace HyperCasual.Runner
         /// </summary>
         private async UniTask LoadAssetImage() =>
             await m_Image.LoadUrl(m_Asset!.NftWithStack.Image);
+
+        /// <summary>
+        /// Fetches the latest NFT bundle data.
+        /// </summary>
+        private async UniTask<NFTBundle?> GetNftBundle()
+        {
+            if (m_Asset == null) return null;
+
+            try
+            {
+                var result = await m_StacksApi.SearchNFTsAsync(
+                    chainName: Config.CHAIN_NAME,
+                    contractAddress: new List<string> { m_Asset.NftWithStack.ContractAddress },
+                    accountAddress: SaveManager.Instance.WalletAddress,
+                    stackId: new List<Guid> { m_Asset.NftWithStack.StackId },
+                    onlyIncludeOwnerListings: true);
+
+                if (result.Result.Count > 0)
+                {
+                    return result.Result
+                        .Where(n => n.NftWithStack.TokenId == m_Asset.NftWithStack.TokenId)
+                        .DefaultIfEmpty(null)
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Failed to fetch NFT bundle data: {ex.Message}");
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// Handles the sell button click event.
@@ -251,6 +251,13 @@ namespace HyperCasual.Runner
                     };
 
                 m_Progress.gameObject.SetActive(false);
+
+                // Fetches the latest NFT bundle data to update the listings.
+                var nftBundle = await GetNftBundle();
+                if (nftBundle != null)
+                {
+                    m_Asset.Listings = new List<Listing> { nftBundle.Listings[0] };
+                }
             }
             catch (Exception ex)
             {
@@ -264,7 +271,7 @@ namespace HyperCasual.Runner
         /// </summary>
         private async void OnCancelButtonClicked()
         {
-            if (m_ListingId == null) return;
+            if (m_ListingId == null || m_Asset == null) return;
 
             m_CancelButton.gameObject.SetActive(false);
             m_Progress.gameObject.SetActive(true);
@@ -274,8 +281,13 @@ namespace HyperCasual.Runner
                 await OrderbookManager.Instance.CancelListing(m_ListingId);
 
                 m_SellButton.gameObject.SetActive(true);
-                m_Progress.gameObject.SetActive(false);
                 m_AmountText.text = "Not listed";
+
+                // Remove listing and reset listing ID
+                m_Asset.Listings.RemoveAll(listing => listing.ListingId == m_ListingId);
+                m_ListingId = null;
+
+                m_Progress.gameObject.SetActive(false);
             }
             catch (Exception ex)
             {
@@ -301,7 +313,14 @@ namespace HyperCasual.Runner
 
         private void OnDisable()
         {
-            ResetUI();
+            m_NameText.text = "";
+            m_DescriptionText.text = "";
+            m_TokenIdText.text = "";
+            m_CollectionText.text = "";
+            m_ContractTypeText.text = "";
+            m_AmountText.text = "";
+            m_FloorPriceText.text = "";
+            m_LastTradePriceText.text = "";
             m_Asset = null;
             ClearAttributes();
         }

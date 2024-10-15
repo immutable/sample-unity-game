@@ -23,7 +23,7 @@
       "dependencies": {
         "com.cysharp.unitask": "2.3.3"
       },
-      "hash": "01fdea8065a855144ab98514d95f70e8d9a2f74e"
+      "hash": "e8bc73fce00813ce0abc7ce442e1d8b8bdf03779"
     },
     "com.immutable.passport": {
       "version": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Passport",

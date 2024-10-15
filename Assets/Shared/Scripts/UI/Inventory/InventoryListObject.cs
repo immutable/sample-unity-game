@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Numerics;
 using Immutable.Api.Model;
 using TMPro;
@@ -11,7 +12,6 @@ namespace HyperCasual.Runner
     public class InventoryListObject : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI m_NameText;
-        [SerializeField] private TextMeshProUGUI m_TokenIdText;
         [SerializeField] private TextMeshProUGUI m_AmountText;
         [SerializeField] private ImageUrlObject m_Image;
 
@@ -40,7 +40,7 @@ namespace HyperCasual.Runner
             if (m_NFT == null) return;
 
             // Display the asset name based on its contract type.
-            m_NameText.text = m_NFT.NftWithStack.ContractType.ToUpper() switch
+            m_NameText.text = m_NFT?.NftWithStack.ContractType.ToUpper() switch
             {
                 "ERC721" => $"{m_NFT.NftWithStack.Name} #{m_NFT.NftWithStack.TokenId}",
                 "ERC1155" => $"{m_NFT.NftWithStack.Name} x{m_NFT.NftWithStack.Balance}",
@@ -70,6 +70,12 @@ namespace HyperCasual.Runner
 #pragma warning disable CS4014
             m_Image.LoadUrl(m_NFT.NftWithStack.Image);
 #pragma warning restore CS4014
+        }
+
+        private void OnDisable()
+        {
+            m_NameText.text = "";
+            m_AmountText.text = "";
         }
     }
 }

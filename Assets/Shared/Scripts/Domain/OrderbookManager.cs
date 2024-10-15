@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using Cysharp.Threading.Tasks;
+using Immutable.Api.Model;
 using Immutable.Orderbook.Api;
 using Immutable.Orderbook.Client;
 using Immutable.Orderbook.Model;
@@ -50,6 +52,11 @@ namespace HyperCasual.Runner
         {
             try
             {
+                if (contractType == "ERC721" && amountToSell != "1")
+                {
+                    throw new ArgumentException("Invalid arguments: 'amountToSell' must be '1' when listing an ERC721.");
+                }
+
                 var listingData = await PrepareListing(contractAddress, contractType, tokenId, price, amountToSell);
 
                 await SignAndSubmitApproval(listingData);
@@ -58,8 +65,7 @@ namespace HyperCasual.Runner
 
                 var listingId = await ListAsset(signature, listingData);
 
-                if (confirmListing)
-                    await ConfirmListingStatus(listingId, "ACTIVE");
+                if (confirmListing) await ConfirmListingStatus(listingId, "ACTIVE");
 
                 return listingId;
             }
@@ -137,8 +143,7 @@ namespace HyperCasual.Runner
                 throw new Exception("No valid listing to sign.");
 
             var messageJson = JsonConvert.SerializeObject(signableAction.Message, Formatting.Indented);
-            // return await Passport.Instance.ZkEvmSignTypedDataV4(messageJson);
-            return "";
+            return await Passport.Instance.ZkEvmSignTypedDataV4(messageJson);
         }
 
         /// <summary>
@@ -187,8 +192,52 @@ namespace HyperCasual.Runner
                 if (txResponse.status != "1")
                     throw new Exception("Failed to cancel listing.");
 
-                if (confirmListing)
-                    await ConfirmListingStatus(listingId, "CANCELLED");
+                if (confirmListing) await ConfirmListingStatus(listingId, "CANCELLED");
+            }
+            catch (ApiException e)
+            {
+                HandleApiException(e);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Executes an order by fulfilling a listing and optionally confirming its status.
+        /// </summary>
+        /// <param name="listing">The listing to fulfill.</param>
+        /// <param name="confirmListing">
+        /// If true, the function will poll the listing endpoint to confirm that the listing status 
+        /// has changed to "FILLED". If false, the function will not verify the listing status.
+        /// </param>
+        public async UniTask ExecuteOrder(Listing listing, bool confirmListing = true)
+        {
+            try
+            {
+                var fees = listing.PriceDetails.Fees
+                    .Select(fee => new FulfillOrderRequestTakerFeesInner(fee.Amount, fee.RecipientAddress)).ToList();
+
+                var request = new FulfillOrderRequest(
+                    takerAddress: SaveManager.Instance.WalletAddress,
+                    listingId: listing.ListingId,
+                    takerFees: fees);
+
+                var createListingResponse = await m_OrderbookApi.FulfillOrderAsync(request);
+
+                if (createListingResponse.Actions.Count > 0)
+                {
+                    foreach (var transaction in createListingResponse.Actions)
+                    {
+                        var transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest
+                        {
+                            to = transaction.PopulatedTransactions.To,
+                            data = transaction.PopulatedTransactions.Data,
+                            value = "0"
+                        });
+                        Debug.Log($"Transaction hash: {transactionHash}");
+                    }
+
+                    if (confirmListing) await ConfirmListingStatus(listing.ListingId, "FILLED");
+                }
             }
             catch (ApiException e)
             {
@@ -202,17 +251,43 @@ namespace HyperCasual.Runner
         /// </summary>
         private async UniTask ConfirmListingStatus(string listingId, string desiredStatus)
         {
-            var isConfirmed = await PollingHelper.PollAsync(
-                $"{Config.BASE_URL}/v1/chains/imtbl-zkevm-devnet/orders/listings/{listingId}",
-                response =>
-                {
-                    var listingResponse = JsonUtility.FromJson<ListingResponse>(response);
-                    return listingResponse.result?.status.name == desiredStatus;
-                });
+            const int timeoutDuration = 60000; // Timeout duration in milliseconds
+            const int pollDelay = 2000; // Delay between polls in milliseconds
 
-            Debug.Log(isConfirmed
-                ? $"Listing {listingId} is {desiredStatus.ToLower()}."
-                : $"Failed to confirm listing status: {desiredStatus.ToLower()}.");
+            using var client = new HttpClient();
+            var startTimeMs = Time.time * 1000;
+            var url = $"{Config.BASE_URL}/v1/chains/{Config.CHAIN_NAME}/orders/listings/{listingId}";
+
+            while (true)
+            {
+                if (Time.time * 1000 - startTimeMs > timeoutDuration)
+                {
+                    Debug.Log($"Failed to confirm listing status: {desiredStatus}.");
+                    return;
+                }
+
+                try
+                {
+                    var response = await client.GetAsync(url);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseBody = await response.Content.ReadAsStringAsync();
+                        var listingResponse = JsonUtility.FromJson<ListingResponse>(responseBody);
+
+                        if (listingResponse.result?.status.name == desiredStatus)
+                        {
+                            Debug.Log($"Listing {listingId} is {desiredStatus}.");
+                            return;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
+
+                await UniTask.Delay(pollDelay);
+            }
         }
 
         /// <summary>

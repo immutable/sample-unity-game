@@ -36,25 +36,18 @@ namespace HyperCasual.Runner
         private void OnEnable()
         {
             m_InventoryObj.gameObject.SetActive(false);
-            ConfigureButtons();
-            ConfigureFilters();
 
-            m_ScrollView.OnCreateItemView += OnCreateItemView;
-
-            if (!m_Assets.Any()) LoadAssets();
-            m_Balance.UpdateBalance();
-        }
-
-        /// <summary>
-        /// Configures the back and add buttons with their respective listeners.
-        /// </summary>
-        private void ConfigureButtons()
-        {
             m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
-
             m_AddButton.RemoveListener(OnAddFundsButtonClick);
             m_AddButton.AddListener(OnAddFundsButtonClick);
+
+            m_ScrollView.OnCreateItemView += OnCreateItemView;
+            if (m_Assets.Count == 0) LoadAssets();
+
+            ConfigureFilters();
+
+            m_Balance.UpdateBalance();
         }
 
         /// <summary>
@@ -75,36 +68,36 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Handles the creation of each item in the inventory list.
+        /// Configures each item view in the inventory list.
         /// </summary>
         /// <param name="index">The index of the asset in the list.</param>
         /// <param name="item">The game object representing the asset view.</param>
         private void OnCreateItemView(int index, GameObject item)
         {
-            if (index >= m_Assets.Count) return;
-
-            var asset = m_Assets[index];
-            var itemComponent = item.GetComponent<InventoryListObject>();
-            itemComponent.Initialise(asset);
-
-            var clickable = item.GetComponent<ClickableView>();
-            if (clickable != null)
+            if (index < m_Assets.Count)
             {
-                clickable.ClearAllSubscribers();
-                clickable.OnClick += () =>
+                var asset = m_Assets[index];
+                var itemComponent = item.GetComponent<InventoryListObject>();
+                itemComponent.Initialise(asset);
+
+                var clickable = item.GetComponent<ClickableView>();
+                if (clickable != null)
                 {
-                    var view = UIManager.Instance.GetView<InventoryAssetDetailsView>();
-                    UIManager.Instance.Show(view);
-                    view.Initialise(asset);
-                };
+                    clickable.ClearAllSubscribers();
+                    clickable.OnClick += () =>
+                    {
+                        var view = UIManager.Instance.GetView<InventoryAssetDetailsView>();
+                        UIManager.Instance.Show(view);
+                        view.Initialise(asset);
+                    };
+                }
             }
 
-            if (index >= m_Assets.Count - 8 && !m_IsLoadingMore)
-                LoadAssets();
+            if (index >= m_Assets.Count - 8 && !m_IsLoadingMore) LoadAssets();
         }
 
         /// <summary>
-        /// Loads the player's assets and adds them to the inventory view.
+        /// Loads the player's assets and adds them to the scroll view
         /// </summary>
         private async void LoadAssets()
         {

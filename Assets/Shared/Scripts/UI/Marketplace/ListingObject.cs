@@ -25,17 +25,6 @@ namespace HyperCasual.Runner
         private Func<Listing, UniTask<bool>> m_OnBuy;
 
         /// <summary>
-        /// Clears any displayed listing data when the object is disabled.
-        /// </summary>
-        private void OnDisable()
-        {
-            m_TokenIdText.text = string.Empty;
-            m_PriceText.text = string.Empty;
-            m_AmountText.text = string.Empty;
-            m_Listing = null;
-        }
-
-        /// <summary>
         /// Initialises the UI with the given listing details.
         /// </summary>
         /// <param name="listing">The listing to display.</param>
@@ -87,6 +76,17 @@ namespace HyperCasual.Runner
             m_PlayersListingText.gameObject.SetActive(success);
             m_BuyButton.gameObject.SetActive(!success);
             m_Progress.SetActive(false);
+        }
+
+        /// <summary>
+        /// Clears any displayed listing data when the object is disabled.
+        /// </summary>
+        private void OnDisable()
+        {
+            m_TokenIdText.text = string.Empty;
+            m_PriceText.text = string.Empty;
+            m_AmountText.text = string.Empty;
+            m_Listing = null;
         }
     }
 }
