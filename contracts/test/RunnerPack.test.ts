@@ -2,7 +2,6 @@ import { ethers } from 'hardhat';
 import { expect } from 'chai';
 // eslint-disable-next-line import/extensions
 import { RunnerToken, OperatorAllowlist__factory, RunnerToken__factory, ImmutableERC721, ImmutableERC721__factory, RunnerPack, RunnerPack__factory } from '../typechain-types';
-import { token } from '../typechain-types/@openzeppelin/contracts';
 
 describe('RunnerShield', function () {
   let tokenContract: RunnerToken;
@@ -15,7 +14,7 @@ describe('RunnerShield', function () {
 
     // deploy OperatorAllowlist contract
     const OperatorAllowlist = await ethers.getContractFactory(
-      'OperatorAllowlist'
+      'OperatorAllowlist',
     ) as unknown as OperatorAllowlist__factory;
     const operatorAllowlist = await OperatorAllowlist.deploy(owner.address);
     const operatorAllowlistAddress = await operatorAllowlist.getAddress();
@@ -58,13 +57,13 @@ describe('RunnerShield', function () {
     const shieldId = await contract.GALACTIC_SHIELD();
     const clearId = await contract.CLEAR_SKIES();
 
-    await contract.connect(owner).safeMint(recipient.address, shieldId.toString(), 5, "0x");
+    await contract.connect(owner).safeMint(recipient.address, shieldId.toString(), 5, '0x');
     expect(await contract.balanceOf(recipient.address, shieldId)).to.equal(5);
 
-    await contract.connect(owner).safeMint(recipient.address, shieldId.toString(), 5, "0x");
+    await contract.connect(owner).safeMint(recipient.address, shieldId.toString(), 5, '0x');
     expect(await contract.balanceOf(recipient.address, shieldId)).to.equal(10);
 
-    await contract.connect(owner).safeMint(recipient.address, clearId.toString(), 8, "0x");
+    await contract.connect(owner).safeMint(recipient.address, clearId.toString(), 8, '0x');
     expect(await contract.balanceOf(recipient.address, clearId)).to.equal(8);
   });
 
@@ -76,7 +75,7 @@ describe('RunnerShield', function () {
     const shieldId = await contract.GALACTIC_SHIELD();
 
     await expect(
-      contract.connect(acc1).safeMint(acc1.address, shieldId.toString(), 5, "0x")
+      contract.connect(acc1).safeMint(acc1.address, shieldId.toString(), 5, '0x'),
     ).to.be.revertedWith(
       `AccessControl: account ${acc1.address.toLowerCase()} is missing role ${minterRole}`,
     );
@@ -87,7 +86,7 @@ describe('RunnerShield', function () {
 
     const shieldId = await contract.GALACTIC_SHIELD();
 
-    await contract.connect(owner).safeMint(recipient.address, shieldId.toString(), 2, "0x");
+    await contract.connect(owner).safeMint(recipient.address, shieldId.toString(), 2, '0x');
     expect(await contract.balanceOf(recipient.address, shieldId)).to.equal(2);
 
     await contract.connect(recipient).burn(recipient.address, shieldId, 1);
@@ -99,14 +98,14 @@ describe('RunnerShield', function () {
 
     const shieldId = await contract.GALACTIC_SHIELD();
 
-    await contract.connect(owner).safeMint(recipient.address, shieldId.toString(), 1, "0x");
+    await contract.connect(owner).safeMint(recipient.address, shieldId.toString(), 1, '0x');
     expect(await contract.balanceOf(recipient.address, shieldId)).to.equal(1);
 
     await contract.connect(recipient).burn(recipient.address, shieldId, 1);
     expect(await contract.balanceOf(recipient.address, shieldId)).to.equal(0);
 
     await expect(
-      contract.connect(recipient).burn(recipient.address, shieldId, 1)
+      contract.connect(recipient).burn(recipient.address, shieldId, 1),
     ).to.be.revertedWith('ERC1155: burn amount exceeds totalSupply');
   });
 
@@ -115,11 +114,11 @@ describe('RunnerShield', function () {
 
     const shieldId = await contract.GALACTIC_SHIELD();
 
-    await contract.connect(owner).safeMint(recipient.address, shieldId.toString(), 2, "0x");
+    await contract.connect(owner).safeMint(recipient.address, shieldId.toString(), 2, '0x');
     expect(await contract.balanceOf(recipient.address, shieldId)).to.equal(2);
 
     await expect(
-      contract.connect(acc1).burn(recipient.address, shieldId, 1)
+      contract.connect(acc1).burn(recipient.address, shieldId, 1),
     ).to.be.revertedWith('ERC1155: caller is not token owner or approved');
   });
 
@@ -160,8 +159,6 @@ describe('RunnerShield', function () {
 
   it('Without approval account cannot buy galactic shield pack', async function () {
     const [owner, recipient] = await ethers.getSigners();
-
-    const shieldId = await contract.GALACTIC_SHIELD();
 
     // Mint ten tokens to recipient
     const tenTokens = 10n * (10n ** await tokenContract.decimals());
@@ -210,8 +207,6 @@ describe('RunnerShield', function () {
 
   it('Without approval account cannot buy clear skies pack', async function () {
     const [owner, recipient] = await ethers.getSigners();
-
-    const clearSkiesId = await contract.CLEAR_SKIES();
 
     // Mint eight tokens to recipient
     const eightTokens = 8n * (10n ** await tokenContract.decimals());
@@ -262,9 +257,6 @@ describe('RunnerShield', function () {
 
   it('Without approval account cannot buy navigators combo pack', async function () {
     const [owner, recipient] = await ethers.getSigners();
-
-    const shieldId = await contract.GALACTIC_SHIELD();
-    const clearSkiesId = await contract.CLEAR_SKIES();
 
     // Mint nine tokens to recipient
     const nineTokens = 9n * (10n ** await tokenContract.decimals());

@@ -16,7 +16,7 @@ async function main() {
   // Deploy the contract to the zkEVM network
   const packContract = await packContractFactory.deploy(
     '0x328766302e7617d0de5901f8da139dca49f3ec75', // Immutable Runner Token contract address
-    '0x5A3461514af018c19A6F887d14840B05fED4c5b8' // Immutable Operator Allowlist
+    '0x5A3461514af018c19A6F887d14840B05fED4c5b8', // Immutable Operator Allowlist
   );
 
   console.log('Contract deployed to:', await packContract.getAddress());
