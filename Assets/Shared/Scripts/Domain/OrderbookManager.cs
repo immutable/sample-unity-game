@@ -143,7 +143,8 @@ namespace HyperCasual.Runner
                 throw new Exception("No valid listing to sign.");
 
             var messageJson = JsonConvert.SerializeObject(signableAction.Message, Formatting.Indented);
-            return await Passport.Instance.ZkEvmSignTypedDataV4(messageJson);
+            // return await Passport.Instance.ZkEvmSignTypedDataV4(messageJson);
+            return "";
         }
 
         /// <summary>
