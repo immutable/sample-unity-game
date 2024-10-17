@@ -40,11 +40,11 @@ router.post('/mint/fox', async (req, res) => {
             // Connect to wallet with minter role
             const signer = new ethers_1.Wallet(privateKey).connect(zkEvmProvider);
             // Specify the function to call
-            const abi = ['function mintByQuantity(address to, uint256 quantity)'];
+            const abi = ["function mintNFT(address to)"];
             // Connect contract to the signer
             const contract = new ethers_1.Contract(foxContractAddress, abi, signer);
-            // Mints the number of tokens specified
-            const tx = await contract.mintByQuantity(to, quantity, gasOverrides);
+            // Mints 1 fox NFT
+            const tx = await contract.mintNFT(to, gasOverrides);
             await tx.wait();
             res.writeHead(200);
             res.end(JSON.stringify({ message: "Minted foxes" }));
@@ -72,11 +72,11 @@ router.post('/mint/token', async (req, res) => {
             // Connect to wallet with minter role
             const signer = new ethers_1.Wallet(privateKey).connect(zkEvmProvider);
             // Specify the function to call
-            const abi = ['function mint(address to, uint256 quantity)'];
+            const abi = ["function mintCoins(address to, uint256 quantity)"];
             // Connect contract to the signer
             const contract = new ethers_1.Contract(tokenContractAddress, abi, signer);
             // Mints the number of tokens specified
-            const tx = await contract.mint(to, quantity, gasOverrides);
+            const tx = await contract.mintCoins(to, quantity, gasOverrides);
             await tx.wait();
             res.writeHead(200);
             res.end(JSON.stringify({ message: "Minted ERC20 tokens" }));
