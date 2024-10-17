@@ -168,7 +168,7 @@ namespace HyperCasual.Runner
                     {
                         // Calculate the quantity to mint
                         // Need to take into account Immutable Runner Token decimal value i.e. 18
-                        BigInteger quantity = BigInteger.Multiply(new BigInteger(m_CoinCount), BigInteger.Pow(10, 18));
+                        BigInteger quantity = new BigInteger(m_CoinCount);
                         Debug.Log($"Quantity: {quantity}");
                         var nvc = new List<KeyValuePair<string, string>>
                     {
