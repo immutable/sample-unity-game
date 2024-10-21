@@ -9,7 +9,6 @@ namespace HyperCasual.Runner
         public const string SERVER_URL = "http://localhost:6060";
 
         public const string CLIENT_ID = "mp6rxfMDwwZDogcdgNrAaHnG0qMlXuMK"; // Testnet
-        //public const string CLIENT_ID = "2Ng38UmEg0Morz1xOQLtsDs72Wx8uyGL"; // Devnet
         // public const string CLIENT_ID = "UnB98ngnXIZIEJWGJOjVe1BpCx5ix7qc"; // WebGL
 
         public const string ENVIRONMENT = "sandbox";
@@ -39,15 +38,8 @@ namespace HyperCasual.Runner
 
     public static class Contract
     {
-        // public const string SKIN = "0xad826E89CDe60E4eE248980D35c0F5C1196ad059"; // Testnet
-        // public const string SKIN = "0xcdbee7935e1b0eaabdee64219182602df0d8d094"; // Devnet
         public const string SKIN = "0xc8df1b1693e2beffd2e484a825a357c6a3d998f2"; // Testnet team
-
-        // public const string TOKEN = "0x912cd5f1cd67F1143b7a5796fd9e5063D755DAbe"; // Testnet
-        // public const string TOKEN = "0x328766302e7617d0de5901f8da139dca49f3ec75"; // Devnet
         public const string TOKEN = "0xb237501b35dfdcad274299236a141425469ab9ba"; // Testnet team
-
-        // public const string PACK = "0x60a6e04faf4feb1e08d7012077146b392569a094"; // Devnet 
         public const string PACK = "0x8525b5e782f3fbe6460057460be020146b63ed0f"; // Testnet team 
     }
 }

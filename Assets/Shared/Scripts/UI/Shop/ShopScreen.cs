@@ -95,7 +95,6 @@ namespace HyperCasual.Runner
             }
         }
 
-        // Uses mocked stacks endpoint
         private async UniTask<List<Pack>> GetPacks()
         {
             Debug.Log("Fetching packs...");
@@ -121,7 +120,6 @@ namespace HyperCasual.Runner
                 }
                 else
                 {
-                    // TODO use dialogs
                     Debug.Log("Failed to fetch packs");
                 }
             }
