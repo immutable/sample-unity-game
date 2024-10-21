@@ -31,7 +31,7 @@
     "vm-browserify": "^1.1.2"
   },
   "dependencies": {
-    "@imtbl/sdk": "^1.40.4",
+    "@imtbl/sdk": "^1.57.0",
     "axios": "^1.7.5",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
