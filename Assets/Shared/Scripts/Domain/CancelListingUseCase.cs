@@ -25,7 +25,11 @@ namespace HyperCasual.Runner
         /// Cancels the specified listing.
         /// </summary>
         /// <param name="listingId">The unique identifier of the listing to cancel.</param>
-        public async UniTask CancelListing(string listingId)
+        /// <param name="confirmListing">
+        /// If true, the function will poll the listing endpoint to confirm that the listing status 
+        /// has changed to "CANCELLED". If false, the function will not verify the listing status.
+        /// </param>
+        public async UniTask CancelListing(string listingId, bool confirmListing = true)
         {
             try
             {
@@ -48,6 +52,8 @@ namespace HyperCasual.Runner
 
                 if (txResponse.status != "1")
                     throw new Exception("Failed to cancel listing.");
+
+                if (confirmListing) await OrderbookUseCase.Instance.ConfirmListingStatus(listingId, "CANCELLED");
             }
             catch (ApiException e)
             {

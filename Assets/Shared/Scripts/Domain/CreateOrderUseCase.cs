@@ -40,12 +40,16 @@ namespace HyperCasual.Runner
         /// <param name="buyContractAddress">
         /// The contract address of the token used to purchase the NFT.
         /// </param>
+        /// <param name="confirmListing">
+        /// If true, the function will continuously poll the marketplace endpoint to ensure the listing status 
+        /// updates to "ACTIVE" upon creation. If false, the function will not verify the listing status.
+        /// </param>
         /// <returns>
         /// A <see cref="UniTask{String}"/> that returns the listing ID if the sale is successfully created.
         /// </returns>
         public async UniTask<string> CreateListing(
             string contractAddress, string contractType, string tokenId,
-            string price, string amountToSell, string buyContractAddress)
+            string price, string amountToSell, string buyContractAddress, bool confirmListing = true)
         {
             try
             {
@@ -61,6 +65,8 @@ namespace HyperCasual.Runner
                 var signature = await SignListing(listingData);
 
                 var listingId = await ListAsset(signature, listingData);
+
+                if (confirmListing) await OrderbookUseCase.Instance.ConfirmListingStatus(listingId, "ACTIVE");
 
                 return listingId;
             }

@@ -26,7 +26,11 @@ namespace HyperCasual.Runner
         /// </summary>
         /// <param name="listingId">The unique identifier of the listing to fulfill.</param>
         /// <param name="fees">The taker fees</param>
-        public async UniTask ExecuteOrder(string listingId, List<FulfillOrderRequestTakerFeesInner> fees)
+        /// <param name="confirmListing">
+        /// If true, the function will poll the listing endpoint to confirm that the listing status 
+        /// has changed to "FILLED". If false, the function will not verify the listing status.
+        /// </param>
+        public async UniTask ExecuteOrder(string listingId, List<FulfillOrderRequestTakerFeesInner> fees, bool confirmListing = true)
         {
             try
             {
@@ -50,6 +54,8 @@ namespace HyperCasual.Runner
                         Debug.Log($"Transaction hash: {transactionHash}");
                     }
                 }
+
+                if (confirmListing) await OrderbookUseCase.Instance.ConfirmListingStatus(listingId, "FILLED");
             }
             catch (ApiException e)
             {
