@@ -25,13 +25,16 @@ namespace HyperCasual.Runner
 
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
+        [SerializeField] private HyperCasualButton m_AddButton;
         [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private TMP_Dropdown m_ColoursDropdown;
         [SerializeField] private TMP_Dropdown m_SpeedDropdown;
         [SerializeField] private InfiniteScrollGridView m_ScrollView;
         [SerializeField] private MarketplaceListObject m_StackObj;
+        [SerializeField] private AddFunds m_AddFunds;
+        [SerializeField] private CustomDialog m_CustomDialog;
 
-        private StacksApi m_StacksApi = new StacksApi(new Configuration { BasePath = Config.BASE_URL });
+        private StacksApi m_StacksApi = new(new Configuration { BasePath = Config.BASE_URL });
         private readonly List<StackBundle> m_Stacks = new();
         private bool m_IsLoadingMore;
         private Page m_Page;
@@ -50,12 +53,15 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Sets up the marketplace screen and loads initial stacks.
         /// </summary>
-        private void OnEnable()
+        private async void OnEnable()
         {
             m_StackObj.gameObject.SetActive(false);
 
+            // Set up buttons
             m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
+            m_AddButton.RemoveListener(OnAddFundsButtonClick);
+            m_AddButton.AddListener(OnAddFundsButtonClick);
 
             if (Passport.Instance == null) return;
 
@@ -64,7 +70,11 @@ namespace HyperCasual.Runner
 
             ConfigureFilters();
 
-            m_Balance.UpdateBalance();
+            var balance = await m_Balance.UpdateBalance();
+            if (balance == "0")
+            {
+                await m_CustomDialog.ShowDialog("Zero Balance", "Your IMR balance is 0. Play the game and collect some tokens!", "OK");
+            }
         }
 
         /// <summary>
@@ -206,6 +216,14 @@ namespace HyperCasual.Runner
         {
             Reset();
             m_BackEvent.Raise();
+        }
+        
+        /// <summary>
+        ///     handles the add funds button click
+        /// </summary>
+        private void OnAddFundsButtonClick()
+        {
+            m_AddFunds.Show();
         }
     }
 }

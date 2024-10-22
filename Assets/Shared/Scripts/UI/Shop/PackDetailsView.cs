@@ -37,7 +37,7 @@ namespace HyperCasual.Runner
 
         private Pack? m_Pack = null;
 
-        private void OnEnable()
+        private async void OnEnable()
         {
             m_ItemObj.gameObject.SetActive(false); // Disable the templateitem object
 
@@ -46,8 +46,9 @@ namespace HyperCasual.Runner
             m_BuyButton.RemoveListener(OnBuyButtonClicked);
             m_BuyButton.AddListener(OnBuyButtonClicked);
 
-            // Gets the player's balance
+#pragma warning disable CS4014
             m_Balance.UpdateBalance();
+#pragma warning restore CS4014
         }
 
         /// <summary>

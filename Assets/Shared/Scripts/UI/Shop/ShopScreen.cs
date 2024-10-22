@@ -20,38 +20,41 @@ namespace HyperCasual.Runner
     public class ShopScreen : View
     {
         [SerializeField] private HyperCasualButton m_BackButton;
-        [SerializeField] private HyperCasualButton m_AddButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
+        [SerializeField] private HyperCasualButton m_AddButton;
         [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private ShopListObject m_ItemObj;
         [SerializeField] private Transform m_ListParent;
         [SerializeField] private InfiniteScrollGridView m_ScrollView;
         [SerializeField] private AddFunds m_AddFunds;
+        [SerializeField] private CustomDialog m_CustomDialog;
 
         private readonly List<Pack> m_Packs = new();
 
         /// <summary>
         ///     Sets up the inventory list and fetches the player's assets.
         /// </summary>
-        private void OnEnable()
+        private async void OnEnable()
         {
             // Hide pack template item
             m_ItemObj.gameObject.SetActive(false);
 
+            // Set up buttons
             m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
-
             m_AddButton.RemoveListener(OnAddFundsButtonClick);
             m_AddButton.AddListener(OnAddFundsButtonClick);
 
-            if (Passport.Instance != null)
-            {
-                // Setup infinite scroll view and load packs
-                m_ScrollView.OnCreateItemView += OnCreateItemView;
-                if (m_Packs.Count == 0) LoadPacks();
+            if (Passport.Instance == null) return;
+            
+            // Setup infinite scroll view and load packs
+            m_ScrollView.OnCreateItemView += OnCreateItemView;
+            if (m_Packs.Count == 0) LoadPacks();
 
-                // Gets the player's balance
-                m_Balance.UpdateBalance();
+            var balance = await m_Balance.UpdateBalance();
+            if (balance == "0")
+            {
+                await m_CustomDialog.ShowDialog("Zero Balance", "Your IMR balance is 0. Play the game and collect some tokens!", "OK");
             }
         }
 

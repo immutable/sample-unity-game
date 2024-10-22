@@ -36,17 +36,9 @@ namespace HyperCasual.Runner
         private readonly List<AttributeView> m_AttributeViews = new();
         private readonly List<ListingObject> m_ListingViews = new();
 
-        private readonly OrderbookApi m_OrderbookApi;
         private Listing m_Listing;
 
         private StackBundle m_Order;
-
-        public MarketplaceAssetDetailsView()
-        {
-            var orderbookConfig = new Configuration();
-            orderbookConfig.BasePath = Config.BASE_URL;
-            m_OrderbookApi = new OrderbookApi(orderbookConfig);
-        }
 
         private async void OnEnable()
         {
@@ -56,8 +48,9 @@ namespace HyperCasual.Runner
             m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
 
-            // Gets the player's balance
+#pragma warning disable CS4014
             m_Balance.UpdateBalance();
+#pragma warning restore CS4014
         }
 
         /// <summary>
@@ -180,7 +173,9 @@ namespace HyperCasual.Runner
 
                 await FulfilOrderUseCase.Instance.ExecuteOrder(listing.ListingId, takerFees);
 
+#pragma warning disable CS4014
                 m_Balance.UpdateBalance();
+#pragma warning restore CS4014
 
                 // Locally update stack listing
                 m_Order.Listings.RemoveAll(l => l.ListingId == listing.ListingId);

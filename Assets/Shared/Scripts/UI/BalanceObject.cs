@@ -1,5 +1,7 @@
+#nullable enable
 using System;
 using System.Net.Http;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -13,9 +15,10 @@ namespace HyperCasual.Runner
         [SerializeField] private TextMeshProUGUI m_ValueText;
 
         /// <summary>
-        ///     Gets the player's balance
+        /// Retrieves the player's balance.
         /// </summary>
-        public async void UpdateBalance()
+        /// <returns>The player's balance as a string, or null if the balance could not be fetched.</returns>
+        public async UniTask<string?> UpdateBalance()
         {
             Debug.Log("Fetching player's balance...");
 
@@ -24,38 +27,31 @@ namespace HyperCasual.Runner
 
             try
             {
-                var address = SaveManager.Instance.WalletAddress;
-
-                if (string.IsNullOrEmpty(address))
-                {
-                    Debug.LogError("Could not get player's wallet");
-                    return;
-                }
-
                 using var client = new HttpClient();
-                var response = await client.GetAsync($"{Config.SERVER_URL}/balance?address={address}");
+                var response = await client.GetAsync($"{Config.SERVER_URL}/balance?address={SaveManager.Instance.WalletAddress}");
 
                 if (response.IsSuccessStatusCode)
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
                     Debug.Log($"Balance response: {responseBody}");
+
                     var balanceResponse = JsonUtility.FromJson<BalanceResponse>(responseBody);
                     if (balanceResponse?.quantity != null) m_ValueText.text = $"{balanceResponse.quantity} IMR";
+
+                    if (gameObject != null) gameObject.SetActive(true);
+
+                    return balanceResponse?.quantity == "0.0" ? "0" : balanceResponse?.quantity;
                 }
-                else
-                {
-                    Debug.Log("Failed to get balance");
-                }
+
+                Debug.LogWarning("Failed to retrieve the balance.");
+                return null;
             }
             catch (Exception ex)
             {
                 Debug.Log($"Failed to get balance: {ex.Message}");
             }
 
-            if (gameObject != null)
-            {
-                gameObject.SetActive(true);
-            }
+            return null;
         }
     }
 }
