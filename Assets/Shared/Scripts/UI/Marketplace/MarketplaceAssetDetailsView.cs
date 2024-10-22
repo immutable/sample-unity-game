@@ -178,7 +178,7 @@ namespace HyperCasual.Runner
                 var takerFees = listing.PriceDetails.Fees
                     .Select(fee => new FulfillOrderRequestTakerFeesInner(fee.Amount, fee.RecipientAddress)).ToList();
 
-                await FulfillOrderUseCase.Instance.ExecuteOrder(listing.ListingId, takerFees);
+                await FulfilOrderUseCase.Instance.ExecuteOrder(listing.ListingId, takerFees);
 
                 m_Balance.UpdateBalance();
 

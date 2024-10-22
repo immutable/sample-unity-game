@@ -11,20 +11,20 @@ using UnityEngine;
 
 namespace HyperCasual.Runner
 {
-    public class FulfillOrderUseCase
+    public class FulfilOrderUseCase
     {
-        private static readonly Lazy<FulfillOrderUseCase> s_Instance = new(() => new FulfillOrderUseCase());
+        private static readonly Lazy<FulfilOrderUseCase> s_Instance = new(() => new FulfilOrderUseCase());
 
         private readonly OrderbookApi m_OrderbookApi = new(new Configuration { BasePath = Config.BASE_URL });
 
-        private FulfillOrderUseCase() { }
+        private FulfilOrderUseCase() { }
 
-        public static FulfillOrderUseCase Instance => s_Instance.Value;
+        public static FulfilOrderUseCase Instance => s_Instance.Value;
 
         /// <summary>
         /// Executes an order by fulfilling a listing and optionally confirming its status.
         /// </summary>
-        /// <param name="listingId">The unique identifier of the listing to fulfill.</param>
+        /// <param name="listingId">The unique identifier of the listing to fulfil.</param>
         /// <param name="fees">The taker fees</param>
         /// <param name="confirmListing">
         /// If true, the function will poll the listing endpoint to confirm that the listing status 
