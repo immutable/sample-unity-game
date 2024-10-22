@@ -456,7 +456,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2602276242752267194}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.77962965
+  m_Size: 0.7314815
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2760,7 +2760,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_NameText: {fileID: 1004618502816312996}
-  m_TokenIdText: {fileID: 0}
   m_AmountText: {fileID: 7316047818373545485}
   m_Image: {fileID: 6397923807468355234}
 --- !u!222 &2122244342755322900
