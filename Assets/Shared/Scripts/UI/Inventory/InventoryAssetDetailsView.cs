@@ -229,12 +229,13 @@ namespace HyperCasual.Runner
 
             try
             {
-                m_ListingId = await OrderbookManager.Instance.CreateListing(
+                m_ListingId = await CreateOrderUseCase.Instance.CreateListing(
                     contractAddress: m_Asset.NftWithStack.ContractAddress,
                     contractType: m_Asset.NftWithStack.ContractType,
                     tokenId: m_Asset.NftWithStack.TokenId,
                     price: $"{normalisedPrice}",
-                    amountToSell: amountToSell
+                    amountToSell: amountToSell,
+                    buyContractAddress: Contract.TOKEN
                 );
 
                 Debug.Log($"Sale complete: Listing ID: {m_ListingId}");
@@ -278,7 +279,7 @@ namespace HyperCasual.Runner
 
             try
             {
-                await OrderbookManager.Instance.CancelListing(m_ListingId);
+                await CancelListingUseCase.Instance.CancelListing(m_ListingId);
 
                 m_SellButton.gameObject.SetActive(true);
                 m_AmountText.text = "Not listed";
