@@ -57,7 +57,7 @@ namespace HyperCasual.Runner
             m_TokenIdText.text = $"Token ID: {m_Listing.TokenId}";
             m_AmountText.text = $"Amount: {m_Listing.Amount}";
 
-            var rawAmount = m_Listing.PriceDetails.Amount.Value;
+            var rawAmount = m_Listing.PriceDetails.Amount;
             var quantity = (decimal)BigInteger.Parse(rawAmount) / (decimal)BigInteger.Pow(10, 18);
             m_PriceText.text = $"{quantity} IMR";
         }

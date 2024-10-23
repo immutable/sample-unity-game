@@ -31,6 +31,12 @@ namespace Immutable.Api.Model
     [DataContract(Name = "NFTWithStack")]
     public partial class NFTWithStack
     {
+
+        /// <summary>
+        /// Gets or Sets ContractType
+        /// </summary>
+        [DataMember(Name = "contract_type", IsRequired = true, EmitDefaultValue = true)]
+        public MarketplaceContractType ContractType { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="NFTWithStack" /> class.
         /// </summary>
@@ -43,7 +49,7 @@ namespace Immutable.Api.Model
         /// <param name="stackId">Stack ID (required).</param>
         /// <param name="chain">chain (required).</param>
         /// <param name="contractAddress">Contract address (required).</param>
-        /// <param name="contractType">The contract type (required).</param>
+        /// <param name="contractType">contractType (required).</param>
         /// <param name="createdAt">When the metadata was created (required).</param>
         /// <param name="updatedAt">When the metadata was last updated (required).</param>
         /// <param name="name">The name of the NFT (required).</param>
@@ -54,7 +60,7 @@ namespace Immutable.Api.Model
         /// <param name="youtubeUrl">The youtube URL of NFT (required).</param>
         /// <param name="attributes">List of Metadata attributes (required).</param>
         /// <param name="balance">Balance of NFT (required).</param>
-        public NFTWithStack(string tokenId = default(string), Guid stackId = default(Guid), Chain chain = default(Chain), string contractAddress = default(string), string contractType = default(string), DateTime createdAt = default(DateTime), DateTime updatedAt = default(DateTime), string name = default(string), string description = default(string), string image = default(string), string externalUrl = default(string), string animationUrl = default(string), string youtubeUrl = default(string), List<NFTMetadataAttribute> attributes = default(List<NFTMetadataAttribute>), int? balance = default(int?))
+        public NFTWithStack(string tokenId = default(string), Guid stackId = default(Guid), Chain chain = default(Chain), string contractAddress = default(string), MarketplaceContractType contractType = default(MarketplaceContractType), DateTime createdAt = default(DateTime), DateTime updatedAt = default(DateTime), string name = default(string), string description = default(string), string image = default(string), string externalUrl = default(string), string animationUrl = default(string), string youtubeUrl = default(string), List<NFTMetadataAttribute> attributes = default(List<NFTMetadataAttribute>), int? balance = default(int?))
         {
             // to ensure "tokenId" is required (not null)
             if (tokenId == null)
@@ -75,11 +81,6 @@ namespace Immutable.Api.Model
                 throw new ArgumentNullException("contractAddress is a required property for NFTWithStack and cannot be null");
             }
             this.ContractAddress = contractAddress;
-            // to ensure "contractType" is required (not null)
-            if (contractType == null)
-            {
-                throw new ArgumentNullException("contractType is a required property for NFTWithStack and cannot be null");
-            }
             this.ContractType = contractType;
             this.CreatedAt = createdAt;
             this.UpdatedAt = updatedAt;
@@ -159,13 +160,6 @@ namespace Immutable.Api.Model
         /// <value>Contract address</value>
         [DataMember(Name = "contract_address", IsRequired = true, EmitDefaultValue = true)]
         public string ContractAddress { get; set; }
-
-        /// <summary>
-        /// The contract type
-        /// </summary>
-        /// <value>The contract type</value>
-        [DataMember(Name = "contract_type", IsRequired = true, EmitDefaultValue = true)]
-        public string ContractType { get; set; }
 
         /// <summary>
         /// When the metadata was created

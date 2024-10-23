@@ -40,10 +40,10 @@ namespace Immutable.Api.Model
         /// Initializes a new instance of the <see cref="MarketPriceDetails" /> class.
         /// </summary>
         /// <param name="token">token (required).</param>
-        /// <param name="amount">amount (required).</param>
-        /// <param name="feeInclusiveAmount">feeInclusiveAmount (required).</param>
+        /// <param name="amount">The token amount value. This value is provided in the smallest unit of the token (e.g. wei for ETH) (required).</param>
+        /// <param name="feeInclusiveAmount">The token amount value. This value is provided in the smallest unit of the token (e.g. wei for ETH) (required).</param>
         /// <param name="fees">fees (required).</param>
-        public MarketPriceDetails(MarketPriceDetailsToken token = default(MarketPriceDetailsToken), PaymentAmount amount = default(PaymentAmount), PaymentAmount feeInclusiveAmount = default(PaymentAmount), List<MarketPriceFees> fees = default(List<MarketPriceFees>))
+        public MarketPriceDetails(MarketPriceDetailsToken token = default(MarketPriceDetailsToken), string amount = default(string), string feeInclusiveAmount = default(string), List<MarketPriceFees> fees = default(List<MarketPriceFees>))
         {
             // to ensure "token" is required (not null)
             if (token == null)
@@ -78,16 +78,20 @@ namespace Immutable.Api.Model
         public MarketPriceDetailsToken Token { get; set; }
 
         /// <summary>
-        /// Gets or Sets Amount
+        /// The token amount value. This value is provided in the smallest unit of the token (e.g. wei for ETH)
         /// </summary>
+        /// <value>The token amount value. This value is provided in the smallest unit of the token (e.g. wei for ETH)</value>
+        /// <example>9750000000000000000</example>
         [DataMember(Name = "amount", IsRequired = true, EmitDefaultValue = true)]
-        public PaymentAmount Amount { get; set; }
+        public string Amount { get; set; }
 
         /// <summary>
-        /// Gets or Sets FeeInclusiveAmount
+        /// The token amount value. This value is provided in the smallest unit of the token (e.g. wei for ETH)
         /// </summary>
+        /// <value>The token amount value. This value is provided in the smallest unit of the token (e.g. wei for ETH)</value>
+        /// <example>9750000000000000000</example>
         [DataMember(Name = "fee_inclusive_amount", IsRequired = true, EmitDefaultValue = true)]
-        public PaymentAmount FeeInclusiveAmount { get; set; }
+        public string FeeInclusiveAmount { get; set; }
 
         /// <summary>
         /// Gets or Sets Fees

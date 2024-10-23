@@ -84,7 +84,7 @@ namespace Immutable.Api.Client
 
         public T Deserialize<T>(UnityWebRequest request)
         {
-            var result = (T)Deserialize(request, typeof(T));
+            var result = (T) Deserialize(request, typeof(T));
             return result;
         }
 
@@ -148,7 +148,7 @@ namespace Immutable.Api.Client
                     throw new ApiException((int)request.responseCode, request.error, text);
                 }
             }
-
+            
             if (type != typeof(global::System.Object) && request.responseCode >= 200 && request.responseCode < 300)
             {
                 throw new UnexpectedResponseException(request, type);
@@ -333,16 +333,16 @@ namespace Immutable.Api.Client
 
             if (options.Cookies != null && options.Cookies.Count > 0)
             {
-#if UNITY_WEBGL
+                #if UNITY_WEBGL
                 throw new System.InvalidOperationException("UnityWebRequest does not support setting cookies in WebGL");
-#else
+                #else
                 if (options.Cookies.Count != 1)
                 {
                     UnityEngine.Debug.LogError("Only one cookie supported, ignoring others");
                 }
 
                 request.SetRequestHeader("Cookie", options.Cookies[0].ToString());
-#endif
+                #endif
             }
 
             return request;
@@ -354,7 +354,7 @@ namespace Immutable.Api.Client
 
         private ApiResponse<T> ToApiResponse<T>(UnityWebRequest request, object responseData)
         {
-            T result = (T)responseData;
+            T result = (T) responseData;
 
             var transformed = new ApiResponse<T>((HttpStatusCode)request.responseCode, new Multimap<string, string>(), result, request.downloadHandler?.text ?? "")
             {
@@ -418,7 +418,7 @@ namespace Immutable.Api.Client
                 {
                     await tsc.Task;
                 }
-
+                
                 if (request.result == UnityWebRequest.Result.ConnectionError ||
                     request.result == UnityWebRequest.Result.DataProcessingError)
                 {
@@ -430,11 +430,11 @@ namespace Immutable.Api.Client
                 // if the response type is oneOf/anyOf, call FromJSON to deserialize the data
                 if (typeof(Immutable.Api.Model.AbstractOpenAPISchema).IsAssignableFrom(typeof(T)))
                 {
-                    responseData = (T)typeof(T).GetMethod("FromJson").Invoke(null, new object[] { new ByteArrayContent(request.downloadHandler.data) });
+                    responseData = (T) typeof(T).GetMethod("FromJson").Invoke(null, new object[] { new ByteArrayContent(request.downloadHandler.data) });
                 }
                 else if (typeof(T).Name == "Stream") // for binary response
                 {
-                    responseData = (T)(object)new MemoryStream(request.downloadHandler.data);
+                    responseData = (T) (object) new MemoryStream(request.downloadHandler.data);
                 }
 
                 InterceptResponse(request, path, options, configuration, ref responseData);

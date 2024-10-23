@@ -89,7 +89,7 @@ namespace HyperCasual.Runner
             // Floor price
             if (m_Order.Market?.FloorListing != null)
             {
-                var amount = m_Order.Market.FloorListing.PriceDetails.Amount.Value;
+                var amount = m_Order.Market.FloorListing.PriceDetails.Amount;
 
                 var quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
                 m_FloorPriceText.text = $"Floor price: {quantity} IMR";
@@ -102,7 +102,7 @@ namespace HyperCasual.Runner
             // Last trade price
             if (m_Order.Market?.LastTrade?.PriceDetails?.Count > 0)
             {
-                var amount = m_Order.Market.LastTrade.PriceDetails[0].Amount.Value;
+                var amount = m_Order.Market.LastTrade.PriceDetails[0].Amount;
 
                 var quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
                 m_LastTradePriceText.text = $"Last trade price: {quantity} IMR";

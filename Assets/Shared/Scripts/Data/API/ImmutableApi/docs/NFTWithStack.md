@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **StackId** | **Guid** | Stack ID | 
 **Chain** | [**Chain**](Chain.md) |  | 
 **ContractAddress** | **string** | Contract address | 
-**ContractType** | **string** | The contract type | 
+**ContractType** | **MarketplaceContractType** |  | 
 **CreatedAt** | **DateTime** | When the metadata was created | 
 **UpdatedAt** | **DateTime** | When the metadata was last updated | 
 **Name** | **string** | The name of the NFT | 

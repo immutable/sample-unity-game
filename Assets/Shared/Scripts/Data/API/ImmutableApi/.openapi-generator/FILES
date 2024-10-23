@@ -93,6 +93,7 @@ docs/MarketPriceDetailsToken.md
 docs/MarketPriceERC20Token.md
 docs/MarketPriceFees.md
 docs/MarketPriceNativeToken.md
+docs/MarketplaceContractType.md
 docs/Metadata.md
 docs/MetadataApi.md
 docs/MetadataRefreshRateLimitResult.md
@@ -129,7 +130,6 @@ docs/OrganisationTier.md
 docs/Page.md
 docs/PassportApi.md
 docs/PassportProfileApi.md
-docs/PaymentAmount.md
 docs/PendingOrderStatus.md
 docs/PricingApi.md
 docs/ProtocolData.md
@@ -271,6 +271,7 @@ src/Immutable.Api.Test/Model/MarketPriceERC20TokenTests.cs
 src/Immutable.Api.Test/Model/MarketPriceFeesTests.cs
 src/Immutable.Api.Test/Model/MarketPriceNativeTokenTests.cs
 src/Immutable.Api.Test/Model/MarketTests.cs
+src/Immutable.Api.Test/Model/MarketplaceContractTypeTests.cs
 src/Immutable.Api.Test/Model/MetadataRefreshRateLimitResultTests.cs
 src/Immutable.Api.Test/Model/MetadataTests.cs
 src/Immutable.Api.Test/Model/MintAssetTests.cs
@@ -301,7 +302,6 @@ src/Immutable.Api.Test/Model/OrderStatusTests.cs
 src/Immutable.Api.Test/Model/OrderTests.cs
 src/Immutable.Api.Test/Model/OrganisationTierTests.cs
 src/Immutable.Api.Test/Model/PageTests.cs
-src/Immutable.Api.Test/Model/PaymentAmountTests.cs
 src/Immutable.Api.Test/Model/PendingOrderStatusTests.cs
 src/Immutable.Api.Test/Model/ProtocolDataTests.cs
 src/Immutable.Api.Test/Model/QuotesForNFTsResultTests.cs
@@ -457,6 +457,7 @@ src/Immutable.Api/Model/MarketPriceDetailsToken.cs
 src/Immutable.Api/Model/MarketPriceERC20Token.cs
 src/Immutable.Api/Model/MarketPriceFees.cs
 src/Immutable.Api/Model/MarketPriceNativeToken.cs
+src/Immutable.Api/Model/MarketplaceContractType.cs
 src/Immutable.Api/Model/Metadata.cs
 src/Immutable.Api/Model/MetadataRefreshRateLimitResult.cs
 src/Immutable.Api/Model/Mint.cs
@@ -487,7 +488,6 @@ src/Immutable.Api/Model/OrderStatus.cs
 src/Immutable.Api/Model/OrderStatusName.cs
 src/Immutable.Api/Model/OrganisationTier.cs
 src/Immutable.Api/Model/Page.cs
-src/Immutable.Api/Model/PaymentAmount.cs
 src/Immutable.Api/Model/PendingOrderStatus.cs
 src/Immutable.Api/Model/ProtocolData.cs
 src/Immutable.Api/Model/QuotesForNFTsResult.cs

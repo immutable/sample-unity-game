@@ -46,7 +46,7 @@ namespace HyperCasual.Runner
             if (m_Stack.Market?.FloorListing != null)
             {
                 // Format the amount
-                var amount = m_Stack.Market.FloorListing.PriceDetails.Amount.Value;
+                var amount = m_Stack.Market.FloorListing.PriceDetails.Amount;
                 var quantity = (decimal)BigInteger.Parse(amount) / (decimal)BigInteger.Pow(10, 18);
                 m_AmountText.text = $"Floor price: {quantity} IMR";
             }

@@ -72,10 +72,10 @@ namespace HyperCasual.Runner
             var nft = asset.NftWithStack;
 
             // Name
-            m_NameText.text = nft.ContractType.ToUpper() switch
+            m_NameText.text = nft.ContractType switch
             {
-                "ERC721" => $"{nft.Name} #{nft.TokenId}",
-                "ERC1155" => $"{nft.Name} x{nft.Balance}",
+                MarketplaceContractType.ERC721 => $"{nft.Name} #{nft.TokenId}",
+                MarketplaceContractType.ERC1155 => $"{nft.Name} x{nft.Balance}",
                 _ => nft.Name
             };
 
@@ -86,7 +86,7 @@ namespace HyperCasual.Runner
             // Details
             m_TokenIdText.text = $"Token ID: {nft.TokenId}";
             m_CollectionText.text = $"Collection: {nft.ContractAddress}";
-            m_ContractTypeText.text = $"Contract type: {nft.ContractType.ToUpper()}";
+            m_ContractTypeText.text = $"Contract type: {nft.ContractType.ToString()}";
 
             // Attributes
             ClearAttributes();
@@ -104,12 +104,12 @@ namespace HyperCasual.Runner
             // Market data
             var floorListing = m_Asset!.Market?.FloorListing;
             m_FloorPriceText.text = floorListing != null
-                ? $"Floor price: {GetQuantity(floorListing.PriceDetails.Amount.Value)} IMR"
+                ? $"Floor price: {GetQuantity(floorListing.PriceDetails.Amount)} IMR"
                 : "Floor price: N/A";
 
             var lastTrade = m_Asset.Market?.LastTrade?.PriceDetails?[0];
             m_LastTradePriceText.text = lastTrade != null
-                ? $"Last trade price: {GetQuantity(lastTrade.Amount.Value)} IMR"
+                ? $"Last trade price: {GetQuantity(lastTrade.Amount)} IMR"
                 : "Last trade price: N/A";
 
             await LoadAssetImage();
@@ -135,13 +135,13 @@ namespace HyperCasual.Runner
             }
 
             var listing = m_Asset.Listings[0];
-            var quantity = GetQuantity(listing.PriceDetails.Amount.Value);
+            var quantity = GetQuantity(listing.PriceDetails.Amount);
 
             // Set the amount text based on the contract type
-            m_AmountText.text = m_Asset.NftWithStack.ContractType.ToUpper() switch
+            m_AmountText.text = m_Asset.NftWithStack.ContractType switch
             {
-                "ERC721" => $"{quantity} IMR",
-                "ERC1155" => $"{listing.Amount} for {quantity} IMR",
+                MarketplaceContractType.ERC721 => $"{quantity} IMR",
+                MarketplaceContractType.ERC1155 => $"{listing.Amount} for {quantity} IMR",
                 _ => m_AmountText.text
             };
         }
@@ -210,7 +210,7 @@ namespace HyperCasual.Runner
             var normalisedPrice = Math.Floor(decimal.Parse(price) * (decimal)BigInteger.Pow(10, 18));
             var amountToSell = "1";
 
-            if (m_Asset.NftWithStack.ContractType.ToUpper() == ERC1155Item.TypeEnum.ERC1155.ToString())
+            if (m_Asset.NftWithStack.ContractType == MarketplaceContractType.ERC1155)
             {
                 var (confirmedAmount, amount) = await m_CustomDialog.ShowDialog(
                     $"How many {m_Asset.NftWithStack.Name} would you like to sell?",
@@ -231,7 +231,7 @@ namespace HyperCasual.Runner
             {
                 m_ListingId = await CreateOrderUseCase.Instance.CreateListing(
                     contractAddress: m_Asset.NftWithStack.ContractAddress,
-                    contractType: m_Asset.NftWithStack.ContractType,
+                    contractType: m_Asset.NftWithStack.ContractType.ToString(),
                     tokenId: m_Asset.NftWithStack.TokenId,
                     price: $"{normalisedPrice}",
                     amountToSell: amountToSell,
@@ -244,10 +244,10 @@ namespace HyperCasual.Runner
                 m_CancelButton.gameObject.SetActive(m_ListingId != null);
 
                 m_AmountText.text = m_ListingId == null ? "Not listed" :
-                    m_Asset!.NftWithStack.ContractType.ToUpper() switch
+                    m_Asset!.NftWithStack.ContractType switch
                     {
-                        "ERC721" => $"{price} IMR",
-                        "ERC1155" => $"{amountToSell} for {price} IMR",
+                        MarketplaceContractType.ERC721 => $"{price} IMR",
+                        MarketplaceContractType.ERC1155 => $"{amountToSell} for {price} IMR",
                         _ => m_AmountText.text
                     };
 

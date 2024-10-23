@@ -40,10 +40,10 @@ namespace HyperCasual.Runner
             if (m_NFT == null) return;
 
             // Display the asset name based on its contract type.
-            m_NameText.text = m_NFT?.NftWithStack.ContractType.ToUpper() switch
+            m_NameText.text = m_NFT?.NftWithStack.ContractType switch
             {
-                "ERC721" => $"{m_NFT.NftWithStack.Name} #{m_NFT.NftWithStack.TokenId}",
-                "ERC1155" => $"{m_NFT.NftWithStack.Name} x{m_NFT.NftWithStack.Balance}",
+                MarketplaceContractType.ERC721 => $"{m_NFT.NftWithStack.Name} #{m_NFT.NftWithStack.TokenId}",
+                MarketplaceContractType.ERC1155 => $"{m_NFT.NftWithStack.Name} x{m_NFT.NftWithStack.Balance}",
                 _ => m_NameText.text
             };
 
@@ -51,13 +51,13 @@ namespace HyperCasual.Runner
             if (m_NFT.Listings.Count > 0)
             {
                 var listing = m_NFT.Listings[0];
-                var rawAmount = listing.PriceDetails.Amount.Value;
+                var rawAmount = listing.PriceDetails.Amount;
                 var quantity = (decimal)BigInteger.Parse(rawAmount) / (decimal)BigInteger.Pow(10, 18);
 
-                m_AmountText.text = m_NFT.NftWithStack.ContractType.ToUpper() switch
+                m_AmountText.text = m_NFT.NftWithStack.ContractType switch
                 {
-                    "ERC721" => $"{quantity} IMR",
-                    "ERC1155" => $"{listing.Amount} for {quantity} IMR",
+                    MarketplaceContractType.ERC721 => $"{quantity} IMR",
+                    MarketplaceContractType.ERC1155 => $"{listing.Amount} for {quantity} IMR",
                     _ => m_AmountText.text
                 };
             }

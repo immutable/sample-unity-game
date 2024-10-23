@@ -41,7 +41,7 @@ namespace Immutable.Api.Model
         public MarketPriceDetailsToken(MarketPriceNativeToken actualInstance)
         {
             this.IsNullable = false;
-            this.SchemaType = "oneOf";
+            this.SchemaType= "oneOf";
             this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
@@ -53,7 +53,7 @@ namespace Immutable.Api.Model
         public MarketPriceDetailsToken(MarketPriceERC20Token actualInstance)
         {
             this.IsNullable = false;
-            this.SchemaType = "oneOf";
+            this.SchemaType= "oneOf";
             this.ActualInstance = actualInstance ?? throw new ArgumentException("Invalid instance found. Must not be null.");
         }
 
@@ -225,7 +225,7 @@ namespace Immutable.Api.Model
         /// <returns>The object converted from the JSON string</returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            switch (reader.TokenType)
+            switch(reader.TokenType) 
             {
                 case JsonToken.StartObject:
                     return MarketPriceDetailsToken.FromJson(JObject.Load(reader).ToString(Formatting.None));
