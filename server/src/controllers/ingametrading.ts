@@ -1,16 +1,6 @@
-import express, { Express, Router, Request, Response } from "express";
-import cors from "cors";
-import http from "http";
+import { Request, Response } from "express";
 import { providers, Wallet, Contract, utils, BigNumber } from "ethers";
-import morgan from "morgan";
 import env from "../config/client";
-
-const app: Express = express();
-app.use(morgan("dev")); // Logging
-app.use(express.urlencoded({ extended: false })); // Parse request
-app.use(express.json()); // Handle JSON
-app.use(cors()); // Enable CORS
-const router: Router = express.Router();
 
 const zkEvmProvider = new providers.JsonRpcProvider(
   `https://rpc.testnet.immutable.com`,

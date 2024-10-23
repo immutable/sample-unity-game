@@ -28,6 +28,9 @@ router.post("/ingametrading/mint/fox", inGameTradingMintFox);
 router.post("/ingametrading/mint/skin", inGameTradingMintSkin);
 router.get("/ingametrading/balance", balance);
 router.get("/ingametrading/packs", packs);
-router.post("/ingametrading/pack/checkApprovalRequired", packCheckApprovalRequired);
+router.post(
+  "/ingametrading/pack/checkApprovalRequired",
+  packCheckApprovalRequired,
+);
 
 export = router;
