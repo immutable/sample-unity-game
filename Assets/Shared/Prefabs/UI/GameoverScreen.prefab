@@ -691,6 +691,7 @@ GameObject:
   - component: {fileID: 2139402322738060826}
   - component: {fileID: 2139402322738060829}
   - component: {fileID: 2139402322738060816}
+  - component: {fileID: 2381014103688507599}
   m_Layer: 5
   m_Name: GameoverScreen
   m_TagString: Untagged
@@ -749,7 +750,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -776,3 +777,17 @@ MonoBehaviour:
   m_PlayAgainEvent: {fileID: 11400000, guid: b892538bd49f3487bbedf5106c094739, type: 2}
   m_GoToMainMenuEvent: {fileID: 11400000, guid: 58f804667e2cb4eb789b6d2dfb3c4ce3,
     type: 2}
+--- !u!114 &2381014103688507599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2139402322738060831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb30198aa32dd140b5750692dd48104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 24
+  image: {fileID: 2139402322738060829}

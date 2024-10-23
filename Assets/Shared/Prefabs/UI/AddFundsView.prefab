@@ -554,6 +554,7 @@ GameObject:
   - component: {fileID: 5464304629124346697}
   - component: {fileID: 5464304629124346696}
   - component: {fileID: 5049268175328206359}
+  - component: {fileID: 6642137182380915652}
   m_Layer: 5
   m_Name: AddFundsView
   m_TagString: Untagged
@@ -613,7 +614,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -638,6 +639,20 @@ MonoBehaviour:
   m_FiatButton: {fileID: 5497729094643045049}
   m_TokenButton: {fileID: 4476008866051575491}
   m_CancelButton: {fileID: 3979097821289202964}
+--- !u!114 &6642137182380915652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5464304629124346709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb30198aa32dd140b5750692dd48104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 24
+  image: {fileID: 5464304629124346696}
 --- !u!1 &7087042878566949568
 GameObject:
   m_ObjectHideFlags: 0
