@@ -217,7 +217,7 @@ namespace HyperCasual.Runner
             Reset();
             m_BackEvent.Raise();
         }
-        
+
         /// <summary>
         ///     handles the add funds button click
         /// </summary>

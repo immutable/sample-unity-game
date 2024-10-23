@@ -46,7 +46,7 @@ namespace HyperCasual.Runner
             m_AddButton.AddListener(OnAddFundsButtonClick);
 
             if (Passport.Instance == null) return;
-            
+
             // Setup infinite scroll view and load packs
             m_ScrollView.OnCreateItemView += OnCreateItemView;
             if (m_Packs.Count == 0) LoadPacks();

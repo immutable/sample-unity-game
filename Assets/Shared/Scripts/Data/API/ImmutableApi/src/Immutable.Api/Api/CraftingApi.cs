@@ -127,7 +127,7 @@ namespace Immutable.Api.Api
                 new Immutable.Api.Client.Configuration { BasePath = basePath }
             );
             this.ApiClient = new Immutable.Api.Client.ApiClient(this.Configuration.BasePath);
-            this.Client =  this.ApiClient;
+            this.Client = this.ApiClient;
             this.AsynchronousClient = this.ApiClient;
             this.ExceptionFactory = Immutable.Api.Client.Configuration.DefaultExceptionFactory;
         }
