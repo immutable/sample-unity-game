@@ -25,7 +25,8 @@
     "morgan": "^1.10.0",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "cors": "^2.8.5"
   },
   "overrides": {
     "@uniswap/swap-router-contracts": {
@@ -40,6 +41,7 @@
     }
   },
   "devDependencies": {
-    "prettier": "3.2.5"
+    "prettier": "3.2.5",
+    "@types/cors": "^2.8.13"
   }
 }

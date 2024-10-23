@@ -20,4 +20,16 @@ export default {
   foxTokenAddress: getEnv("FOX_TOKEN_CONTRACT_ADDRESS"),
   // Fox Mint Fox
   foxContractAddress: getEnv("FOX_CONTRACT_ADDRESS"),
+  // In game trading
+  inGameTradingTokenAddress: getEnv("IN_GAME_TRADING_TOKEN_CONTRACT_ADDRESS"),
+  inGameTradingFoxAddress: getEnv("IN_GAME_TRADING_FOX_CONTRACT_ADDRESS"),
+  inGameTradingSkinBlueAddress: getEnv(
+    "IN_GAME_TRADING_SKIN_BLUE_CONTRACT_ADDRESS",
+  ),
+  inGameTradingSkinColourAddress: getEnv(
+    "IN_GAME_TRADING_SKIN_COLOUR_CONTRACT_ADDRESS",
+  ),
+  inGameTradingPackAddress: getEnv(
+    "IN_GAME_TRADING_PACK_COLOUR_CONTRACT_ADDRESS",
+  ),
 };
