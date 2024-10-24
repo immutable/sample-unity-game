@@ -15,7 +15,7 @@
         "GUID:95a2b1ff23bee4357a10943aba1b014d",
         "GUID:1d9728650655047939a351b40befbcdb",
         "GUID:73ae64c02a64344a180df3fcbaab9f4b",
-        "Immutable.Api"
+        "Immutable.Api.ZkEvm"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

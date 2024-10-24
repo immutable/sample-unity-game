@@ -5,12 +5,6 @@ using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
 using Immutable.Passport;
 using UnityEngine;
-using Xsolla.Core;
-using TMPro;
-using Immutable.Api.Client;
-using Immutable.Api.Model;
-using Immutable.Api.Api;
-using UnityEngine.Serialization;
 
 namespace HyperCasual.Runner
 {

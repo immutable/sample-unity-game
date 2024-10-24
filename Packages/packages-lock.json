@@ -7,6 +7,15 @@
       "dependencies": {},
       "hash": "b992a061fbf68ff1eb475d0837065b0549ed31ba"
     },
+    "com.immutable.api.zkevm": {
+      "version": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/ZkEvmApi",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.0.2"
+      },
+      "hash": "8d2c06f296ebc97d8dfbf7acb2a81c0fddb16f33"
+    },
     "com.immutable.marketplace": {
       "version": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Marketplace",
       "depth": 0,
@@ -33,7 +42,7 @@
         "com.unity.nuget.newtonsoft-json": "3.2.0",
         "com.cysharp.unitask": "2.3.3"
       },
-      "hash": "9a3384926b73629516fc28c940a3ce4847edc503"
+      "hash": "e8d89db9019ae3d0e2fc6596dbd42c5b04276e00"
     },
     "com.nobi.roundedcorners": {
       "version": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",

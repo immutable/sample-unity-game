@@ -2,7 +2,7 @@ using System;
 using System.Numerics;
 using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
-using Immutable.Api.Model;
+using Immutable.Api.ZkEvm.Model;
 using TMPro;
 using UnityEngine;
 

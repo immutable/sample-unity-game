@@ -5,9 +5,9 @@ using System.Linq;
 using System.Numerics;
 using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
-using Immutable.Api.Api;
-using Immutable.Api.Client;
-using Immutable.Api.Model;
+using Immutable.Api.ZkEvm.Api;
+using Immutable.Api.ZkEvm.Client;
+using Immutable.Api.ZkEvm.Model;
 using TMPro;
 using UnityEngine;
 

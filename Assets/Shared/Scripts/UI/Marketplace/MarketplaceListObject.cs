@@ -1,6 +1,6 @@
 using System.Numerics;
 using Cysharp.Threading.Tasks;
-using Immutable.Api.Model;
+using Immutable.Api.ZkEvm.Model;
 using TMPro;
 using UnityEngine;
 

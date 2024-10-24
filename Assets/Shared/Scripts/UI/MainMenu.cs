@@ -86,8 +86,7 @@ namespace HyperCasual.Runner
             else
             {
                 // No saved credentials to re-login the player, reset the login flag
-                SaveManager.Instance.IsLoggedIn = false;
-                SaveManager.Instance.WalletAddress = null;
+                SaveManager.Instance.Clear();
             }
 
             ShowLoading(false);

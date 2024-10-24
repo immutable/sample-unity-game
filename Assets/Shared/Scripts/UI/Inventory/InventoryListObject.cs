@@ -1,6 +1,5 @@
-using System.Linq;
 using System.Numerics;
-using Immutable.Api.Model;
+using Immutable.Api.ZkEvm.Model;
 using TMPro;
 using UnityEngine;
 

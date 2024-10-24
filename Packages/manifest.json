@@ -4,6 +4,7 @@
     "com.immutable.marketplace": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Marketplace",
     "com.immutable.orderbook": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Orderbook",
     "com.immutable.passport": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Passport",
+    "com.immutable.api.zkevm": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/ZkEvmApi",
     "com.nobi.roundedcorners": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",
     "com.unity.nuget.newtonsoft-json": "3.0.1",
     "com.unity.collab-proxy": "2.0.4",

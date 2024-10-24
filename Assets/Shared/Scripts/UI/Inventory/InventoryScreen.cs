@@ -5,9 +5,9 @@ using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
 using UnityEngine;
 using TMPro;
-using Immutable.Api.Client;
-using Immutable.Api.Model;
-using Immutable.Api.Api;
+using Immutable.Api.ZkEvm.Client;
+using Immutable.Api.ZkEvm.Model;
+using Immutable.Api.ZkEvm.Api;
 
 namespace HyperCasual.Runner
 {
