@@ -641,6 +641,7 @@ GameObject:
   - component: {fileID: 5464304629124346697}
   - component: {fileID: 5464304629124346696}
   - component: {fileID: 1687802611063348627}
+  - component: {fileID: 7357231885228915803}
   m_Layer: 5
   m_Name: MintScreen
   m_TagString: Untagged
@@ -697,7 +698,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -728,6 +729,20 @@ MonoBehaviour:
   m_TryAgainButton: {fileID: 4524174831120641203}
   m_NextEvent: {fileID: 11400000, guid: b892538bd49f3487bbedf5106c094739, type: 2}
   m_WalletButton: {fileID: 242098275588205144}
+--- !u!114 &7357231885228915803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5464304629124346709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb30198aa32dd140b5750692dd48104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 24
+  image: {fileID: 5464304629124346696}
 --- !u!1 &5573793632748482465
 GameObject:
   m_ObjectHideFlags: 0
