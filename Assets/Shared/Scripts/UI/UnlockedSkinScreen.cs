@@ -45,7 +45,7 @@ namespace HyperCasual.Runner
             get => m_CraftState;
             set
             {
-                CraftState = value;
+                m_CraftState = value;
                 switch (m_CraftState)
                 {
                     case CraftSkinState.Crafting:
