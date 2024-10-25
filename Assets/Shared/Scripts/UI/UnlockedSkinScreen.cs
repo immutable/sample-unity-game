@@ -96,6 +96,10 @@ namespace HyperCasual.Runner
                     CollectSkin();
                     break;
                 case CraftSkinState.Failed:
+                    ShowLoading(false);
+                    ShowCraftButton(false);
+                    ShowNextButton(true);
+                    ShowError(true);
                     break;
                 default:
                     // There's no craft state, so reset screen to initial state
@@ -110,27 +114,35 @@ namespace HyperCasual.Runner
         private async void Craft()
         {
             CraftState = CraftSkinState.Crafting;
-
-            // Burn tokens and mint a new skin i.e. crafting a skin
-            var response = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
+            
+            try
             {
-                to = Contract.TOKEN, // Immutable Runner Token contract address
-                data = "0x1e957f1e", // Call craftSkin() in the contract
-                value = "0"
-            });
-            Debug.Log($"Craft transaction hash: {response.transactionHash}");
+                // Burn tokens and mint a new skin i.e. crafting a skin
+                var response = await Passport.Instance.ZkEvmSendTransactionWithConfirmation(new TransactionRequest
+                {
+                    to = Contract.TOKEN, // Immutable Runner Token contract address
+                    data = "0x1e957f1e", // Call craftSkin() in the contract
+                    value = "0"
+                });
+                Debug.Log($"Craft transaction hash: {response.transactionHash}");
 
-            if (response.status != "1")
-            {
-                m_CraftState = CraftSkinState.Failed;
-                return;
+                if (response.status != "1")
+                {
+                    m_CraftState = CraftSkinState.Failed;
+                    return;
+                }
+
+                CraftState = CraftSkinState.Crafted;
+
+                // If successfully crafted skin and this screen is visible, go to collect skin screen
+                // otherwise it will be picked in the OnEnable function above when this screen reappears
+                if (m_CraftState == CraftSkinState.Crafted && gameObject.active) CollectSkin();
             }
-
-            CraftState = CraftSkinState.Crafted;
-
-            // If successfully crafted skin and this screen is visible, go to collect skin screen
-            // otherwise it will be picked in the OnEnable function above when this screen reappears
-            if (m_CraftState == CraftSkinState.Crafted && gameObject.active) CollectSkin();
+            catch (Exception ex)
+            {
+                Debug.Log($"Failed to craft skin: {ex.Message}");
+                m_CraftState = CraftSkinState.Failed;
+            }
         }
 
         private void CollectSkin()
@@ -153,6 +165,7 @@ namespace HyperCasual.Runner
 
         private void OnNextButtonClicked()
         {
+            m_CraftState = null;
             m_NextLevelEvent.Raise();
         }
 
