@@ -14,7 +14,7 @@
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.0.2"
       },
-      "hash": "8d2c06f296ebc97d8dfbf7acb2a81c0fddb16f33"
+      "hash": "e939167c61926c9302602e70e3bf6551dc2ddcde"
     },
     "com.immutable.marketplace": {
       "version": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Marketplace",
@@ -42,7 +42,7 @@
         "com.unity.nuget.newtonsoft-json": "3.2.0",
         "com.cysharp.unitask": "2.3.3"
       },
-      "hash": "e8d89db9019ae3d0e2fc6596dbd42c5b04276e00"
+      "hash": "b136ff40a2b0486fa9057b49b022d4d51581b82c"
     },
     "com.nobi.roundedcorners": {
       "version": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",

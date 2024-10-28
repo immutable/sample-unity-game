@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
 using Immutable.Passport;
@@ -17,12 +18,6 @@ namespace HyperCasual.Runner
     /// </summary>
     public class MarketplaceScreen : View
     {
-        // Lists of available colours and speeds for filtering
-        private static readonly List<string> s_Colours = new()
-        { "All", "Tropical Indigo", "Cyclamen", "Robin Egg Blue", "Mint", "Mindaro", "Amaranth Pink" };
-
-        private static readonly List<string> s_Speeds = new() { "All", "Slow", "Medium", "Fast" };
-
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
         [SerializeField] private HyperCasualButton m_AddButton;
@@ -36,6 +31,8 @@ namespace HyperCasual.Runner
 
         private StacksApi m_StacksApi = new(new Configuration { BasePath = Config.BASE_URL });
         private readonly List<StackBundle> m_Stacks = new();
+        private List<string> m_Colours = new();
+        private List<string> m_Speeds = new();
         private bool m_IsLoadingMore;
         private Page m_Page;
 
@@ -80,21 +77,37 @@ namespace HyperCasual.Runner
         /// <summary>
         /// Configures the dropdown filters for colours and speeds.
         /// </summary>
-        private void ConfigureFilters()
+        private async void ConfigureFilters()
         {
+            var filtersResponse = await m_StacksApi.ListFiltersAsync(
+                chainName: Config.CHAIN_NAME,
+                contractAddress: Contract.SKIN);
+            var filters = filtersResponse.Result.Filters;
+
+            // Configure Colours Dropdown
             m_ColoursDropdown.ClearOptions();
-            m_ColoursDropdown.AddOptions(s_Colours);
+            m_Colours = new List<string> { "All" };
+            var colourValues = filters.First(f => f.Name == "Colour")
+                .Values.Select(v => v.Value).ToList();
+            m_Colours.AddRange(colourValues);
+            m_ColoursDropdown.AddOptions(m_Colours);
             m_ColoursDropdown.value = 0; // Default to "All"
-            m_ColoursDropdown.onValueChanged.AddListener(delegate
+            m_ColoursDropdown.onValueChanged.AddListener(_ =>
             {
                 Reset();
                 LoadStacks();
             });
 
+            // Configure Speeds Dropdown
             m_SpeedDropdown.ClearOptions();
-            m_SpeedDropdown.AddOptions(s_Speeds);
+            m_Speeds = new List<string> { "All" };
+            var speedValues = filters.First(f => f.Name == "Speed")
+                .Values.Select(v => v.Value).ToList();
+            speedValues.Sort(); // Sort speed values alphabetically
+            m_Speeds.AddRange(speedValues);
+            m_SpeedDropdown.AddOptions(m_Speeds);
             m_SpeedDropdown.value = 0; // Default to "All"
-            m_SpeedDropdown.onValueChanged.AddListener(delegate
+            m_SpeedDropdown.onValueChanged.AddListener(_ =>
             {
                 Reset();
                 LoadStacks();
@@ -172,13 +185,13 @@ namespace HyperCasual.Runner
                 if (m_ColoursDropdown.value != 0)
                     filters["Colour"] = new
                     {
-                        values = new List<string> { s_Colours[m_ColoursDropdown.value] },
+                        values = new List<string> { m_Colours[m_ColoursDropdown.value] },
                         condition = "eq"
                     };
                 if (m_SpeedDropdown.value != 0)
                     filters["Speed"] = new
                     {
-                        values = new List<string> { s_Speeds[m_SpeedDropdown.value] },
+                        values = new List<string> { m_Speeds[m_SpeedDropdown.value] },
                         condition = "eq"
                     };
 

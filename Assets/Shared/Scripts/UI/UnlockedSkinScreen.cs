@@ -114,7 +114,7 @@ namespace HyperCasual.Runner
         private async void Craft()
         {
             CraftState = CraftSkinState.Crafting;
-            
+
             try
             {
                 // Burn tokens and mint a new skin i.e. crafting a skin
