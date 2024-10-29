@@ -14,7 +14,7 @@
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.0.2"
       },
-      "hash": "e939167c61926c9302602e70e3bf6551dc2ddcde"
+      "hash": "493055b6a6791a35b3ae53becea94f12420f1703"
     },
     "com.immutable.marketplace": {
       "version": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Marketplace",

@@ -201,7 +201,7 @@ namespace HyperCasual.Runner
                 var result = await m_StacksApi.SearchStacksAsync(
                     Config.CHAIN_NAME,
                     new List<string> { Contract.SKIN },
-                    trait: trait,
+                    traits: trait,
                     onlyIfHasActiveListings: true,
                     pageSize: Config.PAGE_SIZE,
                     pageCursor: nextCursor);

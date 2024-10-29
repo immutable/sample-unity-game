@@ -5,8 +5,8 @@ namespace HyperCasual.Runner
 {
     public static class Config
     {
-        // public const string SERVER_URL = "https://sample-passport-unity-game-api.dev.immutable.com/fox";
-        public const string SERVER_URL = "http://localhost:6060";
+        public const string SERVER_URL = "https://sample-passport-unity-game-api.dev.immutable.com/fox";
+        // public const string SERVER_URL = "http://localhost:6060";
 
         public const string CLIENT_ID = "mp6rxfMDwwZDogcdgNrAaHnG0qMlXuMK"; // Testnet
         // public const string CLIENT_ID = "UnB98ngnXIZIEJWGJOjVe1BpCx5ix7qc"; // WebGL
