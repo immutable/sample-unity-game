@@ -29,7 +29,7 @@ namespace HyperCasual.Runner
         [SerializeField] private AddFunds m_AddFunds;
         [SerializeField] private CustomDialog m_CustomDialog;
 
-        private StacksApi m_StacksApi = new(new Configuration { BasePath = Config.BASE_URL });
+        private MetadataSearchApi m_MetadataSearchApi = new(new Configuration { BasePath = Config.BASE_URL });
         private readonly List<StackBundle> m_Stacks = new();
         private List<string> m_Colours = new();
         private List<string> m_Speeds = new();
@@ -79,7 +79,7 @@ namespace HyperCasual.Runner
         /// </summary>
         private async void ConfigureFilters()
         {
-            var filtersResponse = await m_StacksApi.ListFiltersAsync(
+            var filtersResponse = await m_MetadataSearchApi.ListFiltersAsync(
                 chainName: Config.CHAIN_NAME,
                 contractAddress: Contract.SKIN);
             var filters = filtersResponse.Result.Filters;
@@ -198,7 +198,7 @@ namespace HyperCasual.Runner
                 var trait = filters.Count > 0 ? JsonConvert.SerializeObject(filters) : null;
 
                 // Fetch stacks from the API
-                var result = await m_StacksApi.SearchStacksAsync(
+                var result = await m_MetadataSearchApi.SearchStacksAsync(
                     Config.CHAIN_NAME,
                     new List<string> { Contract.SKIN },
                     traits: trait,

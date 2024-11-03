@@ -85,11 +85,9 @@ namespace HyperCasual.Runner
         private async void LoadPacks()
         {
             var packs = await GetPacks();
-            if (packs != null && packs.Count > 0)
-            {
-                m_Packs.AddRange(packs);
-                m_ScrollView.TotalItemCount = m_Packs.Count;
-            }
+            if (packs == null || packs.Count <= 0) return;
+            m_Packs.AddRange(packs);
+            m_ScrollView.TotalItemCount = m_Packs.Count;
         }
 
         private async UniTask<List<Pack>> GetPacks()

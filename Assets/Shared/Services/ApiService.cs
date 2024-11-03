@@ -13,7 +13,6 @@ namespace Shared.Services
         {
             var success = false;
             var url = $"{Config.SERVER_URL}/mint/token";
-            Debug.Log($"MintCoins url: {url}");
 #if UNITY_WEBGL
             var form = new WWWForm();
             form.AddField("to", to);
@@ -43,7 +42,6 @@ namespace Shared.Services
         public static async UniTask<bool> MintFox(string to)
         {
             var url = $"{Config.SERVER_URL}/mint/fox";
-            Debug.Log($"MintFox url: {url}");
 #if UNITY_WEBGL
             var form = new WWWForm();
             form.AddField("to", to);

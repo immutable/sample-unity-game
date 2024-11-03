@@ -27,7 +27,7 @@ namespace HyperCasual.Runner
         [SerializeField] private InfiniteScrollGridView m_ScrollView;
         [SerializeField] private AddFunds m_AddFunds;
 
-        private StacksApi m_StacksApi = new(new Configuration { BasePath = Config.BASE_URL });
+        private MetadataSearchApi m_MetadataSearchApi = new(new Configuration { BasePath = Config.BASE_URL });
         private AssetType m_Type = AssetType.Skin;
         private readonly List<NFTBundle> m_Assets = new();
         private bool m_IsLoadingMore;
@@ -134,7 +134,7 @@ namespace HyperCasual.Runner
 
                 var contractAddress = m_Type == AssetType.Skin ? Contract.SKIN : Contract.PACK;
 
-                var result = await m_StacksApi.SearchNFTsAsync(
+                var result = await m_MetadataSearchApi.SearchNFTsAsync(
                     Config.CHAIN_NAME,
                     new List<string> { contractAddress },
                     SaveManager.Instance.WalletAddress,

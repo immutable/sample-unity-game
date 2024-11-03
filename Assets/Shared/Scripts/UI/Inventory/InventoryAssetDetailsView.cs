@@ -33,7 +33,7 @@ namespace HyperCasual.Runner
         [SerializeField] private GameObject m_Progress;
         [SerializeField] private CustomDialog m_CustomDialog;
 
-        private StacksApi m_StacksApi = new(new Configuration { BasePath = Config.BASE_URL });
+        private MetadataSearchApi m_MetadataSearchApi = new(new Configuration { BasePath = Config.BASE_URL });
         private readonly List<AttributeView> m_Attributes = new();
         private NFTBundle? m_Asset;
         private string? m_ListingId;
@@ -167,7 +167,7 @@ namespace HyperCasual.Runner
 
             try
             {
-                var result = await m_StacksApi.SearchNFTsAsync(
+                var result = await m_MetadataSearchApi.SearchNFTsAsync(
                     chainName: Config.CHAIN_NAME,
                     contractAddress: new List<string> { m_Asset.NftWithStack.ContractAddress },
                     accountAddress: SaveManager.Instance.WalletAddress,
