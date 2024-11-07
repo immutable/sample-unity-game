@@ -8,7 +8,7 @@
 
 ---
 
-# Immutable Unity SDK Sample Game
+# Immutable Unity Sample Game
 
 This repository contains source code for the following:
 
