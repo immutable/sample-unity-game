@@ -1,6 +1,5 @@
 #nullable enable
 using System;
-using System.Net.Http;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -27,24 +26,12 @@ namespace HyperCasual.Runner
 
             try
             {
-                using var client = new HttpClient();
-                var response = await client.GetAsync($"{Config.SERVER_URL}/balance?address={SaveManager.Instance.WalletAddress}");
+                var balance = await GetTokenBalanceUseCase.Instance.GetBalance();
+                m_ValueText.text = $"{balance} IMR";
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseBody = await response.Content.ReadAsStringAsync();
-                    Debug.Log($"Balance response: {responseBody}");
+                if (gameObject != null) gameObject.SetActive(true);
 
-                    var balanceResponse = JsonUtility.FromJson<BalanceResponse>(responseBody);
-                    if (balanceResponse?.quantity != null) m_ValueText.text = $"{balanceResponse.quantity} IMR";
-
-                    if (gameObject != null) gameObject.SetActive(true);
-
-                    return balanceResponse?.quantity == "0.0" ? "0" : balanceResponse?.quantity;
-                }
-
-                Debug.LogWarning("Failed to retrieve the balance.");
-                return null;
+                return balance == "0.0" ? "0" : balance;
             }
             catch (Exception ex)
             {

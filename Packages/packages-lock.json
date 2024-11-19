@@ -42,7 +42,7 @@
         "com.unity.nuget.newtonsoft-json": "3.2.0",
         "com.cysharp.unitask": "2.3.3"
       },
-      "hash": "b136ff40a2b0486fa9057b49b022d4d51581b82c"
+      "hash": "9ed3136ecf878ee1cf229fdf8c7f064bdb6e6cda"
     },
     "com.nobi.roundedcorners": {
       "version": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",

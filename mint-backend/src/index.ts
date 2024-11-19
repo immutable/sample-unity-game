@@ -133,31 +133,6 @@ router.post('/mint/skin', async (req: Request, res: Response) => {
 },
 );
 
-// In-game ERC20 balance
-router.get('/balance', async (req: Request, res: Response) => {
-  try {
-    if (tokenContractAddress) {
-      // Get the address
-      const address = req.query.address ?? null;
-
-      // Call balanceOf
-      const abi = ['function balanceOf(address account) view returns (uint256)'];
-      const contract = new Contract(tokenContractAddress, abi, zkEvmProvider);
-      const balance = await contract.balanceOf(address);
-
-      return res.status(200).json({
-        quantity: utils.formatUnits(balance, 18),
-      });
-    } else {
-      return res.status(500).json({});
-    }
-
-  } catch (error) {
-    console.log(error);
-    return res.status(400).json({ message: 'Failed to mint to user' });
-  }
-},
-);
 
 // Packs
 const galacticShieldId = 1;
