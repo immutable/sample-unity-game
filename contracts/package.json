@@ -8,6 +8,7 @@
     "test": "npx hardhat test",
     "compile": "npx hardhat compile",
     "deploy": "npx hardhat run --network immutableZkevmTestnet scripts/deploy.ts",
+    "deploy:mainnet": "npx hardhat run --network immutableZkevm scripts/deploy.ts",
     "lint": "eslint ."
   },
   "author": "Immutable",
