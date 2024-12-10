@@ -44,13 +44,6 @@
       },
       "hash": "9ed3136ecf878ee1cf229fdf8c7f064bdb6e6cda"
     },
-    "com.nethereum.unity": {
-      "version": "4.26.0",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://package.openupm.com"
-    },
     "com.nobi.roundedcorners": {
       "version": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",
       "depth": 0,
@@ -140,8 +133,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "3.2.0",
-      "depth": 1,
+      "version": "3.2.1",
+      "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"

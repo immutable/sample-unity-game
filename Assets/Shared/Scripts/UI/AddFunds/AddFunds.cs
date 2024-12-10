@@ -44,7 +44,7 @@ namespace HyperCasual.Runner
             string link = await onRamp.GetLink();
             Debug.Log($"onRamp.GetOnRampLink: {link}");
 
-            m_TransakView.Show(link, () =>
+            m_TransakView.Show($"https://global-stg.transak.com/?apiKey=d14b44fb-0f84-4db5-affb-e044040d724b&network=immutablezkevm&defaultPaymentMethod=credit_debit_card&disablePaymentMethods=&productsAvailed=buy&exchangeScreenTitle=Buy&themeColor=0D0D0D&defaultCryptoCurrency=IMX&defaultFiatAmount=50&defaultFiatCurrency=usd&walletAddress={walletAddress.FirstOrDefault()}&cryptoCurrencyList=imx%2Ceth%2Cusdc", () =>
             {
                 m_Options.gameObject.SetActive(true);
                 m_TransakView.gameObject.SetActive(false);
