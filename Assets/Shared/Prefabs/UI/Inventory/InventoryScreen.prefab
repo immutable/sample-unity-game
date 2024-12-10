@@ -455,8 +455,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4986908211239487415}
   m_HandleRect: {fileID: 2602276242752267194}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.4611111
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4052,6 +4052,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7510809188624096650}
     m_Modifications:
+    - target: {fileID: 1463181964528039447, guid: 9703ade02db14aea9329516418991255,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4162196580699819263, guid: 9703ade02db14aea9329516418991255,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5464304629124346698, guid: 9703ade02db14aea9329516418991255,
         type: 3}
       propertyPath: m_Pivot.x
@@ -4090,12 +4100,12 @@ PrefabInstance:
     - target: {fileID: 5464304629124346698, guid: 9703ade02db14aea9329516418991255,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 600
+      value: 700
       objectReference: {fileID: 0}
     - target: {fileID: 5464304629124346698, guid: 9703ade02db14aea9329516418991255,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 650
+      value: 800
       objectReference: {fileID: 0}
     - target: {fileID: 5464304629124346698, guid: 9703ade02db14aea9329516418991255,
         type: 3}

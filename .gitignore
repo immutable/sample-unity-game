@@ -87,3 +87,7 @@ mono_crash.*
 # Ignore temporaries from GameCI
 /[Aa]rtifacts/
 /[Cc]odeCoverage/
+
+# Vuplex
+Assets/Vuplex
+Assets/Vuplex.meta
