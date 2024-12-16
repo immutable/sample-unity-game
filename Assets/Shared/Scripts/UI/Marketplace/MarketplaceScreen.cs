@@ -20,13 +20,11 @@ namespace HyperCasual.Runner
     {
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
-        [SerializeField] private HyperCasualButton m_AddButton;
         [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private TMP_Dropdown m_ColoursDropdown;
         [SerializeField] private TMP_Dropdown m_SpeedDropdown;
         [SerializeField] private InfiniteScrollGridView m_ScrollView;
         [SerializeField] private MarketplaceListObject m_StackObj;
-        [SerializeField] private AddFunds m_AddFunds;
         [SerializeField] private CustomDialog m_CustomDialog;
 
         private MetadataSearchApi m_MetadataSearchApi = new(new Configuration { BasePath = Config.BASE_URL });
@@ -45,6 +43,7 @@ namespace HyperCasual.Runner
             m_Page = null;
             m_ScrollView.TotalItemCount = 0;
             m_ScrollView.Clear();
+            m_Balance.ClosePanel();
         }
 
         /// <summary>
@@ -57,8 +56,6 @@ namespace HyperCasual.Runner
             // Set up buttons
             m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
-            m_AddButton.RemoveListener(OnAddFundsButtonClick);
-            m_AddButton.AddListener(OnAddFundsButtonClick);
 
             if (Passport.Instance == null) return;
 
@@ -229,14 +226,6 @@ namespace HyperCasual.Runner
         {
             Reset();
             m_BackEvent.Raise();
-        }
-
-        /// <summary>
-        ///     handles the add funds button click
-        /// </summary>
-        private void OnAddFundsButtonClick()
-        {
-            m_AddFunds.Show();
         }
     }
 }

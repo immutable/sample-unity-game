@@ -15,12 +15,10 @@ namespace HyperCasual.Runner
     {
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
-        [SerializeField] private HyperCasualButton m_AddButton;
         [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private ShopListObject m_ItemObj;
         [SerializeField] private Transform m_ListParent;
         [SerializeField] private InfiniteScrollGridView m_ScrollView;
-        [SerializeField] private AddFunds m_AddFunds;
         [SerializeField] private CustomDialog m_CustomDialog;
 
         private readonly List<Pack> m_Packs = new();
@@ -36,8 +34,6 @@ namespace HyperCasual.Runner
             // Set up buttons
             m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
-            m_AddButton.RemoveListener(OnAddFundsButtonClick);
-            m_AddButton.AddListener(OnAddFundsButtonClick);
 
             if (Passport.Instance == null) return;
 
@@ -140,14 +136,9 @@ namespace HyperCasual.Runner
 
             // Trigger back button event
             m_BackEvent.Raise();
-        }
-
-        /// <summary>
-        ///     handles the add funds button click
-        /// </summary>
-        private void OnAddFundsButtonClick()
-        {
-            m_AddFunds.Show();
+            
+            // Close balance panel
+            m_Balance.ClosePanel();
         }
     }
 }

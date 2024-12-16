@@ -19,13 +19,11 @@ namespace HyperCasual.Runner
         public enum AssetType { Skin, Powerups }
 
         [SerializeField] private HyperCasualButton m_BackButton;
-        [SerializeField] private HyperCasualButton m_AddButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
         [SerializeField] private BalanceObject m_Balance;
         [SerializeField] private TMP_Dropdown m_TypeDropdown;
         [SerializeField] private InventoryListObject m_InventoryObj;
         [SerializeField] private InfiniteScrollGridView m_ScrollView;
-        [SerializeField] private AddFunds m_AddFunds;
 
         private MetadataSearchApi m_MetadataSearchApi = new(new Configuration { BasePath = Config.BASE_URL });
         private AssetType m_Type = AssetType.Skin;
@@ -39,8 +37,6 @@ namespace HyperCasual.Runner
 
             m_BackButton.RemoveListener(OnBackButtonClick);
             m_BackButton.AddListener(OnBackButtonClick);
-            m_AddButton.RemoveListener(OnAddFundsButtonClick);
-            m_AddButton.AddListener(OnAddFundsButtonClick);
 
             m_ScrollView.OnCreateItemView += OnCreateItemView;
             if (m_Assets.Count == 0) LoadAssets();
@@ -178,14 +174,7 @@ namespace HyperCasual.Runner
             m_Page = null;
             m_ScrollView.TotalItemCount = 0;
             m_ScrollView.Clear();
-        }
-
-        /// <summary>
-        /// Handles the add funds button click by showing the add funds view.
-        /// </summary>
-        private void OnAddFundsButtonClick()
-        {
-            m_AddFunds.Show();
+            m_Balance.ClosePanel();
         }
     }
 }
