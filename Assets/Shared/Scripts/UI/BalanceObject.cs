@@ -79,7 +79,9 @@ namespace HyperCasual.Runner
         /// </summary>
         private void ShowAddFunds()
         {
-            m_AddFunds.Show();
+#pragma warning disable CS4014
+            m_AddFunds.Show(() => UpdateBalance());
+#pragma warning restore CS4014
         }
 
         /// <summary>

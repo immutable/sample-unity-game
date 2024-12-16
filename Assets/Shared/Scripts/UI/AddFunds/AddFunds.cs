@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -19,8 +20,12 @@ namespace HyperCasual.Runner
         
         [SerializeField] TransakView m_TransakView;
 
-        public void Show()
+        private Action m_OnDismiss;
+
+        public void Show(Action onDismiss)
         {
+            m_OnDismiss = onDismiss;
+            
             m_FiatButton.onClick.RemoveListener(OnFiatButtonClicked);
             m_FiatButton.onClick.AddListener(OnFiatButtonClicked);
             
@@ -61,6 +66,7 @@ namespace HyperCasual.Runner
             gameObject.SetActive(false);
             m_Options.gameObject.SetActive(true);
             m_TransakView.gameObject.SetActive(false);
+            m_OnDismiss();
         }
     }
 }
