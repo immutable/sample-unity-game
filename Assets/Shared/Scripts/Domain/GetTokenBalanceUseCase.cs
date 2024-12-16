@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using Immutable.Orderbook.Api;
 using Immutable.Orderbook.Client;
 using Immutable.Passport;
+using UnityEngine;
 
 namespace HyperCasual.Runner
 {
@@ -38,16 +39,14 @@ namespace HyperCasual.Runner
         {
             var balanceHex = await Passport.Instance.ZkEvmGetBalance(SaveManager.Instance.WalletAddress);
             
-            // Convert hex to dec
-            var balanceDec = BigInteger.Parse(balanceHex.Replace("0x", ""), NumberStyles.HexNumber);
-            
-            // Convert smallest unit to main unit
-            var balance = BigInteger.Divide(balanceDec, BigInteger.Pow(10, 18));
-            
-            // Round to two decimal places
-            var decimalValue = (decimal)balance;
+            var balance = BigInteger.Parse(balanceHex.Replace("0x", ""), NumberStyles.HexNumber);
+
+            // Convert from smallest unit to main unit
+            var decimalValue = (decimal)balance / 1_000_000_000_000_000_000m;
+
+            // Round to 2 decimal places
             var roundedValue = Math.Round(decimalValue, 2);
-            
+
             return roundedValue.ToString("F2");
         }
     }
