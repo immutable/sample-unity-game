@@ -10,7 +10,7 @@ namespace HyperCasual.Runner
 
         public const string CLIENT_ID = "mp6rxfMDwwZDogcdgNrAaHnG0qMlXuMK"; // Testnet
         // public const string CLIENT_ID = "UnB98ngnXIZIEJWGJOjVe1BpCx5ix7qc"; // WebGL
-
+        
         public const string ENVIRONMENT = "sandbox";
 
 #if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
@@ -33,6 +33,7 @@ namespace HyperCasual.Runner
 
         public const string CHAIN_NAME = "imtbl-zkevm-testnet";
         public const string BASE_URL = "https://api.sandbox.immutable.com";
+        public const string RPC_URL = "https://rpc.testnet.immutable.com";
         public const int PAGE_SIZE = 20;
     }
 
@@ -40,6 +41,8 @@ namespace HyperCasual.Runner
     {
         public const string SKIN = "0xc8df1b1693e2beffd2e484a825a357c6a3d998f2"; // Testnet team
         public const string TOKEN = "0xb237501b35dfdcad274299236a141425469ab9ba"; // Testnet team
-        public const string PACK = "0x8525b5e782f3fbe6460057460be020146b63ed0f"; // Testnet team\
+        public const string PACK = "0x8525b5e782f3fbe6460057460be020146b63ed0f"; // Testnet team
+        
+        public const string USDC = "0x3B2d8A1931736Fc321C24864BceEe981B11c3c57"; // Transak Testnet USDC
     }
 }

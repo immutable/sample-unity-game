@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using Immutable.Orderbook.Api;
 using Immutable.Orderbook.Client;
 using Immutable.Passport;
+using Nethereum.Web3;
 using UnityEngine;
 
 namespace HyperCasual.Runner
@@ -48,6 +49,26 @@ namespace HyperCasual.Runner
             var roundedValue = Math.Round(decimalValue, 2);
 
             return roundedValue.ToString("F2");
+        }
+        
+        /// <summary>
+        /// Gets the user's USDC balance
+        /// </summary>
+        public async UniTask<string> GetUsdcBalance()
+        {
+            var web3 = new Web3(Config.RPC_URL);
+
+            var abi = @"[{'constant':true,'inputs':[{'name':'account','type':'address'}],'name':'balanceOf','outputs':[{'name':'','type':'uint256'}],'payable':false,'stateMutability':'view','type':'function'}]";
+
+            var contract = web3.Eth.GetContract(abi, Contract.USDC);
+
+            var balanceOfFunction = contract.GetFunction("balanceOf");
+
+            var balance = await balanceOfFunction.CallAsync<BigInteger>(SaveManager.Instance.WalletAddress);
+
+            var quantity = Web3.Convert.FromWei(balance, 6);
+
+            return quantity.ToString("F2");
         }
     }
 }

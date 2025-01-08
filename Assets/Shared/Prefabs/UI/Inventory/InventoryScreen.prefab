@@ -455,8 +455,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4986908211239487415}
   m_HandleRect: {fileID: 2602276242752267194}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.7685185
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2849,13 +2849,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BackButton: {fileID: 608994780706620231}
-  m_AddButton: {fileID: 0}
   m_BackEvent: {fileID: 11400000, guid: 58f804667e2cb4eb789b6d2dfb3c4ce3, type: 2}
   m_Balance: {fileID: 7413814428584860172}
   m_TypeDropdown: {fileID: 3902948968200711973}
   m_InventoryObj: {fileID: 9215591978314449373}
   m_ScrollView: {fileID: 6011150636714096262}
-  m_AddFunds: {fileID: 278197972233077694}
 --- !u!1 &7652146041976592896
 GameObject:
   m_ObjectHideFlags: 0

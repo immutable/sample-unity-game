@@ -82,6 +82,8 @@ namespace HyperCasual.Runner
                     clickable.ClearAllSubscribers();
                     clickable.OnClick += () =>
                     {
+                        m_Balance.ClosePanel();
+                        
                         var view = UIManager.Instance.GetView<InventoryAssetDetailsView>();
                         UIManager.Instance.Show(view);
                         view.Initialise(asset);

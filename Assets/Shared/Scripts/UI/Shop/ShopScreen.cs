@@ -67,6 +67,8 @@ namespace HyperCasual.Runner
                     clickable.ClearAllSubscribers();
                     clickable.OnClick += () =>
                     {
+                        m_Balance.ClosePanel();
+                        
                         var view = UIManager.Instance.GetView<PackDetailsView>();
                         UIManager.Instance.Show(view);
                         view.Initialise(pack);

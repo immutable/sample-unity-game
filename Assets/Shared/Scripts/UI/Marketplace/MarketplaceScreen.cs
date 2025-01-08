@@ -131,6 +131,8 @@ namespace HyperCasual.Runner
                     clickable.ClearAllSubscribers();
                     clickable.OnClick += () =>
                     {
+                        m_Balance.ClosePanel();
+                        
                         var view = UIManager.Instance.GetView<MarketplaceAssetDetailsView>();
                         UIManager.Instance.Show(view);
                         view.Initialise(stack);

@@ -42,14 +42,15 @@ namespace HyperCasual.Runner
 
         private async void OnFiatButtonClicked()
         {
-            string environment = Immutable.Passport.Model.Environment.SANDBOX;
-            string email = await Passport.Instance.GetEmail();
-            List<string> walletAddress = await Passport.Instance.ZkEvmRequestAccounts();
-            OnRamp onRamp = new OnRamp(environment, email, walletAddress.FirstOrDefault());
-            string link = await onRamp.GetLink();
+            const string environment = Immutable.Passport.Model.Environment.SANDBOX;
+            var email = await Passport.Instance.GetEmail();
+            var walletAddress = await Passport.Instance.ZkEvmRequestAccounts();
+            
+            var onRamp = new OnRamp(environment, email, walletAddress.FirstOrDefault());
+            var link = await onRamp.GetLink();
             Debug.Log($"onRamp.GetOnRampLink: {link}");
 
-            m_TransakView.Show($"https://global-stg.transak.com/?apiKey=d14b44fb-0f84-4db5-affb-e044040d724b&network=immutablezkevm&defaultPaymentMethod=credit_debit_card&disablePaymentMethods=&productsAvailed=buy&exchangeScreenTitle=Buy&themeColor=0D0D0D&defaultCryptoCurrency=IMX&defaultFiatAmount=50&defaultFiatCurrency=usd&walletAddress={walletAddress.FirstOrDefault()}&cryptoCurrencyList=imx%2Ceth%2Cusdc", () =>
+            m_TransakView.Show(link, () =>
             {
                 m_Options.gameObject.SetActive(true);
                 m_TransakView.gameObject.SetActive(false);
@@ -58,7 +59,7 @@ namespace HyperCasual.Runner
 
         private void OnTokenButtonClicked()
         {
-            Application.OpenURL($"https://checkout-playground.sandbox.immutable.com/embedded/add-funds/?publishableKey=pk_imapik-test-Xdera%40&passportClientId={Config.CLIENT_ID}&redirectUri={Config.REDIRECT_URI}");
+            Application.OpenURL($"https://checkout-playground.sandbox.immutable.com/checkout/swap/?publishableKey=pk_imapik-test-7-hfC5T$W$eEDE8Mc5mp&fromTokenAddress={Contract.USDC}&toTokenAddress={Contract.TOKEN}");
         }
 
         private void OnCancelButtonClicked()

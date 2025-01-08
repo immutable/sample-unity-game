@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace HyperCasual.Runner
         [SerializeField] private GameObject m_Panel;
         [SerializeField] private TextMeshProUGUI m_ImrValue;
         [SerializeField] private TextMeshProUGUI m_ImxValue;
+        [SerializeField] private TextMeshProUGUI m_UsdcValue;
         
         [SerializeField] private HyperCasualButton m_AddFundsButton;
         [SerializeField] private AddFunds m_AddFunds;
@@ -23,11 +25,19 @@ namespace HyperCasual.Runner
 
         private void Start()
         {
+            Debug.Log("Balance object start");
             gameObject.SetActive(false);
             m_Panel.SetActive(false);
 
             // Cache root Canvas
-            m_RootCanvas = FindObjectOfType<Canvas>();
+            var rootCanvas = FindObjectsOfType<Canvas>().FirstOrDefault(c => c.name == "Canvas");
+            if (rootCanvas == null)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+
+            m_RootCanvas = rootCanvas;
 
             // Wallet address
             var address = SaveManager.Instance.WalletAddress;
@@ -59,6 +69,11 @@ namespace HyperCasual.Runner
                 m_Panel.SetActive(false);
                 return;
             }
+            
+            // Update balance
+#pragma warning disable CS4014
+            UpdateBalance();
+#pragma warning restore CS4014
 
             // Position the panel
             m_Panel.transform.SetParent(m_RootCanvas.transform, false);
@@ -82,6 +97,8 @@ namespace HyperCasual.Runner
 #pragma warning disable CS4014
             m_AddFunds.Show(() => UpdateBalance());
 #pragma warning restore CS4014
+            
+            TogglePanel();
         }
 
         /// <summary>
@@ -101,6 +118,10 @@ namespace HyperCasual.Runner
                 // IMX balance
                 var imxBalance = await GetTokenBalanceUseCase.Instance.GetImxBalance();
                 m_ImxValue.text = imxBalance;
+                
+                // USDC balance
+                var usdcBalance = await GetTokenBalanceUseCase.Instance.GetUsdcBalance();
+                m_UsdcValue.text = usdcBalance;
 
                 return imrBalance == "0.0" ? "0" : imrBalance;
             }
