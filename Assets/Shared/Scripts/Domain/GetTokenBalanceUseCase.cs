@@ -6,7 +6,6 @@ using Immutable.Orderbook.Api;
 using Immutable.Orderbook.Client;
 using Immutable.Passport;
 using Nethereum.Web3;
-using UnityEngine;
 
 namespace HyperCasual.Runner
 {

@@ -3,7 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
+using Immutable.Marketplace.Bridge;
 using Immutable.Marketplace.OnRamp;
+using Immutable.Marketplace.Swap;
 using Immutable.Passport;
 
 namespace HyperCasual.Runner
@@ -15,7 +17,8 @@ namespace HyperCasual.Runner
     {
         [SerializeField] GameObject m_Options;
         [SerializeField] Button m_FiatButton;
-        [SerializeField] Button m_TokenButton;
+        [SerializeField] Button m_SwapButton;
+        [SerializeField] Button m_BridgeButton;
         [SerializeField] Button m_CancelButton;
         
         [SerializeField] TransakView m_TransakView;
@@ -29,8 +32,11 @@ namespace HyperCasual.Runner
             m_FiatButton.onClick.RemoveListener(OnFiatButtonClicked);
             m_FiatButton.onClick.AddListener(OnFiatButtonClicked);
             
-            m_TokenButton.onClick.RemoveListener(OnTokenButtonClicked);
-            m_TokenButton.onClick.AddListener(OnTokenButtonClicked);
+            m_SwapButton.onClick.RemoveListener(OnSwapButtonClicked);
+            m_SwapButton.onClick.AddListener(OnSwapButtonClicked);
+            
+            m_BridgeButton.onClick.RemoveListener(OnBridgeButtonClicked);
+            m_BridgeButton.onClick.AddListener(OnBridgeButtonClicked);
             
             m_CancelButton.onClick.RemoveListener(OnCancelButtonClicked);
             m_CancelButton.onClick.AddListener(OnCancelButtonClicked);
@@ -47,7 +53,7 @@ namespace HyperCasual.Runner
             var walletAddress = await Passport.Instance.ZkEvmRequestAccounts();
             
             var onRamp = new OnRamp(environment, email, walletAddress.FirstOrDefault());
-            var link = await onRamp.GetLink();
+            var link = onRamp.GetLink();
             Debug.Log($"onRamp.GetOnRampLink: {link}");
 
             m_TransakView.Show(link, () =>
@@ -57,9 +63,19 @@ namespace HyperCasual.Runner
             });
         }
 
-        private void OnTokenButtonClicked()
+        private void OnSwapButtonClicked()
         {
-            Application.OpenURL($"https://checkout-playground.sandbox.immutable.com/checkout/swap/?publishableKey=pk_imapik-test-7-hfC5T$W$eEDE8Mc5mp&fromTokenAddress={Contract.USDC}&toTokenAddress={Contract.TOKEN}");
+            var swap = new Swap(Immutable.Passport.Model.Environment.SANDBOX);
+            var link = swap.GetLink(fromTokenAddress: Contract.USDC, toTokenAddress: Contract.TOKEN);
+            Application.OpenURL(link);
+        }
+        
+        private void OnBridgeButtonClicked()
+        {
+            // On supports mainnet
+            var bridge = new Bridge(Immutable.Passport.Model.Environment.PRODUCTION);
+            var link = bridge.GetLink(toChain: "13371");
+            Application.OpenURL(link);
         }
 
         private void OnCancelButtonClicked()
