@@ -20,10 +20,10 @@ namespace HyperCasual.Runner
         {
             m_CloseButton.onClick.RemoveListener(onClose);
             m_CloseButton.onClick.AddListener(onClose);
-            
+
             m_Url = url;
             m_WebViewPrefab.InitialUrl = m_Url;
-            
+
             gameObject.SetActive(true);
         }
     }

@@ -20,7 +20,7 @@ namespace HyperCasual.Runner
         [SerializeField] Button m_SwapButton;
         [SerializeField] Button m_BridgeButton;
         [SerializeField] Button m_CancelButton;
-        
+
         [SerializeField] TransakView m_TransakView;
 
         private Action m_OnDismiss;
@@ -28,19 +28,19 @@ namespace HyperCasual.Runner
         public void Show(Action onDismiss)
         {
             m_OnDismiss = onDismiss;
-            
+
             m_FiatButton.onClick.RemoveListener(OnFiatButtonClicked);
             m_FiatButton.onClick.AddListener(OnFiatButtonClicked);
-            
+
             m_SwapButton.onClick.RemoveListener(OnSwapButtonClicked);
             m_SwapButton.onClick.AddListener(OnSwapButtonClicked);
-            
+
             m_BridgeButton.onClick.RemoveListener(OnBridgeButtonClicked);
             m_BridgeButton.onClick.AddListener(OnBridgeButtonClicked);
-            
+
             m_CancelButton.onClick.RemoveListener(OnCancelButtonClicked);
             m_CancelButton.onClick.AddListener(OnCancelButtonClicked);
-            
+
             m_Options.gameObject.SetActive(true);
             m_TransakView.gameObject.SetActive(false);
             gameObject.SetActive(true);
@@ -51,7 +51,7 @@ namespace HyperCasual.Runner
             const string environment = Immutable.Passport.Model.Environment.SANDBOX;
             var email = await Passport.Instance.GetEmail();
             var walletAddress = await Passport.Instance.ZkEvmRequestAccounts();
-            
+
             var onRamp = new OnRamp(environment, email, walletAddress.FirstOrDefault());
             var link = onRamp.GetLink();
             Debug.Log($"onRamp.GetOnRampLink: {link}");
@@ -69,7 +69,7 @@ namespace HyperCasual.Runner
             var link = swap.GetLink(fromTokenAddress: Contract.USDC, toTokenAddress: Contract.TOKEN);
             Application.OpenURL(link);
         }
-        
+
         private void OnBridgeButtonClicked()
         {
             // On supports mainnet

@@ -17,7 +17,7 @@ namespace HyperCasual.Runner
         [SerializeField] private TextMeshProUGUI m_ImrValue;
         [SerializeField] private TextMeshProUGUI m_ImxValue;
         [SerializeField] private TextMeshProUGUI m_UsdcValue;
-        
+
         [SerializeField] private HyperCasualButton m_AddFundsButton;
         [SerializeField] private AddFunds m_AddFunds;
 
@@ -58,7 +58,7 @@ namespace HyperCasual.Runner
 
             gameObject.SetActive(true);
         }
-        
+
         /// <summary>
         /// Displays or closes the panel
         /// </summary>
@@ -69,7 +69,7 @@ namespace HyperCasual.Runner
                 m_Panel.SetActive(false);
                 return;
             }
-            
+
             // Update balance
 #pragma warning disable CS4014
             UpdateBalance();
@@ -85,7 +85,7 @@ namespace HyperCasual.Runner
             panelRectTransform.pivot = new Vector2(1, 1);
 
             panelRectTransform.anchoredPosition = new Vector2(-32, -88);
-            
+
             m_Panel.SetActive(true);
         }
 
@@ -97,7 +97,7 @@ namespace HyperCasual.Runner
 #pragma warning disable CS4014
             m_AddFunds.Show(() => UpdateBalance());
 #pragma warning restore CS4014
-            
+
             TogglePanel();
         }
 
@@ -114,11 +114,11 @@ namespace HyperCasual.Runner
                 // IMR balance
                 var imrBalance = await GetTokenBalanceUseCase.Instance.GetBalance();
                 m_ImrValue.text = imrBalance;
-                
+
                 // IMX balance
                 var imxBalance = await GetTokenBalanceUseCase.Instance.GetImxBalance();
                 m_ImxValue.text = imxBalance;
-                
+
                 // USDC balance
                 var usdcBalance = await GetTokenBalanceUseCase.Instance.GetUsdcBalance();
                 m_UsdcValue.text = usdcBalance;

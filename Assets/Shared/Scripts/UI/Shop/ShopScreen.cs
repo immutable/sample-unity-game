@@ -68,7 +68,7 @@ namespace HyperCasual.Runner
                     clickable.OnClick += () =>
                     {
                         m_Balance.ClosePanel();
-                        
+
                         var view = UIManager.Instance.GetView<PackDetailsView>();
                         UIManager.Instance.Show(view);
                         view.Initialise(pack);
@@ -138,7 +138,7 @@ namespace HyperCasual.Runner
 
             // Trigger back button event
             m_BackEvent.Raise();
-            
+
             // Close balance panel
             m_Balance.ClosePanel();
         }

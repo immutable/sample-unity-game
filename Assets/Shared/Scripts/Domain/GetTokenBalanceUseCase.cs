@@ -31,14 +31,14 @@ namespace HyperCasual.Runner
             var rounded = Math.Round(Convert.ToDecimal(result.Quantity), 2);
             return rounded.ToString("F2");
         }
-        
+
         /// <summary>
         /// Gets the user's IMX balance
         /// </summary>
         public async UniTask<string> GetImxBalance()
         {
             var balanceHex = await Passport.Instance.ZkEvmGetBalance(SaveManager.Instance.WalletAddress);
-            
+
             var balance = BigInteger.Parse(balanceHex.Replace("0x", ""), NumberStyles.HexNumber);
 
             // Convert from smallest unit to main unit
@@ -49,7 +49,7 @@ namespace HyperCasual.Runner
 
             return roundedValue.ToString("F2");
         }
-        
+
         /// <summary>
         /// Gets the user's USDC balance
         /// </summary>
