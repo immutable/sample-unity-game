@@ -1,12 +1,10 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 using System.Linq;
-using Immutable.Marketplace.Bridge;
-using Immutable.Marketplace.OnRamp;
-using Immutable.Marketplace.Swap;
+using Immutable.Marketplace;
 using Immutable.Passport;
+using Environment = Immutable.Marketplace.Environment;
 
 namespace HyperCasual.Runner
 {
@@ -52,8 +50,8 @@ namespace HyperCasual.Runner
             var email = await Passport.Instance.GetEmail();
             var walletAddress = await Passport.Instance.ZkEvmRequestAccounts();
 
-            var onRamp = new OnRamp(environment, email, walletAddress.FirstOrDefault());
-            var link = onRamp.GetLink();
+            var link = LinkFactory.GenerateOnRampLink(Environment.Sandbox, email, walletAddress.FirstOrDefault(),
+                cryptoCurrency: "USDC");
             Debug.Log($"onRamp.GetOnRampLink: {link}");
 
             m_TransakView.Show(link, () =>
@@ -65,16 +63,14 @@ namespace HyperCasual.Runner
 
         private void OnSwapButtonClicked()
         {
-            var swap = new Swap(Immutable.Passport.Model.Environment.SANDBOX);
-            var link = swap.GetLink(fromTokenAddress: Contract.USDC, toTokenAddress: Contract.TOKEN);
+            var link = LinkFactory.GenerateSwapLink(Environment.Sandbox, "pk_imapik-test-GrVY_g7JLzY2JKZy@ec-",
+                fromTokenAddress: Contract.USDC, toTokenAddress: Contract.TOKEN);
             Application.OpenURL(link);
         }
 
         private void OnBridgeButtonClicked()
         {
-            // On supports mainnet
-            var bridge = new Bridge(Immutable.Passport.Model.Environment.PRODUCTION);
-            var link = bridge.GetLink(toChain: "13371");
+            var link = LinkFactory.GenerateBridgeLink(Environment.Sandbox, toChainID: "13371");
             Application.OpenURL(link);
         }
 
