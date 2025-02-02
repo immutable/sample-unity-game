@@ -46,12 +46,18 @@ namespace HyperCasual.Runner
 
         private async void OnFiatButtonClicked()
         {
-            const string environment = Immutable.Passport.Model.Environment.SANDBOX;
             var email = await Passport.Instance.GetEmail();
             var walletAddress = await Passport.Instance.ZkEvmRequestAccounts();
 
-            var link = LinkFactory.GenerateOnRampLink(Environment.Sandbox, email, walletAddress.FirstOrDefault(),
-                cryptoCurrency: "USDC");
+            var link = LinkFactory.GenerateOnRampLink(
+                environment: Environment.Sandbox,
+                email: email,
+                walletAddress: walletAddress.FirstOrDefault(),
+                queryParams: new OnRampQueryParams
+                {
+                    DefaultCryptoCurrency = "USDC"
+                }
+            );
             Debug.Log($"onRamp.GetOnRampLink: {link}");
 
             m_TransakView.Show(link, () =>
@@ -63,14 +69,27 @@ namespace HyperCasual.Runner
 
         private void OnSwapButtonClicked()
         {
-            var link = LinkFactory.GenerateSwapLink(Environment.Sandbox, "pk_imapik-test-GrVY_g7JLzY2JKZy@ec-",
-                fromTokenAddress: Contract.USDC, toTokenAddress: Contract.TOKEN);
+            var link = LinkFactory.GenerateSwapLink(
+                environment: Environment.Sandbox,
+                publishableKey: "pk_imapik-test-GrVY_g7JLzY2JKZy@ec-",
+                queryParams: new SwapQueryParams
+                {
+                    FromTokenAddress = Contract.USDC,
+                    ToTokenAddress = Contract.TOKEN
+                }
+            );
             Application.OpenURL(link);
         }
 
         private void OnBridgeButtonClicked()
         {
-            var link = LinkFactory.GenerateBridgeLink(Environment.Sandbox, toChainID: "13371");
+            var link = LinkFactory.GenerateBridgeLink(
+                environment: Environment.Sandbox,
+                queryParams: new BridgeQueryParams
+                {
+                    ToChainID = "13371"
+                }
+            );
             Application.OpenURL(link);
         }
 
