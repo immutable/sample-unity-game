@@ -17,20 +17,23 @@ namespace HyperCasual.Runner
 
         private readonly OrderbookApi m_OrderbookApi = new(new Configuration { BasePath = Config.BASE_URL });
 
-        private FulfilOrderUseCase() { }
+        private FulfilOrderUseCase()
+        {
+        }
 
         public static FulfilOrderUseCase Instance => s_Instance.Value;
 
         /// <summary>
-        /// Executes an order by fulfilling a listing and optionally confirming its status.
+        ///     Executes an order by fulfilling a listing and optionally confirming its status.
         /// </summary>
         /// <param name="listingId">The unique identifier of the listing to fulfil.</param>
         /// <param name="fees">The taker fees</param>
         /// <param name="confirmListing">
-        /// If true, the function will poll the listing endpoint to confirm that the listing status 
-        /// has changed to "FILLED". If false, the function will not verify the listing status.
+        ///     If true, the function will poll the listing endpoint to confirm that the listing status
+        ///     has changed to "FILLED". If false, the function will not verify the listing status.
         /// </param>
-        public async UniTask ExecuteOrder(string listingId, List<FulfillOrderRequestTakerFeesInner> fees, bool confirmListing = true)
+        public async UniTask ExecuteOrder(string listingId, List<FulfillOrderRequestTakerFeesInner> fees,
+            bool confirmListing = true)
         {
             try
             {
@@ -42,7 +45,6 @@ namespace HyperCasual.Runner
                 var createListingResponse = await m_OrderbookApi.FulfillOrderAsync(request);
 
                 if (createListingResponse.Actions.Count > 0)
-                {
                     foreach (var transaction in createListingResponse.Actions)
                     {
                         var transactionHash = await Passport.Instance.ZkEvmSendTransaction(new TransactionRequest
@@ -53,7 +55,6 @@ namespace HyperCasual.Runner
                         });
                         Debug.Log($"Transaction hash: {transactionHash}");
                     }
-                }
 
                 if (confirmListing) await OrderbookUseCase.Instance.ConfirmListingStatus(listingId, "FILLED");
             }
@@ -65,7 +66,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Handles API exceptions by logging relevant details.
+        ///     Handles API exceptions by logging relevant details.
         /// </summary>
         private static void HandleApiException(ApiException e)
         {

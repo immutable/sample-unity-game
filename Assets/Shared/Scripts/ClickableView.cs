@@ -8,27 +8,13 @@ namespace HyperCasual.Runner
     {
         public delegate void OnClickAction();
 
-        public event OnClickAction OnClick;
+        private bool m_IsDragging;
 
         private ScrollRect m_ParentScrollRect;
-        private bool m_IsDragging;
 
         private void Awake()
         {
             m_ParentScrollRect = GetComponentInParent<ScrollRect>();
-        }
-
-        public void ClearAllSubscribers()
-        {
-            OnClick = null;
-        }
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if (!m_IsDragging)
-            {
-                OnClick?.Invoke();
-            }
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -46,6 +32,18 @@ namespace HyperCasual.Runner
         {
             m_IsDragging = false;
             m_ParentScrollRect?.OnEndDrag(eventData);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (!m_IsDragging) OnClick?.Invoke();
+        }
+
+        public event OnClickAction OnClick;
+
+        public void ClearAllSubscribers()
+        {
+            OnClick = null;
         }
     }
 }

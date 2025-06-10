@@ -67,13 +67,11 @@ namespace HyperCasual.Runner
 
             // Remove items that are no longer visible
             for (var i = m_VisibleItems.Count - 1; i >= endIndex; i--)
-            {
                 if (i > 0)
                 {
                     Destroy(m_VisibleItems[i]);
                     m_VisibleItems.RemoveAt(i);
                 }
-            }
         }
 
         private void CreateItem(int index)

@@ -60,7 +60,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Displays or closes the panel
+        ///     Displays or closes the panel
         /// </summary>
         private void TogglePanel()
         {
@@ -90,7 +90,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Displays various options for players to add funds to the game.
+        ///     Displays various options for players to add funds to the game.
         /// </summary>
         private void ShowAddFunds()
         {
@@ -102,7 +102,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Retrieves the player's IMR and IMX balances.
+        ///     Retrieves the player's IMR and IMX balances.
         /// </summary>
         /// <returns>The player's IMR balance as a string, or null if the balance could not be fetched.</returns>
         public async UniTask<string?> UpdateBalance()
@@ -134,7 +134,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Closes the panel
+        ///     Closes the panel
         /// </summary>
         public void ClosePanel()
         {

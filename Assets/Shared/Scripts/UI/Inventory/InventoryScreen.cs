@@ -3,20 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
-using UnityEngine;
-using TMPro;
+using Immutable.Api.ZkEvm.Api;
 using Immutable.Api.ZkEvm.Client;
 using Immutable.Api.ZkEvm.Model;
-using Immutable.Api.ZkEvm.Api;
+using TMPro;
+using UnityEngine;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// Represents the Inventory screen displaying the player’s NFTs, such as skins and power-ups.
+    ///     Represents the Inventory screen displaying the player’s NFTs, such as skins and power-ups.
     /// </summary>
     public class InventoryScreen : View
     {
-        public enum AssetType { Skin, Powerups }
+        public enum AssetType
+        {
+            Skin,
+            Powerups
+        }
 
         [SerializeField] private HyperCasualButton m_BackButton;
         [SerializeField] private AbstractGameEvent m_BackEvent;
@@ -24,12 +28,12 @@ namespace HyperCasual.Runner
         [SerializeField] private TMP_Dropdown m_TypeDropdown;
         [SerializeField] private InventoryListObject m_InventoryObj;
         [SerializeField] private InfiniteScrollGridView m_ScrollView;
-
-        private MetadataSearchApi m_MetadataSearchApi = new(new Configuration { BasePath = Config.BASE_URL });
-        private AssetType m_Type = AssetType.Skin;
         private readonly List<NFTBundle> m_Assets = new();
         private bool m_IsLoadingMore;
+
+        private readonly MetadataSearchApi m_MetadataSearchApi = new(new Configuration { BasePath = Config.BASE_URL });
         private Page m_Page;
+        private AssetType m_Type = AssetType.Skin;
 
         private void OnEnable()
         {
@@ -47,7 +51,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Sets up the filter dropdown
+        ///     Sets up the filter dropdown
         /// </summary>
         private void ConfigureFilters()
         {
@@ -64,7 +68,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Configures each item view in the inventory list.
+        ///     Configures each item view in the inventory list.
         /// </summary>
         /// <param name="index">The index of the asset in the list.</param>
         /// <param name="item">The game object representing the asset view.</param>
@@ -95,7 +99,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Loads the player's assets and adds them to the scroll view
+        ///     Loads the player's assets and adds them to the scroll view
         /// </summary>
         private async void LoadAssets()
         {
@@ -114,7 +118,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Fetches the player’s NFTs from the API based on the selected asset type.
+        ///     Fetches the player’s NFTs from the API based on the selected asset type.
         /// </summary>
         /// <returns>A list of NFT bundles.</returns>
         private async UniTask<List<NFTBundle>> GetAssets()
@@ -158,7 +162,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Handles the back button click by resetting the view and raising the back event.
+        ///     Handles the back button click by resetting the view and raising the back event.
         /// </summary>
         private void OnBackButtonClick()
         {
@@ -167,7 +171,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Resets the inventory to its default state.
+        ///     Resets the inventory to its default state.
         /// </summary>
         private void ResetInventory()
         {

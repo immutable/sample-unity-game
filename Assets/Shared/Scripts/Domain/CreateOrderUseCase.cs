@@ -21,31 +21,33 @@ namespace HyperCasual.Runner
 
         private readonly OrderbookApi m_OrderbookApi = new(new Configuration { BasePath = Config.BASE_URL });
 
-        private CreateOrderUseCase() { }
+        private CreateOrderUseCase()
+        {
+        }
 
         public static CreateOrderUseCase Instance => s_Instance.Value;
 
         /// <summary>
-        /// Creates a new listing for the specified NFT.
+        ///     Creates a new listing for the specified NFT.
         /// </summary>
         /// <param name="contractAddress">The address of the NFT's contract.</param>
         /// <param name="contractType">The type of the contract (e.g., "ERC721" or "ERC1155").</param>
         /// <param name="tokenId">The ID of the NFT.</param>
         /// <param name="price">
-        /// The sale price of the NFT, represented as a string amount in IMR (scaled by 10^18).
+        ///     The sale price of the NFT, represented as a string amount in IMR (scaled by 10^18).
         /// </param>
         /// <param name="amountToSell">
-        /// The quantity of the NFT to sell. "1" for ERC721 tokens and a higher number for ERC1155 tokens.
+        ///     The quantity of the NFT to sell. "1" for ERC721 tokens and a higher number for ERC1155 tokens.
         /// </param>
         /// <param name="buyContractAddress">
-        /// The contract address of the token used to purchase the NFT.
+        ///     The contract address of the token used to purchase the NFT.
         /// </param>
         /// <param name="confirmListing">
-        /// If true, the function will continuously poll the marketplace endpoint to ensure the listing status 
-        /// updates to "ACTIVE" upon creation. If false, the function will not verify the listing status.
+        ///     If true, the function will continuously poll the marketplace endpoint to ensure the listing status
+        ///     updates to "ACTIVE" upon creation. If false, the function will not verify the listing status.
         /// </param>
         /// <returns>
-        /// A <see cref="UniTask{String}"/> that returns the listing ID if the sale is successfully created.
+        ///     A <see cref="UniTask{String}" /> that returns the listing ID if the sale is successfully created.
         /// </returns>
         public async UniTask<string> CreateListing(
             string contractAddress, string contractType, string tokenId,
@@ -54,11 +56,11 @@ namespace HyperCasual.Runner
             try
             {
                 if (contractType == "ERC721" && amountToSell != "1")
-                {
-                    throw new ArgumentException("Invalid arguments: 'amountToSell' must be '1' when listing an ERC721.");
-                }
+                    throw new ArgumentException(
+                        "Invalid arguments: 'amountToSell' must be '1' when listing an ERC721.");
 
-                var listingData = await PrepareListing(contractAddress, contractType, tokenId, price, amountToSell, buyContractAddress);
+                var listingData = await PrepareListing(contractAddress, contractType, tokenId, price, amountToSell,
+                    buyContractAddress);
 
                 await SignAndSubmitApproval(listingData);
 
@@ -78,7 +80,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Prepares a listing for the specified NFT and purchase details.
+        ///     Prepares a listing for the specified NFT and purchase details.
         /// </summary>
         private async UniTask<PrepareListing200Response> PrepareListing(
             string contractAddress, string contractType, string tokenId,
@@ -95,7 +97,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Creates the appropriate sell request based on the contract type.
+        ///     Creates the appropriate sell request based on the contract type.
         /// </summary>
         private static PrepareListingRequestSell CreateSellRequest(
             string contractType, string contractAddress, string tokenId, string amountToSell)
@@ -109,7 +111,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Signs and submits approval if required by the listing.
+        ///     Signs and submits approval if required by the listing.
         /// </summary>
         private async UniTask SignAndSubmitApproval(PrepareListing200Response listingData)
         {
@@ -132,7 +134,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Signs the listing with the user's wallet.
+        ///     Signs the listing with the user's wallet.
         /// </summary>
         private async UniTask<string> SignListing(PrepareListing200Response listingData)
         {
@@ -148,7 +150,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Finalises the listing and returns the listing ID.
+        ///     Finalises the listing and returns the listing ID.
         /// </summary>
         private async UniTask<string> ListAsset(string signature, PrepareListing200Response listingData)
         {
@@ -162,7 +164,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Handles API exceptions by logging relevant details.
+        ///     Handles API exceptions by logging relevant details.
         /// </summary>
         private static void HandleApiException(ApiException e)
         {

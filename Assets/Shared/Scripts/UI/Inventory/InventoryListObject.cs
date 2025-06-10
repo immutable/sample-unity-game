@@ -6,7 +6,7 @@ using UnityEngine;
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// Represents an inventory list item in the Inventory screen.
+    ///     Represents an inventory list item in the Inventory screen.
     /// </summary>
     public class InventoryListObject : MonoBehaviour
     {
@@ -21,8 +21,14 @@ namespace HyperCasual.Runner
             UpdateUI();
         }
 
+        private void OnDisable()
+        {
+            m_NameText.text = "";
+            m_AmountText.text = "";
+        }
+
         /// <summary>
-        /// Initialises the object with the given NFT data and updates the UI.
+        ///     Initialises the object with the given NFT data and updates the UI.
         /// </summary>
         /// <param name="asset">The NFT bundle to display in the inventory.</param>
         public void Initialise(NFTBundle asset)
@@ -32,7 +38,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Updates the UI fields with relevant NFT data.
+        ///     Updates the UI fields with relevant NFT data.
         /// </summary>
         private void UpdateUI()
         {
@@ -69,12 +75,6 @@ namespace HyperCasual.Runner
 #pragma warning disable CS4014
             m_Image.LoadUrl(m_NFT.NftWithStack.Image);
 #pragma warning restore CS4014
-        }
-
-        private void OnDisable()
-        {
-            m_NameText.text = "";
-            m_AmountText.text = "";
         }
     }
 }

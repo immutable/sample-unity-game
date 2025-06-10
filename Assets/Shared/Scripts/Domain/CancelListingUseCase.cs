@@ -17,17 +17,19 @@ namespace HyperCasual.Runner
 
         private readonly OrderbookApi m_OrderbookApi = new(new Configuration { BasePath = Config.BASE_URL });
 
-        private CancelListingUseCase() { }
+        private CancelListingUseCase()
+        {
+        }
 
         public static CancelListingUseCase Instance => s_Instance.Value;
 
         /// <summary>
-        /// Cancels the specified listing.
+        ///     Cancels the specified listing.
         /// </summary>
         /// <param name="listingId">The unique identifier of the listing to cancel.</param>
         /// <param name="confirmListing">
-        /// If true, the function will poll the listing endpoint to confirm that the listing status 
-        /// has changed to "CANCELLED". If false, the function will not verify the listing status.
+        ///     If true, the function will poll the listing endpoint to confirm that the listing status
+        ///     has changed to "CANCELLED". If false, the function will not verify the listing status.
         /// </param>
         public async UniTask CancelListing(string listingId, bool confirmListing = true)
         {
@@ -63,7 +65,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Handles API exceptions by logging relevant details.
+        ///     Handles API exceptions by logging relevant details.
         /// </summary>
         private static void HandleApiException(ApiException e)
         {

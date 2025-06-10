@@ -1,6 +1,3 @@
-using System;
-using UnityEngine;
-
 namespace HyperCasual.Runner
 {
     public static class Config
@@ -9,7 +6,7 @@ namespace HyperCasual.Runner
         // public const string SERVER_URL = "http://localhost:6060";
 
         public const string CLIENT_ID = "mp6rxfMDwwZDogcdgNrAaHnG0qMlXuMK"; // Testnet
-                                                                            // public const string CLIENT_ID = "UnB98ngnXIZIEJWGJOjVe1BpCx5ix7qc"; // WebGL
+        // public const string CLIENT_ID = "UnB98ngnXIZIEJWGJOjVe1BpCx5ix7qc"; // WebGL
 
         public const string ENVIRONMENT = "sandbox";
 

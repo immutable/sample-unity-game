@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using Cysharp.Threading.Tasks;
 using HyperCasual.Runner;
-using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Shared.Services
 {

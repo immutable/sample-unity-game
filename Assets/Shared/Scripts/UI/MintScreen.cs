@@ -99,6 +99,7 @@ namespace HyperCasual.Runner
             try
             {
                 var address = SaveManager.Instance.WalletAddress; // Get the player's wallet address to mint the fox to
+                Debug.Log($"Mint fox to address {address}");
 
                 if (address != null) return await ApiService.MintFox(address);
 
@@ -106,7 +107,7 @@ namespace HyperCasual.Runner
             }
             catch (Exception ex)
             {
-                Debug.Log($"Failed to mint fox: {ex.Message}");
+                Debug.LogError($"Failed to mint fox: {ex.Message}");
                 return false;
             }
         }
@@ -126,20 +127,19 @@ namespace HyperCasual.Runner
 
                 var address =
                     SaveManager.Instance.WalletAddress; // Get the player's wallet address to mint the coins to
-                if (address != null)
-                {
-                    // Calculate the quantity to mint
-                    // Need to take into account Immutable Runner Token decimal value i.e. 18
-                    var quantity = BigInteger.Multiply(new BigInteger(coinsCollected), BigInteger.Pow(10, 18));
-                    Debug.Log($"Quantity: {quantity}");
-                    return await ApiService.MintCoins(address, quantity.ToString());
-                }
+                Debug.Log($"Mint coins to address {address}");
+                if (address == null) return false;
+                
+                // Calculate the quantity to mint
+                // Need to take into account Immutable Runner Token decimal value i.e. 18
+                var quantity = BigInteger.Multiply(new BigInteger(coinsCollected), BigInteger.Pow(10, 18));
+                Debug.Log($"Quantity: {quantity}");
+                return await ApiService.MintCoins(address, quantity.ToString());
 
-                return false;
             }
             catch (Exception ex)
             {
-                Debug.Log($"Failed to mint coins: {ex.Message}");
+                Debug.LogError($"Failed to mint coins: {ex.Message}");
                 return false;
             }
         }

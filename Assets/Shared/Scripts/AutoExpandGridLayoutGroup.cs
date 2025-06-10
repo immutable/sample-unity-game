@@ -115,7 +115,6 @@ namespace UnityEngine.UI
             var minRows = 0;
             if (m_Constraint == Constraint.FixedColumnCount)
             {
-
                 minRows = Mathf.CeilToInt(rectChildren.Count / (float)m_ConstraintCount - 0.001f);
             }
             else if (m_Constraint == Constraint.FixedRowCount)

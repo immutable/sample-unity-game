@@ -9,17 +9,20 @@ namespace HyperCasual.Runner
     {
         private static readonly Lazy<OrderbookUseCase> s_Instance = new(() => new OrderbookUseCase());
 
-        private OrderbookUseCase() { }
+        private OrderbookUseCase()
+        {
+        }
 
         public static OrderbookUseCase Instance => s_Instance.Value;
 
         /// <summary>
-        /// Confirms the status of a listing by repeatedly polling until it matches the specified status or the operation times out.
+        ///     Confirms the status of a listing by repeatedly polling until it matches the specified status or the operation times
+        ///     out.
         /// </summary>
         /// <param name="listingId">The unique identifier of the listing.</param>
         /// <param name="desiredStatus">The target status to be matched (e.g., "ACTIVE", "FILLED" or "CANCELLED").</param>
         /// <returns>
-        /// A <see cref="UniTask"/> that completes when the listing reaches the desired status or the operation times out.
+        ///     A <see cref="UniTask" /> that completes when the listing reaches the desired status or the operation times out.
         /// </returns>
         public async UniTask ConfirmListingStatus(string listingId, string desiredStatus)
 

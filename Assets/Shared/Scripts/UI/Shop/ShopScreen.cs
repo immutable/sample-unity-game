@@ -43,9 +43,8 @@ namespace HyperCasual.Runner
 
             var balance = await m_Balance.UpdateBalance();
             if (balance == "0")
-            {
-                await m_CustomDialog.ShowDialog("Zero Balance", "Your IMR balance is 0. Play the game and collect some tokens!", "OK");
-            }
+                await m_CustomDialog.ShowDialog("Zero Balance",
+                    "Your IMR balance is 0. Play the game and collect some tokens!", "OK");
         }
 
         /// <summary>
@@ -106,10 +105,7 @@ namespace HyperCasual.Runner
                     var responseBody = await response.Content.ReadAsStringAsync();
                     Debug.Log($"Assets response: {responseBody}");
 
-                    if (!string.IsNullOrEmpty(responseBody))
-                    {
-                        packs = JsonUtility.FromJson<Packs>(responseBody).result;
-                    }
+                    if (!string.IsNullOrEmpty(responseBody)) packs = JsonUtility.FromJson<Packs>(responseBody).result;
                 }
                 else
                 {

@@ -35,7 +35,7 @@ namespace HyperCasual.Runner
 
         private readonly List<PackItemView> m_Items = new();
 
-        private Pack? m_Pack = null;
+        private Pack? m_Pack;
 
         private async void OnEnable()
         {

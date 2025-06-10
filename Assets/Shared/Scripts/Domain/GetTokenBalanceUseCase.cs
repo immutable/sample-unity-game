@@ -15,25 +15,27 @@ namespace HyperCasual.Runner
 
         private readonly OrderbookApi m_OrderbookApi = new(new Configuration { BasePath = Config.BASE_URL });
 
-        private GetTokenBalanceUseCase() { }
+        private GetTokenBalanceUseCase()
+        {
+        }
 
         public static GetTokenBalanceUseCase Instance => s_Instance.Value;
 
         /// <summary>
-        /// Gets the user's ERC20 token balance
+        ///     Gets the user's ERC20 token balance
         /// </summary>
         public async UniTask<string> GetBalance()
         {
             var result = await m_OrderbookApi.TokenBalanceAsync(
-                walletAddress: SaveManager.Instance.WalletAddress,
-                contractAddress: Contract.TOKEN
+                SaveManager.Instance.WalletAddress,
+                Contract.TOKEN
             );
             var rounded = Math.Round(Convert.ToDecimal(result.Quantity), 2);
             return rounded.ToString("F2");
         }
 
         /// <summary>
-        /// Gets the user's IMX balance
+        ///     Gets the user's IMX balance
         /// </summary>
         public async UniTask<string> GetImxBalance()
         {
@@ -51,13 +53,14 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Gets the user's USDC balance
+        ///     Gets the user's USDC balance
         /// </summary>
         public async UniTask<string> GetUsdcBalance()
         {
             var web3 = new Web3(Config.RPC_URL);
 
-            var abi = @"[{'constant':true,'inputs':[{'name':'account','type':'address'}],'name':'balanceOf','outputs':[{'name':'','type':'uint256'}],'payable':false,'stateMutability':'view','type':'function'}]";
+            var abi =
+                @"[{'constant':true,'inputs':[{'name':'account','type':'address'}],'name':'balanceOf','outputs':[{'name':'','type':'uint256'}],'payable':false,'stateMutability':'view','type':'function'}]";
 
             var contract = web3.Eth.GetContract(abi, Contract.USDC);
 

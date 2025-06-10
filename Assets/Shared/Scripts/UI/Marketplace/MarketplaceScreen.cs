@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using HyperCasual.Core;
-using Immutable.Passport;
 using Immutable.Api.ZkEvm.Api;
 using Immutable.Api.ZkEvm.Client;
 using Immutable.Api.ZkEvm.Model;
+using Immutable.Passport;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
@@ -26,16 +26,16 @@ namespace HyperCasual.Runner
         [SerializeField] private InfiniteScrollGridView m_ScrollView;
         [SerializeField] private MarketplaceListObject m_StackObj;
         [SerializeField] private CustomDialog m_CustomDialog;
-
-        private MetadataSearchApi m_MetadataSearchApi = new(new Configuration { BasePath = Config.BASE_URL });
         private readonly List<StackBundle> m_Stacks = new();
         private List<string> m_Colours = new();
-        private List<string> m_Speeds = new();
         private bool m_IsLoadingMore;
+
+        private readonly MetadataSearchApi m_MetadataSearchApi = new(new Configuration { BasePath = Config.BASE_URL });
         private Page m_Page;
+        private List<string> m_Speeds = new();
 
         /// <summary>
-        /// Resets the marketplace view, clearing the current stacks and resetting pagination.
+        ///     Resets the marketplace view, clearing the current stacks and resetting pagination.
         /// </summary>
         private void Reset()
         {
@@ -47,7 +47,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Sets up the marketplace screen and loads initial stacks.
+        ///     Sets up the marketplace screen and loads initial stacks.
         /// </summary>
         private async void OnEnable()
         {
@@ -66,19 +66,18 @@ namespace HyperCasual.Runner
 
             var balance = await m_Balance.UpdateBalance();
             if (balance == "0")
-            {
-                await m_CustomDialog.ShowDialog("Zero Balance", "Your IMR balance is 0. Play the game and collect some tokens!", "OK");
-            }
+                await m_CustomDialog.ShowDialog("Zero Balance",
+                    "Your IMR balance is 0. Play the game and collect some tokens!", "OK");
         }
 
         /// <summary>
-        /// Configures the dropdown filters for colours and speeds.
+        ///     Configures the dropdown filters for colours and speeds.
         /// </summary>
         private async void ConfigureFilters()
         {
             var filtersResponse = await m_MetadataSearchApi.ListFiltersAsync(
-                chainName: Config.CHAIN_NAME,
-                contractAddress: Contract.SKIN);
+                Config.CHAIN_NAME,
+                Contract.SKIN);
             var filters = filtersResponse.Result.Filters;
 
             // Configure Colours Dropdown
@@ -112,7 +111,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Configures each item view in the stack list.
+        ///     Configures each item view in the stack list.
         /// </summary>
         /// <param name="index">Index of the item in the stack list.</param>
         /// <param name="item">The game object representing the item view.</param>
@@ -144,7 +143,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Loads stacks and adds them to the scroll view.
+        ///     Loads stacks and adds them to the scroll view.
         /// </summary>
         private async void LoadStacks()
         {
@@ -163,7 +162,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Fetches the list of stacks from the API.
+        ///     Fetches the list of stacks from the API.
         /// </summary>
         /// <returns>List of stacks.</returns>
         private async UniTask<List<StackBundle>> GetStacks()

@@ -1,25 +1,25 @@
 using System;
-using UnityEngine;
-using UnityEngine.UI;
 using System.Linq;
 using Immutable.Marketplace;
 using Immutable.Passport;
+using UnityEngine;
+using UnityEngine.UI;
 using Environment = Immutable.Marketplace.Environment;
 
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// Provides various options for players to add funds to the game.
+    ///     Provides various options for players to add funds to the game.
     /// </summary>
     public class AddFunds : MonoBehaviour
     {
-        [SerializeField] GameObject m_Options;
-        [SerializeField] Button m_FiatButton;
-        [SerializeField] Button m_SwapButton;
-        [SerializeField] Button m_BridgeButton;
-        [SerializeField] Button m_CancelButton;
+        [SerializeField] private GameObject m_Options;
+        [SerializeField] private Button m_FiatButton;
+        [SerializeField] private Button m_SwapButton;
+        [SerializeField] private Button m_BridgeButton;
+        [SerializeField] private Button m_CancelButton;
 
-        [SerializeField] TransakView m_TransakView;
+        [SerializeField] private TransakView m_TransakView;
 
         private Action m_OnDismiss;
 
@@ -50,10 +50,10 @@ namespace HyperCasual.Runner
             var walletAddress = await Passport.Instance.ZkEvmRequestAccounts();
 
             var link = LinkFactory.GenerateOnRampLink(
-                environment: Environment.Sandbox,
-                email: email,
-                walletAddress: walletAddress.FirstOrDefault(),
-                queryParams: new OnRampQueryParams
+                Environment.Sandbox,
+                email,
+                walletAddress.FirstOrDefault(),
+                new OnRampQueryParams
                 {
                     DefaultCryptoCurrency = "USDC"
                 }
@@ -70,9 +70,9 @@ namespace HyperCasual.Runner
         private void OnSwapButtonClicked()
         {
             var link = LinkFactory.GenerateSwapLink(
-                environment: Environment.Sandbox,
-                publishableKey: "pk_imapik-test-GrVY_g7JLzY2JKZy@ec-",
-                queryParams: new SwapQueryParams
+                Environment.Sandbox,
+                "pk_imapik-test-GrVY_g7JLzY2JKZy@ec-",
+                new SwapQueryParams
                 {
                     FromTokenAddress = Contract.USDC,
                     ToTokenAddress = Contract.TOKEN
@@ -84,8 +84,8 @@ namespace HyperCasual.Runner
         private void OnBridgeButtonClicked()
         {
             var link = LinkFactory.GenerateBridgeLink(
-                environment: Environment.Sandbox,
-                queryParams: new BridgeQueryParams
+                Environment.Sandbox,
+                new BridgeQueryParams
                 {
                     ToChainID = "13371"
                 }

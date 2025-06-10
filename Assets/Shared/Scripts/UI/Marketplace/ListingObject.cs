@@ -9,8 +9,8 @@ using UnityEngine;
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// Represents a listing object that displays asset data and handles user interaction with buy functionality
-    /// in the Marketplace Asset Details View.
+    ///     Represents a listing object that displays asset data and handles user interaction with buy functionality
+    ///     in the Marketplace Asset Details View.
     /// </summary>
     public class ListingObject : View
     {
@@ -25,7 +25,18 @@ namespace HyperCasual.Runner
         private Func<Listing, UniTask<bool>> m_OnBuy;
 
         /// <summary>
-        /// Initialises the UI with the given listing details.
+        ///     Clears any displayed listing data when the object is disabled.
+        /// </summary>
+        private void OnDisable()
+        {
+            m_TokenIdText.text = string.Empty;
+            m_PriceText.text = string.Empty;
+            m_AmountText.text = string.Empty;
+            m_Listing = null;
+        }
+
+        /// <summary>
+        ///     Initialises the UI with the given listing details.
         /// </summary>
         /// <param name="listing">The listing to display.</param>
         /// <param name="onBuy">The action to execute when the buy button is pressed.</param>
@@ -50,7 +61,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Updates the UI text fields with the listing’s token ID, amount, and price details.
+        ///     Updates the UI text fields with the listing’s token ID, amount, and price details.
         /// </summary>
         private async void UpdateData()
         {
@@ -63,8 +74,8 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Handles the buy button click event by triggering the purchase flow.
-        /// Displays progress and adjusts UI based on the result.
+        ///     Handles the buy button click event by triggering the purchase flow.
+        ///     Displays progress and adjusts UI based on the result.
         /// </summary>
         private async void OnBuyButtonClick()
         {
@@ -76,17 +87,6 @@ namespace HyperCasual.Runner
             m_PlayersListingText.gameObject.SetActive(success);
             m_BuyButton.gameObject.SetActive(!success);
             m_Progress.SetActive(false);
-        }
-
-        /// <summary>
-        /// Clears any displayed listing data when the object is disabled.
-        /// </summary>
-        private void OnDisable()
-        {
-            m_TokenIdText.text = string.Empty;
-            m_PriceText.text = string.Empty;
-            m_AmountText.text = string.Empty;
-            m_Listing = null;
         }
     }
 }

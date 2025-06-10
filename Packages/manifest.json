@@ -1,10 +1,10 @@
 {
   "dependencies": {
     "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2.3.3",
-    "com.immutable.marketplace": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Marketplace#v1.30.0",
-    "com.immutable.orderbook": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Orderbook#v1.30.0",
-    "com.immutable.passport": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Passport#v1.30.0",
-    "com.immutable.api.zkevm": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/ZkEvmApi#v1.30.0",
+    "com.immutable.marketplace": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Marketplace#v1.33.2",
+    "com.immutable.orderbook": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Orderbook#v1.33.2",
+    "com.immutable.passport": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/Passport#v1.33.2",
+    "com.immutable.api.zkevm": "https://github.com/immutable/unity-immutable-sdk.git?path=/src/Packages/ZkEvmApi#v1.33.2",
     "com.nobi.roundedcorners": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",
     "com.unity.nuget.newtonsoft-json": "3.2.1",
     "com.unity.collab-proxy": "2.0.4",

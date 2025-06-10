@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace HyperCasual.Runner
 {
     /// <summary>
-    /// Handles the downloading and display of an image from a URL using a RawImage.
+    ///     Handles the downloading and display of an image from a URL using a RawImage.
     /// </summary>
     public class ImageUrlObject : MonoBehaviour
     {
@@ -18,8 +18,8 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Downloads an image from the provided URL and assigns it to the RawImage. 
-        /// If the download fails or the URL is invalid, the image is hidden.
+        ///     Downloads an image from the provided URL and assigns it to the RawImage.
+        ///     If the download fails or the URL is invalid, the image is hidden.
         /// </summary>
         /// <param name="url">The URL of the image to download.</param>
         public async UniTask LoadUrl(string url)

@@ -159,7 +159,7 @@ namespace HyperCasual.Runner
         }
 
         /// <summary>
-        /// Handles the buy button click event.
+        ///     Handles the buy button click event.
         /// </summary>
         private async UniTask<bool> OnBuyButtonClick(Listing listing)
         {
@@ -196,6 +196,9 @@ namespace HyperCasual.Runner
             return false;
         }
 
-        private void OnBackButtonClick() => UIManager.Instance.GoBack();
+        private void OnBackButtonClick()
+        {
+            UIManager.Instance.GoBack();
+        }
     }
 }
