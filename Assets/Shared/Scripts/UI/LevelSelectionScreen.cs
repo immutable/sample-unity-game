@@ -15,7 +15,7 @@ namespace HyperCasual.Gameplay
 
         [SerializeField] private HyperCasualButton m_BackButton;
 
-        [Space] [SerializeField] private LevelSelectButton m_LevelButtonPrefab;
+        [Space][SerializeField] private LevelSelectButton m_LevelButtonPrefab;
 
         [SerializeField] private RectTransform m_LevelButtonsRoot;
 

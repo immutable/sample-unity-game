@@ -129,7 +129,7 @@ namespace HyperCasual.Runner
                     SaveManager.Instance.WalletAddress; // Get the player's wallet address to mint the coins to
                 Debug.Log($"Mint coins to address {address}");
                 if (address == null) return false;
-                
+
                 // Calculate the quantity to mint
                 // Need to take into account Immutable Runner Token decimal value i.e. 18
                 var quantity = BigInteger.Multiply(new BigInteger(coinsCollected), BigInteger.Pow(10, 18));

@@ -19,7 +19,7 @@ namespace HyperCasual.Gameplay
 
         [SerializeField] private GameObject[] m_LevelManagers;
 
-        [Header("Events")] [SerializeField] private AbstractGameEvent m_ContinueEvent;
+        [Header("Events")][SerializeField] private AbstractGameEvent m_ContinueEvent;
 
         [SerializeField] private AbstractGameEvent m_BackEvent;
         [SerializeField] private AbstractGameEvent m_WinEvent;
@@ -33,7 +33,7 @@ namespace HyperCasual.Gameplay
         [SerializeField] private AbstractGameEvent m_MarketplaceEvent;
         [SerializeField] private AbstractGameEvent m_ShopEvent;
 
-        [Header("Other")] [SerializeField] private float m_SplashDelay = 2f;
+        [Header("Other")][SerializeField] private float m_SplashDelay = 2f;
 
         private readonly List<IState> m_LevelStates = new();
 
