@@ -10,10 +10,7 @@ namespace HyperCasual.Runner
 
         public const string ENVIRONMENT = "sandbox";
 
-#if (UNITY_ANDROID && !UNITY_EDITOR_WIN) || (UNITY_IPHONE && !UNITY_EDITOR_WIN) || UNITY_STANDALONE_OSX
-        public const string REDIRECT_URI = "immutablerunner://callback";
-        public const string LOGOUT_REIDIRECT_URI = "immutablerunner://logout";
-#elif UNITY_WEBGL && !UNITY_EDITOR
+#if UNITY_WEBGL && !UNITY_EDITOR
         private static readonly string url = Application.absoluteURL;
         private static readonly Uri uri = new Uri(url);
         private static readonly string scheme = uri.Scheme;
@@ -24,8 +21,8 @@ namespace HyperCasual.Runner
         public static readonly string REDIRECT_URI = $"{scheme}://{hostWithPort}{fullPath}callback.html";
         public static readonly string LOGOUT_REIDIRECT_URI = $"{scheme}://{hostWithPort}{fullPath}logout.html";
 #else
-        public const string REDIRECT_URI = null;
-        public const string LOGOUT_REIDIRECT_URI = null;
+        public const string REDIRECT_URI = "immutablerunner://callback";
+        public const string LOGOUT_REIDIRECT_URI = "immutablerunner://logout";
 #endif
 
         public const string CHAIN_NAME = "imtbl-zkevm-testnet";
